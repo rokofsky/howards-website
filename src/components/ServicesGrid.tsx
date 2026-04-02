@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { services } from "@/data/services";
 import serviceBg from "@/assets/service-bg.jpg";
 
-const ServiceCard = ({ title, hook, slug, index }: { title: string; hook: string; slug: string; index: number }) => (
+const ServiceCard = ({ title, subtitle, hook, slug, index }: { title: string; subtitle: string; hook: string; slug: string; index: number }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
