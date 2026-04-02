@@ -120,7 +120,6 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
               id="preferredDates"
               name="preferredDates"
               type="date"
-              placeholder="Whenever works"
               value={form.preferredDates}
               onChange={handleChange}
               className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
@@ -140,10 +139,12 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
               onChange={handleChange}
               className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
             >
-              <option value="">What are we doing?</option>
+              <option value="">Select a project type</option>
+              <option value="consultation">1-1 Consultation</option>
+              <option value="management-training">Management Training</option>
+              <option value="negotiation-mediation">Negotiation Mediation</option>
+              <option value="conflict-mediation">Conflict Mediation</option>
               <option value="keynote">Keynote Speaking</option>
-              <option value="workshop">Team Workshop</option>
-              <option value="coaching">1-on-1 Coaching</option>
             </select>
           </div>
           <div>
@@ -156,10 +157,10 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
               className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
             >
               <option value="">When do you need this?</option>
-              <option value="asap">ASAP (yesterday, ideally)</option>
-              <option value="next-week">Next Week</option>
-              <option value="next-month">Next Month</option>
-              <option value="future">Sometime in the Future</option>
+              <option value="asap">ASAP</option>
+              <option value="next-week">Next week</option>
+              <option value="next-month">Next month</option>
+              <option value="future">In the future</option>
             </select>
           </div>
         </div>
