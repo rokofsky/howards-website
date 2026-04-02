@@ -1,14 +1,21 @@
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const testimonials = [
   { name: "Sarah K., VP People, TechCorp", text: "Howard completely transformed how our leadership team communicates. The storytelling framework he taught us is now embedded in our culture." },
   { name: "Marcus T., CEO, BrightPath", text: "I was skeptical about 'soft skills training' until Howard made our entire C-suite laugh, cry, and rethink everything in four hours." },
   { name: "Dr. Lena W., University of Munich", text: "Howard's approach to conflict resolution is unlike anything I've seen in 20 years of organizational psychology. Practical, humane, and surprisingly funny." },
+  { name: "Anja R., Head of HR, Siemens Energy", text: "We've brought Howard back three times now. Each session builds on the last, and the team keeps asking for more." },
+  { name: "Thomas B., Managing Director, Kiefel GmbH", text: "Howard's negotiation workshop saved us more in one quarter than we spent on the entire training program. No exaggeration." },
+  { name: "Lisa M., L&D Manager, Allianz", text: "The brainstorming session Howard facilitated produced more actionable ideas in three hours than our team had generated in six months." },
 ];
 
 const References = () => {
+  const [showAllTestimonials, setShowAllTestimonials] = useState(false);
+  const visibleTestimonials = showAllTestimonials ? testimonials : testimonials.slice(0, 3);
+
   return (
     <Layout>
       <section className="section-padding pt-24">
@@ -16,13 +23,13 @@ const References = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">References</h1>
             <p className="text-muted-foreground font-light mb-12 max-w-lg">
-              Don't take Howard's word for it. Here's what people say when he's not in the room.
+              Don't take Howard's word for it. Here's what people say when he's not looking.
             </p>
           </motion.div>
 
           {/* Testimonials */}
-          <div className="space-y-6 mb-16">
-            {testimonials.map((t, i) => (
+          <div className="space-y-6 mb-8">
+            {visibleTestimonials.map((t, i) => (
               <motion.blockquote
                 key={i}
                 initial={{ opacity: 0, y: 15 }}
@@ -36,13 +43,23 @@ const References = () => {
             ))}
           </div>
 
-          {/* Evaluation Scans Placeholder */}
-          <div>
-            <h2 className="text-2xl font-bold mb-6">Evaluation Sheets</h2>
+          {!showAllTestimonials && (
+            <div className="text-center mb-12">
+              <Button variant="glass" size="lg" onClick={() => setShowAllTestimonials(true)}>
+                More testimonials
+              </Button>
+            </div>
+          )}
+
+          {/* Evaluation Forms Link - always visible */}
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">Evaluation Forms from Clients</h2>
+            </div>
             <p className="text-muted-foreground font-light mb-8">
               Scanned evaluation sheets from past workshops. Click to view full size.
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
                   key={i}
@@ -51,6 +68,11 @@ const References = () => {
                   <span className="text-sm text-muted-foreground font-light">Scan #{i}</span>
                 </div>
               ))}
+            </div>
+            <div className="text-center">
+              <Button variant="glass" size="lg" asChild>
+                <a href="/references/scans">More scans of evaluation forms</a>
+              </Button>
             </div>
           </div>
         </div>

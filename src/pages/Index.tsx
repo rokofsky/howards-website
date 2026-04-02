@@ -27,7 +27,7 @@ const Index = () => {
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-3">Let's Talk</h2>
           <p className="text-muted-foreground font-light max-w-md mx-auto">
-            Whether it's a quick question or a grand plan — Howard reads every message. Eventually.
+            Whether a quick question or a grand plan — Howard reads and replies to every personal message.
           </p>
         </div>
         <ContactForm />

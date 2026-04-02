@@ -30,7 +30,15 @@ const Header = () => {
     if (href.startsWith("/#")) {
       const id = href.slice(2);
       if (location.pathname === "/") {
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+        // Use setTimeout to ensure DOM is ready after any re-render
+        setTimeout(() => {
+          const el = document.getElementById(id);
+          if (el) {
+            const headerOffset = 80;
+            const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({ top: elementPosition - headerOffset, behavior: "smooth" });
+          }
+        }, 100);
       }
     }
     setMobileOpen(false);
