@@ -56,12 +56,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
       className="glass rounded-lg p-8 md:p-10 max-w-2xl mx-auto space-y-5"
     >
       {serviceName && (
-        <div className="text-center mb-4">
-          <span className="inline-block bg-gold/10 text-gold px-4 py-1.5 rounded-full text-sm font-medium">
-            Inquiry: {serviceName}
-          </span>
-          <input type="hidden" name="service" value={serviceName} />
-        </div>
+        <input type="hidden" name="service" value={serviceName} />
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -124,7 +119,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
             <input
               id="preferredDates"
               name="preferredDates"
-              type="text"
+              type="date"
               placeholder="Whenever works"
               value={form.preferredDates}
               onChange={handleChange}

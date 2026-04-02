@@ -40,7 +40,7 @@ const ServiceDetail = () => {
           <div>
             <h2 className="text-2xl font-bold text-center mb-2">Inquire About {service.title}</h2>
             <p className="text-muted-foreground font-light text-center mb-8">
-              Fill in the details below and Howard will get back to you with a custom proposal.
+              Fill in some stuff below and I'll get back to you same/next day.
             </p>
             <ContactForm serviceName={service.title} showServiceFields />
           </div>

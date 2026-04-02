@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { services } from "@/data/services";
 import serviceBg from "@/assets/service-bg.jpg";
 
-const ServiceCard = ({ title, hook, slug, index }: { title: string; hook: string; slug: string; index: number }) => (
+const ServiceCard = ({ title, subtitle, hook, slug, index }: { title: string; subtitle: string; hook: string; slug: string; index: number }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -24,7 +24,8 @@ const ServiceCard = ({ title, hook, slug, index }: { title: string; hook: string
       />
       <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/40 to-foreground/10 group-hover:from-foreground/90 transition-all duration-300" />
       <div className="absolute inset-0 flex flex-col justify-end p-6">
-        <h3 className="text-lg font-semibold text-primary-foreground mb-1">{title}</h3>
+        <h3 className="text-lg font-semibold text-primary-foreground mb-0.5">{title}</h3>
+        <p className="text-xs font-light text-primary-foreground/50 mb-1">{subtitle}</p>
         <p className="text-sm font-light text-primary-foreground/70">{hook}</p>
       </div>
     </Link>
