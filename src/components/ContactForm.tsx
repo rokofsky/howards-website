@@ -119,7 +119,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
             <input
               id="preferredDates"
               name="preferredDates"
-              type="text"
+              type="date"
               placeholder="Whenever works"
               value={form.preferredDates}
               onChange={handleChange}
