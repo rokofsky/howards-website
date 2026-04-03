@@ -20,7 +20,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Howard</h3>
             <p className="text-primary-foreground/60 font-light text-sm leading-relaxed max-w-xs">
-              Helping teams find their voice, one story at a time. Because the best meetings are the ones where everyone forgets they're in a meeting.
+              Helping people find their voice, one story at a time. Because the best meetings are the ones where everyone forgets they're in a meeting.
             </p>
           </div>
 
@@ -29,7 +29,7 @@ const Footer = () => {
             <div className="flex flex-col gap-2">
               <Link to="/bio" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Who is Howard</Link>
               <Link to="/references" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">References</Link>
-              <Link to="/storytelling-workshops" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Storytelling Workshops</Link>
+              <Link to="/storytelling-workshops" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Storytelling Sessions</Link>
               <Link to="/blog" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Blog</Link>
             </div>
           </div>
