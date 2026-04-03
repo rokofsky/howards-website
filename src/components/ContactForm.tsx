@@ -158,9 +158,9 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
             >
               <option value="">When do you need this?</option>
               <option value="asap">ASAP</option>
-              <option value="next-week">Next week</option>
-              <option value="next-month">Next month</option>
-              <option value="future">In the future</option>
+              <option value="next-week">Next Week</option>
+              <option value="next-month">Next Month</option>
+              <option value="future">In the Future</option>
             </select>
           </div>
         </div>
