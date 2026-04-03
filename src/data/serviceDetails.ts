@@ -14,6 +14,7 @@ export interface ServiceTableRow {
 export interface ServiceDetailContent {
   pageTitle?: string;
   lead?: string;
+  taglines?: string[];
   intro: string[];
   sections: ServiceSection[];
   tableTitle?: string;
@@ -28,7 +29,7 @@ export interface ServiceDetailContent {
 export const serviceDetails: Record<string, ServiceDetailContent> = {
   "presentation-speaking-skills": {
     pageTitle: "Persuasive Presentations",
-    lead: "A practical workshop for people who need to present with confidence and impact.",
+    lead: "Speak with confidence and impact. Speak like a pro.",
     intro: [
       "This workshop is especially designed for people who need to present in front of a multicultural group. However, the techniques we will study are universal and apply to any business culture.",
       "The training is rather hands-on \"technical\" in nature: we will practice the nuances of vocal usage, non-verbal language and rhetorical techniques, all designed to attract the audience, focus them where we want, and keep their attention. With these techniques and a healthy dose of self-control, anyone can learn how to be confident and persuasive in front of a group, even those with stage-fright.",
@@ -45,24 +46,23 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         title: "Program Contents",
         bullets: [
           "Individual video-camera work with analysis and feedback",
-          "Vocal hygiene and the four vocal elements of persuasive speech: inflection, intonation, pauses, and word emphasis",
-          "Introduction and conclusion — the most important parts of your speech",
+          "Vocal hygiene and the 4 vocal elements of persuasive speech: Inflection, Intonation, Pauses, Word emphasis",
+          "Introduction and Conclusion — the most important parts of your speech",
           "How to build rapport and credibility with your audience",
           "Gaining and keeping audience attention",
-          "Visual aids: how to do it and NOT to do it",
+          "Visual aids: how to do it and NOT to do it!",
           "Body language — use it to emphasize your strong points and play down the weaker ones",
           "Effective words and phrases used in presentations",
           "How to handle a hostile audience",
           "How to handle audience questions",
-          "Overcoming nerves: cure the jitters in 1 minute",
-          "Optional third day follow up (usually 1-6 months later) to maintain and expand the skills"
+          "Overcoming nerves: cure the jitters in 1 minute!",
+          "Optional third day follow up (usually 1-6 months later): making sure all skills have been maintained, plus expanded techniques for rhetoric and persuasion"
         ]
       },
       {
         title: "Training Methods",
         paragraphs: [
-          "This is a highly interactive workshop, training the verbal and non-verbal skills necessary to deliver any kind of presentation (informative or persuasive). Techniques and activities will demonstrate and practice everything needed to perform a public-speaking task — and to make it compelling.",
-          "Participants give short presentations on camera, with subsequent trainer analysis and corrections. The videos invariably reveal improvement, often significant. Feedback is encouraged at all times."
+          "This is a highly interactive workshop, training the verbal and non-verbal skills necessary to deliver any kind of presentation (informative or persuasive). Techniques and activities will demonstrate and practice everything needed to perform a public-speaking task — and to make it compelling. Participants give short presentations on camera, with subsequent trainer analysis and corrections. The videos invariably reveal improvement, often significant. Feedback is encouraged at all times."
         ]
       }
     ]
@@ -91,20 +91,21 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     pageTitle: "The Six Thinking Hats",
     lead: "A structured method for smoother meetings, better thinking, and faster decisions.",
     intro: [
-      "Management guru Edward de Bono developed the 6 Thinking Hats framework to facilitate creative, collaborative problem-solving meetings. Instead of the traditional meeting style, where people single-mindedly argue their points back and forth, around in circles, the 6 Hats method showcases parallel thinking — where all participants are required to think and discuss in sync.",
-      "All thinking styles are involved — each hat is a different argumentation style, but here, everyone wears the same hat at the same time. The result is much smoother, more pleasant decision making. The rules are simple and it takes a bit of self-discipline; but you’ll immediately notice the difference as doors open up that you hadn’t thought of before.",
-      "The meetings are not only more effective, they’re more pleasant."
+      "Howard will come to your meeting room and demonstrate this fun and miraculous method.",
+      "Management guru Edward de Bono developed the 6 Thinking Hats framework to facilitate creative, collaborative problem-solving meetings. Instead of the traditional meeting style, where people single-mindedly argue their points back and forth, around in circles, the 6 Hats method showcases parallel thinking — where all participants are required to think and discuss in sync. All thinking styles are involved — each hat is a different argumentation style, but here, everyone wears the same hat at the same time. The result is much smoother, more pleasant decision making. The rules are simple and it takes a bit of self-discipline; but you'll immediately notice the difference as doors open up that you hadn't thought of before.",
+      "Many big and small companies — e.g. Prudential Insurance, Siemens, Boeing, IBM, 3M among many others — use this method.",
+      "The meetings are not only more effective, they're more fun."
     ],
     sections: [
       {
         title: "The Hats",
         bullets: [
-          "White Hat — neutral information; focus on available information, data, objective facts, what is needed, and how to get it",
-          "Black Hat — judgmental criticism; difficulties, risk assessment, and the logical negative view",
-          "Red Hat — emotions, feelings, intuition, brainstorming, and gut instinct without explanation or justification",
-          "Green Hat — creative thinking, possibilities, hypotheses, alternatives, solutions, and new ideas",
-          "Yellow Hat — optimism, value, benefits, and why something will work",
-          "Blue Hat — overview, process control, organization, focus, next steps, and action plans"
+          "White Hat — neutral information; focus on available information, data, objective facts, what is needed, how can we get it?",
+          "Black Hat — judgmental; criticism; why something is wrong; difficulties, risk assessment; logical negative view",
+          "Red Hat — fire, warmth; emotions, feelings, intuition, brainstorming, gut instinct; presenting views without explanation or justification",
+          "Green Hat — creative thinking; possibilities and hypotheses; alternatives, solutions, new ideas",
+          "Yellow Hat — sunshine; optimism; logical positive view; look for values and benefits, what is good, why it will work",
+          "Blue Hat — overview; control of process, steps and other hats; chairperson, organizer; thinking about thinking, managing thinking processes, focus, next steps, action plans"
         ]
       },
       {
@@ -119,18 +120,19 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           "Customer focus groups / interviews",
           "Leadership development",
           "Presentations",
-          "Virtual meetings",
-          "Individual thinking"
+          "Virtual meetings"
         ]
       },
       {
-        title: "Training Course Objectives and Outcomes",
+        title: "Demonstration Objectives",
+        paragraphs: [
+          "People who are comfortable sharing their ideas tend to show:"
+        ],
         bullets: [
           "An improved tendency to identify themselves as thinkers",
           "Confidence that they have the ability to cope with and improve their environments",
-          "Problem-solving competencies: identify a problem, propose alternative solutions, predict consequences, assess usefulness, select the best alternative, implement it, and evaluate it",
-          "Opportunity-thinking competencies: spot opportunities, weigh benefits against risks, design plans, and reassess them in progress",
-          "Cooperative thinking competencies: facilitate a group meeting, articulate other people’s points of view, devise an agenda, follow it, and provide for equal participation"
+          "Opportunity-thinking and Problem-solving competencies: spot opportunities, assess usefulness, predict consequences, propose alternative solutions, and evaluate outputs",
+          "Cooperative thinking competencies: articulate other people's points of view, devise an agenda, and provide for equal participation"
         ]
       }
     ]
@@ -140,13 +142,13 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     lead: "Learn to handle disputes, difficult people, and high-pressure conversations with clarity and control.",
     intro: [
       "Most people try to avoid conflict. But conflict is not always a bad thing. Conflict can result in innovation and new, improved understandings, if we know how to manage it. Rather than reacting on a purely emotional level, now you can learn and practice the skills to manage disputes and disagreements positively and pro-actively at work, at home and in society.",
-      "In addition to various acute conflict settings, we will also learn how to cope with chronically difficult people. You will project yourself in crucial situations and practice the skills to respond perfectly. Increase your sensitivity to others’ behaviors and reply constructively; you will be surprised at how well it works.",
+      "In addition to various acute conflict settings, we will also learn how to cope with chronically difficult people. You will project yourself in crucial situations and practice the skills to respond perfectly. Increase your sensitivity to others' behaviors and reply constructively; you will be surprised at how well it works.",
       "On video you will see yourself as others see you, followed by instant peer/trainer feedback. In the next video your correction will be already visible, demonstrating your own success and adaptability.",
-      "By becoming aware of your own communication filters, understanding the action/reaction principle and opening other people’s minds to the possibilities and potentials, the result is better relationships and, ultimately, increased success."
+      "By becoming aware of your own communication filters, understanding the action/reaction principle and opening other people's minds to the possibilities and potentials, the result is better relationships and, ultimately, increased success."
     ],
     sections: [
       {
-        title: "Program Goals",
+        title: "Goals",
         bullets: [
           "Increase your personal impact and credibility",
           "Identify the filters of perception",
@@ -177,10 +179,9 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         ]
       },
       {
-        title: "Training Methods",
+        title: "Methods",
         paragraphs: [
-          "This interactive workshop is one in which we will all be doing a lot of exercises, demonstrations and practicing. The goal in all these seminars is to learn to apply these techniques each and every time we learn or teach something.",
-          "After you try these techniques and see how effective they are, you will be ready to use them in your daily life. Feedback is encouraged in all workshops and seminars. Everyone attending is kindly asked to participate and give feedback. There is space for everyone."
+          "As an 'intruder' it's my job to be as non-invasive as possible. It will become clear that I am an impartial, unbiased bystander who will occasionally comment when someone breaks the unwritten rules of communication, or ask a question to open a discussion. I'm not particularly intimidating, i.e. people tend to feel comfortable around me (at least when I'm working) and I seem to be able to connect with anyone who's open to it. I tend to get to the crux of the matter and facilitate a productive, if not difficult discussion. Discretion guaranteed by NDA. It'll all work out if we discuss it like adults."
         ]
       }
     ]
@@ -189,11 +190,10 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     pageTitle: "Brainstorming Sessions",
     lead: "Turn your meeting into a movement.",
     intro: [
-      "Is your team stuck in the same-old-ideas loop? Most corporate brainstorming fails because it’s too polite, too structured, or just plain boring. With high-energy, un-filtered brainstorming sessions, we can extract the brilliance your team already has, but doesn't know how to raise it to the surface.",
-      "We’re not here to align — we’re here to invent.",
-      "According to the Merriam-Webster dictionary, brainstorming is a group problem-solving method that involves the spontaneous contribution of ideas from all members of the group. This means that all members present are encouraged to share their ideas with no limitations.",
-      "Whether it is a distribution issue, production, PR, a takeover bid or an ad campaign, innovation is the key to keeping ahead of the competition. This is what brainstorming is all about — coming up with a unique solution that might well be thinking outside the box.",
-      "With Edward de Bono’s famous 6 Hats Method, every aspect of decision-making is covered. From idea generation all the way to idea attacking and every step in between, the 6 Hats Method has helped thousands of companies save time, money and energy with solutions that are clearly developed and executed."
+      "Is your team stuck in the same-old-ideas loop? Most corporate brainstorming fails because it's too polite, too structured, or just plain boring. With high-energy, un-filtered brainstorming sessions, we can extract the brilliance your team already has, but doesn't know how to raise to the surface.",
+      "We're not here to align — we're here to invent.",
+      "Brainstorming is a group problem-solving method involving the spontaneous contribution of ideas from all members of the group. This means that all members are encouraged to share their ideas with no limitations.",
+      "Whether it's a distribution issue, PR damage control, a takeover bid or an ad campaign, innovation is the key to keeping ahead of the competition. This is what brainstorming is all about — coming up with a unique solution that might well be thinking outside the box."
     ],
     sections: [
       {
@@ -231,9 +231,12 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
   },
   storytelling: {
     pageTitle: "Storytelling in Business and Beyond",
-    lead: "Empower your team to connect with story.",
+    taglines: [
+      "Empower your team to connect with story.",
+      "Facts tell, stories sell."
+    ],
     intro: [
-      "The Storytelling workshop is based on the neuroscience of communication and focuses on practice and learning through doing. This training will give you the ability to connect with and move your audience to action and will transform the way you speak in public forever."
+      "Stop delivering data and start driving action. This isn't just about telling better anecdotes; it's about mastering the biological triggers that command attention. This training will give you the specific tools to connect with your listeners and, if your goal is to motivate someone to take direct action, you'll be better equipped. Whether you're pitching a board or leading a team, these techniques will transform the way you speak in public forever."
     ],
     sections: [
       {
@@ -262,22 +265,21 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         bullets: [
           "Mentors and leaders who want to impact their employees to motivation and success",
           "Anyone who wants to deliver presentations with greater impression",
-          "Anyone interested in continuing their personal or professional development"
+          "Anyone who likes to tell stories in the pub, around the table, etc."
         ]
       },
       {
-        title: "How the workshop is tailored",
+        title: "What we're going to do",
         paragraphs: [
-          "The course is tailored to the needs of the participants: whether they prefer telling personal stories, traditional stories, improvisation, use of slides, and more. Corrections and peer feedback help improve the story and how you tell it. Everyone is expected to come with a 5- to 7-minute story, joke, anecdote, or similar piece for round one."
+          "Whether you prefer telling personal stories, traditional stories, jokes, during your presentation, or improvising, corrections and peer feedback help improve the story and how you tell it. Everyone is expected to come with a 3 to 7-minute story, joke, anecdote, or similar piece for Round One."
         ]
       }
     ]
   },
   "communication-skills": {
-    pageTitle: "Interpersonal Communication Skills",
-    lead: "Improve how you say it, show it, and write it — so people understand you the first time.",
+    pageTitle: "Interpersonal Communication Training",
     intro: [
-      "It’s a generally accepted fact that personal relationships are the most important factor in any business. Communication is the oil for that machine. Make a good impression, be a good listener, maybe use charisma, and motivate people. Understanding the nuances of communication will help you avoid misunderstandings, and fix them when they occur.",
+      "It's a generally accepted fact that personal relationships are the most important factor in any business. Communication is the oil for that machine. Make a good impression, be a good listener, maybe use charisma, and motivate people. Understanding the nuances of communication will help you avoid misunderstandings, and fix them when they occur.",
       "In this workshop, you will practice how to project yourself more effectively and persuasively by connecting with others and, thereby, motivating them. With these techniques at your disposal, your message will be clear and usually elicit the desired response, in practically any situation you may find yourself in."
     ],
     sections: [
@@ -308,11 +310,11 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         bullets: [
           "Speak calmly and confidently, even under stress",
           "Maximize your credibility and impact with non-verbal skills",
-          "Learn techniques to use for the rest of your life",
+          "Learn the techniques to use for the rest of your life",
           "Handle difficult discussions sensitively and constructively",
           "Assertiveness: make your point and defend your space",
           "Overcome objections and express your requirements, even with difficult people",
-          "Ease your dealings with conflict",
+          "Eased dealing with conflict",
           "Motivate others to action"
         ]
       },
@@ -320,16 +322,15 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         title: "Training Methods",
         paragraphs: [
           "Experiential training by role-playing and resolving model situations. These are recorded, analysed by the trainer with appropriate feedback from all sides.",
-          "The trainer focuses on revealing and repeating correct behaviors, demonstrating the most useful rhetorical formulations, non-verbal signals, and self-control mechanisms. Feedback is encouraged in all workshops and seminars, and everyone is kindly asked to participate. There is space for everyone."
+          "The trainer focuses on revealing and repeating correct behaviors, demonstrating the most useful rhetorical formulations, non-verbal signals, and self-control mechanisms. Feedback is encouraged in all workshops and seminars. Everyone is kindly asked to participate and give feedback. There is space for everyone."
         ]
       }
     ]
   },
   "negotiation-skills": {
     pageTitle: "Negotiation Representation",
-    lead: "Because fair is subjective. Let’s get you the edge.",
     intro: [
-      "Most people walk into a negotiation hoping for the best. Howard’s clients walk in knowing they have the best. Whether it’s a high-stakes contract, a delicate partnership exit, or a complex acquisition, this service provides the psychological leverage and tactical silence required to win."
+      "Most people walk into a negotiation hoping for the best. Howard's clients walk in knowing they have the best. Whether it's a high-stakes contract, a delicate partnership exit, or a complex acquisition, this service provides the psychological leverage and tactical silence required to win."
     ],
     sections: [
       {
@@ -338,16 +339,6 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           "Strategic Ghosting — behind-the-scenes scripting, analysis of their tells, and a plan that keeps you from overplaying your hand",
           "Lead Negotiator — professional, unshakeable representation focused entirely on the closing conditions",
           "Conflict De-escalation — turning No into Not that way by navigating the emotional undercurrents that stall high-value deals"
-        ]
-      },
-      {
-        title: "Private Intake",
-        bullets: [
-          "Name / Company",
-          "Nature of negotiation: M&A, Employment, Vendor, Dispute, or Other",
-          "Estimated stake / value",
-          "Timeline: Immediate / Within 30 days / Planning phase",
-          "What’s the one thing you’re afraid to lose in this deal?"
         ]
       }
     ],
@@ -363,7 +354,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     intro: [
       "Are you looking for a unique surprise for your employees or guests?",
       "Now you can hire Howard to speak at your event — his entertaining, educational themes and interactive speaking style are guaranteed to capture the attention of any audience and positively motivate them to action. They might even learn something.",
-      "Charismatic, charming, intelligent and quick-witted, Howard’s engaging personality and stage presence make him a genuine crowd-pleaser.",
+      "Charismatic, charming, intelligent and quick-witted, Howard's engaging personality and stage presence make him a genuine crowd-pleaser.",
       "Available in English, Czech, Dutch."
     ],
     sections: [
@@ -377,10 +368,10 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         ]
       },
       {
-        title: "Choose the format you prefer",
+        title: "Choose your format",
         bullets: [
-          "Speaker / storyteller — choose an interesting topic and Howard can speak from 20 to 75 minutes to all night, to any group at any level or socioeconomic status.",
-          "Master of Ceremonies (MC) — the thread that ties all the elements of the program together, keeps the tempo right, and ensures your event will be remembered for a long time after."
+          "Speaker / storyteller — choose some interesting topics from below, and Howard can speak from 20 to 75 minutes or all night, to any group at any level or socioeconomic status. Note: this is not intended to be stand-up comedy. For one thing, I'll be alternately sitting and standing. Although some points are supposed to be funny, I won't be telling jokes.",
+          "Master of Ceremonies (MC) — the thread that ties all the elements of the program together, keeps the tempo right, at the desired energy level, ensuring your event will be remembered for a long time after."
         ]
       },
       {

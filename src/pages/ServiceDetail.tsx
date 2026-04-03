@@ -26,10 +26,19 @@ const ServiceDetail = () => {
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-5xl font-bold mb-3">{service.title}</h1>
-            {service.hook && <p className="text-xl text-muted-foreground font-light italic mb-3">{service.hook}</p>}
-            {detail?.lead && <p className="text-lg text-foreground/80 font-light leading-relaxed mb-8">{detail.lead}</p>}
 
-            <div className={`rounded-lg p-8 mb-12 ${detail?.tone === "executive" ? "border border-gold/40 bg-card shadow-[0_20px_60px_-30px_hsl(var(--foreground)/0.55)]" : "glass"}`}>
+            {detail?.taglines ? (
+              detail.taglines.map((line) => (
+                <p key={line} className="text-xl text-muted-foreground font-light italic mb-2">{line}</p>
+              ))
+            ) : (
+              <>
+                {service.hook && <p className="text-xl text-muted-foreground font-light italic mb-3">{service.hook}</p>}
+                {detail?.lead && <p className="text-lg text-foreground/80 font-light leading-relaxed mb-8">{detail.lead}</p>}
+              </>
+            )}
+
+            <div className={`rounded-lg p-8 mb-12 mt-6 ${detail?.tone === "executive" ? "border border-gold/40 bg-card shadow-[0_20px_60px_-30px_hsl(var(--foreground)/0.55)]" : "glass"}`}>
               <h2 className="text-xl md:text-2xl font-semibold mb-6">{detail?.pageTitle ?? "About This Service"}</h2>
 
               <div className="space-y-4">
@@ -62,7 +71,7 @@ const ServiceDetail = () => {
                 ))}
 
                 {section.numbered && (
-                  <ol className="space-y-3 list-decimal pl-5 text-foreground/80 font-light leading-relaxed">
+                  <ol className="space-y-1.5 list-decimal pl-5 text-foreground/80 font-light leading-relaxed">
                     {section.numbered.map((item) => (
                       <li key={item}>{item}</li>
                     ))}
@@ -70,7 +79,7 @@ const ServiceDetail = () => {
                 )}
 
                 {section.bullets && (
-                  <ul className="grid gap-3 text-foreground/80 font-light leading-relaxed pl-0">
+                  <ul className="grid gap-1.5 text-foreground/80 font-light leading-relaxed pl-0">
                     {section.bullets.map((item) => (
                       <li key={item} className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
@@ -106,7 +115,7 @@ const ServiceDetail = () => {
           <div>
             <h2 className="text-2xl font-bold text-center mb-2">Inquire About {service.title}</h2>
             <p className="text-muted-foreground font-light text-center mb-8">
-              Fill in some stuff below and I'll get back to you same/next day.
+              Fill in some stuff below and I'll get back to you next day.
             </p>
             <ContactForm serviceName={service.title} showServiceFields />
           </div>
