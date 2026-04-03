@@ -9,6 +9,7 @@ import Bio from "./pages/Bio";
 import References from "./pages/References";
 import StorytellingWorkshops from "./pages/StorytellingWorkshops";
 import ServiceDetail from "./pages/ServiceDetail";
+import KeynoteTopics from "./pages/KeynoteTopics";
 
 const queryClient = new QueryClient();
 
