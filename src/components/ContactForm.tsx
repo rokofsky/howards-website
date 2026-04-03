@@ -139,8 +139,8 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
               onChange={handleChange}
               className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
             >
-              <option value="">Select a project type</option>
-              <option value="consultation">1-1 Consultation</option>
+              <option value="" disabled hidden>Select a project type</option>
+              <option value="1-1-consultation">1-1 Consultation</option>
               <option value="management-training">Management Training</option>
               <option value="negotiation-mediation">Negotiation Mediation</option>
               <option value="conflict-mediation">Conflict Mediation</option>
@@ -156,7 +156,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
               onChange={handleChange}
               className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
             >
-              <option value="">When do you need this?</option>
+              <option value="" disabled hidden>When do you need this?</option>
               <option value="asap">ASAP</option>
               <option value="next-week">Next Week</option>
               <option value="next-month">Next Month</option>

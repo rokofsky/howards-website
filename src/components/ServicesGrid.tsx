@@ -25,8 +25,8 @@ const ServiceCard = ({ title, subtitle, hook, slug, index }: { title: string; su
       <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/40 to-foreground/10 group-hover:from-foreground/90 transition-all duration-300" />
       <div className="absolute inset-0 flex flex-col justify-end p-6">
         <h3 className="text-lg font-semibold text-primary-foreground mb-0.5">{title}</h3>
-        <p className="text-xs font-light text-primary-foreground/50 mb-1">{subtitle}</p>
-        <p className="text-sm font-light text-primary-foreground/70 lowercase">{hook}</p>
+        {subtitle && <p className="text-xs font-light text-primary-foreground/50 mb-1">{subtitle}</p>}
+        {hook && <p className="text-sm font-light text-primary-foreground/70">{hook}</p>}
       </div>
     </Link>
   </motion.div>
@@ -41,9 +41,9 @@ const ServicesGrid = () => {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">What I Can Do for You</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-3">What can I do for you?</h2>
         <p className="text-muted-foreground font-light max-w-md mx-auto">
-          Nine ways I've learned how to help people with.
+          Nine things I can teach you, to make your life easier
         </p>
       </motion.div>
 

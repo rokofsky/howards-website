@@ -43,14 +43,14 @@ const Header = () => {
     tryScroll();
   };
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (e: React.MouseEvent, href: string) => {
     if (href.startsWith("/#")) {
       const id = href.slice(2);
       if (location.pathname === "/") {
-        setTimeout(() => scrollToElement(id), 50);
+        e.preventDefault();
+        scrollToElement(id);
       }
-      // If not on "/", the <Link to="/#faq"> will navigate to "/" first,
-      // and useEffect below will handle scrolling after navigation.
+      // If not on "/", Link navigates to "/#id", useEffect handles scroll
     }
     setMobileOpen(false);
   };
@@ -59,7 +59,8 @@ const Header = () => {
   useEffect(() => {
     if (location.pathname === "/" && location.hash) {
       const id = location.hash.slice(1);
-      setTimeout(() => scrollToElement(id), 200);
+      // Longer delay when arriving from another page to ensure DOM is ready
+      setTimeout(() => scrollToElement(id), 400);
     }
   }, [location.pathname, location.hash]);
 
@@ -80,7 +81,7 @@ const Header = () => {
             <Link
               key={link.label}
               to={link.href}
-              onClick={() => handleNavClick(link.href)}
+              onClick={(e) => handleNavClick(e, link.href)}
               className="text-sm font-light text-foreground/70 hover:text-foreground transition-colors tracking-wide"
             >
               {link.label}
@@ -118,7 +119,7 @@ const Header = () => {
                 <Link
                   key={link.label}
                   to={link.href}
-                  onClick={() => handleNavClick(link.href)}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className="text-base font-light text-foreground/70 hover:text-foreground py-2"
                 >
                   {link.label}

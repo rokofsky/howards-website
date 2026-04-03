@@ -2,10 +2,11 @@ import { motion } from "framer-motion";
 
 const FAQSection = () => {
   const faqs = [
-    { q: "What makes Howard different from other consultants?", a: "Howard doesn't do jargon, frameworks that need a PhD, or workshops where you 'share your feelings with the group.' He delivers practical, memorable skills wrapped in storytelling — so your team actually remembers Monday's training by Thursday." },
-    { q: "How long are the workshops?", a: "Most workshops run 3–6 hours, though Howard has been known to do intensive full-day sessions for teams that really want to go deep. Half-day sessions are the sweet spot for most." },
-    { q: "Do you work with remote teams?", a: "Absolutely. Howard has run over 200 virtual workshops. Turns out storytelling works just as well through a screen — as long as nobody's on mute." },
-    { q: "What's the investment?", a: "It depends on the scope, group size, and whether Howard needs to fly somewhere nice. Get in touch for a custom quote — he promises not to use the word 'synergy.'" },
+    { q: "What makes Howard different from other consultants?", a: "He does things differently, full stop. This will be apparent from the beginning, from professional ethics through communication to output. Success fee structure is no problem." },
+    { q: "Do you work with remote teams?", a: "Absolutely. Howard has run over 200 virtual workshops and events. Storytelling works just as well through a screen — as long as you're not on mute." },
+    { q: "How long are the workshops?", a: "Thanks to video conferencing, all workshops can be tailored to any amount of time (2 — 2½ hours recommended) and spread over any number of sessions. In-person training is usually 3—6 hours, for one or two days. Half-day sessions are the sweet spot for most, though the Presentation Skills course is usually two intensive days." },
+    { q: "What's the investment?", a: "Depending on the scope, group size, travel, we're talking a daily rate between 1000 and 2000 euros, prorated. There are various success fee options for certain services, get in touch for a custom quote — I promise not to use the word 'synergy'." },
+    { q: "Is there some guarantee I'm not wasting money?", a: "I've always included a satisfaction guarantee, since my first website in 2004. It reads like this: I am not satisfied until you are satisfied. If a client is disappointed with a service, we will agree to continue working on it at no extra charge, until client is satisfied. Or, you can fire me on the spot and not pay the invoice. Simple as that." },
   ];
 
   return (
@@ -17,7 +18,7 @@ const FAQSection = () => {
         className="text-center mb-12"
       >
         <h2 className="text-3xl md:text-4xl font-bold mb-3">Frequently Asked Questions</h2>
-        <p className="text-muted-foreground font-light">Questions I hope you would ask.</p>
+        <p className="text-muted-foreground font-light">Questions I hope you're asking</p>
       </motion.div>
 
       <div className="max-w-3xl mx-auto space-y-4">
