@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface ContactFormProps {
   serviceName?: string;
@@ -32,10 +25,6 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
     const target = e.target;
     const value = target instanceof HTMLInputElement && target.type === "checkbox" ? target.checked : target.value;
     setForm((prev) => ({ ...prev, [target.name]: value }));
-  };
-
-  const handleSelectChange = (name: "projectType" | "timeline", value: string) => {
-    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -143,32 +132,36 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <label htmlFor="projectType" className="text-sm font-light text-muted-foreground mb-1.5 block">Project Type</label>
-            <Select value={form.projectType} onValueChange={(value) => handleSelectChange("projectType", value)}>
-              <SelectTrigger id="projectType" className="w-full h-12 md:h-11 text-sm font-light">
-                <SelectValue placeholder="Select a project type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1-1-consultation">1-1 consultation</SelectItem>
-                <SelectItem value="management-training">Management training</SelectItem>
-                <SelectItem value="negotiation-mediation">Negotiation mediation</SelectItem>
-                <SelectItem value="conflict-mediation">Conflict mediation</SelectItem>
-                <SelectItem value="keynote-speaking">Keynote speaking</SelectItem>
-              </SelectContent>
-            </Select>
+            <select
+              id="projectType"
+              name="projectType"
+              value={form.projectType}
+              onChange={handleChange}
+              className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
+            >
+              <option value="" disabled hidden>Select a project type</option>
+              <option value="1-1-consultation">1-1 consultation</option>
+              <option value="management-training">Management training</option>
+              <option value="negotiation-mediation">Negotiation mediation</option>
+              <option value="conflict-mediation">Conflict mediation</option>
+              <option value="keynote-speaking">Keynote speaking</option>
+            </select>
           </div>
           <div>
             <label htmlFor="timeline" className="text-sm font-light text-muted-foreground mb-1.5 block">Timeline</label>
-            <Select value={form.timeline} onValueChange={(value) => handleSelectChange("timeline", value)}>
-              <SelectTrigger id="timeline" className="w-full h-12 md:h-11 text-sm font-light">
-                <SelectValue placeholder="When do you need this" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="asap">ASAP</SelectItem>
-                <SelectItem value="next-week">Next week</SelectItem>
-                <SelectItem value="next-month">Next month</SelectItem>
-                <SelectItem value="future">In the future</SelectItem>
-              </SelectContent>
-            </Select>
+            <select
+              id="timeline"
+              name="timeline"
+              value={form.timeline}
+              onChange={handleChange}
+              className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
+            >
+              <option value="" disabled hidden>When do you need this</option>
+              <option value="asap">ASAP</option>
+              <option value="next-week">Next week</option>
+              <option value="next-month">Next month</option>
+              <option value="future">In the future</option>
+            </select>
           </div>
         </div>
       )}
