@@ -83,7 +83,7 @@ const ServiceDetail = () => {
                 <h3 className="text-2xl font-semibold mb-4">{section.title}</h3>
 
                 {section.paragraphs?.map((paragraph) => (
-                  <p key={paragraph} className="text-foreground/80 font-light leading-relaxed mb-4 last:mb-0">
+                  <p key={paragraph} className="text-foreground/80 font-light leading-relaxed mb-4 last:mb-0 whitespace-pre-line">
                     {paragraph}
                   </p>
                 ))}
