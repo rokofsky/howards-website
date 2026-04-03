@@ -2,10 +2,80 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
+interface SelectOption {
+  label: string;
+  value: string;
+}
+
 interface ContactFormProps {
   serviceName?: string;
   showServiceFields?: boolean;
 }
+
+const projectTypeOptions: SelectOption[] = [
+  { value: "1-1-consultation", label: "1-1 consultation" },
+  { value: "management-training", label: "Management training" },
+  { value: "negotiation-mediation", label: "Negotiation mediation" },
+  { value: "conflict-mediation", label: "Conflict mediation" },
+  { value: "keynote-speaking", label: "Keynote speaking" },
+];
+
+const timelineOptions: SelectOption[] = [
+  { value: "asap", label: "ASAP" },
+  { value: "next-week", label: "Next week" },
+  { value: "next-month", label: "Next month" },
+  { value: "future", label: "In the future" },
+];
+
+const inputClasses = "w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow";
+
+const FormSelectField = ({
+  id,
+  label,
+  name,
+  onChange,
+  options,
+  placeholder,
+  value,
+}: {
+  id: string;
+  label: string;
+  name: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: SelectOption[];
+  placeholder: string;
+  value: string;
+}) => {
+  return (
+    <div>
+      <label htmlFor={id} className="text-sm font-light text-muted-foreground mb-1.5 block">{label}</label>
+      <div className="relative">
+        {!value && (
+          <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-sm font-light text-muted-foreground/70">
+            {placeholder}
+          </span>
+        )}
+        <select
+          id={id}
+          name={name}
+          value={value}
+          onChange={onChange}
+          className={`${inputClasses} appearance-none pr-10 ${value ? "text-foreground" : "text-transparent"}`}
+        >
+          <option value="" disabled hidden aria-hidden="true" />
+          {options.map((option) => (
+            <option key={option.value} value={option.value} className="text-foreground">
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-muted-foreground">
+          ▾
+        </span>
+      </div>
+    </div>
+  );
+};
 
 const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProps) => {
   const [submitted, setSubmitted] = useState(false);
@@ -70,7 +140,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
             placeholder="The name people actually call you"
             value={form.name}
             onChange={handleChange}
-            className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
+            className={inputClasses}
           />
         </div>
         <div>
@@ -83,7 +153,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
             placeholder="your@bestemailever.com"
             value={form.email}
             onChange={handleChange}
-            className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
+            className={inputClasses}
           />
         </div>
       </div>
@@ -99,7 +169,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
               placeholder="Acme Inc."
               value={form.companyName}
               onChange={handleChange}
-              className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
+              className={inputClasses}
             />
           </div>
           <div>
@@ -111,7 +181,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
               placeholder="10-50 humans"
               value={form.groupSize}
               onChange={handleChange}
-              className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
+              className={inputClasses}
             />
           </div>
           <div>
@@ -122,7 +192,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
               type="date"
               value={form.preferredDates}
               onChange={handleChange}
-              className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
+              className={inputClasses}
             />
           </div>
         </div>
@@ -130,39 +200,24 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
 
       {!showServiceFields && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div>
-            <label htmlFor="projectType" className="text-sm font-light text-muted-foreground mb-1.5 block">Project Type</label>
-            <select
-              id="projectType"
-              name="projectType"
-              value={form.projectType}
-              onChange={handleChange}
-              className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
-            >
-              <option value="" disabled hidden>Select a project type</option>
-              <option value="1-1-consultation">1-1 consultation</option>
-              <option value="management-training">Management training</option>
-              <option value="negotiation-mediation">Negotiation mediation</option>
-              <option value="conflict-mediation">Conflict mediation</option>
-              <option value="keynote-speaking">Keynote speaking</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="timeline" className="text-sm font-light text-muted-foreground mb-1.5 block">Timeline</label>
-            <select
-              id="timeline"
-              name="timeline"
-              value={form.timeline}
-              onChange={handleChange}
-              className="w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow"
-            >
-              <option value="" disabled hidden>When do you need this</option>
-              <option value="asap">ASAP</option>
-              <option value="next-week">Next week</option>
-              <option value="next-month">Next month</option>
-              <option value="future">In the future</option>
-            </select>
-          </div>
+          <FormSelectField
+            id="projectType"
+            label="Project Type"
+            name="projectType"
+            onChange={handleChange}
+            options={projectTypeOptions}
+            placeholder="Select a project type"
+            value={form.projectType}
+          />
+          <FormSelectField
+            id="timeline"
+            label="Timeline"
+            name="timeline"
+            onChange={handleChange}
+            options={timelineOptions}
+            placeholder="When do you need this"
+            value={form.timeline}
+          />
         </div>
       )}
 
