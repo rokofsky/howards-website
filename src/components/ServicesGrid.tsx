@@ -42,8 +42,8 @@ const ServicesGrid = () => {
         className="text-center mb-12"
       >
         <h2 className="text-3xl md:text-4xl font-bold mb-3">What can I do for you?</h2>
-        <p className="text-muted-foreground font-light max-w-md mx-auto">
-          Nine things I can help you with or teach you, to make your life easier.
+        <p className="text-muted-foreground font-light max-w-md mx-auto whitespace-pre-line">
+          Nine things I can help you with or teach you,{"\n"}to make your life easier.
         </p>
       </motion.div>
 
