@@ -36,7 +36,7 @@ const ServiceDetail = () => {
     );
   }
 
-  const inquiryTitle = slug === "conflict-resolution" ? "Conflict mediation/resolution" : service.title;
+  const inquiryTitle = slug === "conflict-resolution" ? "Conflict mediation/resolution" : (slug === "meetings-moderation" ? "the Six Hats Method" : service.title);
 
   return (
     <Layout>
