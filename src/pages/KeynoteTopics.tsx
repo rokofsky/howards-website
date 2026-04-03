@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
 const topics = [
-  "How to give the right instructions",
-  "Brain Gym: get those hemispheres working together",
-  "Emotional Intelligence: how it really can make your life easier",
-  "Increase your powers of perception",
+  "How to give proper directions & instructions",
+  "Brain Gym: get the hemispheres working together",
+  "Emotional Intelligence: how it can make your life easier",
+  "Increase your memory!",
   "EQ & Leadership: how they go hand-in-hand",
-  "Work-life Balance",
+  "Work-life Balance -- is it for me?",
   "8 Intelligences and how to increase yours",
   "Self-motivation and concentration",
   "Time Management in 5 minutes a day",
