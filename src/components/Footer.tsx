@@ -20,7 +20,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Howard</h3>
             <p className="text-primary-foreground/60 font-light text-sm leading-relaxed max-w-xs">
-              Helping teams find their voice, one story at a time. Because the best meetings are the ones where everyone forgets they're in a meeting.
+              Helping people find their voice, one story at a time. Because the best meetings are the ones where everyone forgets they're in a meeting.
             </p>
           </div>
 
