@@ -71,7 +71,7 @@ const References = () => {
             </div>
             <div className="text-center">
               <Button variant="glass" size="lg" asChild>
-                <a href="/references/scans">More scans of evaluation forms</a>
+                <a href="/references/scans">More evaluation form scans</a>
               </Button>
             </div>
           </div>

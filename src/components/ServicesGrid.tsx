@@ -25,8 +25,8 @@ const ServiceCard = ({ title, subtitle, hook, slug, index }: { title: string; su
       <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/40 to-foreground/10 group-hover:from-foreground/90 transition-all duration-300" />
       <div className="absolute inset-0 flex flex-col justify-end p-6">
         <h3 className="text-lg font-semibold text-primary-foreground mb-0.5">{title}</h3>
-        <p className="text-xs font-light text-primary-foreground/50 mb-1">{subtitle}</p>
-        <p className="text-sm font-light text-primary-foreground/70 lowercase">{hook}</p>
+        {subtitle && <p className="text-xs font-light text-primary-foreground/50 mb-1">{subtitle}</p>}
+        {hook && <p className="text-sm font-light text-primary-foreground/70">{hook}</p>}
       </div>
     </Link>
   </motion.div>
