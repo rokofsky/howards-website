@@ -1,9 +1,25 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { services } from "@/data/services";
 import { motion } from "framer-motion";
 import { serviceDetails } from "@/data/serviceDetails";
+
+import whiteHat from "@/assets/hats/white-hat.jpg";
+import blackHat from "@/assets/hats/black-hat.jpg";
+import redHat from "@/assets/hats/red-hat.jpg";
+import greenHat from "@/assets/hats/green-hat.jpg";
+import yellowHat from "@/assets/hats/yellow-hat.jpg";
+import blueHat from "@/assets/hats/blue-hat.jpg";
+
+const hatImages: Record<string, string> = {
+  "white-hat": whiteHat,
+  "black-hat": blackHat,
+  "red-hat": redHat,
+  "green-hat": greenHat,
+  "yellow-hat": yellowHat,
+  "blue-hat": blueHat,
+};
 
 const ServiceDetail = () => {
   const { slug } = useParams();
@@ -19,6 +35,8 @@ const ServiceDetail = () => {
       </Layout>
     );
   }
+
+  const inquiryTitle = slug === "conflict-resolution" ? "Conflict mediation/resolution" : service.title;
 
   return (
     <Layout>
@@ -53,7 +71,7 @@ const ServiceDetail = () => {
               </div>
             </div>
 
-            {detail?.highlight && (
+            {detail?.highlight && detail.highlightPosition !== "bottom" && (
               <div className="mb-12 rounded-lg border border-gold/50 bg-card px-6 py-5 shadow-[0_24px_60px_-36px_hsl(var(--foreground)/0.7)]">
                 <h3 className="text-lg font-semibold mb-2">{detail.highlight.title}</h3>
                 <p className="text-foreground/80 font-light leading-relaxed">{detail.highlight.text}</p>
@@ -78,18 +96,53 @@ const ServiceDetail = () => {
                   </ol>
                 )}
 
+                {section.hatBullets && (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {section.hatBullets.map((hat) => (
+                      <div key={hat.hat} className="flex gap-4 items-start rounded-lg border border-border bg-card p-4">
+                        <img
+                          src={hatImages[hat.image]}
+                          alt={hat.hat}
+                          className="w-14 h-14 object-contain shrink-0"
+                        />
+                        <div>
+                          <h4 className="font-semibold text-sm mb-1" style={{ color: hat.color === "#FFFFFF" ? "hsl(var(--foreground))" : hat.color }}>{hat.hat}</h4>
+                          <p className="text-foreground/70 font-light text-sm leading-relaxed">{hat.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 {section.bullets && (
                   <ul className="grid gap-1.5 text-foreground/80 font-light leading-relaxed pl-0">
                     {section.bullets.map((item) => (
                       <li key={item} className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
-                        <span>{item}</span>
+                        <span>
+                          {item}
+                          {slug === "keynote-speaking" && item.includes("Still, you'll probably laugh") && (
+                            <>
+                              {" "}
+                              <Link to="/keynote-topics" className="text-gold hover:text-gold/80 underline underline-offset-2 transition-colors">
+                                Click to see some of the topics you can choose from
+                              </Link>
+                            </>
+                          )}
+                        </span>
                       </li>
                     ))}
                   </ul>
                 )}
               </div>
             ))}
+
+            {detail?.highlight && detail.highlightPosition === "bottom" && (
+              <div className="mb-12 rounded-lg border border-gold/50 bg-card px-6 py-5 shadow-[0_24px_60px_-36px_hsl(var(--foreground)/0.7)]">
+                <h3 className="text-lg font-semibold mb-2">{detail.highlight.title}</h3>
+                <p className="text-foreground/80 font-light leading-relaxed">{detail.highlight.text}</p>
+              </div>
+            )}
 
             {detail?.tableRows && detail.tableTitle && (
               <div className="mb-12">
@@ -113,7 +166,7 @@ const ServiceDetail = () => {
           </motion.div>
 
           <div>
-            <h2 className="text-2xl font-bold text-center mb-2">Inquire About {service.title}</h2>
+            <h2 className="text-2xl font-bold text-center mb-2">Inquire About {inquiryTitle}</h2>
             <p className="text-muted-foreground font-light text-center mb-8">
               Fill in some stuff below and I'll get back to you next day.
             </p>
