@@ -59,7 +59,8 @@ const Header = () => {
   useEffect(() => {
     if (location.pathname === "/" && location.hash) {
       const id = location.hash.slice(1);
-      setTimeout(() => scrollToElement(id), 200);
+      // Longer delay when arriving from another page to ensure DOM is ready
+      setTimeout(() => scrollToElement(id), 400);
     }
   }, [location.pathname, location.hash]);
 
