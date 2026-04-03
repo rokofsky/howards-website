@@ -83,7 +83,7 @@ const ServiceDetail = () => {
                 <h3 className="text-2xl font-semibold mb-4">{section.title}</h3>
 
                 {section.paragraphs?.map((paragraph) => (
-                  <p key={paragraph} className="text-foreground/80 font-light leading-relaxed mb-4 last:mb-0">
+                  <p key={paragraph} className="text-foreground/80 font-light leading-relaxed mb-4 last:mb-0 whitespace-pre-line">
                     {paragraph}
                   </p>
                 ))}
@@ -115,7 +115,7 @@ const ServiceDetail = () => {
                 )}
 
                 {section.bullets && (
-                  <ul className="grid gap-1.5 text-foreground/80 font-light leading-relaxed pl-0">
+                  <ul className="grid gap-1.5 text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line">
                     {section.bullets.map((item) => (
                       <li key={item} className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
