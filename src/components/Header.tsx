@@ -43,14 +43,14 @@ const Header = () => {
     tryScroll();
   };
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (e: React.MouseEvent, href: string) => {
     if (href.startsWith("/#")) {
       const id = href.slice(2);
       if (location.pathname === "/") {
-        setTimeout(() => scrollToElement(id), 50);
+        e.preventDefault();
+        scrollToElement(id);
       }
-      // If not on "/", the <Link to="/#faq"> will navigate to "/" first,
-      // and useEffect below will handle scrolling after navigation.
+      // If not on "/", Link navigates to "/#id", useEffect handles scroll
     }
     setMobileOpen(false);
   };
