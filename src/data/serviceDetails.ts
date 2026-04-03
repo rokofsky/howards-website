@@ -112,30 +112,31 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         ]
       },
       {
-        title: "How Might You Use The Six Thinking Hats?",
+        title: "When might you use the Six Thinking Hats?",
         bullets: [
           "Facilitation of meetings",
           "Preparing for discussions",
           "Continuous process improvement",
-          "New products / new designs",
+          "New products / designs",
           "Conflict resolution",
           "Decision making and problem solving",
           "Customer focus groups / interviews",
-          "Leadership development",
-          "Presentations",
-          "Virtual meetings"
+          "Personnel and Leadership development",
+          "\n",
+          "an improved tendency to identify themselves as thinkers",
+          "Virtual meetings",
+          "\n"
         ]
       },
       {
-        title: "Demonstration Objectives",
+        title: "People who are comfortable sharing their ideas tend to show:",
         paragraphs: [
-          "People who are comfortable sharing their ideas tend to show:"
+          "\n"
         ],
         bullets: [
-          "An improved tendency to identify themselves as thinkers",
-          "Confidence that they have the ability to cope with and improve their environments",
-          "Opportunity-thinking and Problem-solving competencies: spot opportunities, assess usefulness, predict consequences, propose alternative solutions, and evaluate outputs",
-          "Cooperative thinking competencies: articulate other people's points of view, devise an agenda, and provide for equal participation"
+          "confidence that they have the ability to cope with and improve their environments",
+          "opportunity-thinking and problem-solving competencies: spot opportunities, assess usefulness, predict consequences, propose alternative solutions, and evaluate outputs",
+          "cooperative thinking competencies: can articulate another's point of view, devise an agenda, ensure equal participation"
         ]
       }
     ]
