@@ -46,7 +46,7 @@ const References = () => {
           {!showAllTestimonials && (
             <div className="text-center mb-12">
               <Button variant="glass" size="lg" onClick={() => setShowAllTestimonials(true)}>
-                More testimonials
+                More testimonials from clients and participants
               </Button>
             </div>
           )}
@@ -54,7 +54,7 @@ const References = () => {
           {/* Evaluation Forms Link - always visible */}
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">Evaluation Forms from Clients</h2>
+              <h2 className="text-2xl font-bold">Evaluation forms from participants</h2>
             </div>
             <p className="text-muted-foreground font-light mb-8">
               Scanned evaluation sheets from past workshops. Click to view full size.
@@ -71,7 +71,7 @@ const References = () => {
             </div>
             <div className="text-center">
               <Button variant="glass" size="lg" asChild>
-                <a href="/references/scans">More evaluation form scans</a>
+                <a href="/references/scans">More Evaluation-forms from participants</a>
               </Button>
             </div>
           </div>
