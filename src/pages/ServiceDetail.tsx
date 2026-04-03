@@ -166,9 +166,9 @@ const ServiceDetail = () => {
           </motion.div>
 
           <div>
-            <h2 className="text-2xl font-bold text-center mb-2">Inquire About {inquiryTitle}</h2>
+            <h2 className="text-2xl font-bold text-center mb-2">Inquire about {inquiryTitle}</h2>
             <p className="text-muted-foreground font-light text-center mb-8">
-              Fill in some stuff below and I'll get back to you next day.
+              Fill in some stuff below (mostly optional) and I'll get back to you next day.
             </p>
             <ContactForm serviceName={service.title} showServiceFields />
           </div>
