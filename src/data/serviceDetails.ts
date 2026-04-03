@@ -3,6 +3,7 @@ export interface ServiceSection {
   paragraphs?: string[];
   bullets?: string[];
   numbered?: string[];
+  hatBullets?: { hat: string; color: string; image: string; description: string }[];
 }
 
 export interface ServiceTableRow {
@@ -23,6 +24,7 @@ export interface ServiceDetailContent {
     title: string;
     text: string;
   };
+  highlightPosition?: "top" | "bottom";
   tone?: "default" | "executive";
 }
 
@@ -92,20 +94,21 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     lead: "A structured method for smoother meetings, better thinking, and faster decisions.",
     intro: [
       "Howard will come to your meeting room and demonstrate this fun and miraculous method.",
-      "Management guru Edward de Bono developed the 6 Thinking Hats framework to facilitate creative, collaborative problem-solving meetings. Instead of the traditional meeting style, where people single-mindedly argue their points back and forth, around in circles, the 6 Hats method showcases parallel thinking — where all participants are required to think and discuss in sync. All thinking styles are involved — each hat is a different argumentation style, but here, everyone wears the same hat at the same time. The result is much smoother, more pleasant decision making. The rules are simple and it takes a bit of self-discipline; but you'll immediately notice the difference as doors open up that you hadn't thought of before.",
-      "Many big and small companies — e.g. Prudential Insurance, Siemens, Boeing, IBM, 3M among many others — use this method.",
+      "Edward de Bono developed the 6 Thinking Hats framework to facilitate creative, collaborative problem-solving discussions and meetings. Instead of the traditional meeting style, where people single-mindedly argue their points back and forth, around in circles, the 6 Hats method showcases parallel thinking — all participants are required to think and discuss in sync.",
+      "All thinking styles are involved — one at a time — each hat is a different argumentation style. But everyone wears the same hat at the same time! The result is much smoother, quicker decision making. The rules are simple and it takes a bit of self-discipline, but you'll immediately notice the difference as doors open up that you hadn't realized before.",
+      "Many big and small companies — e.g. Prudential Insurance, Siemens, Boeing, IBM, 3M among many others — use this method to reduce meeting times and effectuate more grounded decision making.",
       "The meetings are not only more effective, they're more fun."
     ],
     sections: [
       {
         title: "The Hats",
-        bullets: [
-          "White Hat — neutral information; focus on available information, data, objective facts, what is needed, how can we get it?",
-          "Black Hat — judgmental; criticism; why something is wrong; difficulties, risk assessment; logical negative view",
-          "Red Hat — fire, warmth; emotions, feelings, intuition, brainstorming, gut instinct; presenting views without explanation or justification",
-          "Green Hat — creative thinking; possibilities and hypotheses; alternatives, solutions, new ideas",
-          "Yellow Hat — sunshine; optimism; logical positive view; look for values and benefits, what is good, why it will work",
-          "Blue Hat — overview; control of process, steps and other hats; chairperson, organizer; thinking about thinking, managing thinking processes, focus, next steps, action plans"
+        hatBullets: [
+          { hat: "White Hat", color: "#FFFFFF", image: "white-hat", description: "Neutral information; focus on available information, data, objective facts, what is needed, how can we get it?" },
+          { hat: "Black Hat", color: "#333333", image: "black-hat", description: "Judgmental; criticism; why something is wrong; difficulties, risk assessment; logical negative view." },
+          { hat: "Red Hat", color: "#E53E3E", image: "red-hat", description: "Fire, warmth; emotions, feelings, intuition, brainstorming, gut instinct; presenting views without explanation or justification." },
+          { hat: "Green Hat", color: "#38A169", image: "green-hat", description: "Creative thinking; possibilities and hypotheses; alternatives, solutions, new ideas." },
+          { hat: "Yellow Hat", color: "#ECC94B", image: "yellow-hat", description: "Sunshine; optimism; logical positive view; look for values and benefits, what is good, why it will work." },
+          { hat: "Blue Hat", color: "#4299E1", image: "blue-hat", description: "Overview; control of process, steps and other hats; chairperson, organizer; thinking about thinking, managing thinking processes, focus, next steps, action plans." }
         ]
       },
       {
@@ -201,7 +204,8 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         bullets: [
           "The messy middle is encouraged: we start with a blank canvas and end with a roadmap",
           "Ink everywhere: expect boards covered in arrows, circles, and wild connections",
-          "Rapid-fire iteration: we scribble, pivot, and scrap the safe ideas until we find the gold"
+          "Rapid-fire iteration: we scribble, pivot, and scrap the safe ideas until we find the gold",
+          "Exhilarating and exhausting in that order"
         ]
       }
     ],
@@ -279,8 +283,8 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
   "communication-skills": {
     pageTitle: "Interpersonal Communication Training",
     intro: [
-      "It's a generally accepted fact that personal relationships are the most important factor in any business. Communication is the oil for that machine. Make a good impression, be a good listener, maybe use charisma, and motivate people. Understanding the nuances of communication will help you avoid misunderstandings, and fix them when they occur.",
-      "In this workshop, you will practice how to project yourself more effectively and persuasively by connecting with others and, thereby, motivating them. With these techniques at your disposal, your message will be clear and usually elicit the desired response, in practically any situation you may find yourself in."
+      "It's universally affirmed that personal relationships are the most important factor in any business. Communication is the oil for that machine. With a few techniques you can make a good impression, be a good listener, maybe use some charisma, and motivate people. Understanding the nuances of communication will help you avoid misunderstandings, and fix them when they occur.",
+      "In this workshop, you will practice how to project yourself more effectively and persuasively by connecting with others, carefully following, guiding, and motivating them. Learn how to craft your message so as to evoke the response you desire. In practically any situation you may find yourself in."
     ],
     sections: [
       {
@@ -337,8 +341,8 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         title: "Service Pillars",
         bullets: [
           "Strategic Ghosting — behind-the-scenes scripting, analysis of their tells, and a plan that keeps you from overplaying your hand",
-          "Lead Negotiator — professional, unshakeable representation focused entirely on the closing conditions",
-          "Conflict De-escalation — turning No into Not that way by navigating the emotional undercurrents that stall high-value deals"
+          "Lead or secondary Negotiator — either good cop or bad cop, always professional, unshakeable representation focused on the closing conditions",
+          "Conflict De-escalation — turning 'No' into 'Not that way' by navigating the emotional undercurrents that stall high-value deals"
         ]
       }
     ],
@@ -346,11 +350,12 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
       title: "Success Fee",
       text: "I believe in skin in the game. For high-stakes representation, I am open to Success-Fee Structures. My value is measured by your result."
     },
+    highlightPosition: "bottom",
     tone: "executive"
   },
   "keynote-speaking": {
     pageTitle: "Speaking Appearances",
-    lead: "Hire Howard to speak at your special event.",
+    lead: "Hire Howard to speak at your special event and they'll be talking about it a year later.",
     intro: [
       "Are you looking for a unique surprise for your employees or guests?",
       "Now you can hire Howard to speak at your event — his entertaining, educational themes and interactive speaking style are guaranteed to capture the attention of any audience and positively motivate them to action. They might even learn something.",
@@ -363,29 +368,14 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         bullets: [
           "Dinner / Cocktail Party",
           "Family or Company Event",
-          "Wedding",
           "Conference"
         ]
       },
       {
         title: "Choose your format",
         bullets: [
-          "Speaker / storyteller — choose some interesting topics from below, and Howard can speak from 20 to 75 minutes or all night, to any group at any level or socioeconomic status. Note: this is not intended to be stand-up comedy. For one thing, I'll be alternately sitting and standing. Although some points are supposed to be funny, I won't be telling jokes.",
+          "Speaker / storyteller — Howard can speak from 20 to 75 minutes or all night, to any group at any level or socioeconomic status. Note: this is not intended to be stand-up comedy. For one thing, I'll be sitting most of the time 😊. Still, you'll probably laugh from time to time.",
           "Master of Ceremonies (MC) — the thread that ties all the elements of the program together, keeps the tempo right, at the desired energy level, ensuring your event will be remembered for a long time after."
-        ]
-      },
-      {
-        title: "Topics include",
-        bullets: [
-          "How to give the right instructions",
-          "Brain Gym: get those hemispheres working together",
-          "Emotional Intelligence: how it really can make your life easier",
-          "Increase your powers of perception",
-          "EQ & Leadership: how they go hand-in-hand",
-          "Work-life Balance",
-          "8 Intelligences and how to increase yours",
-          "Self-motivation and concentration",
-          "Time Management in 5 minutes a day"
         ]
       }
     ]

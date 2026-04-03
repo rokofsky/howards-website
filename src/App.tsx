@@ -9,6 +9,7 @@ import Bio from "./pages/Bio";
 import References from "./pages/References";
 import StorytellingWorkshops from "./pages/StorytellingWorkshops";
 import ServiceDetail from "./pages/ServiceDetail";
+import KeynoteTopics from "./pages/KeynoteTopics";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/references" element={<References />} />
           <Route path="/storytelling-workshops" element={<StorytellingWorkshops />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
+          <Route path="/keynote-topics" element={<KeynoteTopics />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
