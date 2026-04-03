@@ -144,7 +144,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
               <option value="management-training">Management Training</option>
               <option value="negotiation-mediation">Negotiation Mediation</option>
               <option value="conflict-mediation">Conflict Mediation</option>
-              <option value="keynote">Keynote Speaking</option>
+              <option value="keynote-speaking">Keynote Speaking</option>
             </select>
           </div>
           <div>
