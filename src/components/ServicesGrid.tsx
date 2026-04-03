@@ -41,9 +41,9 @@ const ServicesGrid = () => {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">What I Can Do for You</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-3">What can I do for you?</h2>
         <p className="text-muted-foreground font-light max-w-md mx-auto">
-          Nine ways I've learned how to help people with.
+          Nine things I can teach you, to make your life easier
         </p>
       </motion.div>
 
