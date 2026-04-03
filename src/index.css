@@ -6,29 +6,29 @@
 
 @layer base {
   :root {
-    --background: 25 25% 96%;
+    --background: 30 70% 90%;
     --foreground: 20 20% 12%;
 
-    --card: 30 20% 98%;
+    --card: 30 40% 95%;
     --card-foreground: 20 20% 12%;
 
-    --popover: 30 20% 98%;
+    --popover: 30 40% 95%;
     --popover-foreground: 20 20% 12%;
 
     --primary: 20 40% 22%;
     --primary-foreground: 35 30% 95%;
 
-    --secondary: 30 15% 90%;
+    --secondary: 30 50% 85%;
     --secondary-foreground: 20 25% 18%;
 
-    --muted: 30 12% 92%;
+    --muted: 30 40% 88%;
     --muted-foreground: 20 10% 50%;
 
     --accent: 195 40% 32%;
     --accent-foreground: 195 10% 98%;
 
-    --gold: 40 50% 48%;
-    --gold-foreground: 40 10% 98%;
+    --gold: 20 40% 22%;
+    --gold-foreground: 35 30% 95%;
 
     --petrol: 195 40% 32%;
     --petrol-foreground: 195 10% 98%;
@@ -36,53 +36,53 @@
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 30 15% 88%;
-    --input: 30 15% 88%;
+    --border: 30 40% 82%;
+    --input: 30 40% 82%;
     --ring: 20 40% 22%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 25 20% 94%;
+    --sidebar-background: 30 50% 87%;
     --sidebar-foreground: 20 20% 12%;
     --sidebar-primary: 20 40% 22%;
     --sidebar-primary-foreground: 35 30% 95%;
-    --sidebar-accent: 30 15% 90%;
+    --sidebar-accent: 30 50% 85%;
     --sidebar-accent-foreground: 20 25% 18%;
-    --sidebar-border: 30 15% 88%;
+    --sidebar-border: 30 40% 82%;
     --sidebar-ring: 195 40% 32%;
   }
 
   .dark {
-    --background: 20 25% 7%;
+    --background: 20 30% 8%;
     --foreground: 30 15% 90%;
-    --card: 20 20% 10%;
+    --card: 20 25% 12%;
     --card-foreground: 30 15% 90%;
-    --popover: 20 20% 10%;
+    --popover: 20 25% 12%;
     --popover-foreground: 30 15% 90%;
     --primary: 30 35% 75%;
     --primary-foreground: 20 25% 10%;
-    --secondary: 20 15% 15%;
+    --secondary: 20 20% 16%;
     --secondary-foreground: 30 15% 90%;
-    --muted: 20 12% 18%;
+    --muted: 20 18% 18%;
     --muted-foreground: 25 10% 55%;
     --accent: 195 35% 45%;
     --accent-foreground: 195 10% 98%;
-    --gold: 40 50% 55%;
-    --gold-foreground: 40 10% 10%;
+    --gold: 30 30% 65%;
+    --gold-foreground: 20 25% 10%;
     --petrol: 195 35% 45%;
     --petrol-foreground: 195 10% 98%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 98%;
-    --border: 20 12% 18%;
-    --input: 20 12% 18%;
+    --border: 20 18% 18%;
+    --input: 20 18% 18%;
     --ring: 30 35% 75%;
-    --sidebar-background: 20 20% 8%;
+    --sidebar-background: 20 25% 9%;
     --sidebar-foreground: 30 15% 90%;
     --sidebar-primary: 30 35% 75%;
     --sidebar-primary-foreground: 20 25% 10%;
-    --sidebar-accent: 20 15% 15%;
+    --sidebar-accent: 20 20% 16%;
     --sidebar-accent-foreground: 30 15% 90%;
-    --sidebar-border: 20 12% 18%;
+    --sidebar-border: 20 18% 18%;
     --sidebar-ring: 195 35% 45%;
   }
 }
@@ -107,27 +107,27 @@
   .glass {
     @apply bg-card/60 backdrop-blur-xl border border-border/50;
     box-shadow: 0 8px 32px 0 hsl(20 40% 22% / 0.06),
-                inset 0 1px 0 0 hsl(30 20% 98% / 0.4);
+                inset 0 1px 0 0 hsl(30 40% 95% / 0.4);
   }
 
   .glass-button {
     @apply backdrop-blur-md border border-border/30;
     box-shadow: 0 4px 16px 0 hsl(20 40% 22% / 0.08),
-                0 0 20px 0 hsl(40 50% 48% / 0.1),
-                inset 0 1px 0 0 hsl(30 20% 98% / 0.3);
+                0 0 20px 0 hsl(20 40% 22% / 0.1),
+                inset 0 1px 0 0 hsl(30 40% 95% / 0.3);
     transition: all 0.3s ease;
   }
 
   .glass-button:hover {
     box-shadow: 0 6px 24px 0 hsl(20 40% 22% / 0.12),
-                0 0 30px 0 hsl(40 50% 48% / 0.18),
-                inset 0 1px 0 0 hsl(30 20% 98% / 0.4);
+                0 0 30px 0 hsl(20 40% 22% / 0.18),
+                inset 0 1px 0 0 hsl(30 40% 95% / 0.4);
     transform: translateY(-1px);
   }
 
   .glow-gold {
-    box-shadow: 0 0 20px 0 hsl(40 50% 48% / 0.15),
-                0 0 40px 0 hsl(40 50% 48% / 0.08);
+    box-shadow: 0 0 20px 0 hsl(20 40% 22% / 0.15),
+                0 0 40px 0 hsl(20 40% 22% / 0.08);
   }
 
   .glow-petrol {
@@ -137,7 +137,7 @@
 
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(20 40% 22%), hsl(40 50% 48%));
+    background-image: linear-gradient(135deg, hsl(20 40% 22%), hsl(30 70% 90%));
   }
 
   .section-padding {
