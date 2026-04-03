@@ -26,23 +26,42 @@ const Header = () => {
     setMobileOpen(false);
   }, [location]);
 
+  const scrollToElement = (id: string) => {
+    // Poll for the element since the page may still be rendering after navigation
+    let attempts = 0;
+    const tryScroll = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        const headerOffset = 80;
+        const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: elementPosition - headerOffset, behavior: "smooth" });
+      } else if (attempts < 10) {
+        attempts++;
+        setTimeout(tryScroll, 100);
+      }
+    };
+    tryScroll();
+  };
+
   const handleNavClick = (href: string) => {
     if (href.startsWith("/#")) {
       const id = href.slice(2);
       if (location.pathname === "/") {
-        // Use setTimeout to ensure DOM is ready after any re-render
-        setTimeout(() => {
-          const el = document.getElementById(id);
-          if (el) {
-            const headerOffset = 80;
-            const elementPosition = el.getBoundingClientRect().top + window.scrollY;
-            window.scrollTo({ top: elementPosition - headerOffset, behavior: "smooth" });
-          }
-        }, 100);
+        setTimeout(() => scrollToElement(id), 50);
       }
+      // If not on "/", the <Link to="/#faq"> will navigate to "/" first,
+      // and useEffect below will handle scrolling after navigation.
     }
     setMobileOpen(false);
   };
+
+  // After navigating to "/" with a hash, scroll to the target section
+  useEffect(() => {
+    if (location.pathname === "/" && location.hash) {
+      const id = location.hash.slice(1);
+      setTimeout(() => scrollToElement(id), 200);
+    }
+  }, [location.pathname, location.hash]);
 
   return (
     <header
