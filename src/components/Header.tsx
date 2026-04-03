@@ -119,7 +119,7 @@ const Header = () => {
                 <Link
                   key={link.label}
                   to={link.href}
-                  onClick={() => handleNavClick(link.href)}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className="text-base font-light text-foreground/70 hover:text-foreground py-2"
                 >
                   {link.label}
