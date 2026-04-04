@@ -146,7 +146,7 @@ const ServiceDetail = () => {
             {detail?.highlight && detail.highlightPosition === "bottom" && (
               <div className="mb-12 rounded-lg border border-gold/50 bg-card px-6 py-5 shadow-[0_24px_60px_-36px_hsl(var(--foreground)/0.7)]">
                 <h3 className="text-lg font-semibold mb-2">{detail.highlight.title}</h3>
-                <p className="text-foreground/80 font-light leading-relaxed">{detail.highlight.text}</p>
+                <p className="text-foreground/80 leading-relaxed font-normal">{detail.highlight.text}</p>
               </div>
             )}
 
