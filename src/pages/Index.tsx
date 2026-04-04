@@ -26,7 +26,7 @@ const Index = () => {
       <section id="contact" className="section-padding">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-3">Let's Talk</h2>
-          <p className="text-muted-foreground font-light max-w-md mx-auto">
+          <p className="max-w-md mx-auto font-medium text-primary">
             Whether a quick question or a grand plan — Howard reads and replies to every personal message.
           </p>
         </div>
