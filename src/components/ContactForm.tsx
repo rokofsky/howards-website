@@ -131,7 +131,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <label htmlFor="name" className="text-sm font-light text-muted-foreground mb-1.5 block">Name</label>
+          <label htmlFor="name" className="text-sm text-muted-foreground mb-1.5 block font-medium">Name</label>
           <input
             id="name"
             name="name"
