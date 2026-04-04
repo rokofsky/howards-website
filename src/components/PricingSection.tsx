@@ -50,7 +50,7 @@ const PricingSection = () => {
             <p className="text-sm text-muted-foreground mb-6 font-normal">{tier.description}</p>
             <ul className="space-y-2">
               {tier.features.map((f, j) => (
-                <li key={j} className="text-sm font-light text-foreground/80 flex items-start gap-2">
+                <li key={j} className="text-sm text-foreground/80 flex items-start gap-2 font-normal">
                   <span className="text-gold mt-0.5">✓</span>
                   {f}
                 </li>
