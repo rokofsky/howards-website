@@ -61,10 +61,10 @@ It is, after all, a two way street.`,
   },
   {
     slug: "the-art-of-saying-nothing-productively",
-    title: "Former jobs you won’t find on my CV",
+    title: "12 former jobs you won’t find on my CV",
     excerpt: "10 jobs that led me to where I am today",
     date: "Mar 15, 2026",
-    content: `\nIllicit interpreter I was responsible for translating black market deals and, eventually, damage control. Quit after the second hassle. 2 weeks, 1993.`,
+    content: "There are more, but these were particularly educating.",
   },
   {
     slug: "storytelling-is-not-optional-anymore",
