@@ -57,7 +57,7 @@ const ServiceDetail = () => {
               ))
             ) : (
               <>
-                {service.hook && <p className="text-xl text-muted-foreground font-light italic mb-3">{service.hook}</p>}
+                {service.hook && <p className="text-xl text-muted-foreground italic mb-3 font-normal">{service.hook}</p>}
                 {detail?.lead && <p className="text-lg text-foreground/80 leading-relaxed mb-8 font-normal">{detail.lead}</p>}
               </>
             )}
