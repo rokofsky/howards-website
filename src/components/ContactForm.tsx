@@ -161,7 +161,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
       {showServiceFields && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
-            <label htmlFor="companyName" className="text-sm font-light text-muted-foreground mb-1.5 block">Company Name</label>
+            <label htmlFor="companyName" className="text-sm text-muted-foreground mb-1.5 block font-medium">Company Name</label>
             <input
               id="companyName"
               name="companyName"
