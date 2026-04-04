@@ -93,7 +93,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     pageTitle: "The Six Thinking Hats",
     lead: "A structured method for smoother meetings, better thinking, and faster decisions.",
     intro: [
-      "Howard will come to your meeting room and demonstrate this fun and miraculous method.",
+      "Howard will come to your meeting room and demonstrate this fun and miraculous method in about 3 hours.",
       "Edward de Bono developed the 6 Thinking Hats framework to facilitate creative, collaborative problem-solving discussions and meetings. Instead of the traditional meeting style, where people single-mindedly argue their points back and forth, around in circles, the 6 Hats method showcases parallel thinking — all participants are required to think and discuss in sync.",
       "All thinking styles are involved — one at a time — each hat is a different argumentation style. But everyone wears the same hat at the same time! The result is much smoother, quicker decision making. The rules are simple and it takes a bit of self-discipline, but you'll immediately notice the difference as doors open up that you hadn't realized before.",
       "Many big and small companies — e.g. Prudential Insurance, Siemens, Boeing, IBM, 3M among many others — use this method to reduce meeting times and effectuate more grounded decision making.",
@@ -122,10 +122,10 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           "Decision making and problem solving",
           "Customer focus groups / interviews",
           "Personnel and Leadership development",
-          "\n",
+          "\n\n\n",
           "an improved tendency to identify themselves as thinkers",
           "Virtual meetings",
-          "\n"
+          "\n\n\n"
         ]
       },
       {

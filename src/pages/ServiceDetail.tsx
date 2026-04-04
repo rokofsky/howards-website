@@ -112,7 +112,7 @@ const ServiceDetail = () => {
                           className="w-14 h-14 object-contain shrink-0"
                         />
                         <div>
-                          <h4 className="font-semibold text-sm mb-1" style={{ color: hat.color === "#FFFFFF" ? "hsl(var(--foreground))" : hat.color }}>{hat.hat}</h4>
+                          <h4 className="text-sm mb-1 font-extrabold" style={{ color: hat.color === "#FFFFFF" ? "hsl(var(--foreground))" : hat.color }}>{hat.hat}</h4>
                           <p className="text-foreground/70 font-light text-sm leading-relaxed">{hat.description}</p>
                         </div>
                       </div>
