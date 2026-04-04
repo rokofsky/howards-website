@@ -173,7 +173,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
             />
           </div>
           <div>
-            <label htmlFor="groupSize" className="text-sm font-light text-muted-foreground mb-1.5 block">Estimated Group Size</label>
+            <label htmlFor="groupSize" className="text-sm text-muted-foreground mb-1.5 block font-medium">Estimated Group Size</label>
             <input
               id="groupSize"
               name="groupSize"
