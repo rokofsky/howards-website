@@ -64,7 +64,7 @@ It is, after all, a two way street.`,
     title: "Former jobs you won’t find on my CV",
     excerpt: "10 jobs that led me to where I am today",
     date: "Mar 15, 2026",
-    content: `Illicit interpreter I was responsible for translating black market deals and, eventually, damage control. Quit after the second hassle. 2 weeks, 1993.`,
+    content: `\nIllicit interpreter I was responsible for translating black market deals and, eventually, damage control. Quit after the second hassle. 2 weeks, 1993.`,
   },
   {
     slug: "storytelling-is-not-optional-anymore",
