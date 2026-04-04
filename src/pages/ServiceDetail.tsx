@@ -24,6 +24,11 @@ const hatImages: Record<string, string> = {
 
 const ServiceDetail = () => {
   const { slug } = useParams();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
+
   const service = services.find((s) => s.slug === slug);
   const detail = slug ? serviceDetails[slug] : undefined;
 
