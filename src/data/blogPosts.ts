@@ -64,7 +64,53 @@ It is, after all, a two way street.`,
     title: "12 former jobs you won’t find on my CV",
     excerpt: "10 jobs that led me to where I am today",
     date: "Mar 15, 2026",
-    content: "There are more, but these were particularly educating.",
+    content: `Newspaper carrier: from the ages of 13 to 16, every day the Long Island edition of Newsday magically got delivered to a route of 30+ homes in Plainview (it took about 2 hours a day; less if my brother or sister helped me, longer if I took my baby brother or the dog). In addition, I had to collect the weekly fees and tips from each customer on the route. There were always people who were hard to reach, or just didn’t like to pay. Looking back, it was an unlikely livelihood but what else could I do? Length of job: 2.5 years
+
+This opened up for me the worlds of responsibility, independence and perseverance. Probably time management as well.
+
+Baseball cards: over 150,000 cards flowed in and out of my parents’ house during my childhood until I was 17. I must have done 500 transactions, including selling by mail order. This was all before internet, so I placed ads in trade papers and county weeklies. My nearsightedness is probably a result of reading and memorizing the stats on the back of the cards. I financed my first two European trips, bought countless books and gadgets and still have thousands of cards I don’t know what to do with. Teenage years, then later sporadically liquidated inventory.
+
+I was dealing with much older geeks, who all had a lot more experience than I did; I learned how to negotiate. This must be how I manage to come up with the answers to the most difficult questions in seminars. 
+
+University Security Department “Escort” service.
+If someone felt unsafe walking around campus at night, they could call Security and they would call us by walkie-talkie: who to escort where. Between escorts I would monitor the peace and all fire extinguishers in the dormitories, basements, lecture halls etc. I started this job in my first semester.  1.5 years of night-shifts.
+
+I learned how to wield authority and responsibility: professionally and friendly, even as a ‘security guy’.
+
+Oxygen service: summer job delivering liquid oxygen tanks to dying patients all over Long Island and the City. Good money thanks to the on-call and hazard pay, and heavy tanks. I regularly visited these patients, each deathly afraid of not getting
+their O2 on time.  4 summers. 
+
+I learned to organize my schedule so as to deliver the right amount of oxygen at the right time.  And practice bedside manner.
+
+Asbestos removal, South Bronx, NY.
+I wasn’t actually removing the asbestos, but I had to don a hazmat suit at 8am to set up the air meter and at 4pm again to take it away. In between I either slept in the car and/or wandered around the most dangerous neighborhood in NYC.
+
+Bartender, Red light district The Last Waterhole, Amsterdam: arguably the best job I ever had. Live band every night. One time one a Hells Angel fired at a slot machine. When the police came we were duly instructed to say we’d never seen him before. 
+
+I learned how to persuade drunk and sometimes aggressive people to go home at closing time. I never had to use the emergency line.
+
+Illicit interpreter I was responsible for translating deals and damage control. Quit after the second hassle. 2 weeks in 1993.
+
+Cook: various restaurants in Amsterdam. Mostly American and Indonesian food. Usually alone in kitchen. 3 restaurants in the 1990s. 
+
+Rhetorical consultant, “Network CV” – a CV
+and resume writing service. I made flyers and placed them in employment
+agencies (they let me do this for free). Eventually coached job
+candidates at all levels. 1991-1993. 
+
+Sauna Fenomeen: Weekly shifts behind the bar, volunteer on the board. My mandate at this official, anarchistic club was to regulate operations, it turned out to be more diplomat the situation. The legendary sauna is now defunct. 2+ years.
+
+I learned a lot of diplomacy. 
+
+Telemarketing fake lottery tickets,
+Amsterdam: selling international lottery ‘tickets’ to Brits. I eventually figured out that we did not have agents in each country buying tickets. In fact the company was acting as the lottery. That pissed me off but I completed the contract. 3 months, 1994
+
+Suggestopedic teacher:
+even before I got into teaching, I was reading books on alternative learning methods. I tried some out, picked up Dutch and some other esoteric stuff. Then I got a teaching job and so experimented with the music and games. This turned out to be my professional entry into Prague. Sporadically for about 10 years.
+
+I learned the delicate art of communication, to groups and to individuals. This has been useful to say the least in my current challenges as coach and (group) trainer.
+
+Last and least, my horoscope. West: Taurus. Chinese: Fire Horse. This combination, according to the rare sources on such detailed matters, is particularly inauspicious. I just have to live with that.`,
   },
   {
     slug: "storytelling-is-not-optional-anymore",
