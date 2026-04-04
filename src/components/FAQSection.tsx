@@ -35,7 +35,7 @@ const FAQSection = () => {
               {faq.q}
               <span className="text-muted-foreground transition-transform duration-200 group-open:rotate-45 text-xl ml-4">+</span>
             </summary>
-            <div className="px-6 pb-6 text-sm text-muted-foreground font-light leading-relaxed">
+            <div className="px-6 pb-6 text-sm text-muted-foreground leading-relaxed font-medium">
               {faq.a}
             </div>
           </motion.details>
