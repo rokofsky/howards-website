@@ -349,7 +349,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     ],
     highlight: {
       title: "Success Fee",
-      text: "I believe in skin in the game. For high-stakes representation, I am open to Success-Fee Structures. My value is measured by your result."
+      text: "I believe in skin in the game and am open to Success-fee Structures. My value is measured by your result."
     },
     highlightPosition: "bottom",
     tone: "executive"
