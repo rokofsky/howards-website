@@ -222,7 +222,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
       )}
 
       <div>
-        <label htmlFor="message" className="text-sm font-light text-muted-foreground mb-1.5 block">Message</label>
+        <label htmlFor="message" className="text-sm text-muted-foreground mb-1.5 block font-medium">Message</label>
         <textarea
           id="message"
           name="message"
