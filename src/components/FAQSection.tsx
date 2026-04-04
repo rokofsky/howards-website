@@ -18,7 +18,7 @@ const FAQSection = () => {
         className="text-center mb-12"
       >
         <h2 className="text-3xl md:text-4xl font-bold mb-3">Frequently Asked Questions</h2>
-        <p className="text-muted-foreground font-light">Questions I hope you're asking</p>
+        <p className="font-semibold text-primary">Questions I hope you're asking</p>
       </motion.div>
 
       <div className="max-w-3xl mx-auto space-y-4">

@@ -9,15 +9,15 @@ export interface BlogPost {
 export const blogPosts: BlogPost[] = [
   {
     slug: "why-your-team-meetings-feel-like-hostage-situations",
-    title: "Why Your Team Meetings Feel Like Hostage Situations",
-    excerpt: "The three invisible dynamics killing your team's energy — and the surprisingly simple fix.",
+    title: "Are Czechs getting even more polite?",
+    excerpt: "Politeness is a hallmark of Czech culture, though friendliness not so much. Is empathy growing? ",
     date: "Mar 28, 2026",
     content: "Content coming soon. Check back later for the full article.",
   },
   {
     slug: "the-art-of-saying-nothing-productively",
-    title: "The Art of Saying Nothing (Productively)",
-    excerpt: "How strategic silence became my most powerful consulting tool.",
+    title: "Former jobs you won’t find on my CV",
+    excerpt: "10 jobs that led me to where I am today",
     date: "Mar 15, 2026",
     content: "Content coming soon. Check back later for the full article.",
   },
