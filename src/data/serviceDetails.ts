@@ -284,7 +284,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
   "communication-skills": {
     pageTitle: "Interpersonal Communication Training",
     intro: [
-      "It's universally affirmed that personal relationships are the most important factor in any business. Communication is the oil for that machine. With a few techniques you can make a good impression, be a good listener, maybe use some charisma, and motivate people. Understanding the nuances of communication will help you avoid misunderstandings, and fix them when they occur.",
+      "It's universally affirmed that personal relationships are the most important factor in any business. Communication is the oil for the machine. With a few techniques you can make a good impression, be a good listener, maybe use some charisma, and motivate people. Understanding the nuances of communication will help you avoid misunderstandings, and fix them when they occur.",
       "In this workshop, you will practice how to project yourself more effectively and persuasively by connecting with others, carefully following, guiding, and motivating them. Learn how to craft your message so as to evoke the response you desire. In practically any situation you may find yourself in."
     ],
     sections: [
