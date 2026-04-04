@@ -70,40 +70,35 @@ This opened up for me the worlds of responsibility, independence and perseveranc
 
 Baseball cards: over 150,000 cards flowed in and out of my parents’ house during my childhood until I was 17. I must have done 500 transactions, including selling by mail order. This was all before internet, so I placed ads in trade papers and county weeklies. My nearsightedness is probably a result of reading and memorizing the stats on the back of the cards. I financed my first two European trips, bought countless books and gadgets and still have thousands of cards I don’t know what to do with. Teenage years, then later sporadically liquidated inventory.
 
-I was dealing with much older geeks, who all had a lot more experience than I did; I learned how to negotiate. This must be how I manage to come up with the answers to the most difficult questions in seminars. 
+I was dealing with much older geeks, who all had a lot more experience than I did; I learned how to negotiate. This must be how I manage to come up with the answers to the most difficult questions in seminars.
 
 University Security Department “Escort” service.
-If someone felt unsafe walking around campus at night, they could call Security and they would call us by walkie-talkie: who to escort where. Between escorts I would monitor the peace and all fire extinguishers in the dormitories, basements, lecture halls etc. I started this job in my first semester.  1.5 years of night-shifts.
+If someone felt unsafe walking around campus at night, they could call Security and they would call us by walkie-talkie: who to escort where. Between escorts I would monitor the peace and all fire extinguishers in the dormitories, basements, lecture halls etc. I started this job in my first semester. 1.5 years of night-shifts.
 
 I learned how to wield authority and responsibility: professionally and friendly, even as a ‘security guy’.
 
 Oxygen service: summer job delivering liquid oxygen tanks to dying patients all over Long Island and the City. Good money thanks to the on-call and hazard pay, and heavy tanks. I regularly visited these patients, each deathly afraid of not getting
-their O2 on time.  4 summers. 
+their O2 on time. 4 summers.
 
-I learned to organize my schedule so as to deliver the right amount of oxygen at the right time.  And practice bedside manner.
+I learned to organize my schedule so as to deliver the right amount of oxygen at the right time. And practice bedside manner.
 
 Asbestos removal, South Bronx, NY.
 I wasn’t actually removing the asbestos, but I had to don a hazmat suit at 8am to set up the air meter and at 4pm again to take it away. In between I either slept in the car and/or wandered around the most dangerous neighborhood in NYC.
 
-Bartender, Red light district The Last Waterhole, Amsterdam: arguably the best job I ever had. Live band every night. One time one a Hells Angel fired at a slot machine. When the police came we were duly instructed to say we’d never seen him before. 
+Bartender, Red light district, The Last Waterhole, Amsterdam: probably the best job I ever had. Live band every night. 4 or 5 months in 1991. 
+I learned how to persuade drunk and sometimes aggressive people to go home at closing time. I never had to use the emergency hotline to Hell's Angels.
 
-I learned how to persuade drunk and sometimes aggressive people to go home at closing time. I never had to use the emergency line.
+Illicit interpreter I was responsible for translating deals and damage control. Quit after the second hassle. 2 weeks in 1992, Amsterdam, NL.
 
-Illicit interpreter I was responsible for translating deals and damage control. Quit after the second hassle. 2 weeks in 1993.
+Cook: various restaurants in Amsterdam. Mostly American and Indonesian food. Usually alone in kitchen. 3 restaurants in the 1990s.
 
-Cook: various restaurants in Amsterdam. Mostly American and Indonesian food. Usually alone in kitchen. 3 restaurants in the 1990s. 
+Rhetorical consultant, “Network CV” – a CV and resume writing service. I made flyers and placed them in employment agencies (they let me do this for free). Eventually coached job candidates at all levels. Amsterdam, NL, 1991-1993.
 
-Rhetorical consultant, “Network CV” – a CV
-and resume writing service. I made flyers and placed them in employment
-agencies (they let me do this for free). Eventually coached job
-candidates at all levels. 1991-1993. 
-
-Sauna Fenomeen: Weekly shifts behind the bar, volunteer on the board. My mandate at this official, anarchistic club was to regulate operations, it turned out to be more diplomat the situation. The legendary sauna is now defunct. 2+ years.
-
-I learned a lot of diplomacy. 
+Sauna Fenomeen: Weekly shifts behind the bar, volunteer on the board. My mandate at this official, anarchistic club was to regulate operations, it turned out to be more diplomat the situation. The legendary sauna is now defunct. Amsterdam, NL, 1995- 1999.
+I learned a lot of diplomacy.
 
 Telemarketing fake lottery tickets,
-Amsterdam: selling international lottery ‘tickets’ to Brits. I eventually figured out that we did not have agents in each country buying tickets. In fact the company was acting as the lottery. That pissed me off but I completed the contract. 3 months, 1994
+Selling 'international lottery tickets’ to Brits. I eventually figured out that we did not have agents in each country buying tickets. In fact the company was acting as the lottery. That pissed me off but I finished out the contract. 3 months, 1994.
 
 Suggestopedic teacher:
 even before I got into teaching, I was reading books on alternative learning methods. I tried some out, picked up Dutch and some other esoteric stuff. Then I got a teaching job and so experimented with the music and games. This turned out to be my professional entry into Prague. Sporadically for about 10 years.
