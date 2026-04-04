@@ -48,7 +48,7 @@ const FormSelectField = ({
 }) => {
   return (
     <div>
-      <label htmlFor={id} className="text-sm font-light text-muted-foreground mb-1.5 block">{label}</label>
+      <label htmlFor={id} className="text-sm text-muted-foreground mb-1.5 block font-medium">{label}</label>
       <div className="relative">
         {!value && (
           <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-sm font-light text-muted-foreground/70">
@@ -131,7 +131,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <label htmlFor="name" className="text-sm font-light text-muted-foreground mb-1.5 block">Name</label>
+          <label htmlFor="name" className="text-sm text-muted-foreground mb-1.5 block font-medium">Name</label>
           <input
             id="name"
             name="name"
@@ -144,7 +144,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
           />
         </div>
         <div>
-          <label htmlFor="email" className="text-sm font-light text-muted-foreground mb-1.5 block">Email</label>
+          <label htmlFor="email" className="text-sm text-muted-foreground mb-1.5 block font-medium">Email</label>
           <input
             id="email"
             name="email"
@@ -161,7 +161,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
       {showServiceFields && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
-            <label htmlFor="companyName" className="text-sm font-light text-muted-foreground mb-1.5 block">Company Name</label>
+            <label htmlFor="companyName" className="text-sm text-muted-foreground mb-1.5 block font-medium">Company Name</label>
             <input
               id="companyName"
               name="companyName"
@@ -173,7 +173,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
             />
           </div>
           <div>
-            <label htmlFor="groupSize" className="text-sm font-light text-muted-foreground mb-1.5 block">Estimated Group Size</label>
+            <label htmlFor="groupSize" className="text-sm text-muted-foreground mb-1.5 block font-medium">Estimated Group Size</label>
             <input
               id="groupSize"
               name="groupSize"
@@ -185,7 +185,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
             />
           </div>
           <div>
-            <label htmlFor="preferredDates" className="text-sm font-light text-muted-foreground mb-1.5 block">Preferred Dates</label>
+            <label htmlFor="preferredDates" className="text-sm text-muted-foreground mb-1.5 block font-medium">Preferred Dates</label>
             <input
               id="preferredDates"
               name="preferredDates"
@@ -222,7 +222,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
       )}
 
       <div>
-        <label htmlFor="message" className="text-sm font-light text-muted-foreground mb-1.5 block">Message</label>
+        <label htmlFor="message" className="text-sm text-muted-foreground mb-1.5 block font-medium">Message</label>
         <textarea
           id="message"
           name="message"
@@ -244,7 +244,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
           onChange={handleChange}
           className="w-5 h-5 rounded border-input accent-gold"
         />
-        <label htmlFor="copyToMe" className="text-sm font-light text-muted-foreground">Send me a copy</label>
+        <label htmlFor="copyToMe" className="text-sm text-muted-foreground font-normal">Send me a copy</label>
       </div>
 
       <Button variant="glass" size="xl" type="submit" className="w-full">
