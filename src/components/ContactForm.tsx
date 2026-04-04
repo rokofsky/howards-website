@@ -244,7 +244,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
           onChange={handleChange}
           className="w-5 h-5 rounded border-input accent-gold"
         />
-        <label htmlFor="copyToMe" className="text-sm font-light text-muted-foreground">Send me a copy</label>
+        <label htmlFor="copyToMe" className="text-sm text-muted-foreground font-normal">Send me a copy</label>
       </div>
 
       <Button variant="glass" size="xl" type="submit" className="w-full">
