@@ -335,7 +335,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
   "negotiation-skills": {
     pageTitle: "Negotiation Representation",
     intro: [
-      "Most people walk into a negotiation hoping for the best. Howard's clients walk in knowing they have the best. Whether it's a high-stakes contract, a delicate partnership exit, or a complex acquisition, this service provides the psychological leverage and tactical silence required to win."
+      "Secure a decisive advantage with Howard’s expert negotiation edge. We'll deconstruct problems to find root causes and deliver clear, actionable results.Whether it's a high-stakes contract, a delicate partnership exit, or a complex acquisition, this service provides the psychological leverage and tactical silence for a win-win."
     ],
     sections: [
       {
