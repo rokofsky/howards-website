@@ -122,10 +122,10 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           "Decision making and problem solving",
           "Customer focus groups / interviews",
           "Personnel and Leadership development",
-          "\n",
+          "\n\n\n",
           "an improved tendency to identify themselves as thinkers",
           "Virtual meetings",
-          "\n"
+          "\n\n\n"
         ]
       },
       {
