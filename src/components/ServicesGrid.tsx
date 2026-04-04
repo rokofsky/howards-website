@@ -26,7 +26,7 @@ const ServiceCard = ({ title, subtitle, hook, slug, index }: { title: string; su
       <div className="absolute inset-0 flex flex-col justify-end p-6">
         <h3 className="text-lg font-semibold text-primary-foreground mb-0.5">{title}</h3>
         {subtitle && <p className="text-xs font-light text-primary-foreground/50 mb-1">{subtitle}</p>}
-        {hook && <p className="text-sm font-light text-primary-foreground/70">{hook}</p>}
+        {hook && <p className="text-sm font-light text-primary-foreground/70 whitespace-pre-line">{hook}</p>}
       </div>
     </Link>
   </motion.div>
