@@ -111,7 +111,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
       >
         <h3 className="text-2xl font-bold mb-3">You had me at "submit."</h3>
         <p className="text-muted-foreground font-light">
-          Howard will be in touch faster than you can say "synergy" — and with considerably more substance. Check your inbox soon.
+          Howard will be in touch faster than you can say synergy. Check your inbox tomorrow.
         </p>
       </motion.div>
     );

@@ -57,7 +57,7 @@ const ServiceDetail = () => {
               ))
             ) : (
               <>
-                {service.hook && <p className="text-xl text-muted-foreground font-light italic mb-3">{service.hook}</p>}
+                {service.hook && <p className="text-xl text-muted-foreground italic mb-3 font-normal">{service.hook}</p>}
                 {detail?.lead && <p className="text-lg text-foreground/80 leading-relaxed mb-8 font-normal">{detail.lead}</p>}
               </>
             )}
@@ -146,7 +146,7 @@ const ServiceDetail = () => {
             {detail?.highlight && detail.highlightPosition === "bottom" && (
               <div className="mb-12 rounded-lg border border-gold/50 bg-card px-6 py-5 shadow-[0_24px_60px_-36px_hsl(var(--foreground)/0.7)]">
                 <h3 className="text-lg font-semibold mb-2">{detail.highlight.title}</h3>
-                <p className="text-foreground/80 font-light leading-relaxed">{detail.highlight.text}</p>
+                <p className="text-foreground/80 leading-relaxed font-normal">{detail.highlight.text}</p>
               </div>
             )}
 
@@ -173,7 +173,7 @@ const ServiceDetail = () => {
 
           <div>
             <h2 className="text-2xl font-bold text-center mb-2">Inquire about {inquiryTitle}</h2>
-            <p className="text-muted-foreground font-light text-center mb-8">
+            <p className="text-muted-foreground text-center mb-8 font-normal">
               Fill in some stuff below (mostly optional) and I'll get back to you next day.
             </p>
             <ContactForm serviceName={service.title} showServiceFields />
