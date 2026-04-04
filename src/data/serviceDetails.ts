@@ -31,7 +31,7 @@ export interface ServiceDetailContent {
 export const serviceDetails: Record<string, ServiceDetailContent> = {
   "presentation-speaking-skills": {
     pageTitle: "Persuasive Presentations",
-    lead: "Speak with confidence and impact. Speak like a pro.",
+    lead: "Learn the mechanics and rhetoric to win any audience",
     intro: [
       "This workshop is especially designed for people who need to present in front of a multicultural group. However, the techniques we will study are universal and apply to any business culture.",
       "The training is rather hands-on \"technical\" in nature: we will practice the nuances of vocal usage, non-verbal language and rhetorical techniques, all designed to attract the audience, focus them where we want, and keep their attention. With these techniques and a healthy dose of self-control, anyone can learn how to be confident and persuasive in front of a group, even those with stage-fright.",
