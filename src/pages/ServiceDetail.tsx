@@ -70,7 +70,7 @@ const ServiceDetail = () => {
                   "Howard brings his signature blend of storytelling, practical frameworks, and just enough humor to keep everyone awake. This service is tailored to your team's specific needs, challenges, and goals.",
                   "Every engagement starts with a brief discovery call to understand your context. From there, Howard designs a custom experience that delivers measurable improvements in how your team communicates, collaborates, and leads.",
                 ]).map((paragraph) => (
-                  <p key={paragraph} className="text-foreground/80 font-light leading-relaxed">
+                  <p key={paragraph} className="text-foreground/80 leading-relaxed font-normal">
                     {paragraph}
                   </p>
                 ))}
