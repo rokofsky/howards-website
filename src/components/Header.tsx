@@ -3,12 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import bookCover from "@/assets/book-cover.png";
 
 const navLinks = [
   { label: "Services", href: "/#services" },
   { label: "FAQ", href: "/#faq" },
   { label: "Pricing", href: "/#pricing" },
   { label: "References", href: "/references" },
+  { label: "HR's book", href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN", external: true },
 ];
 
 const Header = () => {
@@ -27,7 +29,6 @@ const Header = () => {
   }, [location]);
 
   const scrollToElement = (id: string) => {
-    // Poll for the element since the page may still be rendering after navigation
     let attempts = 0;
     const tryScroll = () => {
       const el = document.getElementById(id);
@@ -50,16 +51,13 @@ const Header = () => {
         e.preventDefault();
         scrollToElement(id);
       }
-      // If not on "/", Link navigates to "/#id", useEffect handles scroll
     }
     setMobileOpen(false);
   };
 
-  // After navigating to "/" with a hash, scroll to the target section
   useEffect(() => {
     if (location.pathname === "/" && location.hash) {
       const id = location.hash.slice(1);
-      // Longer delay when arriving from another page to ensure DOM is ready
       setTimeout(() => scrollToElement(id), 400);
     }
   }, [location.pathname, location.hash]);
@@ -77,21 +75,34 @@ const Header = () => {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              to={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              className="text-sm font-light text-foreground/70 hover:text-foreground transition-colors tracking-wide"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) =>
+            link.external ? (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-light text-foreground/70 hover:text-foreground transition-colors tracking-wide flex items-center gap-1.5"
+              >
+                <img src={bookCover} alt="HR's book cover" className="w-5 h-7 object-cover rounded-sm" width={20} height={28} />
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.label}
+                to={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="text-sm font-light text-foreground/70 hover:text-foreground transition-colors tracking-wide"
+              >
+                {link.label}
+              </Link>
+            )
+          )}
         </nav>
 
         <div className="hidden md:block">
           <Button variant="cta" size="lg" asChild>
-            <Link to="/storytelling-workshops">Storytelling Workshops</Link>
+            <Link to="/storytelling-workshops">Storytelling Sessions</Link>
           </Button>
         </div>
 
@@ -115,18 +126,31 @@ const Header = () => {
             className="md:hidden glass border-t border-border/30"
           >
             <nav className="flex flex-col px-6 py-4 gap-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className="text-base font-light text-foreground/70 hover:text-foreground py-2"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) =>
+                link.external ? (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-base font-light text-foreground/70 hover:text-foreground py-2 flex items-center gap-2"
+                  >
+                    <img src={bookCover} alt="HR's book cover" className="w-5 h-7 object-cover rounded-sm" width={20} height={28} />
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className="text-base font-light text-foreground/70 hover:text-foreground py-2"
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
               <Button variant="cta" size="lg" asChild className="mt-2">
-                <Link to="/storytelling-workshops">Storytelling Workshops</Link>
+                <Link to="/storytelling-workshops">Storytelling Sessions</Link>
               </Button>
             </nav>
           </motion.div>
