@@ -26,7 +26,7 @@ const ServiceCard = ({ title, subtitle, hook, slug, index }: { title: string; su
       <div className="absolute inset-0 flex flex-col justify-end p-6">
         <h3 className="text-lg font-semibold text-primary-foreground mb-0.5">{title}</h3>
         {subtitle && <p className="text-xs font-light text-primary-foreground/50 mb-1">{subtitle}</p>}
-        {hook && <p className="text-sm font-light text-primary-foreground/70">{hook}</p>}
+        {hook && <p className="text-sm font-light text-primary-foreground/70 whitespace-pre-line">{hook}</p>}
       </div>
     </Link>
   </motion.div>
@@ -43,7 +43,7 @@ const ServicesGrid = () => {
       >
         <h2 className="text-3xl md:text-4xl font-bold mb-3">What can I do for you?</h2>
         <p className="text-muted-foreground font-light max-w-md mx-auto whitespace-pre-line">
-          Nine things I can help you with or teach you,{"\n"}to make your life easier.
+          Nine tools to make your life easier
         </p>
       </motion.div>
 
