@@ -144,7 +144,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
           />
         </div>
         <div>
-          <label htmlFor="email" className="text-sm font-light text-muted-foreground mb-1.5 block">Email</label>
+          <label htmlFor="email" className="text-sm text-muted-foreground mb-1.5 block font-medium">Email</label>
           <input
             id="email"
             name="email"
