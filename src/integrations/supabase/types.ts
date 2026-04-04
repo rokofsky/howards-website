@@ -14,7 +14,59 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      session_signups: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          session_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          session_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_signups_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "storytelling_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      storytelling_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          session_date: string
+          zoom_link: string | null
+          zoom_meeting_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          session_date: string
+          zoom_link?: string | null
+          zoom_meeting_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          session_date?: string
+          zoom_link?: string | null
+          zoom_meeting_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
