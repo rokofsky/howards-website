@@ -185,7 +185,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
             />
           </div>
           <div>
-            <label htmlFor="preferredDates" className="text-sm font-light text-muted-foreground mb-1.5 block">Preferred Dates</label>
+            <label htmlFor="preferredDates" className="text-sm text-muted-foreground mb-1.5 block font-medium">Preferred Dates</label>
             <input
               id="preferredDates"
               name="preferredDates"
