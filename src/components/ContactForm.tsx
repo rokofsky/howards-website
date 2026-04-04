@@ -48,7 +48,7 @@ const FormSelectField = ({
 }) => {
   return (
     <div>
-      <label htmlFor={id} className="text-sm font-light text-muted-foreground mb-1.5 block">{label}</label>
+      <label htmlFor={id} className="text-sm text-muted-foreground mb-1.5 block font-medium">{label}</label>
       <div className="relative">
         {!value && (
           <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-sm font-light text-muted-foreground/70">
