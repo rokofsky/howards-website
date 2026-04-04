@@ -5,8 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import hero1 from "@/assets/hero-1.jpg";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
+import hero4 from "@/assets/hero-4.png";
+import hero5 from "@/assets/hero-5.jpg";
+import hero6 from "@/assets/hero-6.jpg";
+import hero7 from "@/assets/hero-7.jpg";
+import hero8 from "@/assets/hero-8.jpg";
 
-const slides = [hero1, hero2, hero3];
+const slides = [hero1, hero2, hero3, hero4, hero5, hero6, hero7, hero8];
 
 const HeroSection = () => {
   const [current, setCurrent] = useState(0);
