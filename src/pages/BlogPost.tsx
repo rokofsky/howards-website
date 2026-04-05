@@ -34,7 +34,7 @@ const BlogPost = () => {
             <time className="text-sm text-muted-foreground font-light block mb-2">{post.date}</time>
             <h1 className="text-3xl md:text-4xl font-bold mb-6">{post.title}</h1>
             <div className="glass rounded-lg p-8">
-              <p className="text-foreground/80 leading-relaxed whitespace-pre-line font-normal">{post.content}</p>
+              <p className="text-foreground/80 leading-relaxed whitespace-pre-line font-medium">{post.content}</p>
             </div>
           </motion.div>
         </div>
