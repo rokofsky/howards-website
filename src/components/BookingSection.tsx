@@ -12,7 +12,8 @@ const BookingSection = () => {
       >
         <h2 className="text-3xl md:text-4xl font-bold mb-4">Book a Zoom Call</h2>
         <p className="text-primary-foreground/70 font-light mb-10 max-w-md mx-auto">
-          Skip the email tennis. Pick a time, get a link, and let's talk like actual humans.
+          Skip the email tennis. Pick a time, get a link,<br />
+          and let's talk like actual humans.
         </p>
 
         {/* Calendly placeholder */}
