@@ -355,8 +355,8 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
       {
         title: "Choose your format",
         bullets: [
-          "Speaker / storyteller — Howard can speak from 25 to 75 minutes or all night, to any group at any level or socioeconomic status. Note: this is not intended to be stand-up comedy. For one thing, I'll be mostly sitting. Still, you'll probably laugh once or twice.",
-          "Master of Ceremonies (MC) — the thread that ties all the elements of the program together, keeps the tempo at the desired energy level, making your event interesting and memorable."
+          "Speaker / storyteller — Howard can speak from 20 to 75 minutes or all night, to any group at any level or socioeconomic status. Note: this is not intended to be stand-up comedy. For one thing, I'll be mostly sitting. Still, you'll probably laugh once or twice.",
+          "Master of Ceremonies (MC) — the thread that ties all the elements of the program together, keeps the tempo at the desired energy level, ensuring your event will be memorable."
         ]
       }
     ]
