@@ -108,17 +108,11 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           "Decision making and problem solving",
           "Customer focus groups / interviews",
           "Personnel and Leadership development",
-          "\n\n\n",
-          "an improved tendency to identify themselves as thinkers",
-          "Virtual meetings",
-          "\n\n\n"
+          "Virtual meetings"
         ]
       },
       {
         title: "People who are comfortable sharing their ideas tend to show:",
-        paragraphs: [
-          "\n"
-        ],
         bullets: [
           "confidence that they have the ability to cope with and improve their environments",
           "opportunity-thinking and problem-solving competencies: spot opportunities, assess usefulness, predict consequences, propose alternative solutions, and evaluate outputs",
