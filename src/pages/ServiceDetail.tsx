@@ -5,6 +5,7 @@ import ContactForm from "@/components/ContactForm";
 import { services } from "@/data/services";
 import { motion } from "framer-motion";
 import { serviceDetails } from "@/data/serviceDetails";
+import { webinars } from "@/data/webinars";
 
 import whiteHat from "@/assets/hats/white-hat.jpg";
 import blackHat from "@/assets/hats/black-hat.jpg";
