@@ -26,7 +26,7 @@ const WebinarDetail = () => {
       <section className="section-padding pt-24">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Link to="/services/individual-coaching" className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 inline-block">
+            <Link to="/services/online-webinars" className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 inline-block">
               ← Back to Online Webinars
             </Link>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">{webinar.title}</h1>
