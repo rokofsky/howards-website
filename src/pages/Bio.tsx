@@ -53,9 +53,6 @@ const Bio = () => {
           </motion.div>
         </div>
       </section>
-          </motion.div>
-        </div>
-      </section>
     </Layout>
   );
 };
