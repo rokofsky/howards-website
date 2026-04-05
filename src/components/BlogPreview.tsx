@@ -14,7 +14,7 @@ const BlogPreview = () => {
         className="text-center mb-12"
       >
         <h2 className="text-3xl md:text-4xl font-bold mb-3">Blog</h2>
-        <p className="font-medium text-primary">Thoughts on communication and the occasional rant.</p>
+        <p className="font-medium text-primary">Thoughts on communication and the occasional rant</p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
