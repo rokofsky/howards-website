@@ -8,7 +8,7 @@ export interface Webinar {
 export const webinars: Webinar[] = [
   /* 1  */ { slug: "6-elements-of-persuasion", title: "6 Elements of Persuasion", intro: "" },
   /* 2  */ { slug: "intro-to-oral-storytelling", title: "Intro to Oral Storytelling", intro: "" },
-  /* 3  */ { slug: "4-step-assertiveness-technique", title: "The 4-step Assertiveness technique", intro: "" },
+  /* 3  */ { slug: "3-step-assertiveness-technique", title: "The 3-step Assertiveness technique", intro: "" },
   /* 4  */ { slug: "cognitive-biases", title: "Cognitive Biases - enemies of our brain", intro: "" },
   /* 5  */ { slug: "constructive-feedback", title: "Constructive Feedback — giving and getting", intro: "" },
   /* 6  */ { slug: "cultural-intelligence", title: "Cultural Intelligence", intro: "" },
