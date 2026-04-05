@@ -125,27 +125,27 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     pageTitle: "Conflict Management",
     lead: "Learn to handle disputes, difficult people, and high-pressure conversations with clarity and control.",
     intro: [
-      "Most people try to avoid conflict. But conflict is not always a bad thing. Conflict can result in innovation and new, improved understandings, if we know how to manage it. Rather than reacting on a purely emotional level, now you can learn and practice the skills to manage disputes and disagreements positively and pro-actively at work, at home and in society.",
-      "In addition to various acute conflict settings, we will also learn how to cope with chronically difficult people. You will project yourself in crucial situations and practice the skills to respond perfectly. Increase your sensitivity to others' behaviors and reply constructively; you will be surprised at how well it works.",
-      "On video you will see yourself as others see you, followed by instant peer/trainer feedback. In the next video your correction will be already visible, demonstrating your own success and adaptability.",
-      "By becoming aware of your own communication filters, understanding the action/reaction principle and opening other people's minds to the possibilities and potentials, the result is better relationships and, ultimately, increased success."
+      "Most people try to avoid conflict. But conflict can result in innovation and new, improved understandings, if we know how to manage it. Rather than reacting on an emotional level, you can learn and practice the techniques to manage disputes and disagreements\u00A0pro-actively\u00A0and positively at work, at home, and in society.",
+      "In addition to various acute conflict settings, we will also learn how to cope with chronically difficult people. There are 7 main types, each with its own solution.",
+      "On video you will see yourself as others see you, followed by instant peer/trainer feedback. In the next video your improvement will be already visible, demonstrating your own success and adaptability.",
+      "By increasing your sensitivity to others' behaviors, projecting yourself properly in crucial situations and exercising self control, you will be able to respond constructively in difficult discussions. The result is better relationships and, ultimately, increased success.."
     ],
     sections: [
       {
         title: "Goals",
         bullets: [
+          "\n",
+          "Identify the filters of perception\u00A0and the root causes of conflict",
+          "See the big picture and identify alternate angles of perception",
+          "Practice effective listening and when to shut up",
           "Increase your personal impact and credibility",
-          "Identify the filters of perception",
-          "See the big picture",
-          "Practice effective / active listening",
           "Effectively give and get feedback",
-          "Master body language",
           "Make sure you are never misunderstood",
-          "Recognize the root causes of inter-personal conflict",
+          "Handle difficult meetings sensitively and constructively",
           "Speak fluently and confidently even under stress",
           "Become aware of your emotional triggers and prevent explosive situations",
-          "Handle difficult meetings sensitively and constructively",
-          "Maximize your verbal and non-verbal communication skills",
+          "\n",
+          "\n",
           "Control anger with a simple technique",
           "Learn the 7 Types of Difficult People, their ways, and how to neutralize them"
         ]
@@ -154,7 +154,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         title: "Solutions for Conflict Situations",
         bullets: [
           "Understand your own and the other person's style, then identify and react accordingly",
-          "Use intervention, mediation and voluntary arbitration as the preferred process for setting issues",
+          "Use intervention, mediation and voluntary arbitration as the process for settling issues",
           "Settle disputes through an empowering process",
           "\n",
           "Develop the art, science and practice of conflict resolution",
