@@ -249,14 +249,14 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         title: "Who is this course for?",
         bullets: [
           "Mentors and leaders who want to impact their employees to motivation and success",
-          "Anyone who wants to deliver presentations with greater impression",
-          "Anyone who likes to tell stories in the pub, around the table, etc."
+          "Professionals who want to deliver memorable presentations with greater impact",
+          "Anyone who likes to tell stories in the pub, around the fire, etc."
         ]
       },
       {
-        title: "What we're going to do",
+        title: "Refined through perfect feedback",
         paragraphs: [
-          "Whether you prefer telling personal stories, traditional stories, jokes, during your presentation, or improvising, corrections and peer feedback help improve the story and how you tell it. Everyone is expected to come with a 3 to 7-minute story, joke, anecdote, or similar piece for Round One."
+          "Whether you prefer telling personal, traditional, or fictional stories, we'll help you tighten them up and get them audience-ready. Carefully orchestrated trainer and peer feedback provide suggestions to improve not only the story, but also how you tell it. Everyone is invited to bring a 3 to 7-minute story, joke, anecdote, or similar piece for Round One."
         ]
       }
     ]

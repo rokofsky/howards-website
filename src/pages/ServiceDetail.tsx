@@ -113,7 +113,7 @@ const ServiceDetail = () => {
                 {section.numbered && (
                   <ol className="space-y-1.5 list-decimal pl-5 text-foreground/80 font-light leading-relaxed">
                     {section.numbered.map((item) => (
-                      <li key={item}>{item}</li>
+                      <li key={item} className="font-normal">{item}</li>
                     ))}
                   </ol>
                 )}
