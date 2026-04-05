@@ -102,11 +102,14 @@ const ServiceDetail = () => {
 
             {detail?.sections.map((section, sectionIndex) => (
               <div key={section.title} className={`${slug === "meetings-moderation" && sectionIndex === detail.sections.length - 1 ? "mb-4" : "mb-10"}`}>
-                <h3 className="text-2xl font-semibold mb-2">{section.title}</h3>
+                {detail?.tone !== "executive" && (
+                  <h3 className="text-2xl font-semibold mb-2">{section.title}</h3>
+                )}
 
                 {section.paragraphs && (
                   detail?.tone === "executive" ? (
                     <div className="rounded-lg border border-gold/40 bg-card px-6 py-5 shadow-[0_24px_60px_-36px_hsl(var(--foreground)/0.7)]">
+                      <h3 className="text-lg font-semibold mb-2">{section.title}</h3>
                       {section.paragraphs.map((paragraph) => (
                         <p key={paragraph} className="text-foreground/80 leading-relaxed mb-4 last:mb-0 whitespace-pre-line font-normal">
                           {paragraph}
