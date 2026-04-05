@@ -104,11 +104,23 @@ const ServiceDetail = () => {
               <div key={section.title} className={`${slug === "meetings-moderation" && sectionIndex === detail.sections.length - 1 ? "mb-4" : "mb-10"}`}>
                 <h3 className="text-2xl font-semibold mb-2">{section.title}</h3>
 
-                {section.paragraphs?.map((paragraph) => (
-                  <p key={paragraph} className="text-foreground/80 leading-relaxed mb-4 last:mb-0 whitespace-pre-line font-normal">
-                    {paragraph}
-                  </p>
-                ))}
+                {section.paragraphs && (
+                  detail?.tone === "executive" ? (
+                    <div className="rounded-lg border border-gold/40 bg-card px-6 py-5 shadow-[0_24px_60px_-36px_hsl(var(--foreground)/0.7)]">
+                      {section.paragraphs.map((paragraph) => (
+                        <p key={paragraph} className="text-foreground/80 leading-relaxed mb-4 last:mb-0 whitespace-pre-line font-normal">
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  ) : (
+                    section.paragraphs.map((paragraph) => (
+                      <p key={paragraph} className="text-foreground/80 leading-relaxed mb-4 last:mb-0 whitespace-pre-line font-normal">
+                        {paragraph}
+                      </p>
+                    ))
+                  )
+                )}
 
                 {section.numbered && (
                   <ol className="space-y-1.5 list-decimal pl-5 text-foreground/80 font-light leading-relaxed">
