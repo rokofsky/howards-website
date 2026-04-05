@@ -24,7 +24,7 @@ const PricingSection = () => {
   ];
 
   return (
-    <section id="pricing" className="section-padding bg-[sidebar-primary-foreground] bg-muted-foreground">
+    <section id="pricing" className="section-padding bg-[sidebar-primary-foreground] bg-secondary">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
