@@ -11,7 +11,7 @@ import hero6 from "@/assets/hero-6.jpg";
 import hero7 from "@/assets/hero-7.jpg";
 import hero8 from "@/assets/hero-8.jpg";
 
-const slides = [hero1, hero2, hero3, hero4, hero5, hero6, hero7, hero8];
+const slides = [hero5, hero4, hero2, hero1, hero6, hero3, hero8, hero7];
 
 const HeroSection = () => {
   const [current, setCurrent] = useState(0);
