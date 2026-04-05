@@ -1,37 +1,24 @@
 
 
-## Plan: Hero Photos from Upload + Blog Scroll Fix
+## Fix: Wrap "Service Pillars" in a styled text box
 
-### 1. Extract and Replace Hero Images
+The Service Pillars content currently renders as plain paragraphs under a heading because `section.paragraphs` in `ServiceDetail.tsx` just outputs `<p>` tags with no container styling.
 
-The uploaded `fotos.zip` contains numbered JPG files (1.JPG, 2.JPG, etc.). These will replace the existing `hero-1.jpg`, `hero-2.jpg`, `hero-3.jpg` in `src/assets/`.
+The intro content above it sits in a `rounded-lg p-8 mb-12 glass` (or `border border-gold/40 bg-card shadow-...` for executive tone) box, and the highlight below uses `rounded-lg border border-gold/50 bg-card px-6 py-5 shadow-...`.
 
-**Steps:**
-- Copy `fotos.zip` to `/tmp`, extract it
-- Copy extracted images to `src/assets/` as `hero-1.jpg`, `hero-2.jpg`, `hero-3.jpg` (matching the order: 1.JPG → hero-1, 2.JPG → hero-2, etc.)
-- If more than 3 images exist, add them and update the `HeroSection.tsx` imports to include all slides
+### What I'll do
 
-**File:** `src/components/HeroSection.tsx` — update the `slides` array if additional images are found.
+**File: `src/pages/ServiceDetail.tsx`** (lines 107-111)
 
-### 2. Fix Blog Links Scrolling to Top
+Wrap section paragraphs in a styled container when the page has `tone: "executive"`. This will give the Service Pillars text the same card-style box treatment as the intro and highlight sections:
 
-When clicking a blog post link from the homepage, the page should scroll to the top. The `BlogPost.tsx` already calls `window.scrollTo(0, 0)`, but this may not fire reliably with React Router.
-
-**Fix:** Add a `ScrollToTop` component in `App.tsx` that listens to route changes and scrolls to top on every navigation. This is the standard React Router pattern.
-
-**Files changed:**
-- `src/App.tsx` — add a `ScrollToTop` component inside `BrowserRouter` that uses `useLocation` + `useEffect` to scroll to top on pathname change
-
-### Technical Details
-
-**ScrollToTop component** (inline in App.tsx):
-```tsx
-function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
-  return null;
-}
+```
+rounded-lg border border-gold/40 bg-card px-6 py-5 shadow-[0_24px_60px_-36px_hsl(var(--foreground)/0.7)]
 ```
 
-Place it inside `<BrowserRouter>` before `<Routes>`.
+The heading "Service Pillars" stays above the box. The paragraph text goes inside the box, matching the visual style of the intro box and the Success Fee highlight box on the same page.
+
+### Technical detail
+- Add a conditional wrapper `<div>` around `section.paragraphs` rendering when `detail?.tone === "executive"`, applying the same border/shadow/bg-card classes used by the highlight box.
+- No data changes needed — the text is already correct from the previous edit.
 
