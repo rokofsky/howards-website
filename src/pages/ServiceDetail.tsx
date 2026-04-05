@@ -5,6 +5,7 @@ import ContactForm from "@/components/ContactForm";
 import { services } from "@/data/services";
 import { motion } from "framer-motion";
 import { serviceDetails } from "@/data/serviceDetails";
+import { webinars } from "@/data/webinars";
 
 import whiteHat from "@/assets/hats/white-hat.jpg";
 import blackHat from "@/assets/hats/black-hat.jpg";
@@ -65,16 +66,31 @@ const ServiceDetail = () => {
             <div className={`rounded-lg p-8 mb-12 mt-6 ${detail?.tone === "executive" ? "border border-gold/40 bg-card shadow-[0_20px_60px_-30px_hsl(var(--foreground)/0.55)]" : "glass"}`}>
               <h2 className="text-xl md:text-2xl font-semibold mb-6">{detail?.pageTitle ?? "About This Service"}</h2>
 
-              <div className="space-y-4">
-                {(detail?.intro ?? [
-                  "Howard brings his signature blend of storytelling, practical frameworks, and just enough humor to keep everyone awake. This service is tailored to your team's specific needs, challenges, and goals.",
-                  "Every engagement starts with a brief discovery call to understand your context. From there, Howard designs a custom experience that delivers measurable improvements in how your team communicates, collaborates, and leads.",
-                ]).map((paragraph) => (
-                  <p key={paragraph} className="text-foreground/80 leading-relaxed font-normal">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
+              {slug === "individual-coaching" ? (
+                <div className="space-y-3">
+                  {webinars.map((webinar) => (
+                    <div key={webinar.slug} className="border border-border rounded-lg p-4 hover:border-gold/50 transition-colors">
+                      <Link to={`/webinars/${webinar.slug}`} className="text-foreground font-semibold hover:text-gold transition-colors">
+                        {webinar.title}
+                      </Link>
+                      <div className="text-foreground/60 text-sm mt-1 font-normal min-h-[1.25rem]">
+                        {webinar.intro || ""}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {(detail?.intro ?? [
+                    "Howard brings his signature blend of storytelling, practical frameworks, and just enough humor to keep everyone awake. This service is tailored to your team's specific needs, challenges, and goals.",
+                    "Every engagement starts with a brief discovery call to understand your context. From there, Howard designs a custom experience that delivers measurable improvements in how your team communicates, collaborates, and leads.",
+                  ]).map((paragraph) => (
+                    <p key={paragraph} className="text-foreground/80 leading-relaxed font-normal">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              )}
             </div>
 
             {detail?.highlight && detail.highlightPosition !== "bottom" && (
@@ -84,8 +100,8 @@ const ServiceDetail = () => {
               </div>
             )}
 
-            {detail?.sections.map((section) => (
-              <div key={section.title} className="mb-10">
+            {detail?.sections.map((section, sectionIndex) => (
+              <div key={section.title} className={`${slug === "meetings-moderation" && sectionIndex === detail.sections.length - 1 ? "mb-4" : "mb-10"}`}>
                 <h3 className="text-2xl font-semibold mb-4">{section.title}</h3>
 
                 {section.paragraphs?.map((paragraph) => (
@@ -121,7 +137,7 @@ const ServiceDetail = () => {
                 )}
 
                 {section.bullets && (
-                  <ul className="grid gap-1.5 text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line">
+                  <ul className={`grid ${slug === "storytelling" ? "gap-0.5" : "gap-1.5"} text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line ${slug === "meetings-moderation" && section.title.includes("People who are comfortable") ? "mt-1" : ""}`}>
                     {section.bullets.map((item) => (
                       <li key={item} className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold shrink-0" />

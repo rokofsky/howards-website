@@ -12,12 +12,13 @@ import StorytellingWorkshops from "./pages/StorytellingWorkshops";
 import ServiceDetail from "./pages/ServiceDetail";
 import KeynoteTopics from "./pages/KeynoteTopics";
 import BlogPost from "./pages/BlogPost";
+import WebinarDetail from "./pages/WebinarDetail";
 
 const queryClient = new QueryClient();
 
 function ScrollToTop() {
   const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior }); }, [pathname]);
   return null;
 }
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/keynote-topics" element={<KeynoteTopics />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/webinars/:slug" element={<WebinarDetail />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

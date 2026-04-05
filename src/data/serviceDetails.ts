@@ -72,22 +72,8 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
   "individual-coaching": {
     pageTitle: "12 interactive webinars to choose from!",
     lead: "Turn on your camera and unmute your microphone. Learn all sorts of stuff online with interactive webinars. Any time of day.",
-    intro: [
-      "\n",
-      "\n"
-    ],
-    sections: [
-      {
-        title: "Benefits",
-        bullets: [
-          "Maximize your credibility and impact with non-verbal skills",
-          "Learn self-meditation/hypnosis techniques to use for the rest of your life",
-          "Handle difficult discussions sensitively and constructively",
-          "Assertiveness: make your point and defend your space",
-          "Eased dealing with conflict"
-        ]
-      }
-    ]
+    intro: [],
+    sections: []
   },
   "meetings-moderation": {
     pageTitle: "The Six Thinking Hats",
@@ -122,17 +108,11 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           "Decision making and problem solving",
           "Customer focus groups / interviews",
           "Personnel and Leadership development",
-          "\n\n\n",
-          "an improved tendency to identify themselves as thinkers",
-          "Virtual meetings",
-          "\n\n\n"
+          "Virtual meetings"
         ]
       },
       {
         title: "People who are comfortable sharing their ideas tend to show:",
-        paragraphs: [
-          "\n"
-        ],
         bullets: [
           "confidence that they have the ability to cope with and improve their environments",
           "opportunity-thinking and problem-solving competencies: spot opportunities, assess usefulness, predict consequences, propose alternative solutions, and evaluate outputs",
