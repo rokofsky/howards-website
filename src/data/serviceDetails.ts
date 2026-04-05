@@ -154,12 +154,16 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         title: "Solutions for Conflict Situations",
         bullets: [
           "Understand your own and the other person's style, then identify and react accordingly",
-          "Promote the development of sound and stable labor-management relations",
-          "Settle disputes through an empowering process",
           "Use intervention, mediation and voluntary arbitration as the preferred process for setting issues",
+          "Settle disputes through an empowering process",
+          "\n",
           "Develop the art, science and practice of conflict resolution",
-          "Establish and maintain constructive joint processes to create organizational effectiveness",
-          "Offer a practical way to resolve disputes and preserve relationships"
+          "\n",
+          "Maintain constructive joint processes to create organizational effectiveness",
+          "Remember everyone's interests and try to help each protect theirs",
+          "\n",
+          "Offer a practical way to resolve disputes and preserve relationships",
+          "Find any common ground and use this leverage to go forward"
         ]
       },
       {
