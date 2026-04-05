@@ -13,6 +13,18 @@ const topics = [
   "8 Intelligences and how to increase yours",
   "Self-motivation and concentration",
   "Time Management in 5 minutes a day",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
 ];
 
 const KeynoteTopics = () => {
@@ -28,10 +40,10 @@ const KeynoteTopics = () => {
             <h1 className="text-3xl md:text-4xl font-bold mb-3">Some topics you can choose from</h1>
             <p className="text-muted-foreground font-light mb-10">In addition to Howard's story of the month</p>
             <ul className="grid gap-1.5 text-foreground/80 font-light leading-relaxed pl-0">
-              {topics.map((topic) => (
-                <li key={topic} className="flex gap-3">
+              {topics.map((topic, i) => (
+                <li key={i} className="flex gap-3 min-h-[2rem]">
                   <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
-                  <span>{topic}</span>
+                  <span>{topic || "\u00A0"}</span>
                 </li>
               ))}
             </ul>
