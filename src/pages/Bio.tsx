@@ -45,7 +45,7 @@ const Bio = () => {
                 <p>In August 2018, a few short months after finishing my book (How to GET Great Service), I managed to (double) break my femur, and life changed on a dime. Training was out of the question as, thanks to being relegated to crutches for the next 4+ months, I couldn’t use my hands and feet at the same time. So, I went and took a job that even I, in my wildest dreams, had never imagined, as an English teacher at a local high school. Never mind that I was supposed to lie on my back for 3 months. 3½ weeks after the accident I was hobbling around a classroom, desperately hoping that none of those kids would bump into a crutch and set me back all that physiotherapy, not to mention pain.</p>
                 <p className="font-medium">Update: fully healed, sometimes I nostalgically miss my limp.</p>
                 <p className="font-medium italic mt-6 text-primary">
-                  His workshops have been described as "the first training I've attended where nobody checked their phone"
+                  One participant commented: "the first training I've attended where nobody checked their phone."
                 </p>
               </div>
 
