@@ -339,13 +339,13 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     lead: "Hire Howard to speak at your special event and they'll be talking about it a year later.",
     intro: [
       "Are you looking for a unique surprise for your employees or guests?",
-      "Now you can hire Howard to speak at your event — his entertaining, educational themes and interactive speaking style are guaranteed to capture the attention of any audience and positively motivate them to action. They might even learn something.",
-      "Charismatic, charming, intelligent and quick-witted, Howard's engaging personality and stage presence make him a genuine crowd-pleaser.",
+      "Now you can hire Howard to speak at your event — his entertaining, educational themes and articulate, interactive speaking style are guaranteed to capture the attention of any audience and motivate them to action. They might even learn something along the way...",
+      "Charismatic, charming and quick-witted, Howard's engaging personality and stage presence make him a genuine crowd-pleaser.",
       "Available in English, Czech, Dutch."
     ],
     sections: [
       {
-        title: "A welcome breath of fresh air at your",
+        title: "A breath of fresh air at your",
         bullets: [
           "Dinner / Cocktail Party",
           "Family or Company Event",
@@ -355,8 +355,8 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
       {
         title: "Choose your format",
         bullets: [
-          "Speaker / storyteller — Howard can speak from 20 to 75 minutes or all night, to any group at any level or socioeconomic status. Note: this is not intended to be stand-up comedy. For one thing, I'll be sitting most of\nthe time 😊. Still, you'll probably laugh from time to time.",
-          "Master of Ceremonies (MC) — the thread that ties all the elements of the program together, keeps the tempo at\nthe desired energy level, ensuring your event will be remembered for a long time after."
+          "Speaker / storyteller — Howard can speak from 25 to 75 minutes or all night, to any group at any level or socioeconomic status. Note: this is not intended to be stand-up comedy. For one thing, I'll be mostly sitting. Still, you'll probably laugh once or twice.",
+          "Master of Ceremonies (MC) — the thread that ties all the elements of the program together, keeps the tempo at the desired energy level, making your event interesting and memorable."
         ]
       }
     ]
