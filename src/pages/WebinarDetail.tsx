@@ -13,7 +13,7 @@ const WebinarDetail = () => {
       <Layout>
         <div className="section-padding pt-24 text-center">
           <h1 className="text-3xl font-bold">Webinar not found</h1>
-          <Link to="/services/individual-coaching" className="text-gold hover:text-gold/80 underline mt-4 inline-block">
+          <Link to="/services/online-webinars" className="text-gold hover:text-gold/80 underline mt-4 inline-block">
             ← Back to Online Webinars
           </Link>
         </div>
