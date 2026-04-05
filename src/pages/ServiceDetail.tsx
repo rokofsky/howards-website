@@ -137,7 +137,7 @@ const ServiceDetail = () => {
                 )}
 
                 {section.bullets && (
-                  <ul className="grid gap-1.5 text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line">
+                  <ul className={`grid ${slug === "storytelling" ? "gap-0.5" : "gap-1.5"} text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line ${slug === "meetings-moderation" && section.title.includes("People who are comfortable") ? "mt-1" : ""}`}>
                     {section.bullets.map((item) => (
                       <li key={item} className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
