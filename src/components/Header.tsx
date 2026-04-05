@@ -82,7 +82,7 @@ const Header = () => {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide flex items-center gap-1.5 font-semibold"
+                className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide flex items-center gap-1.5 font-bold"
               >
                 <img src={bookCover} alt="HR's book cover" className="w-5 h-7 object-cover rounded-sm" width={20} height={28} />
                 {link.label}
@@ -92,7 +92,7 @@ const Header = () => {
                 key={link.label}
                 to={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-semibold"
+                className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold"
               >
                 {link.label}
               </Link>
