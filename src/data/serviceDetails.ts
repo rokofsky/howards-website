@@ -72,22 +72,8 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
   "individual-coaching": {
     pageTitle: "12 interactive webinars to choose from!",
     lead: "Turn on your camera and unmute your microphone. Learn all sorts of stuff online with interactive webinars. Any time of day.",
-    intro: [
-      "\n",
-      "\n"
-    ],
-    sections: [
-      {
-        title: "Benefits",
-        bullets: [
-          "Maximize your credibility and impact with non-verbal skills",
-          "Learn self-meditation/hypnosis techniques to use for the rest of your life",
-          "Handle difficult discussions sensitively and constructively",
-          "Assertiveness: make your point and defend your space",
-          "Eased dealing with conflict"
-        ]
-      }
-    ]
+    intro: [],
+    sections: []
   },
   "meetings-moderation": {
     pageTitle: "The Six Thinking Hats",
