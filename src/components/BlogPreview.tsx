@@ -6,7 +6,7 @@ const BlogPreview = () => {
   const displayPosts = blogPosts.slice(0, 6);
 
   return (
-    <section id="blog" className="section-padding bg-secondary-foreground">
+    <section id="blog" className="section-padding bg-sidebar-accent">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
