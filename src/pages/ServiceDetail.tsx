@@ -42,7 +42,7 @@ const ServiceDetail = () => {
     );
   }
 
-  const inquiryTitle = slug === "conflict-resolution" ? "Conflict mediation/resolution" : (slug === "meetings-moderation" ? "the Six Hats Method" : service.title);
+  const inquiryTitle = slug === "conflict-resolution" ? "Conflict mediation/resolution" : (slug === "meetings-moderation" ? "the Six Hats Method" : (slug === "individual-coaching" ? "Online webinar sessions" : service.title));
 
   return (
     <Layout>

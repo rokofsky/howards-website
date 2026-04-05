@@ -70,11 +70,11 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     ]
   },
   "individual-coaching": {
-    pageTitle: "Coaching sessions",
-    lead: "One-to-one work for sharper communication, steadier self-control, and better decisions under pressure.",
+    pageTitle: "12 interactive webinars to choose from!",
+    lead: "Turn on your camera and unmute your microphone. Learn all sorts of stuff online with interactive webinars. Any time of day.",
     intro: [
-      "These coaching sessions are designed for people who want to re-examine a situation from different angles, uncover new options, and strengthen the way they show up in important conversations.",
-      "The focus is personal, practical, and tailored: we work on the exact communication habits, reactions, and patterns that matter most in your real-life context."
+      "\n",
+      "\n"
     ],
     sections: [
       {
