@@ -32,7 +32,7 @@ const BlogPreview = () => {
             >
               <time className="text-xs text-muted-foreground font-light">{post.date}</time>
               <h3 className="text-lg font-semibold mt-2 mb-3 group-hover:text-gold transition-colors">{post.title}</h3>
-              <p className="text-sm text-muted-foreground font-light leading-relaxed">{post.excerpt}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed font-normal">{post.excerpt}</p>
             </Link>
           </motion.article>
         ))}
