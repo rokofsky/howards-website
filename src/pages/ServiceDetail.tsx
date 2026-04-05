@@ -102,7 +102,7 @@ const ServiceDetail = () => {
 
             {detail?.sections.map((section, sectionIndex) => (
               <div key={section.title} className={`${slug === "meetings-moderation" && sectionIndex === detail.sections.length - 1 ? "mb-4" : "mb-10"}`}>
-                <h3 className="text-2xl font-semibold mb-4">{section.title}</h3>
+                <h3 className="text-2xl font-semibold mb-2">{section.title}</h3>
 
                 {section.paragraphs?.map((paragraph) => (
                   <p key={paragraph} className="text-foreground/80 leading-relaxed mb-4 last:mb-0 whitespace-pre-line font-normal">
@@ -137,7 +137,7 @@ const ServiceDetail = () => {
                 )}
 
                 {section.bullets && (
-                  <ul className={`grid ${slug === "storytelling" ? "gap-0.5" : "gap-1.5"} text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line ${slug === "meetings-moderation" && section.title.includes("People who are comfortable") ? "mt-1" : ""}`}>
+                  <ul className={`grid ${slug === "storytelling" ? "gap-0.5" : "gap-0.5"} text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line ${slug === "meetings-moderation" && section.title.includes("People who are comfortable") ? "mt-1" : ""}`}>
                     {section.bullets.map((item) => (
                       <li key={item} className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold shrink-0" />

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import hero1 from "@/assets/hero-1.jpg";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
@@ -10,14 +11,27 @@ import hero5 from "@/assets/hero-5.jpg";
 import hero6 from "@/assets/hero-6.jpg";
 import hero7 from "@/assets/hero-7.jpg";
 import hero8 from "@/assets/hero-8.jpg";
+import hero9 from "@/assets/hero-9.png";
 
-const slides = [hero5, hero4, hero2, hero1, hero6, hero3, hero8, hero7];
+const slides = [hero9, hero5, hero4, hero2, hero1, hero6, hero3, hero8, hero7];
+
+// Per-slide object-position overrides (default is "center top")
+const slidePositions: Record<number, string> = {
+  3: "center 30%",   // hero-2 (index 3): lower to show subject
+  4: "center 30%",   // hero-1 (index 4): lower
+  5: "center 40%",   // hero-6 (index 5): zoom way out, show face
+  6: "center 30%",   // hero-3 (index 6): lower to show subject
+};
 
 const HeroSection = () => {
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % slides.length);
+  }, []);
+
+  const prev = useCallback(() => {
+    setCurrent((p) => (p - 1 + slides.length) % slides.length);
   }, []);
 
   useEffect(() => {
@@ -33,11 +47,12 @@ const HeroSection = () => {
             key={current}
             src={slides[current]}
             alt="Howard - Soft Skills Consultant"
-            className="absolute inset-0 w-full h-full object-cover object-top"
-            initial={{ opacity: 0, scale: 1.05 }}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: slidePositions[current] ?? "center top" }}
+            initial={{ opacity: 0, scale: 1.15 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1.2 }}
             width={1920}
             height={1080}
           />
@@ -46,6 +61,22 @@ const HeroSection = () => {
         {/* Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/20 to-transparent">{"\n"}</div>
       </Link>
+
+      {/* Navigation arrows */}
+      <button
+        onClick={(e) => { e.preventDefault(); prev(); }}
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-background/30 hover:bg-background/50 backdrop-blur-sm rounded-full p-2 transition-all"
+        aria-label="Previous slide"
+      >
+        <ChevronLeft className="w-6 h-6 text-primary-foreground" />
+      </button>
+      <button
+        onClick={(e) => { e.preventDefault(); next(); }}
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/30 hover:bg-background/50 backdrop-blur-sm rounded-full p-2 transition-all"
+        aria-label="Next slide"
+      >
+        <ChevronRight className="w-6 h-6 text-primary-foreground" />
+      </button>
 
       {/* CTA */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">

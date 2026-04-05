@@ -233,19 +233,6 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         ]
       },
       {
-        title: "Program Contents",
-        bullets: [
-          "Preparation vs Spontaneity",
-          "Anchoring spaces",
-          "Reading an audience, eliciting states, keeping their attention",
-          "Rhetoric and influence",
-          "Nested loops and other devices",
-          "Use of visuals",
-          "The key success secrets to winning over any audience",
-          "Teach your managers to tell stories for more impact on their team"
-        ]
-      },
-      {
         title: "Who is this course for?",
         bullets: [
           "Mentors and leaders who want to impact their employees to motivation and success",
