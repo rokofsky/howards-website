@@ -69,7 +69,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
       }
     ]
   },
-  "individual-coaching": {
+  "online-webinars": {
     pageTitle: "12 interactive webinars to choose from!",
     lead: "Turn on your camera and unmute your microphone. Learn all sorts of stuff online with interactive webinars. Any time of day.",
     intro: [],

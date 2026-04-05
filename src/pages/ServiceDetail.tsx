@@ -43,7 +43,7 @@ const ServiceDetail = () => {
     );
   }
 
-  const inquiryTitle = slug === "conflict-resolution" ? "Conflict mediation/resolution" : (slug === "meetings-moderation" ? "the Six Hats Method" : (slug === "individual-coaching" ? "Online webinar sessions" : service.title));
+  const inquiryTitle = slug === "conflict-resolution" ? "Conflict mediation/resolution" : (slug === "meetings-moderation" ? "the Six Hats Method" : (slug === "online-webinars" ? "Online webinar sessions" : service.title));
 
   return (
     <Layout>
@@ -66,7 +66,7 @@ const ServiceDetail = () => {
             <div className={`rounded-lg p-8 mb-12 mt-6 ${detail?.tone === "executive" ? "border border-gold/40 bg-card shadow-[0_20px_60px_-30px_hsl(var(--foreground)/0.55)]" : "glass"}`}>
               <h2 className="text-xl md:text-2xl font-semibold mb-6">{detail?.pageTitle ?? "About This Service"}</h2>
 
-              {slug === "individual-coaching" ? (
+              {slug === "online-webinars" ? (
                 <div className="space-y-3">
                   {webinars.map((webinar) => (
                     <div key={webinar.slug} className="border border-border rounded-lg p-4 hover:border-gold/50 transition-colors">
