@@ -310,7 +310,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     ],
     sections: [
       {
-        title: "Service Pillars",
+        title: "Service Pillar",
         paragraphs: [
           "As an 'intruder' it's my job to be as non-invasive as possible. My tactic of agreeing with the other side on small issues may unnerve you but my position is secondary, unbiased participant, occasionally commenting or asking a question to clarify. I can't help but be funny, not particularly intimidating, and I make people feel comfortable. I tend to get to the crux of the matter and facilitate a productive discussion. Meetings are usually shorter than expected and, depending on the culture, I'll be present or absent for the informal moments. Discretion guaranteed by NDA."
         ]
