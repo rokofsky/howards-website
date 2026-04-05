@@ -169,7 +169,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
       {
         title: "Methods",
         paragraphs: [
-          "As an 'intruder' it's my job to be as non-invasive as possible. It will become clear that I am an impartial, unbiased bystander who will occasionally comment when someone breaks the unwritten rules of communication, or ask a question to open a discussion. I'm not particularly intimidating, i.e. people tend to feel comfortable around me (at least when I'm working) and I seem to be able to connect with anyone who's open to it. I tend to get to the crux of the matter and facilitate a productive, if not difficult discussion. Discretion guaranteed by NDA. It'll all work out if we discuss it like adults."
+          "As an 'intruder' it's my job to be as non-invasive as possible. My unbiased tactics may unnerve you but my position is secondary, occasionally commenting or asking a question to clarify. I can't help but be funny, not particularly intimidating, and I make people feel comfortable. I tend to get to the crux of the matter and facilitate a productive discussion. Meetings are usually shorter than expected, with outcomes both sides can live with. "
         ]
       }
     ]
