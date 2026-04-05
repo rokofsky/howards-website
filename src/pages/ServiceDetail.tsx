@@ -100,8 +100,8 @@ const ServiceDetail = () => {
               </div>
             )}
 
-            {detail?.sections.map((section) => (
-              <div key={section.title} className="mb-10">
+            {detail?.sections.map((section, sectionIndex) => (
+              <div key={section.title} className={`${slug === "meetings-moderation" && sectionIndex === detail.sections.length - 1 ? "mb-4" : "mb-10"}`}>
                 <h3 className="text-2xl font-semibold mb-4">{section.title}</h3>
 
                 {section.paragraphs?.map((paragraph) => (
