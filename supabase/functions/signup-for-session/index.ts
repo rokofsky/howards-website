@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
 
     if (!sessionId || !email || !firstName || !lastName) {
       return new Response(
-        JSON.stringify({ error: "first_name, email, and session_id are required" }),
+        JSON.stringify({ error: "first_name, last_name, email, and session_id are required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -115,7 +115,7 @@ Deno.serve(async (req) => {
         Authorization: `Bearer ${tokenData.access_token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, first_name: firstName }),
+      body: JSON.stringify({ email, first_name: firstName, last_name: lastName }),
     });
 
     const registrantBody = await registrantRes.text();
