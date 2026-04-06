@@ -48,7 +48,107 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Insert into registrations table
+    // Normalize meeting ID: strip everything except digits
+    const rawMeetingId = session.zoom_meeting_id || "";
+    const meetingId = rawMeetingId.replace(/\D/g, "");
+
+    // Check Zoom credentials
+    const zoomAccountId = Deno.env.get("ZOOM_ACCOUNT_ID");
+    const zoomClientId = Deno.env.get("ZOOM_CLIENT_ID");
+    const zoomClientSecret = Deno.env.get("ZOOM_CLIENT_SECRET");
+
+    if (!zoomAccountId || !zoomClientId || !zoomClientSecret) {
+      console.error("Missing Zoom credentials");
+      return new Response(
+        JSON.stringify({ error: "Zoom is not configured. Please contact the organizer." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!meetingId) {
+      console.error("Session has no valid Zoom meeting ID", { rawMeetingId, sessionId });
+      return new Response(
+        JSON.stringify({ error: "This session does not have a valid Zoom meeting ID configured." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Step 1: Get Zoom access token
+    console.log("Requesting Zoom token for account:", zoomAccountId);
+    const tokenRes = await fetch(
+      `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${zoomAccountId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${btoa(`${zoomClientId}:${zoomClientSecret}`)}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+
+    const tokenBody = await tokenRes.text();
+    if (!tokenRes.ok) {
+      console.error("Zoom token request failed:", tokenRes.status, tokenBody);
+      return new Response(
+        JSON.stringify({ error: "Failed to authenticate with Zoom. Please contact the organizer." }),
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const tokenData = JSON.parse(tokenBody);
+    if (!tokenData.access_token) {
+      console.error("Zoom token response missing access_token:", tokenBody);
+      return new Response(
+        JSON.stringify({ error: "Zoom authentication error. Please contact the organizer." }),
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Step 2: Register the user in Zoom
+    const registrantUrl = `https://api.zoom.us/v2/meetings/${meetingId}/registrants`;
+    console.log("Adding Zoom registrant:", registrantUrl, { email, first_name: firstName });
+
+    const registrantRes = await fetch(registrantUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${tokenData.access_token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, first_name: firstName }),
+    });
+
+    const registrantBody = await registrantRes.text();
+    console.log("Zoom registrant response:", registrantRes.status, registrantBody);
+
+    if (!registrantRes.ok) {
+      // Parse Zoom error for a user-friendly message
+      let zoomError = "Zoom registration failed.";
+      try {
+        const parsed = JSON.parse(registrantBody);
+        if (parsed.message) {
+          zoomError = parsed.message;
+        }
+        // Zoom code 3001 = meeting not found, 200 = already registered, etc.
+        if (parsed.code === 200 || (parsed.message && parsed.message.toLowerCase().includes("already"))) {
+          zoomError = "This email is already registered for this session.";
+        }
+        if (parsed.code === 3001) {
+          zoomError = "Zoom meeting not found. The meeting ID may be incorrect.";
+        }
+        if (parsed.code === 3027) {
+          zoomError = "Registration is not enabled for this Zoom meeting.";
+        }
+      } catch {
+        // keep generic message
+      }
+
+      return new Response(
+        JSON.stringify({ error: zoomError }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Step 3: Zoom registration succeeded — now save locally
     const { error: insertError } = await supabase
       .from("registrations")
       .insert({
@@ -56,47 +156,12 @@ Deno.serve(async (req) => {
         email,
         session_title: session.title || "Storytelling Session",
         session_date: session.session_date,
-        zoom_meeting_id: session.zoom_meeting_id,
+        zoom_meeting_id: meetingId,
       });
 
-    if (insertError) throw insertError;
-
-    // Add Zoom registrant if credentials are available
-    const zoomAccountId = Deno.env.get("ZOOM_ACCOUNT_ID");
-    const zoomClientId = Deno.env.get("ZOOM_CLIENT_ID");
-    const zoomClientSecret = Deno.env.get("ZOOM_CLIENT_SECRET");
-
-    if (zoomAccountId && zoomClientId && zoomClientSecret && session.zoom_meeting_id) {
-      try {
-        const tokenRes = await fetch(
-          `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${zoomAccountId}`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Basic ${btoa(`${zoomClientId}:${zoomClientSecret}`)}`,
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-          }
-        );
-        const tokenData = await tokenRes.json();
-
-        if (tokenData.access_token) {
-          await fetch(
-            `https://api.zoom.us/v2/meetings/${session.zoom_meeting_id}/registrants`,
-            {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${tokenData.access_token}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ email, first_name: firstName }),
-            }
-          );
-        }
-      } catch (zoomErr) {
-        console.error("Zoom registrant error:", zoomErr);
-        // Don't fail the registration if Zoom add fails
-      }
+    if (insertError) {
+      console.error("Local registration insert failed:", insertError);
+      // Don't fail the user — Zoom registration already succeeded
     }
 
     return new Response(

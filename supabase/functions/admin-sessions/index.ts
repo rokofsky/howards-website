@@ -42,9 +42,19 @@ Deno.serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
+
+      // Normalize meeting ID: strip non-digits
+      const cleanMeetingId = zoom_meeting_id ? zoom_meeting_id.replace(/\D/g, "") : null;
+
       const { data, error } = await supabase
         .from("storytelling_sessions")
-        .insert({ title, description, session_date, zoom_link, zoom_meeting_id })
+        .insert({
+          title,
+          description,
+          session_date,
+          zoom_link,
+          zoom_meeting_id: cleanMeetingId,
+        })
         .select()
         .single();
 
