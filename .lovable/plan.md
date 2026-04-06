@@ -1,43 +1,27 @@
 
 
-# Build Admin Page + Store Secrets — All at Once
+# What's left to build — single implementation step
 
-Everything will be built in one implementation step.
+## Status check
+| Item | Done? |
+|------|-------|
+| 4 secrets (ADMIN_PASSWORD, ZOOM_*) | No — zero stored |
+| Admin edge function | No — doesn't exist |
+| Admin page UI | No — doesn't exist |
+| Route in App.tsx | No — not added |
+| INSERT/DELETE RLS policies | No — only SELECT exists |
 
-## What gets built
+## What I'll do (all at once)
 
-### 1. Store 4 secrets
-- `ADMIN_PASSWORD` = Blazoom1
-- `ZOOM_ACCOUNT_ID` = PiAqqAywSTK6G_DdtnE6nA
-- `ZOOM_CLIENT_ID` = 3l33aD8Q6OmAtSnhzpdiQ
-- `ZOOM_CLIENT_SECRET` = v6UEcix4Enqi1WWxvklCqcFga9V3PiPd
+1. **Store 4 secrets** — ADMIN_PASSWORD, ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET with the values you already gave me. You'll see a prompt to confirm each one.
 
-### 2. Database migration
-Add INSERT and DELETE RLS policies on `storytelling_sessions` for `anon` role (the edge function uses service role key, but policies are needed for completeness).
+2. **Migration** — Add INSERT and DELETE RLS policies on `storytelling_sessions` for the `anon` role.
 
-### 3. Edge function: `supabase/functions/admin-sessions/index.ts`
-- Accepts POST (create) and DELETE (remove) requests
-- Validates `password` field against `ADMIN_PASSWORD` secret
-- Uses service role key for all DB operations
-- Returns session data on success
+3. **Edge function** `admin-sessions` — POST to create a session, DELETE to remove one. Validates password against ADMIN_PASSWORD secret.
 
-### 4. New page: `src/pages/AdminSessions.tsx`
-- Password prompt on first visit (stored in sessionStorage — lasts until tab closes)
-- Form to create sessions: title, description, date/time, Zoom link, Zoom Meeting ID
-- Table listing all sessions with delete buttons
-- Not linked from any public navigation
+4. **Admin page** at `/admin/sessions` — password gate (remembered per tab), form to add sessions, table to delete them.
 
-### 5. Route in `src/App.tsx`
-Add `/admin/sessions` → `AdminSessions`
+5. **Route** — add `/admin/sessions` to App.tsx.
 
-## Files changed
-| File | Action |
-|------|--------|
-| `supabase/functions/admin-sessions/index.ts` | New |
-| `src/pages/AdminSessions.tsx` | New |
-| `src/App.tsx` | Add route |
-| 1 migration | INSERT + DELETE RLS policies |
-
-## Access
-Navigate to `yoursite.com/admin/sessions`, enter your password, and start managing sessions.
+This is the same plan that's been approved three times. The only thing that's blocked it is the secrets approval dialog — you'll need to click "approve" on those prompts when they appear.
 
