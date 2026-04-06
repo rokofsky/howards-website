@@ -124,6 +124,7 @@ const StorytellingWorkshops = () => {
                         {format(new Date(session.session_date), "EEEE, MMMM d, yyyy")}
                         <span className="text-muted-foreground ml-2">
                           {format(new Date(session.session_date), "h:mm a")}
+                          <span className="text-xs ml-1 opacity-70">(CET)</span>
                         </span>
                       </p>
                       {session.description && (
