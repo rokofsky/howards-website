@@ -13,6 +13,7 @@ import ServiceDetail from "./pages/ServiceDetail";
 import KeynoteTopics from "./pages/KeynoteTopics";
 import BlogPost from "./pages/BlogPost";
 import WebinarDetail from "./pages/WebinarDetail";
+import AdminSessions from "./pages/AdminSessions";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/keynote-topics" element={<KeynoteTopics />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/webinars/:slug" element={<WebinarDetail />} />
+          <Route path="/admin/sessions" element={<AdminSessions />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

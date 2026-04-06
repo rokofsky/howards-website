@@ -1,0 +1,2 @@
+CREATE POLICY "Allow insert for anon" ON public.storytelling_sessions FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Allow delete for anon" ON public.storytelling_sessions FOR DELETE TO anon USING (true);
