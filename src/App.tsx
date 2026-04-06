@@ -39,6 +39,7 @@ const App = () => (
           <Route path="/keynote-topics" element={<KeynoteTopics />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/webinars/:slug" element={<WebinarDetail />} />
+          <Route path="/admin/sessions" element={<AdminSessions />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
