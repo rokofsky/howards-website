@@ -26,18 +26,19 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Auth check only
-    if (body.action === "verify") {
+    const action = body.action;
+
+    if (action === "verify") {
       return new Response(JSON.stringify({ ok: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    if (req.method === "POST") {
+    if (action === "create") {
       const { title, description, session_date, zoom_link, zoom_meeting_id } = body;
       if (!session_date) {
         return new Response(JSON.stringify({ error: "session_date is required" }), {
-          status: 400,
+          status: 200,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -53,11 +54,11 @@ Deno.serve(async (req) => {
       });
     }
 
-    if (req.method === "DELETE") {
+    if (action === "delete") {
       const { id } = body;
       if (!id) {
         return new Response(JSON.stringify({ error: "id is required" }), {
-          status: 400,
+          status: 200,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -72,8 +73,8 @@ Deno.serve(async (req) => {
       });
     }
 
-    return new Response(JSON.stringify({ error: "Method not allowed" }), {
-      status: 405,
+    return new Response(JSON.stringify({ error: "Unknown action" }), {
+      status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
