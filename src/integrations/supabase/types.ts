@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      registrations: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          session_date: string
+          session_title: string
+          zoom_meeting_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          session_date: string
+          session_title: string
+          zoom_meeting_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          session_date?: string
+          session_title?: string
+          zoom_meeting_id?: string | null
+        }
+        Relationships: []
+      }
       session_signups: {
         Row: {
           created_at: string
@@ -46,22 +76,28 @@ export type Database = {
       storytelling_sessions: {
         Row: {
           created_at: string
+          description: string | null
           id: string
           session_date: string
+          title: string | null
           zoom_link: string | null
           zoom_meeting_id: string | null
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id?: string
           session_date: string
+          title?: string | null
           zoom_link?: string | null
           zoom_meeting_id?: string | null
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: string
           session_date?: string
+          title?: string | null
           zoom_link?: string | null
           zoom_meeting_id?: string | null
         }
