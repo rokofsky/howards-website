@@ -78,7 +78,7 @@ const StorytellingWorkshops = () => {
 
       setSuccess({
         title: data.session_title,
-        date: format(new Date(data.session_date), "EEEE, MMMM d, yyyy 'at' h:mm a"),
+        date: format(new Date(data.session_date), "EEEE, d MMMM yyyy 'at' HH:mm 'CET'"),
       });
     } catch {
       toast.error("Registration failed. Please try again.");
@@ -154,9 +154,9 @@ const StorytellingWorkshops = () => {
           {success ? (
             <>
               <DialogHeader>
-                <DialogTitle className="text-xl">You're registered! 🎉</DialogTitle>
+                <DialogTitle className="text-xl">You're signed up! 🌱</DialogTitle>
                 <DialogDescription className="pt-2 text-base">
-                  Check your email for your Zoom link.
+                  Check your email for the Zoom link, see you there!
                 </DialogDescription>
               </DialogHeader>
               <div className="glass rounded-lg p-4 mt-2">
