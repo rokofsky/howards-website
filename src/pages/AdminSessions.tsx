@@ -166,12 +166,14 @@ export default function AdminSessions() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="zoom">Zoom Link</Label>
+              <Label htmlFor="zoom">Zoom Join Link</Label>
               <Input id="zoom" value={zoomLink} onChange={(e) => setZoomLink(e.target.value)} placeholder="https://zoom.us/j/..." />
+              <p className="text-xs text-muted-foreground mt-1">The link attendees use to join (not the registration URL)</p>
             </div>
             <div>
-              <Label htmlFor="mid">Zoom Meeting ID</Label>
-              <Input id="mid" value={zoomMeetingId} onChange={(e) => setZoomMeetingId(e.target.value)} placeholder="123 456 7890" />
+              <Label htmlFor="mid">Zoom Meeting ID (numeric)</Label>
+              <Input id="mid" value={zoomMeetingId} onChange={(e) => setZoomMeetingId(e.target.value)} placeholder="84146763709" />
+              <p className="text-xs text-muted-foreground mt-1">Digits only — used for API registration</p>
             </div>
           </div>
           <Button onClick={handleCreate} disabled={loading}>
