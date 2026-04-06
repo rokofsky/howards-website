@@ -7,12 +7,23 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { session_id, email } = await req.json();
-    if (!session_id || !email) {
-      return new Response(JSON.stringify({ error: "session_id and email are required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    const body = await req.json();
+    const firstName = (body.first_name ?? "").trim();
+    const email = (body.email ?? "").trim();
+    const sessionId = body.session_id;
+
+    if (!sessionId || !email || !firstName) {
+      return new Response(
+        JSON.stringify({ error: "first_name, email, and session_id are required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid email address" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     const supabase = createClient(
@@ -20,28 +31,34 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Get session details
+    // Look up session
     const { data: session, error: sessionError } = await supabase
       .from("storytelling_sessions")
       .select("*")
-      .eq("id", session_id)
+      .eq("id", sessionId)
       .single();
 
     if (sessionError || !session) {
-      return new Response(JSON.stringify({ error: "Session not found" }), {
-        status: 404,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "Session not found" }),
+        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    // Insert signup
-    const { error: signupError } = await supabase
-      .from("session_signups")
-      .insert({ session_id, email });
+    // Insert into registrations table
+    const { error: insertError } = await supabase
+      .from("registrations")
+      .insert({
+        first_name: firstName,
+        email,
+        session_title: session.title || "Storytelling Session",
+        session_date: session.session_date,
+        zoom_meeting_id: session.zoom_meeting_id,
+      });
 
-    if (signupError) throw signupError;
+    if (insertError) throw insertError;
 
-    // If Zoom credentials are available, add registrant
+    // Add Zoom registrant if credentials are available
     const zoomAccountId = Deno.env.get("ZOOM_ACCOUNT_ID");
     const zoomClientId = Deno.env.get("ZOOM_CLIENT_ID");
     const zoomClientSecret = Deno.env.get("ZOOM_CLIENT_SECRET");
@@ -69,28 +86,29 @@ Deno.serve(async (req) => {
                 Authorization: `Bearer ${tokenData.access_token}`,
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ email, first_name: "Attendee" }),
+              body: JSON.stringify({ email, first_name: firstName }),
             }
           );
         }
       } catch (zoomErr) {
         console.error("Zoom registrant error:", zoomErr);
-        // Don't fail the signup if Zoom add fails
+        // Don't fail the registration if Zoom add fails
       }
     }
 
     return new Response(
       JSON.stringify({
         success: true,
-        zoom_link: session.zoom_link,
-        message: "Successfully signed up!",
+        session_title: session.title || "Storytelling Session",
+        session_date: session.session_date,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    console.error("Registration error:", err);
+    return new Response(
+      JSON.stringify({ error: "Registration failed. Please try again." }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
 });
