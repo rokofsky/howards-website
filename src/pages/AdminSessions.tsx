@@ -56,22 +56,19 @@ export default function AdminSessions() {
     try {
       const res = await supabase.functions.invoke("admin-sessions", {
         method: "POST",
-        body: { password, title: "__auth_check__", session_date: new Date().toISOString() },
+        body: { password, action: "verify" },
       });
-      if (res.error && res.error.message?.includes("401")) {
+      if (res.data?.error) {
         toast({ title: "Wrong password", variant: "destructive" });
         return;
       }
-      // If we got here the password worked — delete the test session
-      if (res.data?.id) {
-        await supabase.functions.invoke("admin-sessions", {
-          method: "DELETE",
-          body: { password, id: res.data.id },
-        });
+      if (res.data?.ok) {
+        sessionStorage.setItem("admin_auth", "true");
+        sessionStorage.setItem("admin_pw", password);
+        setAuthenticated(true);
+      } else {
+        toast({ title: "Unexpected response", variant: "destructive" });
       }
-      sessionStorage.setItem("admin_auth", "true");
-      sessionStorage.setItem("admin_pw", password);
-      setAuthenticated(true);
     } catch {
       toast({ title: "Error verifying password", variant: "destructive" });
     }
