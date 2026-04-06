@@ -182,19 +182,34 @@ const StorytellingWorkshops = () => {
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4 mt-2">
-                <div>
-                  <label htmlFor="firstName" className="text-sm font-medium mb-1 block">
-                    First name
-                  </label>
-                  <Input
-                    id="firstName"
-                    placeholder="Your first name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                    maxLength={100}
-                  />
-                </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label htmlFor="firstName" className="text-sm font-medium mb-1 block">
+                        First name
+                      </label>
+                      <Input
+                        id="firstName"
+                        placeholder="First name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        required
+                        maxLength={100}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="lastName" className="text-sm font-medium mb-1 block">
+                        Last name
+                      </label>
+                      <Input
+                        id="lastName"
+                        placeholder="Last name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        required
+                        maxLength={100}
+                      />
+                    </div>
+                  </div>
                 <div>
                   <label htmlFor="email" className="text-sm font-medium mb-1 block">
                     Email
