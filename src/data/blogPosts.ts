@@ -69,8 +69,8 @@ step in dog poop / panic *a lot less*.`,
   },
   {
     slug: "the-art-of-saying-nothing-productively",
-    title: "12 former jobs you won’t find on my CV",
-    excerpt: "12 jobs that led me to where I am today",
+    title: "Work experience you won’t find on my CV",
+    excerpt: "12 former jobs that led me to where I am today",
     date: "Mar 15, 2026",
     content: `Newspaper carrier: from the ages of 13 to 16, every day the Long Island edition of Newsday magically got delivered to a route of 30+ homes in Plainview (it took about 2 hours a day; less if my brother or sister helped me, longer if I took my baby brother or the dog). In addition, I had to collect the weekly fees and tips from each customer on the route. There were always people who were hard to reach, or just didn’t like to pay. Looking back, it was an unlikely livelihood but what else could I do? Length of job: 2.5 years
 
