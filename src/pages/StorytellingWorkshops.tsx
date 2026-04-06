@@ -92,9 +92,9 @@ const StorytellingWorkshops = () => {
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Storytelling Sessions</h1>
-            <p className="text-muted-foreground mb-10 max-w-2xl leading-relaxed font-medium">
+            <p className="text-muted-foreground mb-10 max-w-2xl leading-relaxed font-semibold">
               Join us in a round of neighborly storytelling. We come together on Zoom and take
-              turns telling our story, anecdote, joke, whatever, and (if you want) get instant
+              turns telling our story, anecdote, joke, whatever, and, if you want, get instant
               feedback from the others.
             </p>
 
@@ -128,7 +128,7 @@ const StorytellingWorkshops = () => {
                         </span>
                       </p>
                       {session.description && (
-                        <p className="text-sm text-muted-foreground font-light mb-4 flex-1">
+                        <p className="text-sm text-muted-foreground mb-4 flex-1 font-normal">
                           {session.description}
                         </p>
                       )}
