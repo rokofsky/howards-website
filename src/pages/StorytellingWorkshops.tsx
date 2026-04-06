@@ -174,7 +174,7 @@ const StorytellingWorkshops = () => {
                 <DialogDescription>
                   {selectedSession?.title || "Storytelling Session"} —{" "}
                   {selectedSession &&
-                    format(new Date(selectedSession.session_date), "MMMM d, yyyy 'at' h:mm a")}
+                    format(new Date(selectedSession.session_date), "d MMMM, yyyy 'at' h:mm a 'CET'")}
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4 mt-2">
