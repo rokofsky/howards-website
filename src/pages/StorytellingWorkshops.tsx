@@ -80,8 +80,9 @@ const StorytellingWorkshops = () => {
         title: data.session_title,
         date: format(new Date(data.session_date), "EEEE, d MMMM yyyy 'at' HH:mm 'CET'"),
       });
-    } catch {
-      toast.error("Registration failed. Please try again.");
+    } catch (err: any) {
+      const message = err?.message || "Registration failed. Please try again.";
+      toast.error(message);
     }
     setSubmitting(false);
   };
