@@ -83,9 +83,9 @@ export default function AdminSessions() {
     }
     setLoading(true);
     const res = await supabase.functions.invoke("admin-sessions", {
-      method: "POST",
       body: {
         password: getPassword(),
+        action: "create",
         title: title || null,
         description: description || null,
         session_date: new Date(sessionDate).toISOString(),
@@ -94,8 +94,8 @@ export default function AdminSessions() {
       },
     });
     setLoading(false);
-    if (res.error) {
-      toast({ title: "Error creating session", description: res.error.message, variant: "destructive" });
+    if (res.error || res.data?.error) {
+      toast({ title: "Error creating session", description: res.error?.message || res.data?.error, variant: "destructive" });
       return;
     }
     toast({ title: "Session created!" });
@@ -106,8 +106,7 @@ export default function AdminSessions() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this session?")) return;
     const res = await supabase.functions.invoke("admin-sessions", {
-      method: "DELETE",
-      body: { password: getPassword(), id },
+      body: { password: getPassword(), action: "delete", id },
     });
     if (res.error) {
       toast({ title: "Error deleting", variant: "destructive" });
