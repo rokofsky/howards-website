@@ -21,7 +21,14 @@ Deno.serve(async (req) => {
 
     if (body.password !== password) {
       return new Response(JSON.stringify({ error: "Invalid password" }), {
-        status: 401,
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Auth check only
+    if (body.action === "verify") {
+      return new Response(JSON.stringify({ ok: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
