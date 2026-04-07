@@ -17,6 +17,7 @@ const slides = [hero9, hero5, hero2, hero1, hero6, hero3, hero4, hero7, hero8];
 
 // Per-slide object-position overrides (default is "center center")
 const slidePositions: Record<number, string> = {
+  0: "center 30%",      // hero-9: shift view upward
   2: "center center",
   7: "center center",
 };
