@@ -55,6 +55,38 @@ const ServiceDetail = () => {
     }
   }, [slug]);
 
+  const handleAddWebinarClick = () => {
+    if (sessionStorage.getItem("admin_auth") === "true") {
+      navigate("/admin/webinars");
+    } else {
+      setShowPasswordPrompt(true);
+    }
+  };
+
+  const handleAddWebinarAuth = async () => {
+    try {
+      const res = await supabase.functions.invoke("admin-webinars", {
+        method: "POST",
+        body: { password: adminPassword, action: "verify" },
+      });
+      if (res.data?.ok) {
+        sessionStorage.setItem("admin_auth", "true");
+        sessionStorage.setItem("admin_pw", adminPassword);
+        navigate("/admin/webinars");
+      } else {
+        const next = attempts + 1;
+        setAttempts(next);
+        if (next >= 2) {
+          navigate("/");
+        } else {
+          toast({ title: "Wrong password", variant: "destructive" });
+        }
+      }
+    } catch {
+      toast({ title: "Error verifying password", variant: "destructive" });
+    }
+  };
+
   const service = services.find((s) => s.slug === slug);
   const detail = slug ? serviceDetails[slug] : undefined;
 
