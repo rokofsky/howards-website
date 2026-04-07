@@ -127,42 +127,42 @@ const ServiceDetail = () => {
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {webinars.map((webinar) => (
-                      <div key={webinar.id}>
-                        <div className="flex flex-col justify-between rounded-lg border border-border bg-card p-5 hover:border-gold/50 transition-colors">
-                          <div>
-                            <h3 className="font-semibold text-foreground mb-2">{webinar.title}</h3>
-                            {webinar.description && (
-                              <p className="text-foreground/60 text-sm font-normal leading-relaxed">{webinar.description}</p>
-                            )}
-                          </div>
-                          <div className="mt-4">
-                            <Button
-                              variant="glass"
-                              size="sm"
-                              onClick={() => setExpandedWebinar(expandedWebinar === webinar.id ? null : webinar.id)}
-                            >
-                              {expandedWebinar === webinar.id ? "Close" : "Inquire"}
-                            </Button>
-                          </div>
-                        </div>
-                        <AnimatePresence>
-                          {expandedWebinar === webinar.id && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.3, ease: "easeInOut" }}
-                              className="overflow-hidden"
-                            >
-                              <div className="pt-4 pb-2">
-                                <ContactForm serviceName={webinar.title} showServiceFields />
-                              </div>
-                            </motion.div>
+                      <div key={webinar.id} className="flex flex-col justify-between rounded-lg border border-border bg-card p-5 hover:border-gold/50 transition-colors">
+                        <div>
+                          <h3 className="font-semibold text-foreground mb-2">{webinar.title}</h3>
+                          {webinar.description && (
+                            <p className="text-foreground/60 text-sm font-normal leading-relaxed">{webinar.description}</p>
                           )}
-                        </AnimatePresence>
+                        </div>
+                        <div className="mt-4">
+                          <Button
+                            variant="glass"
+                            size="sm"
+                            onClick={() => setExpandedWebinar(expandedWebinar === webinar.id ? null : webinar.id)}
+                          >
+                            {expandedWebinar === webinar.id ? "Close" : "Inquire"}
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>
+                  <AnimatePresence>
+                    {expandedWebinar && (
+                      <motion.div
+                        key={expandedWebinar}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden max-w-2xl mx-auto mt-6"
+                      >
+                        <ContactForm
+                          serviceName={webinars.find((w) => w.id === expandedWebinar)?.title ?? ""}
+                          showServiceFields
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                   <div className="mt-6">
                     {showPasswordPrompt ? (
                       <div className="flex gap-2 items-center max-w-sm">
