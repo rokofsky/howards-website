@@ -17,9 +17,14 @@ const slides = [hero9, hero5, hero2, hero1, hero6, hero3, hero4, hero7, hero8];
 
 // Per-slide object-position overrides (default is "center center")
 const slidePositions: Record<number, string> = {
-  0: "center 30%",      // hero-9: shift view upward
+  0: "center 30%",
   2: "center center",
   7: "center center",
+};
+
+// Per-slide initial scale (default 1.08); higher = starts more zoomed, zooms out more
+const slideScales: Record<number, number> = {
+  0: 1.25, // hero-9: start further out for dramatic zoom-out
 };
 
 const HeroSection = () => {
