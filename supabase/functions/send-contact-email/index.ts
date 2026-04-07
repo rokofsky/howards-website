@@ -77,8 +77,18 @@ Deno.serve(async (req) => {
     const to = type === "copy" ? email : TO_EMAIL;
     const subject = type === "copy"
       ? "Copy of your message to Howard Rokofsky"
-      : `New inquiry from ${name}`;
+      : (data.service ? `New inquiry: ${data.service} — ${name}` : `New inquiry from ${name}`);
     const html = type === "copy" ? copyHtml(data) : notificationHtml(data);
+
+    const emailPayload: Record<string, unknown> = {
+      from: `Howard Rokofsky <${FROM_EMAIL}>`,
+      to: [to],
+      subject,
+      html,
+    };
+    if (type !== "copy") {
+      emailPayload.reply_to = email;
+    }
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -86,7 +96,7 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
-      body: JSON.stringify({ from: `Howard Rokofsky <${FROM_EMAIL}>`, to: [to], subject, html }),
+      body: JSON.stringify(emailPayload),
     });
 
     const result = await res.json();
