@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_submissions: {
+        Row: {
+          company_name: string | null
+          copy_to_me: boolean
+          created_at: string
+          email: string
+          group_size: string | null
+          id: string
+          message: string
+          name: string
+          preferred_dates: string | null
+          project_type: string | null
+          service: string | null
+          timeline: string | null
+        }
+        Insert: {
+          company_name?: string | null
+          copy_to_me?: boolean
+          created_at?: string
+          email: string
+          group_size?: string | null
+          id?: string
+          message: string
+          name: string
+          preferred_dates?: string | null
+          project_type?: string | null
+          service?: string | null
+          timeline?: string | null
+        }
+        Update: {
+          company_name?: string | null
+          copy_to_me?: boolean
+          created_at?: string
+          email?: string
+          group_size?: string | null
+          id?: string
+          message?: string
+          name?: string
+          preferred_dates?: string | null
+          project_type?: string | null
+          service?: string | null
+          timeline?: string | null
+        }
+        Relationships: []
+      }
       registrations: {
         Row: {
           created_at: string
