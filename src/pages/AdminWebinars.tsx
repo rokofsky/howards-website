@@ -58,7 +58,13 @@ export default function AdminWebinars() {
         sessionStorage.setItem("admin_pw", password);
         setAuthenticated(true);
       } else {
-        toast({ title: "Wrong password", variant: "destructive" });
+        const next = loginAttempts + 1;
+        setLoginAttempts(next);
+        if (next >= 2) {
+          navigate("/");
+        } else {
+          toast({ title: "Wrong password", variant: "destructive" });
+        }
       }
     } catch {
       toast({ title: "Error verifying password", variant: "destructive" });
