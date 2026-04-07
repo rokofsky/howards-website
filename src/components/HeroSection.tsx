@@ -17,10 +17,8 @@ const slides = [hero9, hero5, hero2, hero1, hero6, hero3, hero4, hero7, hero8];
 
 // Per-slide object-position overrides (default is "center center")
 const slidePositions: Record<number, string> = {
-  0: "center center",   // hero-9: center
-  2: "center center",   // hero-2: center
-  7: "center center",   // hero-7: center
-  8: "center 70%",      // hero-8: show lower half (subject is bottom)
+  2: "center center",
+  7: "center center",
 };
 
 const HeroSection = () => {
