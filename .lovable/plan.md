@@ -1,21 +1,39 @@
 
 
-# Show admin webinar list as a 3-column card grid
+# Wire up contact form emails via Resend
 
-## What changes
+## Overview
 
-Replace the vertical stacked list in `src/pages/AdminWebinars.tsx` with a 3-column card grid that mirrors the public webinar page layout. Each card shows title, description, an edit/delete button row, and a drag handle. This lets you see the exact visual order as it appears to visitors.
+Create the database table, an edge function that sends emails via Resend, and update the contact form to save submissions and trigger emails. Uses the already-configured `RESEND_API_KEY` and sender `info@rokofsky.com`.
 
-## Technical detail
+## Steps
 
-### File: `src/pages/AdminWebinars.tsx`
+### 1. Database migration: `contact_submissions` table
 
-**SortableWebinarRow component** — change from a horizontal flex row to a card matching the public page style:
-- Outer wrapper: `rounded-lg border border-border bg-card p-5` (same classes as public cards)
-- Title as `<h3>`, description below, drag handle + edit/delete buttons at bottom
-- Keep all `useSortable` logic intact
+Create table with fields: `id` (uuid PK), `name`, `email`, `message`, `service`, `company_name`, `group_size`, `preferred_dates`, `project_type`, `timeline`, `copy_to_me` (boolean), `created_at`. Public insert RLS policy (no auth required, since this is a public contact form).
 
-**Grid container** — replace `<div className="space-y-3">` with `<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">` (identical breakpoints to public page)
+### 2. Edge function: `send-contact-email`
 
-No other files changed. Drag-and-drop, edit modal, create form, and password protection stay the same.
+New function at `supabase/functions/send-contact-email/index.ts`:
+- Accepts JSON body with form fields + `type` ("notification" or "copy")
+- **Notification email** (always sent): to `info@rokofsky.com`, from `info@rokofsky.com`, contains all form details (name, email, message, service, company, group size, timeline)
+- **Copy email** (when "Send me a copy" checked): to submitter's email, from `info@rokofsky.com`, confirms receipt and includes their message back to them
+- Calls Resend API directly using the `RESEND_API_KEY` secret
+- HTML templates inline with warm earthy styling matching the site (terracotta accents, Inter font)
+- Input validation with early return on bad data
+
+### 3. Update `ContactForm.tsx`
+
+Replace the current no-op `handleSubmit` with:
+1. Set loading state
+2. Generate UUID, insert into `contact_submissions`
+3. Invoke `send-contact-email` with type "notification"
+4. If `copyToMe` checked, invoke again with type "copy"
+5. Show success or error toast
+6. Keep the existing success UI on completion
+
+### Files changed
+- New migration SQL — `contact_submissions` table + public insert RLS
+- `supabase/functions/send-contact-email/index.ts` — new edge function
+- `src/components/ContactForm.tsx` — wire up real submit logic
 
