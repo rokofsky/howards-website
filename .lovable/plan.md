@@ -1,36 +1,33 @@
 
 
-# Inline inquiry form per webinar card + password-protect "Add Webinar"
+# Fix inline inquiry form width on webinar page
 
-## What you'll see
+## What changes
 
-- Clicking "Inquire" on a webinar card expands an animated contact form directly below that card (no page navigation)
-- Only one card's form is open at a time — clicking another closes the previous
-- The bottom `#inquiry-form` stays for general inquiries
-- "Add Webinar" button uses the same password as the storytelling admin (shared `sessionStorage` key `admin_auth`)
-- **Wrong password: 2 attempts allowed, then redirect to homepage**
+The expanded inquiry form moves **outside** the per-card grid column so it's no longer squeezed to 1/3 width. Instead it renders below the grid at a comfortable width (~`max-w-2xl`, roughly 672px) centered within the container. On mobile it naturally spans full width.
 
-## Technical details
+## Technical detail
 
 ### File: `src/pages/ServiceDetail.tsx`
 
-**Inline inquiry form**
-- Add `expandedWebinar` state (slug or null) to track which card's form is open
-- On "Inquire" click, toggle `expandedWebinar`
-- Below the clicked card, render `<ContactForm serviceName={webinar.title} showServiceFields />` wrapped in `AnimatePresence` + `motion.div` for slide-down + fade animation
+**Current**: `AnimatePresence` + `ContactForm` is nested inside each grid item → form is column-width (narrow).
 
-**Password-protect "Add Webinar" button**
-- Add states: `showPasswordPrompt`, `adminPassword`, `attempts` (starts at 0)
-- On click: check `sessionStorage.getItem("admin_auth") === "true"` → navigate to `/admin/webinars`
-- If not authenticated: show inline password input + submit button
-- On submit: call `admin-webinars` edge function with `action: "verify"`
-  - Correct → save to `sessionStorage`, navigate to `/admin/webinars`
-  - Wrong → increment `attempts`, show error toast. If `attempts >= 2`, redirect to `/` immediately
+**New**: Remove the `AnimatePresence` block from inside the `.map()`. Add a single `AnimatePresence` block **after** the grid `</div>`. It renders when `expandedWebinar` is set, using `max-w-2xl mx-auto` for comfortable desktop width and full-width on mobile. Same slide-down + fade animation. The selected webinar's title is looked up from the `webinars` array to pass as `serviceName`.
 
-### File: `src/pages/AdminWebinars.tsx`
-- Same 2-attempt limit on the login screen: track failed attempts, redirect to `/` after 2 wrong tries (using `useNavigate`)
+```
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  {/* Cards only — no form inside */}
+</div>
+
+<AnimatePresence>
+  {expandedWebinar && (
+    <motion.div className="max-w-2xl mx-auto mt-6">
+      <ContactForm serviceName={...} showServiceFields />
+    </motion.div>
+  )}
+</AnimatePresence>
+```
 
 ### Files changed
-- `src/pages/ServiceDetail.tsx`
-- `src/pages/AdminWebinars.tsx`
+- `src/pages/ServiceDetail.tsx` only
 
