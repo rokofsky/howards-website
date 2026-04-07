@@ -29,7 +29,7 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
-  verticalListSortingStrategy,
+  rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -64,28 +64,30 @@ function SortableWebinarRow({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-start justify-between gap-4 rounded-lg border border-border p-4"
+      className="rounded-lg border border-border bg-card p-5 flex flex-col justify-between"
     >
-      <button
-        className="mt-1 cursor-grab touch-none text-muted-foreground hover:text-foreground"
-        {...attributes}
-        {...listeners}
-      >
-        <GripVertical className="h-5 w-5" />
-      </button>
-      <div className="min-w-0 flex-1">
-        <p className="font-medium text-foreground">{webinar.title}</p>
+      <div className="min-w-0">
+        <h3 className="font-semibold text-foreground text-lg">{webinar.title}</h3>
         {webinar.description && (
-          <p className="text-sm text-muted-foreground mt-1">{webinar.description}</p>
+          <p className="text-sm text-muted-foreground mt-2 line-clamp-3">{webinar.description}</p>
         )}
       </div>
-      <div className="flex gap-1 shrink-0">
-        <Button variant="ghost" size="icon" onClick={() => onEdit(webinar)}>
-          <Pencil className="h-4 w-4 text-muted-foreground" />
-        </Button>
-        <Button variant="ghost" size="icon" onClick={() => onDelete(webinar.id)}>
-          <Trash2 className="h-4 w-4 text-destructive" />
-        </Button>
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
+        <button
+          className="cursor-grab touch-none text-muted-foreground hover:text-foreground"
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical className="h-5 w-5" />
+        </button>
+        <div className="flex gap-1">
+          <Button variant="ghost" size="icon" onClick={() => onEdit(webinar)}>
+            <Pencil className="h-4 w-4 text-muted-foreground" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={() => onDelete(webinar.id)}>
+            <Trash2 className="h-4 w-4 text-destructive" />
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -295,8 +297,8 @@ export default function AdminWebinars() {
             <p className="text-muted-foreground">No webinars yet.</p>
           ) : (
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-              <SortableContext items={webinars.map((w) => w.id)} strategy={verticalListSortingStrategy}>
-                <div className="space-y-3">
+              <SortableContext items={webinars.map((w) => w.id)} strategy={rectSortingStrategy}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {webinars.map((w) => (
                     <SortableWebinarRow
                       key={w.id}
