@@ -98,7 +98,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         ]
       },
       {
-        title: "When might you use the Six Thinking Hats?",
+        title: "When might you use Six Thinking Hats?",
         bullets: [
           "\nAnytime there are differences of opinion in a business meeting",
           "\nFacilitation of meetings",
