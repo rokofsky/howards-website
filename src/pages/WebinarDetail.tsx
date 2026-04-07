@@ -1,13 +1,33 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
-import { webinars } from "@/data/webinars";
+import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
+
+interface DbWebinar {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+}
 
 const WebinarDetail = () => {
   const { slug } = useParams();
-  const webinar = webinars.find((w) => w.slug === slug);
+  const [webinar, setWebinar] = useState<DbWebinar | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.from("webinars").select("*").eq("slug", slug).maybeSingle().then(({ data }) => {
+      if (data) setWebinar(data as DbWebinar);
+      setLoading(false);
+    });
+  }, [slug]);
+
+  if (loading) {
+    return <Layout><div className="section-padding pt-24 text-center text-muted-foreground">Loading...</div></Layout>;
+  }
 
   if (!webinar) {
     return (
@@ -35,7 +55,7 @@ const WebinarDetail = () => {
             <div className="rounded-lg p-8 mb-12 glass">
               <h2 className="text-xl md:text-2xl font-semibold mb-4">About This Webinar</h2>
               <p className="text-foreground/80 leading-relaxed font-normal">
-                {webinar.intro || "Details coming soon."}
+                {webinar.description || "Details coming soon."}
               </p>
             </div>
           </motion.div>
