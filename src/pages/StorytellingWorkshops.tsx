@@ -158,14 +158,14 @@ const StorytellingWorkshops = () => {
           {success ? (
             <>
               <DialogHeader>
-                <DialogTitle className="text-xl">You're signed up! 🌱</DialogTitle>
-                <DialogDescription className="pt-2 text-base">
+                <DialogTitle className="text-xl">🌱 You're signed up! 🌱</DialogTitle>
+                <DialogDescription className="pt-2 text-base font-medium">
                   Check your email for the Zoom link, see you there!
                 </DialogDescription>
               </DialogHeader>
               <div className="glass rounded-lg p-4 mt-2">
                 <p className="font-semibold">{success.title}</p>
-                <p className="text-sm text-muted-foreground">{success.date}</p>
+                <p className="text-sm text-muted-foreground font-medium">{success.date}</p>
               </div>
               <Button variant="outline" className="mt-4" onClick={() => setModalOpen(false)}>
                 Close
