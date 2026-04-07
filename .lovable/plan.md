@@ -1,23 +1,14 @@
 
 
-# Fix: Edge function boot error preventing emails
+# Fix notification email: service in subject + reply-to inquirer
 
-## Problem
-The `send-contact-email` edge function crashes on startup because line 1 imports from a non-existent path:
-```
-import { corsHeaders } from "npm:@supabase/supabase-js@2.49.4/cors";
-```
-The edge runtime cannot resolve this module, so every call returns a 503 BOOT_ERROR. No emails are sent.
+## Changes (one file: `supabase/functions/send-contact-email/index.ts`)
 
-## Fix
-Replace the broken import with manually defined CORS headers (the standard approach for older Supabase SDK versions):
+### 1. Subject line includes service
+Change the notification subject from `"New inquiry from {name}"` to include the service when present: `"New inquiry: {service} — {name}"`.
 
-```typescript
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-```
+### 2. Add reply-to header
+Add `reply_to` field to the Resend API payload for notification emails, set to the inquirer's email. Clicking Reply in your inbox will address the inquirer directly.
 
-One line changed in `supabase/functions/send-contact-email/index.ts`. Then redeploy the function.
+No other changes needed. Requires redeployment of the edge function.
 
