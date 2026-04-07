@@ -46,7 +46,9 @@ Deno.serve(async (req) => {
 
       const { data, error } = await supabase
         .from("webinars")
-        .insert({ slug, title: title.trim(), description: (description || "").trim() })
+        .insert({ slug, title: title.trim(), description: (description || "").trim(), sort_order: body.sort_order ?? 0 })
+        .select()
+        .single();
         .select()
         .single();
 
