@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 
 interface Session {
   id: string;
@@ -32,6 +32,9 @@ export default function AdminSessions() {
   const [zoomLink, setZoomLink] = useState("");
   const [zoomMeetingId, setZoomMeetingId] = useState("");
 
+  // Edit mode
+  const [editingId, setEditingId] = useState<string | null>(null);
+
   useEffect(() => {
     const saved = sessionStorage.getItem("admin_auth");
     if (saved === "true") {
@@ -52,7 +55,6 @@ export default function AdminSessions() {
   };
 
   const handleLogin = async () => {
-    // Verify password by calling edge function with a GET-like check
     try {
       const res = await supabase.functions.invoke("admin-sessions", {
         method: "POST",
@@ -76,30 +78,74 @@ export default function AdminSessions() {
 
   const getPassword = () => sessionStorage.getItem("admin_pw") || password;
 
-  const handleCreate = async () => {
+  const clearForm = () => {
+    setTitle("");
+    setDescription("");
+    setSessionDate("");
+    setZoomLink("");
+    setZoomMeetingId("");
+    setEditingId(null);
+  };
+
+  const handleEdit = (s: Session) => {
+    setEditingId(s.id);
+    setTitle(s.title || "");
+    setDescription(s.description || "");
+    // Format date for datetime-local input
+    const d = new Date(s.session_date);
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    setSessionDate(`${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`);
+    setZoomLink(s.zoom_link || "");
+    setZoomMeetingId(s.zoom_meeting_id || "");
+  };
+
+  const handleCreateOrUpdate = async () => {
     if (!sessionDate) {
       toast({ title: "Date is required", variant: "destructive" });
       return;
     }
     setLoading(true);
-    const res = await supabase.functions.invoke("admin-sessions", {
-      body: {
-        password: getPassword(),
-        action: "create",
-        title: title || null,
-        description: description || null,
-        session_date: new Date(sessionDate).toISOString(),
-        zoom_link: zoomLink || null,
-        zoom_meeting_id: zoomMeetingId || null,
-      },
-    });
-    setLoading(false);
-    if (res.error || res.data?.error) {
-      toast({ title: "Error creating session", description: res.error?.message || res.data?.error, variant: "destructive" });
-      return;
+
+    if (editingId) {
+      const res = await supabase.functions.invoke("admin-sessions", {
+        body: {
+          password: getPassword(),
+          action: "update",
+          id: editingId,
+          title: title || null,
+          description: description || null,
+          session_date: new Date(sessionDate).toISOString(),
+          zoom_link: zoomLink || null,
+          zoom_meeting_id: zoomMeetingId || null,
+        },
+      });
+      setLoading(false);
+      if (res.error || res.data?.error) {
+        toast({ title: "Error updating session", description: res.error?.message || res.data?.error, variant: "destructive" });
+        return;
+      }
+      toast({ title: "Session updated!" });
+    } else {
+      const res = await supabase.functions.invoke("admin-sessions", {
+        body: {
+          password: getPassword(),
+          action: "create",
+          title: title || null,
+          description: description || null,
+          session_date: new Date(sessionDate).toISOString(),
+          zoom_link: zoomLink || null,
+          zoom_meeting_id: zoomMeetingId || null,
+        },
+      });
+      setLoading(false);
+      if (res.error || res.data?.error) {
+        toast({ title: "Error creating session", description: res.error?.message || res.data?.error, variant: "destructive" });
+        return;
+      }
+      toast({ title: "Session created!" });
     }
-    toast({ title: "Session created!" });
-    setTitle(""); setDescription(""); setSessionDate(""); setZoomLink(""); setZoomMeetingId("");
+
+    clearForm();
     fetchSessions();
   };
 
@@ -147,7 +193,7 @@ export default function AdminSessions() {
 
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Add New Session</CardTitle>
+          <CardTitle>{editingId ? "Edit Session" : "Add New Session"}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -176,9 +222,14 @@ export default function AdminSessions() {
               <p className="text-xs text-muted-foreground mt-1">Digits only — used for API registration</p>
             </div>
           </div>
-          <Button onClick={handleCreate} disabled={loading}>
-            {loading ? "Creating..." : "Create Session"}
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={handleCreateOrUpdate} disabled={loading}>
+              {loading ? (editingId ? "Updating..." : "Creating...") : (editingId ? "Update Session" : "Create Session")}
+            </Button>
+            {editingId && (
+              <Button variant="outline" onClick={clearForm}>Cancel</Button>
+            )}
+          </div>
         </CardContent>
       </Card>
 
@@ -205,7 +256,10 @@ export default function AdminSessions() {
                     <TableCell>{s.title || "Untitled"}</TableCell>
                     <TableCell>{new Date(s.session_date).toLocaleString()}</TableCell>
                     <TableCell>{s.zoom_meeting_id || "—"}</TableCell>
-                    <TableCell>
+                    <TableCell className="flex gap-1">
+                      <Button variant="ghost" size="icon" onClick={() => handleEdit(s)}>
+                        <Pencil className="h-4 w-4 text-muted-foreground" />
+                      </Button>
                       <Button variant="ghost" size="icon" onClick={() => handleDelete(s.id)}>
                         <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
