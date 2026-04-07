@@ -163,7 +163,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
       {
         title: "Methods",
         paragraphs: [
-          "As an 'intruder' it's my job to be as non-invasive as possible. My unbiased tactics may unnerve you but my position is secondary, occasionally commenting or asking a question to clarify. I can't help but be funny, not particularly intimidating, and I make people feel comfortable. I tend to get to the crux of the matter and facilitate a productive discussion. Meetings are usually shorter than expected, with outcomes both sides can live with. "
+          "As an 'intruder' it's my job to be as non-invasive as possible. My unbiased tactics may unnerve you but my position is secondary, occasionally commenting or asking a question to clarify. I can't help but be funny, not particularly intimidating, and I tend to make people feel comfortable. I identify the crux of the matter and facilitate a productive discussion. Meetings are usually shorter than expected, with outcomes both sides can live with. "
         ]
       }
     ]
