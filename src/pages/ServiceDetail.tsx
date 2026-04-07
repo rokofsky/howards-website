@@ -139,31 +139,25 @@ const ServiceDetail = () => {
                           <Button
                             variant="glass"
                             size="sm"
-                            onClick={() => setExpandedWebinar(expandedWebinar === webinar.id ? null : webinar.id)}
+                            onClick={() => setExpandedWebinar(webinar.id)}
                           >
-                            {expandedWebinar === webinar.id ? "Close" : "Inquire"}
+                            Inquire
                           </Button>
                         </div>
                       </div>
                     ))}
                   </div>
-                  <AnimatePresence>
-                    {expandedWebinar && (
-                      <motion.div
-                        key={expandedWebinar}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="max-w-2xl mx-auto mt-6"
-                      >
-                        <ContactForm
-                          serviceName={webinars.find((w) => w.id === expandedWebinar)?.title ?? ""}
-                          showServiceFields
-                        />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  <Dialog open={!!expandedWebinar} onOpenChange={(open) => { if (!open) setExpandedWebinar(null); }}>
+                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>{webinars.find((w) => w.id === expandedWebinar)?.title ?? "Inquire"}</DialogTitle>
+                      </DialogHeader>
+                      <ContactForm
+                        serviceName={webinars.find((w) => w.id === expandedWebinar)?.title ?? ""}
+                        showServiceFields
+                      />
+                    </DialogContent>
+                  </Dialog>
                   <div className="mt-6">
                     {showPasswordPrompt ? (
                       <div className="flex gap-2 items-center max-w-sm">
