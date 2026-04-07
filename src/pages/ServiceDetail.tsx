@@ -1,12 +1,12 @@
 import { useParams, Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { services } from "@/data/services";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { serviceDetails } from "@/data/serviceDetails";
-import { webinars } from "@/data/webinars";
+import { supabase } from "@/integrations/supabase/client";
 
 import whiteHat from "@/assets/hats/white-hat.jpg";
 import blackHat from "@/assets/hats/black-hat.jpg";
@@ -24,11 +24,27 @@ const hatImages: Record<string, string> = {
   "blue-hat": blueHat,
 };
 
+interface DbWebinar {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+}
+
 const ServiceDetail = () => {
   const { slug } = useParams();
+  const [webinars, setWebinars] = useState<DbWebinar[]>([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, [slug]);
+
+  useEffect(() => {
+    if (slug === "online-webinars") {
+      supabase.from("webinars").select("*").order("title").then(({ data }) => {
+        if (data) setWebinars(data as DbWebinar[]);
+      });
+    }
   }, [slug]);
 
   const service = services.find((s) => s.slug === slug);
@@ -68,18 +84,30 @@ const ServiceDetail = () => {
               <h2 className="text-xl md:text-2xl font-semibold mb-6">{detail?.pageTitle ?? "About This Service"}</h2>
 
               {slug === "online-webinars" ? (
-                <div className="space-y-3">
-                  {webinars.map((webinar) => (
-                    <div key={webinar.slug} className="border border-border rounded-lg p-4 hover:border-gold/50 transition-colors">
-                      <Link to={`/webinars/${webinar.slug}`} className="text-foreground font-semibold hover:text-gold transition-colors">
-                        {webinar.title}
-                      </Link>
-                      <div className="text-foreground/60 text-sm mt-1 font-normal min-h-[1.25rem]">
-                        {webinar.intro || ""}
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {webinars.map((webinar) => (
+                      <div key={webinar.id} className="flex flex-col justify-between rounded-lg border border-border bg-card p-5 hover:border-gold/50 transition-colors">
+                        <div>
+                          <h3 className="font-semibold text-foreground mb-2">{webinar.title}</h3>
+                          {webinar.description && (
+                            <p className="text-foreground/60 text-sm font-normal leading-relaxed">{webinar.description}</p>
+                          )}
+                        </div>
+                        <div className="mt-4">
+                          <Button variant="glass" size="sm" asChild>
+                            <a href="#inquiry-form">Inquire</a>
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                  <div className="mt-6">
+                    <Button variant="outline" asChild>
+                      <Link to="/admin/webinars">Add Webinar</Link>
+                    </Button>
+                  </div>
+                </>
               ) : (
                 <div className="space-y-4">
                   {(detail?.intro ?? [
@@ -203,7 +231,7 @@ const ServiceDetail = () => {
             )}
           </motion.div>
 
-          <div>
+          <div id="inquiry-form">
             <h2 className="text-2xl font-bold text-center mb-2">Inquire about {inquiryTitle}</h2>
             <p className="text-muted-foreground text-center mb-8 font-normal">
               Fill in some stuff below (mostly optional) and I'll get back to you next day.
