@@ -35,7 +35,13 @@ interface DbWebinar {
 
 const ServiceDetail = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [webinars, setWebinars] = useState<DbWebinar[]>([]);
+  const [expandedWebinar, setExpandedWebinar] = useState<string | null>(null);
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [adminPassword, setAdminPassword] = useState("");
+  const [attempts, setAttempts] = useState(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
