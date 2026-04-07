@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,10 +18,12 @@ interface Webinar {
 }
 
 export default function AdminWebinars() {
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [webinars, setWebinars] = useState<Webinar[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loginAttempts, setLoginAttempts] = useState(0);
   const { toast } = useToast();
 
   const [title, setTitle] = useState("");
@@ -55,7 +58,13 @@ export default function AdminWebinars() {
         sessionStorage.setItem("admin_pw", password);
         setAuthenticated(true);
       } else {
-        toast({ title: "Wrong password", variant: "destructive" });
+        const next = loginAttempts + 1;
+        setLoginAttempts(next);
+        if (next >= 2) {
+          navigate("/");
+        } else {
+          toast({ title: "Wrong password", variant: "destructive" });
+        }
       }
     } catch {
       toast({ title: "Error verifying password", variant: "destructive" });

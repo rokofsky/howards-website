@@ -1,12 +1,14 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { services } from "@/data/services";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { motion, AnimatePresence } from "framer-motion";
 import { serviceDetails } from "@/data/serviceDetails";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 import whiteHat from "@/assets/hats/white-hat.jpg";
 import blackHat from "@/assets/hats/black-hat.jpg";
@@ -33,7 +35,13 @@ interface DbWebinar {
 
 const ServiceDetail = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [webinars, setWebinars] = useState<DbWebinar[]>([]);
+  const [expandedWebinar, setExpandedWebinar] = useState<string | null>(null);
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [adminPassword, setAdminPassword] = useState("");
+  const [attempts, setAttempts] = useState(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -46,6 +54,38 @@ const ServiceDetail = () => {
       });
     }
   }, [slug]);
+
+  const handleAddWebinarClick = () => {
+    if (sessionStorage.getItem("admin_auth") === "true") {
+      navigate("/admin/webinars");
+    } else {
+      setShowPasswordPrompt(true);
+    }
+  };
+
+  const handleAddWebinarAuth = async () => {
+    try {
+      const res = await supabase.functions.invoke("admin-webinars", {
+        method: "POST",
+        body: { password: adminPassword, action: "verify" },
+      });
+      if (res.data?.ok) {
+        sessionStorage.setItem("admin_auth", "true");
+        sessionStorage.setItem("admin_pw", adminPassword);
+        navigate("/admin/webinars");
+      } else {
+        const next = attempts + 1;
+        setAttempts(next);
+        if (next >= 2) {
+          navigate("/");
+        } else {
+          toast({ title: "Wrong password", variant: "destructive" });
+        }
+      }
+    } catch {
+      toast({ title: "Error verifying password", variant: "destructive" });
+    }
+  };
 
   const service = services.find((s) => s.slug === slug);
   const detail = slug ? serviceDetails[slug] : undefined;
@@ -87,25 +127,59 @@ const ServiceDetail = () => {
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {webinars.map((webinar) => (
-                      <div key={webinar.id} className="flex flex-col justify-between rounded-lg border border-border bg-card p-5 hover:border-gold/50 transition-colors">
-                        <div>
-                          <h3 className="font-semibold text-foreground mb-2">{webinar.title}</h3>
-                          {webinar.description && (
-                            <p className="text-foreground/60 text-sm font-normal leading-relaxed">{webinar.description}</p>
+                      <div key={webinar.id}>
+                        <div className="flex flex-col justify-between rounded-lg border border-border bg-card p-5 hover:border-gold/50 transition-colors">
+                          <div>
+                            <h3 className="font-semibold text-foreground mb-2">{webinar.title}</h3>
+                            {webinar.description && (
+                              <p className="text-foreground/60 text-sm font-normal leading-relaxed">{webinar.description}</p>
+                            )}
+                          </div>
+                          <div className="mt-4">
+                            <Button
+                              variant="glass"
+                              size="sm"
+                              onClick={() => setExpandedWebinar(expandedWebinar === webinar.id ? null : webinar.id)}
+                            >
+                              {expandedWebinar === webinar.id ? "Close" : "Inquire"}
+                            </Button>
+                          </div>
+                        </div>
+                        <AnimatePresence>
+                          {expandedWebinar === webinar.id && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3, ease: "easeInOut" }}
+                              className="overflow-hidden"
+                            >
+                              <div className="pt-4 pb-2">
+                                <ContactForm serviceName={webinar.title} showServiceFields />
+                              </div>
+                            </motion.div>
                           )}
-                        </div>
-                        <div className="mt-4">
-                          <Button variant="glass" size="sm" asChild>
-                            <a href="#inquiry-form">Inquire</a>
-                          </Button>
-                        </div>
+                        </AnimatePresence>
                       </div>
                     ))}
                   </div>
                   <div className="mt-6">
-                    <Button variant="outline" asChild>
-                      <Link to="/admin/webinars">Add Webinar</Link>
-                    </Button>
+                    {showPasswordPrompt ? (
+                      <div className="flex gap-2 items-center max-w-sm">
+                        <Input
+                          type="password"
+                          placeholder="Admin password"
+                          value={adminPassword}
+                          onChange={(e) => setAdminPassword(e.target.value)}
+                          onKeyDown={(e) => e.key === "Enter" && handleAddWebinarAuth()}
+                        />
+                        <Button onClick={handleAddWebinarAuth}>Go</Button>
+                      </div>
+                    ) : (
+                      <Button variant="outline" onClick={handleAddWebinarClick}>
+                        Add Webinar
+                      </Button>
+                    )}
                   </div>
                 </>
               ) : (
