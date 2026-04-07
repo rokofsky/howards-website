@@ -20,6 +20,13 @@ const projectTypeOptions: SelectOption[] = [
   { value: "keynote-speaking", label: "Keynote speaking" },
 ];
 
+const preferredDatesOptions: SelectOption[] = [
+  { value: "asap", label: "ASAP" },
+  { value: "next-week", label: "Next week" },
+  { value: "next-month", label: "Next month" },
+  { value: "near-future", label: "Near future" },
+];
+
 const timelineOptions: SelectOption[] = [
   { value: "asap", label: "ASAP" },
   { value: "next-week", label: "Next week" },
@@ -184,17 +191,15 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
               className={inputClasses}
             />
           </div>
-          <div>
-            <label htmlFor="preferredDates" className="text-sm text-muted-foreground mb-1.5 block font-medium">Preferred Dates</label>
-            <input
-              id="preferredDates"
-              name="preferredDates"
-              type="date"
-              value={form.preferredDates}
-              onChange={handleChange}
-              className={inputClasses}
-            />
-          </div>
+          <FormSelectField
+            id="preferredDates"
+            label="Preferred Dates"
+            name="preferredDates"
+            onChange={handleChange}
+            options={preferredDatesOptions}
+            placeholder="When do you need this"
+            value={form.preferredDates}
+          />
         </div>
       )}
 

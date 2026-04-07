@@ -134,7 +134,6 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
       {
         title: "Goals",
         bullets: [
-          "\n",
           "Identify the filters of perception\u00A0and the root causes of conflict",
           "See the big picture and identify alternate angles of perception",
           "Practice effective listening and when to shut up",
@@ -144,8 +143,6 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           "Handle difficult meetings sensitively and constructively",
           "Speak fluently and confidently even under stress",
           "Become aware of your emotional triggers and prevent explosive situations",
-          "\n",
-          "\n",
           "Control anger with a simple technique",
           "Learn the 7 Types of Difficult People, their ways, and how to neutralize them"
         ]
@@ -156,12 +153,9 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           "Understand your own and the other person's style, then identify and react accordingly",
           "Use intervention, mediation and voluntary arbitration as the process for settling issues",
           "Settle disputes through an empowering process",
-          "\n",
           "Develop the art, science and practice of conflict resolution",
-          "\n",
           "Maintain constructive joint processes to create organizational effectiveness",
           "Remember everyone's interests and try to help each protect theirs",
-          "\n",
           "Offer a practical way to resolve disputes and preserve relationships",
           "Find any common ground and use this leverage to go forward"
         ]
