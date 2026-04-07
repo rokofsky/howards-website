@@ -18,10 +18,12 @@ const Footer = () => {
       <div className="container mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
-            <Link to="/admin/sessions" className="text-lg font-semibold mb-4 block hover:no-underline text-primary-foreground">Howard</Link>
+            <Link to="/bio" className="text-lg font-semibold mb-4 block hover:no-underline text-primary-foreground">Howard</Link>
             <p className="text-primary-foreground/60 font-light text-sm leading-relaxed max-w-xs">
               Helping people find their voice, one story at a time. Because the best meetings are the ones where everyone forgets they're in a meeting.
             </p>
+            <Link to="/admin/sessions" className="text-[10px] text-primary-foreground/[0.08] block mt-1">Manage Storytelling</Link>
+            <Link to="/admin/webinars" className="text-[10px] text-primary-foreground/[0.08] block">Manage Webinars</Link>
           </div>
 
           <div>
