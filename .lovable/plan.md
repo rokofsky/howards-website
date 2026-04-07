@@ -1,29 +1,21 @@
 
 
-# Add drag-and-drop reordering to admin webinars
+# Show admin webinar list as a 3-column card grid
 
-## Steps
+## What changes
 
-### 1. Database migration
-Add `sort_order` integer column (default 0) to `webinars` table. Backfill existing rows sequentially by title.
+Replace the vertical stacked list in `src/pages/AdminWebinars.tsx` with a 3-column card grid that mirrors the public webinar page layout. Each card shows title, description, an edit/delete button row, and a drag handle. This lets you see the exact visual order as it appears to visitors.
 
-### 2. Edge function update (`supabase/functions/admin-webinars/index.ts`)
-Add `"reorder"` action accepting `{ items: [{ id, sort_order }] }` — loops through and updates each row's `sort_order`.
+## Technical detail
 
-### 3. Admin UI (`src/pages/AdminWebinars.tsx`)
-- Install `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`
-- Wrap webinar list in `DndContext` + `SortableContext`
-- Make each webinar row a sortable item with a `GripVertical` drag handle
-- On drag end: reorder local state, call edge function with `action: "reorder"`
-- Fetch ordered by `sort_order` ascending
+### File: `src/pages/AdminWebinars.tsx`
 
-### 4. Public page (`src/pages/ServiceDetail.tsx`)
-Change `.order("title")` to `.order("sort_order", { ascending: true })`.
+**SortableWebinarRow component** — change from a horizontal flex row to a card matching the public page style:
+- Outer wrapper: `rounded-lg border border-border bg-card p-5` (same classes as public cards)
+- Title as `<h3>`, description below, drag handle + edit/delete buttons at bottom
+- Keep all `useSortable` logic intact
 
-### Files changed
-- New migration SQL
-- `supabase/functions/admin-webinars/index.ts`
-- `src/pages/AdminWebinars.tsx`
-- `src/pages/ServiceDetail.tsx`
-- `package.json` (add @dnd-kit packages)
+**Grid container** — replace `<div className="space-y-3">` with `<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">` (identical breakpoints to public page)
+
+No other files changed. Drag-and-drop, edit modal, create form, and password protection stay the same.
 
