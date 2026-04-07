@@ -18,10 +18,12 @@ interface Webinar {
 }
 
 export default function AdminWebinars() {
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [webinars, setWebinars] = useState<Webinar[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loginAttempts, setLoginAttempts] = useState(0);
   const { toast } = useToast();
 
   const [title, setTitle] = useState("");
