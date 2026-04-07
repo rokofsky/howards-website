@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 interface SelectOption {
   label: string;
@@ -86,6 +88,7 @@ const FormSelectField = ({
 
 const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProps) => {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -104,9 +107,72 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
     setForm((prev) => ({ ...prev, [target.name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+
+    try {
+      const id = crypto.randomUUID();
+
+      const { error: dbError } = await supabase.from("contact_submissions").insert({
+        id,
+        name: form.name,
+        email: form.email,
+        message: form.message,
+        service: serviceName || null,
+        company_name: form.companyName || null,
+        group_size: form.groupSize || null,
+        preferred_dates: form.preferredDates || null,
+        project_type: form.projectType || null,
+        timeline: form.timeline || null,
+        copy_to_me: form.copyToMe,
+      });
+
+      if (dbError) {
+        console.error("DB error:", dbError);
+      }
+
+      const emailPayload = {
+        type: "notification",
+        name: form.name,
+        email: form.email,
+        message: form.message,
+        service: serviceName || "",
+        companyName: form.companyName,
+        groupSize: form.groupSize,
+        preferredDates: form.preferredDates,
+        projectType: form.projectType,
+        timeline: form.timeline,
+      };
+
+      const { error: notifError } = await supabase.functions.invoke("send-contact-email", {
+        body: emailPayload,
+      });
+
+      if (notifError) {
+        console.error("Notification email error:", notifError);
+      }
+
+      if (form.copyToMe) {
+        const { error: copyError } = await supabase.functions.invoke("send-contact-email", {
+          body: { ...emailPayload, type: "copy" },
+        });
+        if (copyError) {
+          console.error("Copy email error:", copyError);
+        }
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error("Submit error:", err);
+      toast({
+        title: "Something went wrong",
+        description: "Please try again or email info@rokofsky.com directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -252,8 +318,8 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
         <label htmlFor="copyToMe" className="text-sm text-muted-foreground font-normal">Send me a copy</label>
       </div>
 
-      <Button variant="glass" size="xl" type="submit" className="w-full">
-        Send Message
+      <Button variant="glass" size="xl" type="submit" className="w-full" disabled={loading}>
+        {loading ? "Sending..." : "Send Message"}
       </Button>
     </motion.form>
   );
