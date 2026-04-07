@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { services } from "@/data/services";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { serviceDetails } from "@/data/serviceDetails";
 import { webinars } from "@/data/webinars";
@@ -153,7 +154,7 @@ const ServiceDetail = () => {
 
                 {section.bullets && (
                   <ul className={`grid ${slug === "storytelling" ? "gap-0.5" : "gap-0.5"} text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line ${slug === "meetings-moderation" && section.title.includes("People who are comfortable") ? "mt-1" : ""}`}>
-                    {section.bullets.map((item) => (
+                    {section.bullets.filter((item) => item.trim().length > 0).map((item) => (
                       <li key={item} className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
                         <span className="font-normal">
@@ -208,6 +209,11 @@ const ServiceDetail = () => {
               Fill in some stuff below (mostly optional) and I'll get back to you next day.
             </p>
             <ContactForm serviceName={service.title} showServiceFields />
+            <div className="text-center mt-8">
+              <Button variant="glassPetrol" size="lg" asChild>
+                <a href="https://calendly.com" target="_blank" rel="noopener noreferrer">Skip the email, book a call now</a>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

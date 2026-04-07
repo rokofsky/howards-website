@@ -13,18 +13,6 @@ const topics = [
   "8 Intelligences and how to increase yours",
   "Self-motivation and concentration",
   "Time Management in 5 minutes a day",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
 ];
 
 const KeynoteTopics = () => {

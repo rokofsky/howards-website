@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
+import { Button } from "@/components/ui/button";
 import { webinars } from "@/data/webinars";
 import { motion } from "framer-motion";
 
@@ -45,6 +46,11 @@ const WebinarDetail = () => {
               Fill in some stuff below (mostly optional) and I'll get back to you next day.
             </p>
             <ContactForm serviceName={webinar.title} showServiceFields />
+            <div className="text-center mt-8">
+              <Button variant="glassPetrol" size="lg" asChild>
+                <a href="https://calendly.com" target="_blank" rel="noopener noreferrer">Skip the email, book a call now</a>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

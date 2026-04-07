@@ -13,14 +13,14 @@ import hero7 from "@/assets/hero-7.jpg";
 import hero8 from "@/assets/hero-8.jpg";
 import hero9 from "@/assets/hero-9.png";
 
-const slides = [hero9, hero5, hero4, hero2, hero1, hero6, hero3, hero8, hero7];
+const slides = [hero9, hero5, hero2, hero1, hero6, hero3, hero4, hero7, hero8];
 
-// Per-slide object-position overrides (default is "center top")
+// Per-slide object-position overrides (default is "center center")
 const slidePositions: Record<number, string> = {
-  3: "center 30%",   // hero-2 (index 3): lower to show subject
-  4: "center 30%",   // hero-1 (index 4): lower
-  5: "center 40%",   // hero-6 (index 5): zoom way out, show face
-  6: "center 30%",   // hero-3 (index 6): lower to show subject
+  0: "center center",   // hero-9: center
+  2: "center center",   // hero-2: center
+  7: "center center",   // hero-7: center
+  8: "center 70%",      // hero-8: show lower half (subject is bottom)
 };
 
 const HeroSection = () => {
@@ -48,8 +48,8 @@ const HeroSection = () => {
             src={slides[current]}
             alt="Howard - Soft Skills Consultant"
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: slidePositions[current] ?? "center top" }}
-            initial={{ opacity: 0, scale: 1.15 }}
+            style={{ objectPosition: slidePositions[current] ?? "center center" }}
+            initial={{ opacity: 0, scale: 1.08 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.2 }}
@@ -94,7 +94,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          Soft-skills consultant & storytelling evangelist
+          Soft skills trainer & storytelling maestro
         </motion.p>
         <motion.div
           className="pointer-events-auto"
