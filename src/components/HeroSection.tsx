@@ -17,9 +17,14 @@ const slides = [hero9, hero5, hero2, hero1, hero6, hero3, hero4, hero7, hero8];
 
 // Per-slide object-position overrides (default is "center center")
 const slidePositions: Record<number, string> = {
-  0: "center 30%",      // hero-9: shift view upward
+  0: "center 30%",
   2: "center center",
   7: "center center",
+};
+
+// Per-slide initial scale (default 1.08); higher = starts more zoomed, zooms out more
+const slideScales: Record<number, number> = {
+  0: 1.25, // hero-9: start further out for dramatic zoom-out
 };
 
 const HeroSection = () => {
@@ -48,7 +53,7 @@ const HeroSection = () => {
             alt="Howard - Soft Skills Consultant"
             className="absolute inset-0 w-full h-full object-cover"
             style={{ objectPosition: slidePositions[current] ?? "center center" }}
-            initial={{ opacity: 0, scale: 1.08 }}
+            initial={{ opacity: 0, scale: slideScales[current] ?? 1.08 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.2 }}
