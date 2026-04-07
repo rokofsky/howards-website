@@ -6,6 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, Pencil } from "lucide-react";
 
@@ -26,9 +33,16 @@ export default function AdminWebinars() {
   const [loginAttempts, setLoginAttempts] = useState(0);
   const { toast } = useToast();
 
+  // Add form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [editingId, setEditingId] = useState<string | null>(null);
+
+  // Edit modal state
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editLoading, setEditLoading] = useState(false);
 
   useEffect(() => {
     const saved = sessionStorage.getItem("admin_auth");
@@ -73,43 +87,55 @@ export default function AdminWebinars() {
 
   const getPassword = () => sessionStorage.getItem("admin_pw") || password;
 
-  const clearForm = () => {
-    setTitle("");
-    setDescription("");
-    setEditingId(null);
-  };
-
-  const handleEdit = (w: Webinar) => {
-    setEditingId(w.id);
-    setTitle(w.title);
-    setDescription(w.description);
-  };
-
-  const handleCreateOrUpdate = async () => {
+  const handleCreate = async () => {
     if (!title.trim()) {
       toast({ title: "Title is required", variant: "destructive" });
       return;
     }
     setLoading(true);
+    const res = await supabase.functions.invoke("admin-webinars", {
+      body: { password: getPassword(), action: "create", title, description },
+    });
+    setLoading(false);
+    if (res.error || res.data?.error) {
+      toast({ title: "Error creating webinar", description: res.error?.message || res.data?.error, variant: "destructive" });
+      return;
+    }
+    toast({ title: "Webinar created!" });
+    setTitle("");
+    setDescription("");
+    fetchWebinars();
+  };
 
-    const action = editingId ? "update" : "create";
+  const handleEditOpen = (w: Webinar) => {
+    setEditId(w.id);
+    setEditTitle(w.title);
+    setEditDescription(w.description || "");
+    setEditDialogOpen(true);
+  };
+
+  const handleEditSave = async () => {
+    if (!editId || !editTitle.trim()) {
+      toast({ title: "Title is required", variant: "destructive" });
+      return;
+    }
+    setEditLoading(true);
     const res = await supabase.functions.invoke("admin-webinars", {
       body: {
         password: getPassword(),
-        action,
-        ...(editingId ? { id: editingId } : {}),
-        title,
-        description,
+        action: "update",
+        id: editId,
+        title: editTitle,
+        description: editDescription,
       },
     });
-
-    setLoading(false);
+    setEditLoading(false);
     if (res.error || res.data?.error) {
-      toast({ title: `Error ${action === "update" ? "updating" : "creating"} webinar`, description: res.error?.message || res.data?.error, variant: "destructive" });
+      toast({ title: "Error updating webinar", description: res.error?.message || res.data?.error, variant: "destructive" });
       return;
     }
-    toast({ title: `Webinar ${action === "update" ? "updated" : "created"}!` });
-    clearForm();
+    toast({ title: "Webinar updated!" });
+    setEditDialogOpen(false);
     fetchWebinars();
   };
 
@@ -157,7 +183,7 @@ export default function AdminWebinars() {
 
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>{editingId ? "Edit Webinar" : "Add New Webinar"}</CardTitle>
+          <CardTitle>Add New Webinar</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -166,16 +192,11 @@ export default function AdminWebinars() {
           </div>
           <div>
             <Label htmlFor="desc">Description</Label>
-            <Textarea id="desc" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Short description" rows={3} />
+            <Textarea id="desc" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Short description (shown smaller on the card)" rows={3} />
           </div>
-          <div className="flex gap-2">
-            <Button onClick={handleCreateOrUpdate} disabled={loading}>
-              {loading ? (editingId ? "Updating..." : "Creating...") : (editingId ? "Update Webinar" : "Add Webinar")}
-            </Button>
-            {editingId && (
-              <Button variant="outline" onClick={clearForm}>Cancel</Button>
-            )}
-          </div>
+          <Button onClick={handleCreate} disabled={loading}>
+            {loading ? "Creating..." : "Add Webinar"}
+          </Button>
         </CardContent>
       </Card>
 
@@ -195,7 +216,7 @@ export default function AdminWebinars() {
                     {w.description && <p className="text-sm text-muted-foreground mt-1">{w.description}</p>}
                   </div>
                   <div className="flex gap-1 shrink-0">
-                    <Button variant="ghost" size="icon" onClick={() => handleEdit(w)}>
+                    <Button variant="ghost" size="icon" onClick={() => handleEditOpen(w)}>
                       <Pencil className="h-4 w-4 text-muted-foreground" />
                     </Button>
                     <Button variant="ghost" size="icon" onClick={() => handleDelete(w.id)}>
@@ -208,6 +229,31 @@ export default function AdminWebinars() {
           )}
         </CardContent>
       </Card>
+
+      {/* Edit Webinar Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Webinar</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div>
+              <Label htmlFor="edit-title">Title</Label>
+              <Input id="edit-title" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
+            </div>
+            <div>
+              <Label htmlFor="edit-desc">Description</Label>
+              <Textarea id="edit-desc" value={editDescription} onChange={(e) => setEditDescription(e.target.value)} placeholder="Short description (shown smaller on the card)" rows={4} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleEditSave} disabled={editLoading}>
+              {editLoading ? "Saving..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
