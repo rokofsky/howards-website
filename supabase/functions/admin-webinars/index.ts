@@ -46,7 +46,9 @@ Deno.serve(async (req) => {
 
       const { data, error } = await supabase
         .from("webinars")
-        .insert({ slug, title: title.trim(), description: (description || "").trim() })
+        .insert({ slug, title: title.trim(), description: (description || "").trim(), sort_order: body.sort_order ?? 0 })
+        .select()
+        .single();
         .select()
         .single();
 
@@ -80,6 +82,26 @@ Deno.serve(async (req) => {
 
       if (error) throw error;
       return new Response(JSON.stringify(data), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (action === "reorder") {
+      const { items } = body;
+      if (!Array.isArray(items)) {
+        return new Response(JSON.stringify({ error: "items array is required" }), {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      for (const item of items) {
+        const { error } = await supabase
+          .from("webinars")
+          .update({ sort_order: item.sort_order })
+          .eq("id", item.id);
+        if (error) throw error;
+      }
+      return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }

@@ -14,7 +14,24 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, GripVertical } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface Webinar {
   id: string;
@@ -22,6 +39,56 @@ interface Webinar {
   title: string;
   description: string;
   created_at: string;
+  sort_order: number;
+}
+
+function SortableWebinarRow({
+  webinar,
+  onEdit,
+  onDelete,
+}: {
+  webinar: Webinar;
+  onEdit: (w: Webinar) => void;
+  onDelete: (id: string) => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: webinar.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-start justify-between gap-4 rounded-lg border border-border p-4"
+    >
+      <button
+        className="mt-1 cursor-grab touch-none text-muted-foreground hover:text-foreground"
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="h-5 w-5" />
+      </button>
+      <div className="min-w-0 flex-1">
+        <p className="font-medium text-foreground">{webinar.title}</p>
+        {webinar.description && (
+          <p className="text-sm text-muted-foreground mt-1">{webinar.description}</p>
+        )}
+      </div>
+      <div className="flex gap-1 shrink-0">
+        <Button variant="ghost" size="icon" onClick={() => onEdit(webinar)}>
+          <Pencil className="h-4 w-4 text-muted-foreground" />
+        </Button>
+        <Button variant="ghost" size="icon" onClick={() => onDelete(webinar.id)}>
+          <Trash2 className="h-4 w-4 text-destructive" />
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 export default function AdminWebinars() {
@@ -33,16 +100,19 @@ export default function AdminWebinars() {
   const [loginAttempts, setLoginAttempts] = useState(0);
   const { toast } = useToast();
 
-  // Add form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  // Edit modal state
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editLoading, setEditLoading] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   useEffect(() => {
     const saved = sessionStorage.getItem("admin_auth");
@@ -57,7 +127,7 @@ export default function AdminWebinars() {
     const { data } = await supabase
       .from("webinars")
       .select("*")
-      .order("title", { ascending: true });
+      .order("sort_order", { ascending: true });
     if (data) setWebinars(data as Webinar[]);
   };
 
@@ -93,8 +163,9 @@ export default function AdminWebinars() {
       return;
     }
     setLoading(true);
+    const maxOrder = webinars.length > 0 ? Math.max(...webinars.map((w) => w.sort_order)) + 1 : 0;
     const res = await supabase.functions.invoke("admin-webinars", {
-      body: { password: getPassword(), action: "create", title, description },
+      body: { password: getPassword(), action: "create", title, description, sort_order: maxOrder },
     });
     setLoading(false);
     if (res.error || res.data?.error) {
@@ -150,6 +221,21 @@ export default function AdminWebinars() {
     }
     toast({ title: "Webinar deleted" });
     fetchWebinars();
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = webinars.findIndex((w) => w.id === active.id);
+    const newIndex = webinars.findIndex((w) => w.id === over.id);
+    const reordered = arrayMove(webinars, oldIndex, newIndex);
+    setWebinars(reordered);
+
+    const items = reordered.map((w, i) => ({ id: w.id, sort_order: i }));
+    await supabase.functions.invoke("admin-webinars", {
+      body: { password: getPassword(), action: "reorder", items },
+    });
   };
 
   if (!authenticated) {
@@ -208,29 +294,24 @@ export default function AdminWebinars() {
           {webinars.length === 0 ? (
             <p className="text-muted-foreground">No webinars yet.</p>
           ) : (
-            <div className="space-y-3">
-              {webinars.map((w) => (
-                <div key={w.id} className="flex items-start justify-between gap-4 rounded-lg border border-border p-4">
-                  <div className="min-w-0">
-                    <p className="font-medium text-foreground">{w.title}</p>
-                    {w.description && <p className="text-sm text-muted-foreground mt-1">{w.description}</p>}
-                  </div>
-                  <div className="flex gap-1 shrink-0">
-                    <Button variant="ghost" size="icon" onClick={() => handleEditOpen(w)}>
-                      <Pencil className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(w.id)}>
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </div>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <SortableContext items={webinars.map((w) => w.id)} strategy={verticalListSortingStrategy}>
+                <div className="space-y-3">
+                  {webinars.map((w) => (
+                    <SortableWebinarRow
+                      key={w.id}
+                      webinar={w}
+                      onEdit={handleEditOpen}
+                      onDelete={handleDelete}
+                    />
+                  ))}
                 </div>
-              ))}
-            </div>
+              </SortableContext>
+            </DndContext>
           )}
         </CardContent>
       </Card>
 
-      {/* Edit Webinar Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent>
           <DialogHeader>

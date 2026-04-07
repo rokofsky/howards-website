@@ -50,7 +50,7 @@ const ServiceDetail = () => {
 
   useEffect(() => {
     if (slug === "online-webinars") {
-      supabase.from("webinars").select("*").order("title").then(({ data }) => {
+      supabase.from("webinars").select("*").order("sort_order", { ascending: true }).then(({ data }) => {
         if (data) setWebinars(data as DbWebinar[]);
       });
     }
