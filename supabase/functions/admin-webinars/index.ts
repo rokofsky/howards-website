@@ -49,8 +49,6 @@ Deno.serve(async (req) => {
         .insert({ slug, title: title.trim(), description: (description || "").trim(), sort_order: body.sort_order ?? 0 })
         .select()
         .single();
-        .select()
-        .single();
 
       if (error) throw error;
       return new Response(JSON.stringify(data), {
