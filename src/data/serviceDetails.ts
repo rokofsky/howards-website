@@ -76,8 +76,8 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     sections: []
   },
   "meetings-moderation": {
-    pageTitle: "The Six Thinking Hats",
-    lead: "A structured method for smoother meetings, better thinking, and faster decisions.",
+    pageTitle: "Six Thinking Hats",
+    lead: "A structured method for smoother meetings, lateral thinking, and faster decisions.",
     intro: [
       "Howard will come to your meeting room and demonstrate this fun and miraculous method in about 3 hours.",
       "The 6 Thinking Hats framework is designed to facilitate creative, collaborative problem-solving discussions and meetings. Instead of the traditional meeting style, where people single-mindedly argue their points back and forth, around in circles, the 6 Hats method showcases parallel thinking — all participants are required to think and discuss\u00A0\u2014\u00A0in sync!",
