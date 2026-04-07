@@ -84,6 +84,26 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (action === "reorder") {
+      const { items } = body;
+      if (!Array.isArray(items)) {
+        return new Response(JSON.stringify({ error: "items array is required" }), {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      for (const item of items) {
+        const { error } = await supabase
+          .from("webinars")
+          .update({ sort_order: item.sort_order })
+          .eq("id", item.id);
+        if (error) throw error;
+      }
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     if (action === "delete") {
       const { id } = body;
       if (!id) {
