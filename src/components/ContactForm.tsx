@@ -182,7 +182,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
         animate={{ opacity: 1, scale: 1 }}
         className="glass rounded-lg p-10 text-center max-w-lg mx-auto"
       >
-        <h3 className="text-2xl font-bold mb-3">Thanks.</h3>
+        <h3 className="text-2xl font-bold mb-3">Thanks for the nudge</h3>
         <p className="text-muted-foreground font-normal">
           Howard will be in touch faster than you can say "synergy". Check your email tomorrow.
         </p>
