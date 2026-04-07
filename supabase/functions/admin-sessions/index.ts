@@ -64,6 +64,34 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (action === "update") {
+      const { id, title, description, session_date, zoom_link, zoom_meeting_id } = body;
+      if (!id) {
+        return new Response(JSON.stringify({ error: "id is required" }), {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const updates: Record<string, unknown> = {};
+      if (title !== undefined) updates.title = title;
+      if (description !== undefined) updates.description = description;
+      if (session_date !== undefined) updates.session_date = session_date;
+      if (zoom_link !== undefined) updates.zoom_link = zoom_link;
+      if (zoom_meeting_id !== undefined) updates.zoom_meeting_id = zoom_meeting_id ? zoom_meeting_id.replace(/\D/g, "") : null;
+
+      const { data, error } = await supabase
+        .from("storytelling_sessions")
+        .update(updates)
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return new Response(JSON.stringify(data), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     if (action === "delete") {
       const { id } = body;
       if (!id) {

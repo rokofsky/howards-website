@@ -1,0 +1,1 @@
+CREATE POLICY "Allow update for anon" ON public.storytelling_sessions FOR UPDATE TO anon USING (true) WITH CHECK (true);
