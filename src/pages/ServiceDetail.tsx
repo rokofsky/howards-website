@@ -1,5 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import MobileTruncatedText from "@/components/MobileTruncatedText";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
 import { services } from "@/data/services";
