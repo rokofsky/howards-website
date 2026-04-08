@@ -1,24 +1,23 @@
 
 
-# Add service name to copy email
+# Webinar grid: always 3 columns
 
-## Changes (one file: `supabase/functions/send-contact-email/index.ts`)
+## Current state
+The webinar list on the Online Webinars service page (`src/pages/ServiceDetail.tsx`, line 129) uses:
+```
+grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
+```
+This means 1 column on phones, 2 on tablets, 3 on desktop.
 
-### 1. Subject line includes service
-Change line 135 from:
-```
-"Copy of your message to Howard Rokofsky"
-```
-to:
-```
-`Copy of your message to Howard about ${data.service}`
-```
+## Change
+Update to **3 columns at all sizes**, with compact cards on mobile — same approach as the services grid:
 
-### 2. Show service in copy email body
-In `copyHtml()`, add a line after the greeting (line 56) showing the service:
-```html
-<p style="..."><strong>Re: {service}</strong></p>
-```
+### File: `src/pages/ServiceDetail.tsx`
+- Change grid classes from `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4` to `grid-cols-3 gap-2 md:gap-4`
+- Make card padding responsive: `p-2 md:p-5`
+- Make title smaller on mobile: `text-xs md:text-base`
+- Hide description on mobile (not enough space): `hidden md:block`
+- Make the "Inquire" button smaller on mobile: `text-xs md:text-sm`
 
-Two small edits in one file. Redeploy of the edge function.
+One file, responsive class changes only.
 
