@@ -4,22 +4,22 @@ const PricingSection = () => {
   const tiers = [
     {
       name: "Keynote",
-      price: "From €2,500",
-      description: "A one-off speaking engagement that your audience will actually remember.",
+      price: "From €1,500",
+      description: "A one-time speaking engage-ment that your audience will talk about for days.",
       features: ["60–90 minute session", "Custom topic & storytelling", "Q&A session included", "Recording rights available"],
     },
     {
       name: "Online Workshops",
       price: "From €250",
       description: "Half-day or full-day immersive team training.",
-      features: ["3–6 hour session", "Up to 30 participants", "Custom exercises & materials", "Follow-up resources", "Post-workshop debrief"],
+      features: ["3–6 hour session", "Up to 30 participants", "Flexible timing options", "Follow-up resources", "Post-workshop debrief"],
       highlighted: true,
     },
     {
       name: "Inhouse Workshops",
       price: "From €1000",
       description: "Training for teams.",
-      features: ["Monthly sessions", "Unlimited email support", "Team assessments", "Priority booking", "Quarterly strategy reviews"],
+      features: ["Modules can be combined", "Custom exercises & materials", "Team assessments", "Follow-up resources", "Post-workshop debrief"],
     },
   ];
 
