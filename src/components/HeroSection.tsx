@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import hero1 from "@/assets/hero-1.jpg";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
 import hero4 from "@/assets/hero-4.png";
@@ -11,9 +10,9 @@ import hero5 from "@/assets/hero-5.jpg";
 import hero6 from "@/assets/hero-6.jpg";
 import hero7 from "@/assets/hero-7.jpg";
 import hero8 from "@/assets/hero-8.jpg";
-import hero9 from "@/assets/hero-9.png";
+import hero9a from "@/assets/hero-9a.png";
 
-const slides = [hero9, hero5, hero2, hero1, hero6, hero3, hero4, hero7, hero8];
+const slides = [hero9a, hero5, hero2, hero6, hero3, hero4, hero7, hero8];
 
 // Per-slide object-position overrides (default is "center center")
 const slidePositions: Record<number, string> = {

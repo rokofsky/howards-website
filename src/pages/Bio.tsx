@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
-import hero1 from "@/assets/hero-1.jpg";
+import hero9a from "@/assets/hero-9a.png";
 
 const Bio = () => {
   return (
