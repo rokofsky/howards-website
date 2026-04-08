@@ -160,7 +160,7 @@ const StorytellingWorkshops = () => {
               <DialogHeader>
                 <DialogTitle className="text-xl">🌱 You're signed up! 🌱</DialogTitle>
                 <DialogDescription className="pt-2 text-base font-medium">
-                  Check your email for the Zoom link, see you there!
+                  Check your email for the Zoom link, see you there!<br />/HR
                 </DialogDescription>
               </DialogHeader>
               <div className="glass rounded-lg p-4 mt-2">
