@@ -14,7 +14,7 @@ const Bio = () => {
           >
             <div>
               <img
-                src={hero1}
+                src={hero9a}
                 alt="Howard"
                 className="rounded-lg w-full object-cover aspect-[3/4]"
                 width={600}
