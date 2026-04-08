@@ -112,26 +112,6 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
     setLoading(true);
 
     try {
-      const id = crypto.randomUUID();
-
-      const { error: dbError } = await supabase.from("contact_submissions").insert({
-        id,
-        name: form.name,
-        email: form.email,
-        message: form.message,
-        service: serviceName || null,
-        company_name: form.companyName || null,
-        group_size: form.groupSize || null,
-        preferred_dates: form.preferredDates || null,
-        project_type: form.projectType || null,
-        timeline: form.timeline || null,
-        copy_to_me: form.copyToMe,
-      });
-
-      if (dbError) {
-        console.error("DB error:", dbError);
-      }
-
       const emailPayload = {
         type: "notification",
         name: form.name,
@@ -143,6 +123,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
         preferredDates: form.preferredDates,
         projectType: form.projectType,
         timeline: form.timeline,
+        copyToMe: form.copyToMe,
       };
 
       const { error: notifError } = await supabase.functions.invoke("send-contact-email", {
