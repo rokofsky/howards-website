@@ -1,14 +1,24 @@
 
 
-# Fix notification email: service in subject + reply-to inquirer
+# Add service name to copy email
 
 ## Changes (one file: `supabase/functions/send-contact-email/index.ts`)
 
 ### 1. Subject line includes service
-Change the notification subject from `"New inquiry from {name}"` to include the service when present: `"New inquiry: {service} — {name}"`.
+Change line 135 from:
+```
+"Copy of your message to Howard Rokofsky"
+```
+to:
+```
+`Copy of your message to Howard about ${data.service}`
+```
 
-### 2. Add reply-to header
-Add `reply_to` field to the Resend API payload for notification emails, set to the inquirer's email. Clicking Reply in your inbox will address the inquirer directly.
+### 2. Show service in copy email body
+In `copyHtml()`, add a line after the greeting (line 56) showing the service:
+```html
+<p style="..."><strong>Re: {service}</strong></p>
+```
 
-No other changes needed. Requires redeployment of the edge function.
+Two small edits in one file. Redeploy of the edge function.
 
