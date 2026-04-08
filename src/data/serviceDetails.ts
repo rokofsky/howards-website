@@ -70,7 +70,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     ]
   },
   "online-webinars": {
-    pageTitle: "These interactive webinars last about 2 hours each. Inquire about some, or use the general form at the bottom.",
+    pageTitle: "These interactive webinars last about 2 hours. Inquire about each, or use the general form at the bottom ⬇️",
     lead: "Turn on your camera and unmute your microphone. Learn all sorts of stuff online with an interactive webinar. Just about any time of day.",
     intro: [],
     sections: []
