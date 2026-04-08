@@ -11,8 +11,8 @@ const PricingSection = () => {
     {
       name: "Online Workshops",
       price: "From €250",
-      description: "Half-day or full-day immersive team training.",
-      features: ["3–6 hour session", "Up to 30 participants", "Flexible timing options", "Follow-up resources", "Post-workshop debrief"],
+      description: "Half-day or full-day interactive team learning.",
+      features: ["3–6 hour sessions", "Up to 100 participants", "Flexible timing options", "Follow-up resources", "Post-workshop debrief"],
       highlighted: true,
     },
     {
