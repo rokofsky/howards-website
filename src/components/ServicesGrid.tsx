@@ -12,7 +12,7 @@ const ServiceCard = ({ title, subtitle, hook, slug, index }: { title: string; su
   >
     <Link
       to={`/services/${slug}`}
-      className="group block relative h-64 rounded-lg overflow-hidden"
+      className="group block relative h-28 md:h-64 rounded-lg overflow-hidden"
     >
       <img
         src={serviceBg}
@@ -23,10 +23,10 @@ const ServiceCard = ({ title, subtitle, hook, slug, index }: { title: string; su
         height={800}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/40 to-foreground/10 group-hover:from-foreground/90 transition-all duration-300" />
-      <div className="absolute inset-0 flex flex-col justify-end p-6">
-        <h3 className="text-lg font-semibold text-primary-foreground mb-0.5">{title}</h3>
-        {subtitle && <p className="text-sm font-light text-primary-foreground/70 mb-1">{subtitle}</p>}
-        {hook && <p className="text-sm font-light text-primary-foreground/70 whitespace-pre-line">{hook}</p>}
+      <div className="absolute inset-0 flex flex-col justify-end p-2 md:p-6">
+        <h3 className="text-xs md:text-lg font-semibold text-primary-foreground mb-0.5">{title}</h3>
+        {subtitle && <p className="hidden md:block text-sm font-light text-primary-foreground/70 mb-1">{subtitle}</p>}
+        {hook && <p className="hidden md:block text-sm font-light text-primary-foreground/70 whitespace-pre-line">{hook}</p>}
       </div>
     </Link>
   </motion.div>
@@ -54,12 +54,10 @@ const ServicesGrid = () => {
         ))}
       </div>
 
-      {/* Mobile Carousel */}
-      <div className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-6 px-6 scrollbar-hide">
+      {/* Mobile Grid */}
+      <div className="md:hidden grid grid-cols-3 gap-2">
         {services.map((s, i) => (
-          <div key={s.id} className="snap-start shrink-0 w-[280px]">
-            <ServiceCard {...s} index={i} />
-          </div>
+          <ServiceCard key={s.id} {...s} index={i} />
         ))}
       </div>
     </section>
