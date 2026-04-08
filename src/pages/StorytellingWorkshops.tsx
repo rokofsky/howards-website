@@ -98,8 +98,8 @@ const StorytellingWorkshops = () => {
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Storytelling Sessions</h1>
             <p className="mb-10 max-w-2xl leading-relaxed font-semibold text-secondary-foreground">
               Join us in a round of neighborly storytelling. We come together on Zoom and take
-              turns telling our story, anecdote, joke, whatever, and, if you want, get instant
-              feedback from the others.
+              turns telling our story, anecdote, joke, whatever. If you want, get instant feedback
+              <br />from the others.
             </p>
 
             {loading ? (
