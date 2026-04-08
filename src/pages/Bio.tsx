@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
-import hero1 from "@/assets/hero-1.jpg";
+import hero9a from "@/assets/hero-9a.png";
 
 const Bio = () => {
   return (
@@ -14,7 +14,7 @@ const Bio = () => {
           >
             <div>
               <img
-                src={hero1}
+                src={hero9a}
                 alt="Howard"
                 className="rounded-lg w-full object-cover aspect-[3/4]"
                 width={600}
