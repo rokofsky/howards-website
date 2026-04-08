@@ -1,23 +1,33 @@
 
 
-# Webinar grid: always 3 columns
+# Implement mobile 3×3 grid for services
 
-## Current state
-The webinar list on the Online Webinars service page (`src/pages/ServiceDetail.tsx`, line 129) uses:
+## Problem
+The services section still uses a horizontal swipe carousel on mobile. The approved plan to show all 9 services in a compact 3×3 grid was never applied.
+
+## Changes — one file: `src/components/ServicesGrid.tsx`
+
+### 1. Update `ServiceCard` with responsive classes
+- Height: `h-28 md:h-64`
+- Padding: `p-2 md:p-6`
+- Title: `text-xs md:text-lg`
+- Hide subtitle and hook on mobile: `hidden md:block`
+
+### 2. Replace mobile carousel with grid
+Replace the "Mobile Carousel" `div` (lines 57–64):
 ```
-grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
+<div className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-6 px-6 scrollbar-hide">
+  ...shrink-0 w-[280px]...
+</div>
 ```
-This means 1 column on phones, 2 on tablets, 3 on desktop.
+with:
+```
+<div className="md:hidden grid grid-cols-3 gap-2">
+  {services.map((s, i) => (
+    <ServiceCard key={s.id} {...s} index={i} />
+  ))}
+</div>
+```
 
-## Change
-Update to **3 columns at all sizes**, with compact cards on mobile — same approach as the services grid:
-
-### File: `src/pages/ServiceDetail.tsx`
-- Change grid classes from `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4` to `grid-cols-3 gap-2 md:gap-4`
-- Make card padding responsive: `p-2 md:p-5`
-- Make title smaller on mobile: `text-xs md:text-base`
-- Hide description on mobile (not enough space): `hidden md:block`
-- Make the "Inquire" button smaller on mobile: `text-xs md:text-sm`
-
-One file, responsive class changes only.
+One file, CSS class changes only. All 9 services visible at once on mobile, no scrolling needed.
 
