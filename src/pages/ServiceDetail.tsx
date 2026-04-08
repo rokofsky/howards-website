@@ -126,19 +126,20 @@ const ServiceDetail = () => {
 
               {slug === "online-webinars" ? (
                 <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-3 gap-2 md:gap-4">
                     {webinars.map((webinar) => (
-                      <div key={webinar.id} className="flex flex-col justify-between rounded-lg border border-border bg-card p-5 hover:border-gold/50 transition-colors">
+                      <div key={webinar.id} className="flex flex-col justify-between rounded-lg border border-border bg-card p-2 md:p-5 hover:border-gold/50 transition-colors">
                         <div>
-                          <h3 className="font-semibold text-foreground mb-2">{webinar.title}</h3>
+                          <h3 className="text-xs md:text-base font-semibold text-foreground mb-2">{webinar.title}</h3>
                           {webinar.description && (
-                            <p className="text-foreground/60 text-sm font-normal leading-relaxed">{webinar.description}</p>
+                            <p className="hidden md:block text-foreground/60 text-sm font-normal leading-relaxed">{webinar.description}</p>
                           )}
                         </div>
                         <div className="mt-4">
                           <Button
                             variant="glass"
                             size="sm"
+                            className="text-xs md:text-sm"
                             onClick={() => setExpandedWebinar(webinar.id)}
                           >
                             Inquire
