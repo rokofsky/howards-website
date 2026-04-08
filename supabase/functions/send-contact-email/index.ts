@@ -55,6 +55,9 @@ function copyHtml(data: Record<string, string>) {
     <p style="font-size:14px;color:#3d2c1e;line-height:1.6;margin:0 0 16px">
       Hi ${esc("name") || "there"}, thanks for reaching out. Here's a copy of what you sent:
     </p>
+    <p style="font-size:14px;color:#3d2c1e;line-height:1.6;margin:0 0 16px">
+      <strong>Re: ${esc("service")}</strong>
+    </p>
     <div style="background:#efe4d9;padding:16px 20px;border-radius:6px;font-size:14px;color:#3d2c1e;white-space:pre-wrap;line-height:1.6">
 ${esc("message")}
     </div>
@@ -132,7 +135,7 @@ Deno.serve(async (req) => {
 
     const to = type === "copy" ? email : TO_EMAIL;
     const subject = type === "copy"
-      ? "Copy of your message to Howard Rokofsky"
+      ? `Copy of your message to Howard about ${data.service}`
       : (data.service ? `New inquiry: ${data.service} — ${name}` : `New inquiry from ${name}`);
     const html = type === "copy" ? copyHtml(data) : notificationHtml(data);
 
