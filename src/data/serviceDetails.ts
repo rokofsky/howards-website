@@ -33,7 +33,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     pageTitle: "Persuasive Presentations",
     lead: "Learn the mechanics and rhetoric to win any audience",
     intro: [
-      "This workshop is especially designed for people who need to present in front of a multicultural group. However, the techniques we will study are universal and apply to any business culture.",
+      "This workshop is designed especially for people who need to present in front of a multicultural group. However, the techniques we will study are universal and apply to any business culture.",
       "The training is rather hands-on \"technical\" in nature: we will practice the nuances of vocal usage, non-verbal language and rhetorical techniques, all designed to attract the audience, focus them where we want, and keep their attention. With these techniques and a healthy dose of self-control, anyone can learn how to be confident and persuasive in front of a group, even those with stage-fright.",
       "The trainer focuses on revealing specific points for individual improvement and repeating correct behaviours. After completing this workshop, you will have all the tools necessary to speak confidently, persuasively, and motivate your audience to action."
     ],
