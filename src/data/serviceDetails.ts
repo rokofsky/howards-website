@@ -267,31 +267,26 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           "Empathy: the 180-degree mindset",
           "Take Me, Please! — a game to identify working styles",
           "Role playing on camera, analysis and feedback",
-          "Dealing with difficult people",
+          "\n",
           "Overcoming objections",
           "Assertiveness — 2/4 Step Technique",
           "Constructive feedback: giving, receiving and requesting",
+          "\n",
+          "\n",
+          "4 barriers to communication and overcoming them",
+          "Dealing with difficult people",
           "Reframing — how to use it effectively and ethically",
-          "SOFTEN technique for winning friends and influencing people"
+          "SOFTEN technique for winning friends and influencing people",
+          "\n"
         ]
       },
       {
         title: "Benefits",
-        bullets: [
-          "Speak calmly and confidently, even under stress",
-          "Maximize your credibility and impact with non-verbal skills",
-          "Learn the techniques to use for the rest of your life",
-          "Handle difficult discussions sensitively and constructively",
-          "Assertiveness: make your point and defend your space",
-          "Overcome objections and express your requirements, even with difficult people",
-          "Eased dealing with conflict",
-          "Motivate others to action"
-        ]
-      },
+...
       {
         title: "Training Methods",
         paragraphs: [
-          "Experiential training by role-playing and resolving model situations. These are recorded, analysed by the trainer with appropriate feedback from all sides.",
+          "Experiential training by role-playing and resolving model situations. These are recorded, analysed by the trainer with appropriate feedback.",
           "The trainer focuses on revealing and repeating correct behaviors, demonstrating the most useful rhetorical formulations, non-verbal signals, and self-control mechanisms. Feedback is encouraged in all workshops and seminars. Everyone is kindly asked to participate and give feedback. There is space for everyone."
         ]
       }
