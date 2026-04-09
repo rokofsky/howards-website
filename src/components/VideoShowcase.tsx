@@ -11,8 +11,7 @@ const VideoShowcase = () => {
       >
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-3">See Howard in Action</h2>
         <p className="text-center mb-10 text-primary font-medium">
-          A two-minute preview we made a long time ago. {"\n"}
-          More coming soon.
+          A video we made a long time ago. More coming soon.
         </p>
 
         <div className="relative aspect-video rounded-lg overflow-hidden glass">
