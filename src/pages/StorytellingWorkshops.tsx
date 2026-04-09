@@ -17,8 +17,6 @@ import {
 interface Session {
   id: string;
   session_date: string;
-  zoom_link: string | null;
-  zoom_meeting_id: string | null;
   title: string | null;
   description: string | null;
 }
@@ -41,13 +39,13 @@ const StorytellingWorkshops = () => {
 
   const fetchSessions = async () => {
     const { data, error } = await supabase
-      .from("storytelling_sessions")
-      .select("id, session_date, zoom_link, zoom_meeting_id, title, description")
+      .from("storytelling_sessions_public" as any)
+      .select("id, session_date, title, description")
       .gte("session_date", new Date().toISOString())
       .order("session_date", { ascending: true });
 
     if (!error && data) {
-      setSessions(data);
+      setSessions(data as unknown as Session[]);
     }
     setLoading(false);
   };
