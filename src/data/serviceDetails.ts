@@ -100,8 +100,8 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
       {
         title: "When might you use Six Thinking Hats?",
         bullets: [
-          "\nAnytime there are differences of opinion in a business meeting",
-          "\nFacilitation of meetings",
+          "Anytime there are differences of opinion in a business meeting",
+          "Facilitation of meetings",
           "Continuous process improvement",
           "New products / designs",
           "Conflict resolution",
