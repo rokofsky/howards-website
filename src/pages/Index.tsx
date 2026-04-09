@@ -9,6 +9,7 @@ import BookingSection from "@/components/BookingSection";
 import FAQSection from "@/components/FAQSection";
 import PricingSection from "@/components/PricingSection";
 import { Button } from "@/components/ui/button";
+import { openCalendly } from "@/lib/calendly";
 
 const Index = () => {
   return (
@@ -32,8 +33,8 @@ const Index = () => {
         </div>
         <ContactForm />
         <div className="text-center mt-8">
-          <Button variant="glassPetrol" size="lg" asChild>
-            <a href="#booking">Skip the email, book a call now</a>
+          <Button variant="glassPetrol" size="lg" onClick={openCalendly}>
+            Skip the email, book a call now
           </Button>
         </div>
       </section>

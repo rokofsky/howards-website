@@ -67,8 +67,8 @@ const WebinarDetail = () => {
             </p>
             <ContactForm serviceName={webinar.title} showServiceFields />
             <div className="text-center mt-8">
-              <Button variant="glassPetrol" size="lg" asChild>
-                <a href="https://calendly.com" target="_blank" rel="noopener noreferrer">Skip the email, book a call now</a>
+              <Button variant="glassPetrol" size="lg" onClick={openCalendly}>
+                Skip the email, book a call now
               </Button>
             </div>
           </div>
