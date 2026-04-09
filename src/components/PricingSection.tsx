@@ -3,12 +3,6 @@ import { motion } from "framer-motion";
 const PricingSection = () => {
   const tiers = [
     {
-      name: "Keynote Speaking",
-      price: "From CZK 30,000 (€1,200)",
-      description: "A one-time speaking engage-ment that your audience will talk about for days.",
-      features: ["60–90 minute session", "Custom topic & storytelling", "Q&A session included", "Recording rights available"],
-    },
-    {
       name: "Online Workshops",
       price: "From CZK 4,000 (€165)",
       description: "From 2 hours to a full day of interactive team learning.",
@@ -20,6 +14,12 @@ const PricingSection = () => {
       price: "From CZK 24,500 (€1000)",
       description: "Training for teams.",
       features: ["Modules can be combined", "Custom exercises & materials", "Team assessments", "Follow-up resources", "Post-workshop debrief"],
+    },
+    {
+      name: "Keynote Speaking",
+      price: "From CZK 30,000 (€1,200)",
+      description: "A one-time speaking engage-ment that your audience will talk about for days.",
+      features: ["60–90 minute session", "Custom topic & storytelling", "Q&A session included", "Recording rights available"],
     },
   ];
 

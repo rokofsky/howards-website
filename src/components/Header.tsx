@@ -55,6 +55,13 @@ const Header = () => {
     setMobileOpen(false);
   };
 
+  const handleLogoClick = (e: React.MouseEvent) => {
+    if (location.pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     if (location.pathname === "/" && location.hash) {
       const id = location.hash.slice(1);
@@ -69,7 +76,7 @@ const Header = () => {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between px-6">
-        <Link to="/" className="text-xl font-bold tracking-tight text-foreground">
+        <Link to="/" onClick={handleLogoClick} className="text-xl font-bold tracking-tight text-foreground">
           Howard
         </Link>
 
