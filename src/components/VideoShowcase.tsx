@@ -16,16 +16,13 @@ const VideoShowcase = () => {
         </p>
 
         <div className="relative aspect-video rounded-lg overflow-hidden glass">
-          <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 glass-button cursor-pointer">
-                <svg className="w-6 h-6 text-gold ml-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>
-              <p className="text-sm text-muted-foreground font-light">Video placeholder — coming soon</p>
-            </div>
-          </div>
+          <iframe
+            src="https://www.youtube.com/embed/mfDvsbTwnY8?start=4"
+            title="See Howard in Action"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute inset-0 w-full h-full"
+          />
         </div>
       </motion.div>
     </section>
