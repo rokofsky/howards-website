@@ -293,6 +293,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           "Motivate others to action"
         ]
       },
+      {
         title: "Training Methods",
         paragraphs: [
           "Experiential training by role-playing and resolving model situations. These are recorded, analysed by the trainer with appropriate feedback.",
