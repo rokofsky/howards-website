@@ -249,7 +249,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
   "communication-skills": {
     pageTitle: "Interpersonal Communication Training",
     intro: [
-      "It's universally affirmed that personal relationships are the most important factor in any business. Communication is the oil for the machine. With a few techniques you can make a good impression, be a good listener, maybe use some charisma, and motivate people. Understanding the nuances of communication will help you avoid misunderstandings, and fix them when they occur.",
+      "It's universally affirmed that personal relationships are the most important factor in any business. Communication is the oil for the machine. With a few techniques you can make a good impression, be a good listener, maybe use some charisma, and motivate people. Understanding the nuances of communication will help you avoid misunderstandings, and fix them when they occur. Optional Leadership module.",
       "In this workshop, you will practice how to project yourself more effectively and persuasively by connecting with others, carefully following, guiding, and motivating them. Learn how to craft your message so as to evoke the response you desire. In practically any situation you may find yourself in."
     ],
     sections: [
@@ -257,22 +257,27 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         title: "Workshop Contents",
         bullets: [
           "Vocal hygiene — exercise for a resonating voice",
-          "The basic communication styles and how to deal with them",
-          "Discussion: the various communication styles and how we can adapt",
-          "4 barriers to communication and overcoming them",
-          "Hara: demonstrate the power of speaking from your gut",
+          "The basic communication styles\u00A0how we can adapt,\u00A0and how to deal with them",
+          "\n",
+          "\n",
+          "Hara: learn the power of speaking from your gut",
           "Vocal intonation for the proper authority",
           "Active listening",
           "Gaining rapport",
           "Empathy: the 180-degree mindset",
           "Take Me, Please! — a game to identify working styles",
           "Role playing on camera, analysis and feedback",
-          "Dealing with difficult people",
+          "\n",
           "Overcoming objections",
           "Assertiveness — 2/4 Step Technique",
           "Constructive feedback: giving, receiving and requesting",
+          "\n",
+          "\n",
+          "4 barriers to communication and overcoming them",
+          "Dealing with difficult people",
           "Reframing — how to use it effectively and ethically",
-          "SOFTEN technique for winning friends and influencing people"
+          "SOFTEN technique for winning friends and influencing people",
+          "\n"
         ]
       },
       {
@@ -291,7 +296,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
       {
         title: "Training Methods",
         paragraphs: [
-          "Experiential training by role-playing and resolving model situations. These are recorded, analysed by the trainer with appropriate feedback from all sides.",
+          "Experiential training by role-playing and resolving model situations. These are recorded, analysed by the trainer with appropriate feedback.",
           "The trainer focuses on revealing and repeating correct behaviors, demonstrating the most useful rhetorical formulations, non-verbal signals, and self-control mechanisms. Feedback is encouraged in all workshops and seminars. Everyone is kindly asked to participate and give feedback. There is space for everyone."
         ]
       }
