@@ -17,8 +17,6 @@ import {
 interface Session {
   id: string;
   session_date: string;
-  zoom_link: string | null;
-  zoom_meeting_id: string | null;
   title: string | null;
   description: string | null;
 }
