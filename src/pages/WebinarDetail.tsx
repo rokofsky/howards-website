@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { openCalendly } from "@/lib/calendly";
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/ContactForm";
