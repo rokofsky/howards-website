@@ -45,7 +45,7 @@ const StorytellingWorkshops = () => {
       .order("session_date", { ascending: true });
 
     if (!error && data) {
-      setSessions(data);
+      setSessions(data as unknown as Session[]);
     }
     setLoading(false);
   };
