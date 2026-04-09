@@ -9,7 +9,7 @@ export interface ServiceItem {
 export const services: ServiceItem[] = [
   { id: "1", title: "Presentation & Speaking skills Training", subtitle: "Including storytelling", hook: "Speak like a pro and own the room", slug: "presentation-speaking-skills" },
   { id: "2", title: "Live webinar sessions", subtitle: "So many to choose from!", hook: "", slug: "online-webinars" },
-  { id: "3", title: "The Six Hats Method", subtitle: "Meetings moderation", hook: "Make even difficult decisions easier, in half the time", slug: "meetings-moderation" },
+  { id: "3", title: "The Six Hats Method", subtitle: "Better meetings to get more done", hook: "Make even difficult decisions easier, in half the time", slug: "meetings-moderation" },
   { id: "4", title: "Conflict mediation /resolution", subtitle: "Mediation and de-escalation", hook: "Turn battles into breakthroughs", slug: "conflict-resolution" },
   { id: "5", title: "Brainstorming sessions", subtitle: "Where ideas go to multiply", hook: "Success fee guarantee", slug: "brainstorming-sessions" },
   { id: "6", title: "Storytelling", subtitle: "Creating and performing", hook: "Facts tell, stories sell", slug: "storytelling" },
