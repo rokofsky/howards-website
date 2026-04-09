@@ -80,10 +80,10 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     lead: "Helping teams run smoother meetings, enabling parallel thinking and faster decisions for measurable productivity.",
     intro: [
       "Howard will come to your meeting room and demonstrate this fun and miraculous method in about 3 hours.",
-      "Most meetings are:\n\ntoo long\nunclear\nand lead nowhere\n\nThe result?\n\nwasted time\nfrustrated teams\nslow decision-making",
+      "Most meetings are: \n• too long \n• unclear and \n• lead nowhere \nThe result? \n• wasted time \n• frustrated teams \n• slow decision-making",
       "The 6 Thinking Hats framework is designed to facilitate creative, collaborative problem-solving discussions and meetings. Instead of the traditional meeting style, where people single-mindedly argue their points back and forth, around in circles, the 6 Hats method showcases parallel thinking — all participants are required to think and discuss\u00A0\u2014\u00A0in sync!\n\nAll thinking styles are involved — one at a time — each hat is a different argumentation style. Everyone wears the same hat at the same time. All opinions are expressed at the right time, and consensus is reached smoother and quicker. The rules are simple and it takes a bit of self-discipline, but you'll immediately notice the difference as doors open up that you hadn't realized before.",
       "Many big and small companies — e.g. Prudential Insurance, Siemens, Boeing, IBM, 3M, among many others use this method to reduce meeting times and effectuate more grounded decision making.",
-      "Through hands-on workshops and consulting, you’ll learn how to:\n\n• run shorter, focused meetings\n• make clear decisions\n• turn discussions into action\n\n\nLead meetings that actually move things forward!"
+      "Through hands-on workshops and consulting, you’ll learn how to: \n• run shorter, focused meetings \n• make clear decisions \n• turn discussions into action \n\nLead meetings that actually move things forward!"
     ],
     sections: [
       {
