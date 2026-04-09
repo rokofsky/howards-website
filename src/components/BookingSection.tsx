@@ -1,6 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { openCalendly } from "@/lib/calendly";
+import { CALENDLY_URL } from "@/lib/calendly";
 
 const BookingSection = () => {
   return (
@@ -17,16 +16,17 @@ const BookingSection = () => {
           and let's talk like actual humans.
         </p>
 
-        {/* Calendly placeholder */}
-        <div className="glass rounded-lg p-12 bg-primary-foreground/5 border-primary-foreground/10 mb-8">
-          <p className="text-primary-foreground/50 font-light text-sm">
-            📅 Calendar widget placeholder — Calendly or SavvyCal embed goes here
-          </p>
+        {/* Calendly inline embed */}
+        <div className="rounded-lg overflow-hidden" style={{ minHeight: 660 }}>
+          <iframe
+            src={`${CALENDLY_URL}?hide_gdpr_banner=1&background_color=1a1a2e&text_color=ffffff&primary_color=00b4d8`}
+            width="100%"
+            height="660"
+            frameBorder="0"
+            title="Book a call with Howard"
+            className="w-full"
+          />
         </div>
-
-        <Button variant="cta" size="xl" onClick={openCalendly}>
-          Skip the email, book a call now
-        </Button>
       </motion.div>
     </section>
   );
