@@ -55,6 +55,13 @@ const Header = () => {
     setMobileOpen(false);
   };
 
+  const handleLogoClick = (e: React.MouseEvent) => {
+    if (location.pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     if (location.pathname === "/" && location.hash) {
       const id = location.hash.slice(1);
