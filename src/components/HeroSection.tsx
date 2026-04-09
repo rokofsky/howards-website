@@ -10,9 +10,9 @@ import hero5 from "@/assets/hero-5.jpg";
 import hero6 from "@/assets/hero-6.jpg";
 import hero7 from "@/assets/hero-7.jpg";
 import hero8 from "@/assets/hero-8.jpg";
-import hero9a from "@/assets/hero-9a.png";
+import hero9b from "@/assets/hero-9b.png";
 
-const slides = [hero9a, hero5, hero2, hero6, hero3, hero4, hero7, hero8];
+const slides = [hero9b, hero5, hero2, hero6, hero3, hero4, hero7, hero8];
 
 // Per-slide object-position overrides (default is "center center")
 const slidePositions: Record<number, string> = {

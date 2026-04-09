@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import hero9a from "@/assets/hero-9a.png";
+import hero9b from "@/assets/hero-9b.png";
 import { openCalendly } from "@/lib/calendly";
 
 const Bio = () => {
@@ -17,7 +17,7 @@ const Bio = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
               <div>
                 <img
-                  src={hero9a}
+                  src={hero9b}
                   alt="Howard"
                   className="rounded-lg w-full object-cover aspect-[3/4]"
                   width={600}
