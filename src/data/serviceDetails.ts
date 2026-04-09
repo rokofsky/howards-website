@@ -77,7 +77,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
   },
   "meetings-moderation": {
     pageTitle: "Six Thinking Hats",
-    lead: "Helping teams run smoother meetings, enabling parallel thinking and faster decisions for measurable productivity.",
+    lead: "I help companies run smoother meetings by enabling parallel thinking to reach faster decisions for measurable productivity.",
     intro: [
       "Howard will come to your meeting room and demonstrate this fun and miraculous method in about 3 hours.",
       "Most meetings are:\u00A0\n• too long\u00A0\n• unclear and\u00A0\n• lead nowhere\u00A0\nThe result?\u00A0\n• wasted time\u00A0\n• frustrated teams\u00A0\n• slow decision-making",
