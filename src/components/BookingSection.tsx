@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { openCalendly } from "@/lib/calendly";
 
 const BookingSection = () => {
   return (
@@ -23,7 +24,7 @@ const BookingSection = () => {
           </p>
         </div>
 
-        <Button variant="cta" size="xl">
+        <Button variant="cta" size="xl" onClick={openCalendly}>
           Skip the email, book a call now
         </Button>
       </motion.div>
