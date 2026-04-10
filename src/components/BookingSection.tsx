@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { CALENDLY_URL } from "@/lib/calendly";
+import { Button } from "@/components/ui/button";
+import { openCalendly } from "@/lib/calendly";
 
 const BookingSection = () => {
   return (
@@ -16,17 +17,9 @@ const BookingSection = () => {
           and let's talk like actual humans.
         </p>
 
-        {/* Calendly inline embed */}
-        <div className="rounded-lg overflow-hidden" style={{ minHeight: 660 }}>
-          <iframe
-            src={`${CALENDLY_URL}?hide_gdpr_banner=1&background_color=1a1a2e&text_color=ffffff&primary_color=00b4d8`}
-            width="100%"
-            height="660"
-            frameBorder="0"
-            title="Book a call with Howard"
-            className="w-full"
-          />
-        </div>
+        <Button variant="glassPetrol" size="xl" onClick={openCalendly}>
+          Book a free call with Howard
+        </Button>
       </motion.div>
     </section>
   );
