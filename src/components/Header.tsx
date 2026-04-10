@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import bookCover from "@/assets/book-cover.png";
+import logo from "@/assets/logo.png";
 
 const navLinks = [
   { label: "Services", href: "/#services" },
