@@ -73,12 +73,12 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "glass py-3" : "bg-transparent py-5"
+        scrolled ? "glass" : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto flex items-center justify-between px-6">
-        <Link to="/" onClick={handleLogoClick} className="flex items-center transition-opacity duration-200 hover:opacity-75 hover:scale-[1.02]">
-          <img src={logo} alt="Rokofski Communication & Training" className="h-[2.3rem] md:h-[2.875rem] w-auto object-contain mix-blend-multiply" />
+      <div className="container mx-auto flex h-16 md:h-[72px] items-center justify-between px-6">
+        <Link to="/" onClick={handleLogoClick} className="flex items-center self-center leading-none bg-transparent transition-all duration-200 hover:opacity-80 hover:scale-[1.02]" style={{ backgroundColor: "transparent" }}>
+          <img src={logo} alt="Rokofski Communication & Training" className="block h-8 md:h-10 w-auto shrink-0 object-contain mix-blend-multiply" style={{ backgroundColor: "transparent" }} />
         </Link>
 
         {/* Desktop Nav */}
