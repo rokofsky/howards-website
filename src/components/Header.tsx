@@ -12,7 +12,7 @@ const navLinks = [
   { label: "Pricing", href: "/#pricing" },
   { label: "References", href: "/references" },
   {
-    label: "HR's book",
+    label: "My book",
     href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN",
     external: true,
   },
