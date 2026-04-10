@@ -7,13 +7,13 @@ export interface ServiceItem {
 }
 
 export const services: ServiceItem[] = [
-  { id: "1", title: "Presentation & Speaking skills Training", subtitle: "Including storytelling", hook: "Speak like a pro and own the room", slug: "presentation-speaking-skills" },
-  { id: "2", title: "Live webinar sessions", subtitle: "So many to choose from!", hook: "", slug: "online-webinars" },
+  { id: "1", title: "Presentation & Speaking Skills Training", subtitle: "Including storytelling", hook: "Speak like a pro and own the room", slug: "presentation-speaking-skills" },
+  { id: "2", title: "Live Webinar Sessions", subtitle: "So many to choose from!", hook: "", slug: "online-webinars" },
   { id: "3", title: "The Six Hats Method", subtitle: "Better meetings to get more done", hook: "Stop wasting time. Turn every meeting into actionable decisions.", slug: "meetings-moderation" },
-  { id: "4", title: "Conflict mediation /resolution", subtitle: "Mediation and de-escalation", hook: "Turn battles into breakthroughs", slug: "conflict-resolution" },
-  { id: "5", title: "Brainstorming sessions", subtitle: "Where ideas go to multiply", hook: "Success fee guarantee", slug: "brainstorming-sessions" },
+  { id: "4", title: "Conflict Mediation /Resolution", subtitle: "Mediation and de-escalation", hook: "Turn battles into breakthroughs", slug: "conflict-resolution" },
+  { id: "5", title: "Brainstorming Sessions", subtitle: "Where ideas go to multiply", hook: "Success fee guarantee", slug: "brainstorming-sessions" },
   { id: "6", title: "Storytelling", subtitle: "Creating and performing", hook: "Facts tell, stories sell", slug: "storytelling" },
-  { id: "7", title: "Interpersonal Communication Training", subtitle: "", hook: "Shape your message just right to get the response you want", slug: "communication-skills" },
+  { id: "7", title: "Individual Coaching Sessions", subtitle: "", hook: "Explore new angles and discover new options", slug: "communication-skills" },
   { id: "8", title: "Negotiation Representation", subtitle: "Need an advantage?", hook: "Benefit from Howard's edge", slug: "negotiation-skills" },
   { id: "9", title: "Keynote Speaking and Storytelling", subtitle: "Events that resonate", hook: "Something special for your guests", slug: "keynote-speaking" },
 ];
