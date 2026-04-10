@@ -11,7 +11,11 @@ const navLinks = [
   { label: "FAQ", href: "/#faq" },
   { label: "Pricing", href: "/#pricing" },
   { label: "References", href: "/references" },
-  { label: "HR's book", href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN", external: true },
+  {
+    label: "HR's book",
+    href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN",
+    external: true,
+  },
 ];
 
 const Header = () => {
@@ -57,9 +61,12 @@ const Header = () => {
   };
 
   const handleLogoClick = (e: React.MouseEvent) => {
+    setMobileOpen(false);
     if (location.pathname === "/") {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "auto" });
     }
   };
 
@@ -77,13 +84,20 @@ const Header = () => {
       }`}
     >
       <div className="container mx-auto flex h-16 md:h-[72px] items-center justify-between px-6">
-        <Link to="/" onClick={handleLogoClick} className="flex h-full items-center self-stretch bg-transparent transition-all duration-200 hover:opacity-80 hover:scale-[1.02]" style={{ backgroundColor: "transparent" }}>
-          <img src={logo} alt="Rokofski Communication & Training" className="block h-7 md:h-8 w-auto shrink-0 object-contain align-middle" style={{ backgroundColor: "transparent" }} />
-        </Link>
-        </Link>
+        <Link
+          to="/"
+          onClick={handleLogoClick}
+          className="flex h-full items-center self-stretch bg-transparent transition-all duration-200 hover:scale-[1.02] hover:opacity-80"
+          style={{ backgroundColor: "transparent" }}
+        >
+          <img
+            src={logo}
+            alt="Rokofski Communication & Training"
+            className="block h-8 md:h-10 w-auto shrink-0 object-contain"
+            style={{ backgroundColor: "transparent" }}
+          />
         </Link>
 
-        {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) =>
             link.external ? (
@@ -94,7 +108,13 @@ const Header = () => {
                 rel="noopener noreferrer"
                 className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide flex items-center gap-1.5 font-bold"
               >
-                <img src={bookCover} alt="HR's book cover" className="w-5 h-7 object-cover rounded-sm" width={20} height={28} />
+                <img
+                  src={bookCover}
+                  alt="HR's book cover"
+                  className="w-5 h-7 object-cover rounded-sm"
+                  width={20}
+                  height={28}
+                />
                 {link.label}
               </a>
             ) : (
@@ -106,7 +126,7 @@ const Header = () => {
               >
                 {link.label}
               </Link>
-            )
+            ),
           )}
         </nav>
 
@@ -116,7 +136,6 @@ const Header = () => {
           </Button>
         </div>
 
-        {/* Mobile Toggle */}
         <button
           className="md:hidden p-2 text-foreground"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -126,7 +145,6 @@ const Header = () => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -145,7 +163,13 @@ const Header = () => {
                     rel="noopener noreferrer"
                     className="text-base font-light text-foreground/70 hover:text-foreground py-2 flex items-center gap-2"
                   >
-                    <img src={bookCover} alt="HR's book cover" className="w-5 h-7 object-cover rounded-sm" width={20} height={28} />
+                    <img
+                      src={bookCover}
+                      alt="HR's book cover"
+                      className="w-5 h-7 object-cover rounded-sm"
+                      width={20}
+                      height={28}
+                    />
                     {link.label}
                   </a>
                 ) : (
@@ -157,7 +181,7 @@ const Header = () => {
                   >
                     {link.label}
                   </Link>
-                )
+                ),
               )}
               <Button variant="cta" size="lg" asChild className="mt-2">
                 <Link to="/storytelling-workshops">Storytelling Sessions</Link>
