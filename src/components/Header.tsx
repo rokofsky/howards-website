@@ -81,6 +81,7 @@ const Header = () => {
           <img src={logo} alt="Rokofski Communication & Training" className="block h-7 md:h-8 w-auto shrink-0 object-contain align-middle" style={{ backgroundColor: "transparent" }} />
         </Link>
         </Link>
+        </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
