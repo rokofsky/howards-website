@@ -3,7 +3,21 @@ import { motion } from "framer-motion";
 import { services } from "@/data/services";
 import serviceBg from "@/assets/service-bg.jpg";
 
-const ServiceCard = ({ title, subtitle, hook, slug, index }: { title: string; subtitle: string; hook: string; slug: string; index: number }) => {
+const ServiceCard = ({
+  title,
+  subtitle,
+  hook,
+  slug,
+  index,
+  showSecondaryText,
+}: {
+  title: string;
+  subtitle: string;
+  hook: string;
+  slug: string;
+  index: number;
+  showSecondaryText: boolean;
+}) => {
   const hasSubtitle = subtitle && subtitle.trim() !== "" && subtitle !== "\\n";
   const hasHook = hook && hook.trim() !== "" && hook !== "\\n";
   const secondaryText = hasSubtitle ? subtitle : hasHook ? hook : "";
@@ -28,13 +42,21 @@ const ServiceCard = ({ title, subtitle, hook, slug, index }: { title: string; su
           height={800}
         />
         <div className="absolute inset-0 bg-foreground/10 md:group-hover:bg-foreground/15 transition-colors duration-300" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2 md:p-6">
-          <h3 className="text-xs md:text-2xl font-bold text-primary-foreground md:group-hover:text-foreground transition-colors duration-300 mb-0.5 md:mb-1">
-            {title}
-          </h3>
-          <p className="hidden md:block text-sm font-semibold text-primary-foreground/70 md:group-hover:text-foreground/70 transition-colors duration-300">
-            {secondaryText || "\u00A0"}
-          </p>
+        <div className="absolute inset-0 flex items-center justify-center p-2 md:p-6">
+          <div className="relative z-10 flex max-w-full flex-col items-center justify-center text-center">
+            <h3 className="mb-0.5 text-xs font-bold leading-tight text-primary-foreground transition-colors duration-300 ease-out md:mb-1 md:text-2xl md:group-hover:text-foreground">
+              <span id={`service-title-${slug}`} className="block">
+                {title}
+              </span>
+            </h3>
+            {showSecondaryText ? (
+              <p className="min-h-[1.25rem] text-sm font-semibold leading-tight text-primary-foreground/85 transition-colors duration-300 ease-out md:group-hover:text-foreground">
+                <span id={`service-subtitle-${slug}`} className="block">
+                  {secondaryText || "\u00A0"}
+                </span>
+              </p>
+            ) : null}
+          </div>
         </div>
       </Link>
     </motion.div>
@@ -56,17 +78,15 @@ const ServicesGrid = () => {
         </p>
       </motion.div>
 
-      {/* Desktop Grid */}
       <div className="hidden md:grid grid-cols-3 gap-6 max-w-5xl mx-auto">
         {services.map((s, i) => (
-          <ServiceCard key={s.id} {...s} index={i} />
+          <ServiceCard key={s.id} {...s} index={i} showSecondaryText />
         ))}
       </div>
 
-      {/* Mobile Grid */}
       <div className="md:hidden grid grid-cols-3 gap-2">
         {services.map((s, i) => (
-          <ServiceCard key={s.id} {...s} index={i} />
+          <ServiceCard key={s.id} {...s} index={i} showSecondaryText={false} />
         ))}
       </div>
     </section>
