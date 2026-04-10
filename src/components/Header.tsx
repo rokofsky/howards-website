@@ -78,7 +78,7 @@ const Header = () => {
     >
       <div className="container mx-auto flex items-center justify-between px-6">
         <Link to="/" onClick={handleLogoClick} className="flex items-center py-1 transition-opacity duration-200 hover:opacity-75 hover:scale-[1.02]">
-          <img src={logo} alt="Rokofski Communication & Training" className="h-8 md:h-10 w-auto object-contain" />
+          <img src={logo} alt="Rokofski Communication & Training" className="h-[2.3rem] md:h-[2.875rem] w-auto object-contain mix-blend-multiply" />
         </Link>
 
         {/* Desktop Nav */}
