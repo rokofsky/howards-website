@@ -3,34 +3,43 @@ import { motion } from "framer-motion";
 import { services } from "@/data/services";
 import serviceBg from "@/assets/service-bg.jpg";
 
-const ServiceCard = ({ title, subtitle, hook, slug, index }: { title: string; subtitle: string; hook: string; slug: string; index: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-50px" }}
-    transition={{ delay: index * 0.05, duration: 0.4 }}
-  >
-    <Link
-      to={`/services/${slug}`}
-      className="group block relative h-28 md:h-64 rounded-lg overflow-hidden transition-transform duration-300 md:hover:scale-[1.03] active:brightness-90 active:duration-150"
+const ServiceCard = ({ title, subtitle, hook, slug, index }: { title: string; subtitle: string; hook: string; slug: string; index: number }) => {
+  const hasSubtitle = subtitle && subtitle.trim() !== "" && subtitle !== "\\n";
+  const hasHook = hook && hook.trim() !== "" && hook !== "\\n";
+  const secondaryText = hasSubtitle ? subtitle : hasHook ? hook : "";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ delay: index * 0.05, duration: 0.4 }}
     >
-      <img
-        src={serviceBg}
-        alt={title}
-        className="absolute inset-0 w-full h-full object-cover"
-        loading="lazy"
-        width={800}
-        height={800}
-      />
-      <div className="absolute inset-0 bg-foreground/10 md:group-hover:bg-foreground/15 transition-colors duration-300" />
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2 md:p-6">
-        <h3 className="text-xs md:text-lg font-semibold text-primary-foreground md:group-hover:text-foreground transition-colors duration-300 mb-0.5">{title}</h3>
-        {subtitle && <p className="hidden md:block text-sm font-light text-primary-foreground/70 md:group-hover:text-foreground/70 transition-colors duration-300 mb-1">{subtitle}</p>}
-        {hook && hook.trim() !== "" && hook !== "\\n" && <p className="hidden md:block text-sm font-light text-primary-foreground/70 md:group-hover:text-foreground/70 transition-colors duration-300 whitespace-pre-line">{hook}</p>}
-      </div>
-    </Link>
-  </motion.div>
-);
+      <Link
+        to={`/services/${slug}`}
+        className="group block relative h-28 md:h-64 rounded-lg overflow-hidden transition-transform duration-300 md:hover:scale-[1.03] active:brightness-90 active:duration-150"
+      >
+        <img
+          src={serviceBg}
+          alt={title}
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+          width={800}
+          height={800}
+        />
+        <div className="absolute inset-0 bg-foreground/10 md:group-hover:bg-foreground/15 transition-colors duration-300" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2 md:p-6">
+          <h3 className="text-xs md:text-2xl font-bold text-primary-foreground md:group-hover:text-foreground transition-colors duration-300 mb-0.5 md:mb-1">
+            {title}
+          </h3>
+          <p className="hidden md:block text-sm font-semibold text-primary-foreground/70 md:group-hover:text-foreground/70 transition-colors duration-300">
+            {secondaryText || "\u00A0"}
+          </p>
+        </div>
+      </Link>
+    </motion.div>
+  );
+};
 
 const ServicesGrid = () => {
   return (
