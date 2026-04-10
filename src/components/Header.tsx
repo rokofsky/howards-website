@@ -77,8 +77,8 @@ const Header = () => {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between px-6">
-        <Link to="/" onClick={handleLogoClick} className="flex items-center bg-transparent transition-opacity duration-200 hover:opacity-75 hover:scale-[1.02]" style={{ backgroundColor: 'transparent' }}>
-          <img src={logo} alt="Rokofski Communication & Training" className="h-[calc(100%-16px)] max-h-[2rem] md:max-h-[2.5rem] w-auto object-contain" style={{ mixBlendMode: 'multiply', backgroundColor: 'transparent' }} />
+        <Link to="/" onClick={handleLogoClick} className="flex items-center transition-opacity duration-200 hover:opacity-75 hover:scale-[1.02]">
+          <img src={logo} alt="Rokofski Communication & Training" className="h-[2.3rem] md:h-[2.875rem] w-auto object-contain mix-blend-multiply" />
         </Link>
 
         {/* Desktop Nav */}
