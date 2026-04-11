@@ -48,9 +48,9 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex gap-6 text-xs text-primary-foreground/40 font-light">
-            <Link to="/privacy" className="hover:text-primary-foreground/60 transition-colors">Privacy Policy</Link>
+            <Link to="/privacy-policy" className="hover:text-primary-foreground/60 transition-colors">Privacy Policy</Link>
             <Link to="/gdpr" className="hover:text-primary-foreground/60 transition-colors">GDPR</Link>
-            <Link to="/terms" className="hover:text-primary-foreground/60 transition-colors">Terms</Link>
+            <Link to="/terms-of-service" className="hover:text-primary-foreground/60 transition-colors">Terms</Link>
           </div>
           <p className="text-xs text-primary-foreground/30 font-light italic">
             "Every great leader is first a great storyteller." — Howard (probably)
