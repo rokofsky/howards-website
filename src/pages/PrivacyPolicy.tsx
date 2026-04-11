@@ -9,13 +9,13 @@ const PrivacyPolicy = () => (
       <div className="space-y-8 text-foreground/80 font-light leading-relaxed text-[15px]">
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-2">1. Who We Are</h2>
-          <p>Rokofsky Communication Training provides professional consulting, facilitation, and coaching services. Our registered address is in Prague, 17000 Czech Republic. For questions about this policy, contact us at info@rokofsky.com.</p>
+          <p>We at Rokofsky Communication Training value your privacy as much as we value our professional relationship. This policy explains how we handle your information when you book a session or send an inquiry.&nbsp;I provide professional consulting, facilitation, and coaching services. Our registered address is in Prague, 17000 Czech Republic. For questions about this policy, contact us at info@rokofsky.com.</p>
         </div>
         <div>
-          <h2 className="text-lg font-semibold text-foreground mb-2">2. Information We Collect</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-2">2. Information Collected</h2>
           <p>We may collect the following personal data:</p>
           <ul className="list-disc pl-6 mt-2 space-y-1">
-            <li>Name and email address (via contact forms or event registrations), although we will never save your name or email address for any other purpose.</li>
+            <li>Name and email address (via contact forms or event registrations), in order to coordinate consulting sessions in person or over Zoom, and respond to inquiries,&nbsp;although we will never save your name or email address for any other purpose.</li>
             <li>Company name and role</li>
             <li>Messages and enquiry details you submit</li>
             <li>Technical data such as IP address, browser type, and pages visited (via cookies and analytics)</li>
@@ -24,7 +24,7 @@ const PrivacyPolicy = () => (
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-2">3. How We Use Your Information</h2>
           <ul className="list-disc pl-6 space-y-1">
-            <li>To respond to enquiries and provide our services</li>
+            <li>To respond to enquiries and provide my services</li>
             <li>To send event confirmations and relevant follow-ups</li>
             <li>To improve our website and user experience</li>
             <li>To comply with legal obligations</li>
