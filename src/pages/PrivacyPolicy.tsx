@@ -17,7 +17,23 @@ const PrivacyPolicy = () => (
           <ul className="list-disc pl-6 mt-2 space-y-1">
             <li>Name and email address (via contact forms or event registrations), although we will never save your name or email address for any other purpose.</li>
             <li>Company name and role</li>
-...
+            <li>Messages and enquiry details you submit</li>
+            <li>Technical data such as IP address, browser type, and pages visited (via cookies and analytics)</li>
+          </ul>
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-foreground mb-2">3. How We Use Your Information</h2>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>To respond to enquiries and provide our services</li>
+            <li>To send event confirmations and relevant follow-ups</li>
+            <li>To improve our website and user experience</li>
+            <li>To comply with legal obligations</li>
+          </ul>
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-foreground mb-2">4. Legal Basis for Processing</h2>
+          <p>We process personal data based on: (a) your consent, (b) the performance of a contract, or (c) our legitimate business interests, provided these do not override your rights.</p>
+        </div>
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-2">5. Data Sharing</h2>
           <p>We do not sell your personal data. We may share information ONLY with trusted service providers (e.g., hosting, email delivery, video conferencing) who process data on our behalf under strict confidentiality agreements. Nothing else.</p>
