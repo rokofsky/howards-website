@@ -4,7 +4,7 @@ import { openCalendly } from "@/lib/calendly";
 
 const BookingSection = () => {
   return (
-    <section className="section-padding bg-primary text-primary-foreground">
+    <section id="contact-area" className="section-padding bg-primary text-primary-foreground">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
