@@ -93,7 +93,7 @@ const Header = () => {
         >
           <img
             src={logo}
-            alt="Rokofski Communication & Training"
+            alt="Rokofsky Communication Consulting Logo"
             className="block h-8 md:h-10 w-auto shrink-0 object-contain"
             style={{ backgroundColor: "transparent" }}
           />
@@ -111,7 +111,7 @@ const Header = () => {
               >
                 <img
                   src={bookCover}
-                  alt="HR's book cover"
+                  alt="How to GET Great Service by Howard Rokofsky"
                   className="w-5 h-7 object-cover rounded-sm"
                   width={20}
                   height={28}
@@ -166,7 +166,7 @@ const Header = () => {
                   >
                     <img
                       src={bookCover}
-                      alt="HR's book cover"
+                      alt="How to GET Great Service by Howard Rokofsky"
                       className="w-5 h-7 object-cover rounded-sm"
                       width={20}
                       height={28}
