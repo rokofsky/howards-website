@@ -47,11 +47,12 @@ export default function AdminSessions() {
   }, [authenticated]);
 
   const fetchSessions = async () => {
-    const { data } = await supabase
-      .from("storytelling_sessions")
-      .select("*")
-      .order("session_date", { ascending: true });
-    if (data) setSessions(data);
+    const pw = sessionStorage.getItem("admin_pw") || password;
+    const res = await supabase.functions.invoke("admin-sessions", {
+      method: "POST",
+      body: { password: pw, action: "list" },
+    });
+    if (Array.isArray(res.data)) setSessions(res.data);
   };
 
   const handleLogin = async () => {
