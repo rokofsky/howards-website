@@ -34,6 +34,17 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (action === "list") {
+      const { data, error } = await supabase
+        .from("storytelling_sessions")
+        .select("*")
+        .order("session_date", { ascending: true });
+      if (error) throw error;
+      return new Response(JSON.stringify(data), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     if (action === "create") {
       const { title, description, session_date, zoom_link, zoom_meeting_id } = body;
       if (!session_date) {
