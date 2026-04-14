@@ -71,7 +71,7 @@ withstanding pain to stage-fright. Let me know if you lose your balance /
 step in dog poop / panic *a lot less*.`,
   },
   {
-    slug: "the-art-of-saying-nothing-productively",
+    slug: "my-secret-cv",
     title: "Work experience you won’t find on my CV",
     excerpt: "12 former jobs that led me to where I am today",
     date: "Mar 15, 2026",
