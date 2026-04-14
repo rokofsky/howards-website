@@ -3,6 +3,8 @@ export interface BlogPost {
   title: string;
   excerpt: string;
   date: string;
+  category: string;
+  imageUrl?: string;
   content: string;
 }
 
@@ -12,6 +14,7 @@ export const blogPosts: BlogPost[] = [
     title: "Hara, so you don't fall down",
     excerpt: "Discover the ancient Japanese secret of Hara: finding your center of gravity for balance, confidence, and control.",
     date: "Mar 28, 2026",
+    category: "Mindset",
     content: `In ancient Japan, to say that someone ‘thinks with their head’ was an
 insult. Thinking was understood as something that came from a point in
 the belly: the Hara. You’ve heard of Hara Kiri (ritualistic suicide by
@@ -72,6 +75,7 @@ step in dog poop / panic *a lot less*.`,
     title: "Work experience you won’t find on my CV",
     excerpt: "12 former jobs that led me to where I am today",
     date: "Mar 15, 2026",
+    category: "Personal",
     content: `Newspaper carrier: from the ages of 13 to 16, every day the Long Island edition of Newsday magically got delivered to a route of 30+ homes in Plainview (it took about 2 hours a day; less if my brother or sister helped me, longer if I took my baby brother or the dog). In addition, I had to collect the weekly fees and tips from each customer on the route. There were always people who were hard to reach, or just didn’t like to pay. Looking back, it was an unlikely livelihood but what else could I do? Length of job: 2.5 years
 
 This opened up for me the worlds of responsibility, independence and perseverance. Probably time management as well.
@@ -121,6 +125,7 @@ Last and least, my horoscope. West: Taurus. Chinese: Fire Horse. This combinatio
     title: "Storytelling Is Not Optional Anymore",
     excerpt: "In a world of AI-generated everything, your story is the last unfakeable asset.",
     date: "Feb 28, 2026",
+    category: "Storytelling",
     content: "Content coming soon. Check back later for the full article.",
   },
 ];
