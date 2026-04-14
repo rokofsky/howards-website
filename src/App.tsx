@@ -16,6 +16,7 @@ import BlogPost from "./pages/BlogPost";
 import WebinarDetail from "./pages/WebinarDetail";
 import AdminSessions from "./pages/AdminSessions";
 import AdminWebinars from "./pages/AdminWebinars";
+import RokofAdmin from "./pages/RokofAdmin";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import GDPR from "./pages/GDPR";
 import TermsOfService from "./pages/TermsOfService";
@@ -47,6 +48,8 @@ const App = () => (
           <Route path="/webinars/:slug" element={<WebinarDetail />} />
           <Route path="/admin/sessions" element={<AdminSessions />} />
           <Route path="/admin/webinars" element={<AdminWebinars />} />
+          <Route path="/rokofsky-admin" element={<RokofAdmin />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/gdpr" element={<GDPR />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
