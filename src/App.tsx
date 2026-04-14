@@ -16,6 +16,7 @@ import BlogPost from "./pages/BlogPost";
 import WebinarDetail from "./pages/WebinarDetail";
 import AdminSessions from "./pages/AdminSessions";
 import AdminWebinars from "./pages/AdminWebinars";
+import RokofAdmin from "./pages/RokofAdmin";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import GDPR from "./pages/GDPR";
 import TermsOfService from "./pages/TermsOfService";

@@ -22,8 +22,7 @@ const Footer = () => {
             <p className="text-primary-foreground/60 font-light text-sm leading-relaxed max-w-xs">
               Helping people find their voice, one story at a time. Because the best meetings are the ones where everyone forgets they're in a meeting.
             </p>
-            <Link to="/admin/sessions" className="text-[10px] text-primary-foreground/[0.08] block mt-1">Manage Storytelling</Link>
-            <Link to="/admin/webinars" className="text-[10px] text-primary-foreground/[0.08] block">Manage Webinars</Link>
+            <Link to="/rokofsky-admin" className="text-[10px] text-primary-foreground/[0.08] block mt-1">Admin</Link>
           </div>
 
           <div>
