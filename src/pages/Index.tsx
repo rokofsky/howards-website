@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import HeroSection from "@/components/HeroSection";
 import SubHeroNav from "@/components/SubHeroNav";
 import ServicesGrid from "@/components/ServicesGrid";
-import BlogPreview from "@/components/BlogPreview";
+
 import VideoShowcase from "@/components/VideoShowcase";
 import ContactForm from "@/components/ContactForm";
 import BookingSection from "@/components/BookingSection";
@@ -19,7 +19,7 @@ const Index = () => {
       <ServicesGrid />
       <FAQSection />
       <PricingSection />
-      <BlogPreview />
+      
       <VideoShowcase />
       <BookingSection />
 

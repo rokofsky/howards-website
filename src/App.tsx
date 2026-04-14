@@ -11,6 +11,7 @@ import References from "./pages/References";
 import StorytellingWorkshops from "./pages/StorytellingWorkshops";
 import ServiceDetail from "./pages/ServiceDetail";
 import KeynoteTopics from "./pages/KeynoteTopics";
+import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import WebinarDetail from "./pages/WebinarDetail";
 import AdminSessions from "./pages/AdminSessions";
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/storytelling-workshops" element={<StorytellingWorkshops />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/keynote-topics" element={<KeynoteTopics />} />
+          <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/webinars/:slug" element={<WebinarDetail />} />
           <Route path="/admin/sessions" element={<AdminSessions />} />

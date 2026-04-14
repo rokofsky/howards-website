@@ -3,6 +3,8 @@ export interface BlogPost {
   title: string;
   excerpt: string;
   date: string;
+  category: string;
+  imageUrl?: string;
   content: string;
 }
 
@@ -12,6 +14,7 @@ export const blogPosts: BlogPost[] = [
     title: "Hara, so you don't fall down",
     excerpt: "Discover the ancient Japanese secret of Hara: finding your center of gravity for balance, confidence, and control.",
     date: "Mar 28, 2026",
+    category: "Mindset",
     content: `In ancient Japan, to say that someone ‘thinks with their head’ was an
 insult. Thinking was understood as something that came from a point in
 the belly: the Hara. You’ve heard of Hara Kiri (ritualistic suicide by
@@ -121,6 +124,7 @@ Last and least, my horoscope. West: Taurus. Chinese: Fire Horse. This combinatio
     title: "Storytelling Is Not Optional Anymore",
     excerpt: "In a world of AI-generated everything, your story is the last unfakeable asset.",
     date: "Feb 28, 2026",
+    category: "Storytelling",
     content: "Content coming soon. Check back later for the full article.",
   },
 ];

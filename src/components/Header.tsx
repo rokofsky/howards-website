@@ -16,6 +16,7 @@ const navLinks = [
     href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN",
     external: true,
   },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/#contact-area" },
 ];
 

@@ -28,13 +28,23 @@ const BlogPost = () => {
       <section className="section-padding pt-24">
         <div className="max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Link to="/#blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 inline-block">
-              ← Back to Blog
+            <Link to="/blog" className="text-sm text-accent hover:text-foreground transition-colors mb-6 inline-block font-medium">
+              ← Back to all articles
             </Link>
             <time className="text-sm text-muted-foreground font-light block mb-2">{post.date}</time>
             <h1 className="text-3xl md:text-4xl font-bold mb-6">{post.title}</h1>
+            {post.category && (
+              <span className="inline-block bg-accent text-accent-foreground text-xs font-semibold px-2.5 py-1 rounded-full mb-6">
+                {post.category}
+              </span>
+            )}
             <div className="glass rounded-lg p-8">
               <p className="text-foreground/80 leading-relaxed whitespace-pre-line font-medium">{post.content}</p>
+            </div>
+            <div className="mt-10">
+              <Link to="/blog" className="text-sm text-accent hover:text-foreground transition-colors font-medium">
+                ← Back to all articles
+              </Link>
             </div>
           </motion.div>
         </div>
