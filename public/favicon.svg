@@ -1,36 +1,39 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <style>
-    @media (prefers-color-scheme: dark) {
-      .bg-circle { fill: #1A1A1A; }
-    }
-  </style>
+  <defs>
+    <style>
+      @media (prefers-color-scheme: dark) {
+        .bg { fill: #1A1A1A; }
+      }
+    </style>
+  </defs>
   <!-- Orange ring -->
-  <circle cx="32" cy="32" r="30" fill="none" stroke="#FF5C00" stroke-width="2"/>
-  <!-- White circle (dark mode aware) -->
-  <circle class="bg-circle" cx="32" cy="32" r="29" fill="white"/>
-  <!-- Traced brand R in charcoal, visually centered (shifted right ~1.5 to compensate for tail) -->
-  <g transform="translate(19.5, 12) scale(0.052)">
+  <circle cx="32" cy="32" r="31" fill="none" stroke="#FF5C00" stroke-width="1.8"/>
+  <!-- White/dark background circle -->
+  <circle class="bg" cx="32" cy="32" r="29.5" fill="white"/>
+  <!-- Brand R traced from logo, visually centered -->
+  <g transform="translate(33.5, 32.5) scale(0.038) translate(-350, -420)">
+    <!-- Main vertical stem -->
     <path d="
-      M 80 0 L 80 700 L 160 700 L 160 400
-      L 220 400
-      C 260 400, 280 410, 300 440
-      L 420 700 L 510 700
-      L 370 420
-      C 350 385, 330 365, 300 355
-      C 380 340, 420 290, 420 220
-      C 420 100, 340 0, 200 0
-      Z
-      M 160 80 L 200 80
-      C 300 80, 340 140, 340 220
-      C 340 300, 300 340, 200 340
-      L 160 340 Z
+      M 140 60 L 140 840 L 250 840 L 250 480
+      L 320 480
+      C 350 480, 370 500, 390 540
+      L 500 800
+      Q 560 900, 600 940
+      Q 680 1020, 760 1020
+      Q 800 1020, 800 980
+      Q 800 960, 780 940
+      Q 740 900, 680 800
+      L 560 580
+      Q 530 530, 500 500
+      Q 480 480, 450 465
+      C 560 440, 620 370, 620 260
+      C 620 150, 560 60, 380 60
+      L 220 60 Z
 
-      M 300 440
-      C 320 440, 340 460, 360 500
-      Q 480 700, 520 780
-      Q 540 810, 500 810
-      Q 460 810, 380 680
-      L 300 540 Z
-    " fill="#111111"/>
+      M 250 150 L 360 150
+      C 480 150, 530 210, 530 270
+      C 530 350, 470 410, 360 410
+      L 250 410 Z
+    " fill="#111111" fill-rule="evenodd"/>
   </g>
 </svg>
