@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,6 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 
-const ADMIN_PASSWORD = "Rokofskyxxxx";
 const SESSION_KEY = "rokofsky-admin-auth";
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
@@ -22,7 +22,7 @@ const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Commun
 const RokofAdmin = () => {
   const navigate = useNavigate();
   const [authenticated, setAuthenticated] = useState(
-    () => sessionStorage.getItem(SESSION_KEY) === "true"
+    () => !!sessionStorage.getItem(SESSION_KEY)
   );
   const [password, setPassword] = useState("");
 
@@ -34,14 +34,22 @@ const RokofAdmin = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [generatedCode, setGeneratedCode] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, "true");
-      setAuthenticated(true);
-      setPassword("");
-    } else {
-      toast({ title: "Incorrect password", variant: "destructive" });
+    try {
+      const { data, error } = await supabase.functions.invoke("admin-sessions", {
+        body: { password, action: "verify" },
+      });
+      if (error) throw error;
+      if (data?.ok) {
+        sessionStorage.setItem(SESSION_KEY, password);
+        setAuthenticated(true);
+        setPassword("");
+      } else {
+        toast({ title: "Incorrect password", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Login failed", variant: "destructive" });
     }
   };
 
