@@ -12,7 +12,18 @@ const GDPR = () => (
           <p>Rokofsky Events s.r.o. acts as the data controller for personal data collected through this website. Registered address: Simackova 24, Prague, CZ. Data protection contact: info@rokofsky.com</p>
         </div>
         <div>
-...
+          <h2 className="text-lg font-semibold text-foreground mb-2">2. Scope</h2>
+          <p>This policy applies to all individuals whose personal data we process, including clients, prospects, and website visitors within the European Union (EU), European Economic Area (EEA), and internationally.</p>
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-foreground mb-2">3. Lawful Basis for Processing</h2>
+          <p>Under the General Data Protection Regulation (EU 2016/679), we process personal data on the following legal bases:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li><strong>Consent</strong> — When you voluntarily submit information via our contact or registration forms.</li>
+            <li><strong>Contractual necessity</strong> — To deliver services you have engaged us to provide.</li>
+            <li><strong>Legitimate interest</strong> — To improve our services and communicate relevant updates, where this does not override your fundamental rights.</li>
+          </ul>
+        </div>
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-2">4. Data Subject Rights</h2>
           <p>Under GDPR, you have the right to:</p>
