@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 
-const ADMIN_PASSWORD = "Rokofskyxxxx";
 const SESSION_KEY = "rokofsky-admin-auth";
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
