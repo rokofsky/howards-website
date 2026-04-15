@@ -22,7 +22,7 @@ const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Commun
 const RokofAdmin = () => {
   const navigate = useNavigate();
   const [authenticated, setAuthenticated] = useState(
-    () => sessionStorage.getItem(SESSION_KEY) === "true"
+    () => !!sessionStorage.getItem(SESSION_KEY)
   );
   const [password, setPassword] = useState("");
 
