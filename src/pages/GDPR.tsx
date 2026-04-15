@@ -4,12 +4,12 @@ const GDPR = () => (
   <Layout>
     <section className="section-padding max-w-3xl mx-auto">
       <h1 className="text-3xl md:text-4xl font-bold mb-2">GDPR &amp; Data Protection</h1>
-      <p className="text-muted-foreground text-sm mb-10">Last updated: [DATE]</p>
+      <p className="text-muted-foreground text-sm mb-10">Last updated: 14.04.2026</p>
 
       <div className="space-y-8 text-foreground/80 font-light leading-relaxed text-[15px]">
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-2">1. Data Controller</h2>
-          <p>[BUSINESS NAME] acts as the data controller for personal data collected through this website. Registered address: [ADDRESS]. Data protection contact: [EMAIL].</p>
+          <p>Rokofsky Events s.r.o. acts as the data controller for personal data collected through this website. Registered address: Simackova 24, Prague, CZ. Data protection contact: info@rokofsky.com</p>
         </div>
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-2">2. Scope</h2>
@@ -35,7 +35,7 @@ const GDPR = () => (
             <li><strong>Portability</strong> — Receive your data in a structured, machine-readable format.</li>
             <li><strong>Objection</strong> — Object to processing based on legitimate interests or direct marketing.</li>
           </ul>
-          <p className="mt-2">To exercise any of these rights, contact us at [EMAIL]. We will respond within 30 days.</p>
+          <p className="mt-2">To exercise any of these rights, contact us at info@rokofsky.com. We will respond within 30 days.</p>
         </div>
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-2">5. International Data Transfers</h2>
