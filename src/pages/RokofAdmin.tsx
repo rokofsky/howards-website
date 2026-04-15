@@ -34,14 +34,22 @@ const RokofAdmin = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [generatedCode, setGeneratedCode] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, "true");
-      setAuthenticated(true);
-      setPassword("");
-    } else {
-      toast({ title: "Incorrect password", variant: "destructive" });
+    try {
+      const { data, error } = await supabase.functions.invoke("admin-sessions", {
+        body: { password, action: "verify" },
+      });
+      if (error) throw error;
+      if (data?.ok) {
+        sessionStorage.setItem(SESSION_KEY, password);
+        setAuthenticated(true);
+        setPassword("");
+      } else {
+        toast({ title: "Incorrect password", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Login failed", variant: "destructive" });
     }
   };
 
