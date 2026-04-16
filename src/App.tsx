@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Bio from "./pages/Bio";
 import References from "./pages/References";
+import ReferenceScans from "./pages/ReferenceScans";
 import StorytellingWorkshops from "./pages/StorytellingWorkshops";
 import ServiceDetail from "./pages/ServiceDetail";
 import KeynoteTopics from "./pages/KeynoteTopics";
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/bio" element={<Bio />} />
           <Route path="/references" element={<References />} />
+          <Route path="/references/scans" element={<ReferenceScans />} />
           <Route path="/storytelling-workshops" element={<StorytellingWorkshops />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/keynote-topics" element={<KeynoteTopics />} />
