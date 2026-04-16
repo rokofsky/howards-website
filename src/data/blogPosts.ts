@@ -1,3 +1,7 @@
+import haraImg from "@/assets/blog-hara.jpg";
+import cvImg from "@/assets/blog-cv.jpg";
+import storytellingImg from "@/assets/blog-storytelling.jpg";
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -126,6 +130,7 @@ Last and least, my horoscope. West: Taurus. Chinese: Fire Horse. This combinatio
     excerpt: "In a world of AI-generated everything, your story is the last unfakeable asset.",
     date: "Feb 28, 2026",
     category: "Storytelling",
+    imageUrl: storytellingImg,
     content: "Content coming soon. Check back later for the full article.",
   },
 ];
