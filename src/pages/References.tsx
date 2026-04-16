@@ -60,14 +60,25 @@ const References = () => {
               Scanned evaluation sheets from past workshops. Click to view full size.
             </p>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div
-                  key={i}
-                  className="aspect-[3/4] glass rounded-lg flex items-center justify-center cursor-pointer hover:shadow-lg transition-shadow"
-                >
-                  <span className="text-sm text-muted-foreground font-light">Scan #{i}</span>
-                </div>
-              ))}
+              {[1, 2, 3, 4, 5, 6].map((i) => {
+                // To fill: place PDF in public/scans/scan-{i}.pdf and set pdfUrl below
+                const pdfUrl: string | undefined = undefined;
+                const inner = (
+                  <div className="aspect-[3/4] glass rounded-lg flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-shadow p-3">
+                    <span className="text-sm text-muted-foreground font-light">Scan #{i}</span>
+                    {!pdfUrl && (
+                      <span className="text-[10px] text-muted-foreground/60 mt-1 uppercase tracking-wider">
+                        Placeholder
+                      </span>
+                    )}
+                  </div>
+                );
+                return pdfUrl ? (
+                  <a key={i} href={pdfUrl} target="_blank" rel="noopener noreferrer">{inner}</a>
+                ) : (
+                  <div key={i}>{inner}</div>
+                );
+              })}
             </div>
             <div className="text-center">
               <Button variant="glass" size="lg" asChild>
