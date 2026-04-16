@@ -1,3 +1,7 @@
+import haraImg from "@/assets/blog-hara.jpg";
+import cvImg from "@/assets/blog-cv.jpg";
+import storytellingImg from "@/assets/blog-storytelling.jpg";
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -76,6 +80,7 @@ step in dog poop / panic *a lot less*.`,
     excerpt: "12 former jobs that led me to where I am today",
     date: "Mar 15, 2026",
     category: "Personal",
+    imageUrl: cvImg,
     content: `Newspaper carrier: from the ages of 13 to 16, every day the Long Island edition of Newsday magically got delivered to a route of 30+ homes in Plainview (it took about 2 hours a day; less if my brother or sister helped me, longer if I took my baby brother or the dog). In addition, I had to collect the weekly fees and tips from each customer on the route. There were always people who were hard to reach, or just didn’t like to pay. Looking back, it was an unlikely livelihood but what else could I do? Length of job: 2.5 years
 
 This opened up for me the worlds of responsibility, independence and perseverance. Probably time management as well.
@@ -126,6 +131,7 @@ Last and least, my horoscope. West: Taurus. Chinese: Fire Horse. This combinatio
     excerpt: "In a world of AI-generated everything, your story is the last unfakeable asset.",
     date: "Feb 28, 2026",
     category: "Storytelling",
+    imageUrl: storytellingImg,
     content: "Content coming soon. Check back later for the full article.",
   },
 ];
