@@ -19,7 +19,7 @@ const renderParagraph = (paragraph: string, className: string) => {
     const rightBullets = rightParts.slice(1);
 
     return (
-      <div key={paragraph} className="grid grid-cols-2 gap-4 md:gap-8">
+      <div key={paragraph} className="grid grid-cols-2 gap-4 md:gap-12 md:max-w-2xl md:mx-auto">
         <div>
           <h4 className="font-semibold text-foreground mb-2">{leftTitle}</h4>
           <ul className="space-y-1">
