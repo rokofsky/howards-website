@@ -19,6 +19,7 @@ export const blogPosts: BlogPost[] = [
     excerpt: "Discover the ancient Japanese secret of Hara: finding your center of gravity for balance, confidence, and control.",
     date: "Mar 28, 2026",
     category: "Mindset",
+    imageUrl: haraImg,
     content: `In ancient Japan, to say that someone ‘thinks with their head’ was an
 insult. Thinking was understood as something that came from a point in
 the belly: the Hara. You’ve heard of Hara Kiri (ritualistic suicide by
