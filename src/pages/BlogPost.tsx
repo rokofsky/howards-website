@@ -33,6 +33,13 @@ const BlogPost = () => {
             </Link>
             <time className="text-sm text-muted-foreground font-light block mb-2">{post.date}</time>
             <h1 className="text-3xl md:text-4xl font-bold mb-6">{post.title}</h1>
+            {post.imageUrl && (
+              <img
+                src={post.imageUrl}
+                alt={post.title}
+                className="w-full aspect-[16/9] object-cover rounded-lg mb-6"
+              />
+            )}
             {post.category && (
               <span className="inline-block bg-accent text-accent-foreground text-xs font-semibold px-2.5 py-1 rounded-full mb-6">
                 {post.category}
