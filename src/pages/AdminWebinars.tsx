@@ -117,8 +117,7 @@ export default function AdminWebinars() {
   );
 
   useEffect(() => {
-    const saved = sessionStorage.getItem("admin_auth");
-    if (saved === "true") setAuthenticated(true);
+    // No persistent auth — admin must log in each visit
   }, []);
 
   useEffect(() => {
@@ -140,8 +139,6 @@ export default function AdminWebinars() {
         body: { password, action: "verify" },
       });
       if (res.data?.ok) {
-        sessionStorage.setItem("admin_auth", "true");
-        sessionStorage.setItem("admin_pw", password);
         setAuthenticated(true);
       } else {
         const next = loginAttempts + 1;
@@ -157,7 +154,7 @@ export default function AdminWebinars() {
     }
   };
 
-  const getPassword = () => sessionStorage.getItem("admin_pw") || password;
+  const getPassword = () => password;
 
   const handleCreate = async () => {
     if (!title.trim()) {

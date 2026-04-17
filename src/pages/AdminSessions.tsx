@@ -36,21 +36,13 @@ export default function AdminSessions() {
   const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
-    const saved = sessionStorage.getItem("admin_auth");
-    if (saved === "true") {
-      setAuthenticated(true);
-    }
-  }, []);
-
-  useEffect(() => {
     if (authenticated) fetchSessions();
   }, [authenticated]);
 
   const fetchSessions = async () => {
-    const pw = sessionStorage.getItem("admin_pw") || password;
     const res = await supabase.functions.invoke("admin-sessions", {
       method: "POST",
-      body: { password: pw, action: "list" },
+      body: { password, action: "list" },
     });
     if (Array.isArray(res.data)) setSessions(res.data);
   };
@@ -66,8 +58,6 @@ export default function AdminSessions() {
         return;
       }
       if (res.data?.ok) {
-        sessionStorage.setItem("admin_auth", "true");
-        sessionStorage.setItem("admin_pw", password);
         setAuthenticated(true);
       } else {
         toast({ title: "Unexpected response", variant: "destructive" });
@@ -77,7 +67,7 @@ export default function AdminSessions() {
     }
   };
 
-  const getPassword = () => sessionStorage.getItem("admin_pw") || password;
+  const getPassword = () => password;
 
   const clearForm = () => {
     setTitle("");
