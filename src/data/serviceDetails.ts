@@ -214,7 +214,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     ]
   },
   storytelling: {
-    pageTitle: "Storytelling in Business and Beyond",
+    pageTitle: "The Art of Storytelling",
     taglines: [
       "Empower your team to connect with story.",
       "Facts tell, stories sell."

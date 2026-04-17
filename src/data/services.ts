@@ -12,7 +12,7 @@ export const services: ServiceItem[] = [
   { id: "3", title: "The Six Hats Method", subtitle: "Stop wasting time. Turn every meeting into actionable decisions.", hook: "\n", slug: "meetings-moderation" },
   { id: "4", title: "Conflict Mediation /Resolution", subtitle: "Turn battles into breakthroughs", hook: "\n", slug: "conflict-resolution" },
   { id: "5", title: "Brainstorming Sessions", subtitle: "Where ideas go to multiply", hook: "\n", slug: "brainstorming-sessions" },
-  { id: "6", title: "Storytelling", subtitle: "Facts tell, stories sell", hook: "\n", slug: "storytelling" },
+  { id: "6", title: "The Art of Storytelling", subtitle: "Facts tell, stories sell", hook: "\n", slug: "storytelling" },
   { id: "7", title: "Individual Coaching Sessions", subtitle: "", hook: "Explore new angles and discover new options", slug: "communication-skills" },
   { id: "8", title: "Negotiation Representation", subtitle: "Need an advantage? Benefit from Howard's edge", hook: "\n", slug: "negotiation-skills" },
   { id: "9", title: "Keynote Speaking", subtitle: "Events that resonate for your guests", hook: "\n", slug: "keynote-speaking" },
