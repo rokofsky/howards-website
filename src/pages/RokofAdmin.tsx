@@ -16,15 +16,14 @@ import {
 import { toast } from "@/hooks/use-toast";
 import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
 
-const SESSION_KEY = "rokofsky-admin-auth";
+// Password is kept only in component state — never persisted to storage
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
 const RokofAdmin = () => {
   const navigate = useNavigate();
-  const [authenticated, setAuthenticated] = useState(
-    () => !!sessionStorage.getItem(SESSION_KEY)
-  );
+  const [authenticated, setAuthenticated] = useState(false);
+  const [adminPassword, setAdminPassword] = useState("");
   const [password, setPassword] = useState("");
 
   // Blog generator state
@@ -43,7 +42,7 @@ const RokofAdmin = () => {
       });
       if (error) throw error;
       if (data?.ok) {
-        sessionStorage.setItem(SESSION_KEY, password);
+        setAdminPassword(password);
         setAuthenticated(true);
         setPassword("");
       } else {
@@ -55,7 +54,7 @@ const RokofAdmin = () => {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem(SESSION_KEY);
+    setAdminPassword("");
     setAuthenticated(false);
     navigate("/");
   };
@@ -159,7 +158,7 @@ const RokofAdmin = () => {
             <p className="text-sm text-muted-foreground mb-6">
               Upload, replace, or delete the 80 evaluation form PDFs shown on the References page.
             </p>
-            <ReferenceScansManager password={sessionStorage.getItem(SESSION_KEY) ?? ""} />
+            <ReferenceScansManager password={adminPassword} />
           </div>
 
           {/* Blog Post Generator */}
