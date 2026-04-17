@@ -1,36 +1,31 @@
 
-Issue understood: the current `/bio` page is using a rigid `md:grid-cols-2` layout in `src/pages/Bio.tsx`, so the text is manually split into “right column” paragraphs and then a separate full-width block. That structure is exactly why the layout keeps snapping back to the wrong behavior and leaving blank space.
+Currently no — the `/references/scans` page reads from a hardcoded array in `ReferenceScans.tsx`, and slots only fill when a PDF is manually placed in `public/scans/` and the code is edited. There is no admin upload flow.
 
-Do I know what the issue is? Yes.
+Here's a plan to make it admin-manageable:
 
-Plan:
-1. Replace the current two-block/grid structure in `src/pages/Bio.tsx` with a single continuous text flow.
-2. Change the photo layout on desktop from `grid` to a floated image pattern so the image sits left, the text naturally fills the right side beside it, and then automatically continues full width below the image with no dead space.
-3. Keep mobile behavior simple: image on top, all text full width underneath.
-4. Preserve the existing Amazon link for “How to GET Great Service” since it is already correctly implemented as a new-tab link.
-5. Verify the result specifically at the current desktop breakpoint and on mobile so the text wraps cleanly, with no empty lower-right gap beside the photo and no unnecessary left gap below it.
+## Plan: Admin-managed reference scans
 
-Technical details:
-- File to update: `src/pages/Bio.tsx`
-- Root cause: current code has:
-  - a desktop 2-column grid for image + selected paragraphs
-  - a second standalone full-width container for the rest
-- Better structure:
-```text
-Bio content wrapper
-  floated image on desktop
-  heading
-  all paragraphs in one uninterrupted flow
-  CTA clears the float below
-```
-- Likely implementation approach:
-  - remove `md:grid md:grid-cols-2`
-  - use the image with desktop float classes such as `md:float-left`
-  - give the image desktop width/margin/bottom spacing so text wraps around it
-  - keep the CTA/button in a container with `clear-both` so it sits cleanly below the text
+**1. Storage**
+- Create a public Supabase storage bucket `reference-scans` for PDFs.
+- Create a `reference_scans` table: `id`, `slot_number` (1–80), `pdf_path`, `title`, `created_at`.
+- RLS: public can SELECT; only admin edge function can INSERT/UPDATE/DELETE (service role).
 
-Expected result:
-- “As a hobby...” and following text will continue in the right column beside the photo
-- once the text reaches the bottom of the photo, it will continue full width automatically
-- the transition can happen mid-paragraph, matching your requirement
-- no unnecessary blank space beside or below the photo
+**2. Admin upload UI (in `RokofAdmin.tsx`)**
+Add a new "Reference Scans" section with:
+- A grid of 80 numbered slots showing current state (filled / empty).
+- Per slot: file input (PDF only), optional title, Upload button, Replace, Delete.
+- Calls a new edge function `admin-reference-scans` (password-protected like `admin-sessions`) that handles upload to storage + DB upsert.
+
+**3. Public page (`ReferenceScans.tsx`)**
+- Replace the hardcoded array with a Supabase query to `reference_scans`, ordered by `slot_number`.
+- Render 80 slots; filled ones link to the public storage URL, empty ones stay as placeholders.
+
+**4. References landing (`References.tsx`)**
+- Update the 6 preview slots to also pull from the same table (first 6 by slot_number).
+
+**Files**
+- New: `supabase/functions/admin-reference-scans/index.ts`
+- New migration: bucket + table + RLS
+- Edit: `src/pages/RokofAdmin.tsx`, `src/pages/ReferenceScans.tsx`, `src/pages/References.tsx`
+
+After approval I'll switch to default mode and implement it.
