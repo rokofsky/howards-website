@@ -1,15 +1,17 @@
 import { useParams, Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
-import { blogPosts } from "@/data/blogPosts";
+import { getPostBySlug, subscribe } from "@/data/blogStore";
 import { motion } from "framer-motion";
 
 const BlogPost = () => {
   const { slug } = useParams();
-  const post = blogPosts.find((p) => p.slug === slug);
+  const [, force] = useState(0);
+  const post = getPostBySlug(slug ?? "");
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    return subscribe(() => force((n) => n + 1));
   }, [slug]);
 
   if (!post) {
