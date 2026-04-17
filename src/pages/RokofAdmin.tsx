@@ -40,6 +40,7 @@ const RokofAdmin = () => {
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [generatedCode, setGeneratedCode] = useState("");
+  const [generatedSlug, setGeneratedSlug] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
