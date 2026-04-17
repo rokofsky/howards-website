@@ -16,12 +16,6 @@ import {
 import { toast } from "@/hooks/use-toast";
 import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
 import { addSessionPost } from "@/data/blogStore";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { ChevronDown } from "lucide-react";
 
 // Password is kept only in component state — never persisted to storage
 
@@ -40,6 +34,7 @@ const RokofAdmin = () => {
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [generatedCode, setGeneratedCode] = useState("");
+  const [generatedSlug, setGeneratedSlug] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,6 +94,7 @@ const RokofAdmin = () => {
   },`;
 
     setGeneratedCode(code);
+    setGeneratedSlug(slug);
 
     addSessionPost({
       slug,
@@ -112,10 +108,13 @@ const RokofAdmin = () => {
 
     toast({
       title: "Post added (session preview)",
-      description: "Copy the generated code and ask Lovable to make it permanent.",
+      description: "Scroll down — copy the generated code and ask Lovable to make it permanent.",
     });
 
-    navigate(`/blog/${slug}`);
+    // Scroll the generated code into view (no auto-redirect)
+    setTimeout(() => {
+      document.getElementById("generated-code-block")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
   };
 
   const copyToClipboard = () => {
@@ -229,32 +228,32 @@ const RokofAdmin = () => {
             </div>
 
             {generatedCode && (
-              <div className="mt-8">
-                <Collapsible>
-                  <CollapsibleTrigger className="flex items-center gap-2 text-sm font-bold w-full text-left py-2 hover:text-accent transition-colors">
-                    <ChevronDown className="h-4 w-4" />
-                    Technical: Generated Code (for permanent save)
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="pt-3">
-                    <div className="rounded-md border border-accent/40 bg-accent/10 p-3 text-xs mb-3">
-                      <strong>Note:</strong> Your post is visible right now in this browser session only.
-                      To make it permanent for everyone, copy the code below and ask Lovable to{" "}
-                      <em>"update the blog list with this new post"</em>.
-                    </div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-bold text-sm">Generated Code</span>
-                      <Button variant="outline" size="sm" onClick={copyToClipboard}>
-                        Copy
-                      </Button>
-                    </div>
-                    <pre className="bg-primary/90 text-primary-foreground p-4 rounded-lg text-xs overflow-x-auto whitespace-pre-wrap">
-                      {generatedCode}
-                    </pre>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      Paste this into the blogPosts array in <code>src/data/blogPosts.ts</code>
-                    </p>
-                  </CollapsibleContent>
-                </Collapsible>
+              <div id="generated-code-block" className="mt-8 space-y-3">
+                <div className="rounded-md border border-accent/40 bg-accent/10 p-3 text-xs">
+                  <strong>Post added to session preview.</strong> To make it permanent for everyone,
+                  copy the code below and ask Lovable to{" "}
+                  <em>"add this post to src/data/blogPosts.ts"</em>.
+                </div>
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <span className="font-bold text-sm">Generated Code</span>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                      Copy
+                    </Button>
+                    <Button variant="cta" size="sm" onClick={() => navigate(`/blog/${generatedSlug}`)}>
+                      View on Blog →
+                    </Button>
+                  </div>
+                </div>
+                <Textarea
+                  readOnly
+                  value={generatedCode}
+                  className="font-mono text-xs min-h-[260px] bg-primary/90 text-primary-foreground"
+                  onFocus={(e) => e.currentTarget.select()}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Paste this into the <code>blogPosts</code> array in <code>src/data/blogPosts.ts</code>.
+                </p>
               </div>
             )}
           </div>
