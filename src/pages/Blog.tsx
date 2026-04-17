@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
-import { blogPosts } from "@/data/blogPosts";
+import { getAllPosts, subscribe } from "@/data/blogStore";
 import { motion } from "framer-motion";
 
 const Blog = () => {
+  const [posts, setPosts] = useState(getAllPosts());
+  useEffect(() => subscribe(() => setPosts(getAllPosts())), []);
   return (
     <Layout>
       <section className="section-padding pt-24">
@@ -20,7 +23,7 @@ const Blog = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post, i) => (
+            {posts.map((post, i) => (
               <motion.article
                 key={post.slug}
                 initial={{ opacity: 0, y: 20 }}
