@@ -96,16 +96,6 @@ const HeroSection = () => {
         >
           Soft skills trainer & storytelling maestro
         </motion.p>
-        <motion.div
-          className="pointer-events-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-        >
-          <Button variant="glass" size="xl" asChild>
-            <a href="#contact">Contact Me</a>
-          </Button>
-        </motion.div>
       </div>
 
       {/* Slide indicators */}
