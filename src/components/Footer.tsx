@@ -29,7 +29,7 @@ const Footer = () => {
             <h4 className="text-sm font-semibold uppercase tracking-wider mb-4 text-primary-foreground/80">Quick Links</h4>
             <div className="flex flex-col gap-2">
               <Link to="/bio" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Who is Howard</Link>
-              <Link to="/references" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">References</Link>
+              <Link to="/references" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">What clients say</Link>
               <Link to="/storytelling-workshops" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Storytelling sessions</Link>
               <Link to="/blog" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Blog</Link>
               <Link to="/#contact-area" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Contact</Link>
