@@ -99,6 +99,23 @@ const RokofAdmin = () => {
   },`;
 
     setGeneratedCode(code);
+
+    addSessionPost({
+      slug,
+      title,
+      excerpt,
+      date: dateStr,
+      category,
+      imageUrl: imageUrl || undefined,
+      content,
+    });
+
+    toast({
+      title: "Post added (session preview)",
+      description: "Copy the generated code and ask Lovable to make it permanent.",
+    });
+
+    navigate(`/blog/${slug}`);
   };
 
   const copyToClipboard = () => {
