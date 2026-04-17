@@ -10,7 +10,17 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { session_date } = await req.json();
+    const body = await req.json();
+    const { session_date, password } = body ?? {};
+
+    const adminPassword = Deno.env.get("ADMIN_PASSWORD");
+    if (!adminPassword || password !== adminPassword) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     if (!session_date) {
       return new Response(JSON.stringify({ error: "session_date is required" }), {
         status: 400,
