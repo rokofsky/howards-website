@@ -15,6 +15,13 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
+import { addSessionPost } from "@/data/blogStore";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
 
 // Password is kept only in component state — never persisted to storage
 
@@ -206,18 +213,31 @@ const RokofAdmin = () => {
 
             {generatedCode && (
               <div className="mt-8">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-bold text-sm">Generated Code</h3>
-                  <Button variant="outline" size="sm" onClick={copyToClipboard}>
-                    Copy
-                  </Button>
-                </div>
-                <pre className="bg-primary/90 text-primary-foreground p-4 rounded-lg text-xs overflow-x-auto whitespace-pre-wrap">
-                  {generatedCode}
-                </pre>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Paste this into the blogPosts array in <code>src/data/blogPosts.ts</code>
-                </p>
+                <Collapsible>
+                  <CollapsibleTrigger className="flex items-center gap-2 text-sm font-bold w-full text-left py-2 hover:text-accent transition-colors">
+                    <ChevronDown className="h-4 w-4" />
+                    Technical: Generated Code (for permanent save)
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="pt-3">
+                    <div className="rounded-md border border-accent/40 bg-accent/10 p-3 text-xs mb-3">
+                      <strong>Note:</strong> Your post is visible right now in this browser session only.
+                      To make it permanent for everyone, copy the code below and ask Lovable to{" "}
+                      <em>"update the blog list with this new post"</em>.
+                    </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-bold text-sm">Generated Code</span>
+                      <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                        Copy
+                      </Button>
+                    </div>
+                    <pre className="bg-primary/90 text-primary-foreground p-4 rounded-lg text-xs overflow-x-auto whitespace-pre-wrap">
+                      {generatedCode}
+                    </pre>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Paste this into the blogPosts array in <code>src/data/blogPosts.ts</code>
+                    </p>
+                  </CollapsibleContent>
+                </Collapsible>
               </div>
             )}
           </div>
