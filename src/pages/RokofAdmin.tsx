@@ -100,6 +100,7 @@ const RokofAdmin = () => {
   },`;
 
     setGeneratedCode(code);
+    setGeneratedSlug(slug);
 
     addSessionPost({
       slug,
@@ -113,10 +114,13 @@ const RokofAdmin = () => {
 
     toast({
       title: "Post added (session preview)",
-      description: "Copy the generated code and ask Lovable to make it permanent.",
+      description: "Scroll down — copy the generated code and ask Lovable to make it permanent.",
     });
 
-    navigate(`/blog/${slug}`);
+    // Scroll the generated code into view (no auto-redirect)
+    setTimeout(() => {
+      document.getElementById("generated-code-block")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
   };
 
   const copyToClipboard = () => {
