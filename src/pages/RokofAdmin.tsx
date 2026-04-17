@@ -16,12 +16,6 @@ import {
 import { toast } from "@/hooks/use-toast";
 import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
 import { addSessionPost } from "@/data/blogStore";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { ChevronDown } from "lucide-react";
 
 // Password is kept only in component state — never persisted to storage
 
