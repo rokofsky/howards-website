@@ -15,7 +15,9 @@ export const addSessionPost = (post: BlogPost) => {
 
 export const subscribe = (cb: () => void) => {
   listeners.add(cb);
-  return () => listeners.delete(cb);
+  return () => {
+    listeners.delete(cb);
+  };
 };
 
 export const getPostBySlug = (slug: string): BlogPost | undefined =>
