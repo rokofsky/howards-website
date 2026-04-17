@@ -15,5 +15,5 @@ export const services: ServiceItem[] = [
   { id: "6", title: "Storytelling", subtitle: "Facts tell, stories sell", hook: "\n", slug: "storytelling" },
   { id: "7", title: "Individual Coaching Sessions", subtitle: "", hook: "Explore new angles and discover new options", slug: "communication-skills" },
   { id: "8", title: "Negotiation Representation", subtitle: "Need an advantage? Benefit from Howard's edge", hook: "\n", slug: "negotiation-skills" },
-  { id: "9", title: "Keynote Speaking and Storytelling", subtitle: "Events that resonate for your guests", hook: "\n", slug: "keynote-speaking" },
+  { id: "9", title: "Keynote Speaking", subtitle: "Events that resonate for your guests", hook: "\n", slug: "keynote-speaking" },
 ];
