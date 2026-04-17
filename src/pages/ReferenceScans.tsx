@@ -1,23 +1,38 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { FileText } from "lucide-react";
-
-// Placeholder slots for scanned evaluation form PDFs.
-// To fill a slot: drop the PDF in `public/scans/` (e.g. `public/scans/scan-7.pdf`)
-// and set `pdfUrl: "/scans/scan-7.pdf"` on the matching entry below.
-interface ScanPlaceholder {
-  id: number;
-  pdfUrl?: string;
-  title?: string;
-}
+import { supabase } from "@/integrations/supabase/client";
 
 const TOTAL_SCANS = 80;
-const scans: ScanPlaceholder[] = Array.from({ length: TOTAL_SCANS }, (_, i) => ({
-  id: i + 1,
-}));
+const BUCKET = "reference-scans";
+
+interface ScanRow {
+  slot_number: number;
+  pdf_path: string;
+  title: string | null;
+}
 
 const ReferenceScans = () => {
+  const [scans, setScans] = useState<Record<number, ScanRow>>({});
+
+  useEffect(() => {
+    supabase
+      .from("reference_scans")
+      .select("slot_number,pdf_path,title")
+      .order("slot_number", { ascending: true })
+      .then(({ data }) => {
+        if (!data) return;
+        const map: Record<number, ScanRow> = {};
+        for (const r of data as ScanRow[]) map[r.slot_number] = r;
+        setScans(map);
+      });
+  }, []);
+
+  const publicUrl = (path: string) =>
+    supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+
   return (
     <Layout>
       <section className="section-padding pt-24">
@@ -36,14 +51,16 @@ const ReferenceScans = () => {
           </motion.div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {scans.map((scan, i) => {
+            {Array.from({ length: TOTAL_SCANS }, (_, i) => i + 1).map((slot, i) => {
+              const scan = scans[slot];
+              const url = scan ? publicUrl(scan.pdf_path) : undefined;
               const inner = (
                 <div className="aspect-[3/4] glass rounded-lg flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-shadow p-3 text-center">
                   <FileText className="w-8 h-8 text-muted-foreground mb-2" />
                   <span className="text-xs text-muted-foreground font-light">
-                    {scan.title ?? `Scan #${scan.id}`}
+                    {scan?.title ?? `Scan #${slot}`}
                   </span>
-                  {!scan.pdfUrl && (
+                  {!url && (
                     <span className="text-[10px] text-muted-foreground/60 mt-1 uppercase tracking-wider">
                       Placeholder
                     </span>
@@ -53,13 +70,13 @@ const ReferenceScans = () => {
 
               return (
                 <motion.div
-                  key={scan.id}
+                  key={slot}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: Math.min(i * 0.01, 0.5) }}
                 >
-                  {scan.pdfUrl ? (
-                    <a href={scan.pdfUrl} target="_blank" rel="noopener noreferrer">
+                  {url ? (
+                    <a href={url} target="_blank" rel="noopener noreferrer">
                       {inner}
                     </a>
                   ) : (

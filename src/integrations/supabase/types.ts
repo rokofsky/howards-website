@@ -59,6 +59,33 @@ export type Database = {
         }
         Relationships: []
       }
+      reference_scans: {
+        Row: {
+          created_at: string
+          id: string
+          pdf_path: string
+          slot_number: number
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          pdf_path: string
+          slot_number: number
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          pdf_path?: string
+          slot_number?: number
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       registrations: {
         Row: {
           created_at: string

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 const testimonials = [
   { name: "Sarah K., VP People, TechCorp", text: "Howard completely transformed how our leadership team communicates. The storytelling framework he taught us is now embedded in our culture." },
@@ -12,9 +13,35 @@ const testimonials = [
   { name: "Lisa M., L&D Manager, Allianz", text: "The brainstorming session Howard facilitated produced more actionable ideas in three hours than our team had generated in six months." },
 ];
 
+const BUCKET = "reference-scans";
+
+interface ScanRow {
+  slot_number: number;
+  pdf_path: string;
+  title: string | null;
+}
+
 const References = () => {
   const [showAllTestimonials, setShowAllTestimonials] = useState(false);
   const visibleTestimonials = showAllTestimonials ? testimonials : testimonials.slice(0, 3);
+  const [previewScans, setPreviewScans] = useState<Record<number, ScanRow>>({});
+
+  useEffect(() => {
+    supabase
+      .from("reference_scans")
+      .select("slot_number,pdf_path,title")
+      .lte("slot_number", 6)
+      .order("slot_number", { ascending: true })
+      .then(({ data }) => {
+        if (!data) return;
+        const map: Record<number, ScanRow> = {};
+        for (const r of data as ScanRow[]) map[r.slot_number] = r;
+        setPreviewScans(map);
+      });
+  }, []);
+
+  const publicUrl = (path: string) =>
+    supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
 
   return (
     <Layout>
@@ -61,20 +88,22 @@ const References = () => {
             </p>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
               {[1, 2, 3, 4, 5, 6].map((i) => {
-                // To fill: place PDF in public/scans/scan-{i}.pdf and set pdfUrl below
-                const pdfUrl: string | undefined = undefined;
+                const scan = previewScans[i];
+                const url = scan ? publicUrl(scan.pdf_path) : undefined;
                 const inner = (
                   <div className="aspect-[3/4] glass rounded-lg flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-shadow p-3">
-                    <span className="text-sm text-muted-foreground font-light">Scan #{i}</span>
-                    {!pdfUrl && (
+                    <span className="text-sm text-muted-foreground font-light">
+                      {scan?.title ?? `Scan #${i}`}
+                    </span>
+                    {!url && (
                       <span className="text-[10px] text-muted-foreground/60 mt-1 uppercase tracking-wider">
                         Placeholder
                       </span>
                     )}
                   </div>
                 );
-                return pdfUrl ? (
-                  <a key={i} href={pdfUrl} target="_blank" rel="noopener noreferrer">{inner}</a>
+                return url ? (
+                  <a key={i} href={url} target="_blank" rel="noopener noreferrer">{inner}</a>
                 ) : (
                   <div key={i}>{inner}</div>
                 );

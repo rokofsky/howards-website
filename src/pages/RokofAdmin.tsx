@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
+import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
 
 const SESSION_KEY = "rokofsky-admin-auth";
 
@@ -150,6 +151,15 @@ const RokofAdmin = () => {
               <h3 className="font-bold text-lg mb-1">Manage Webinars</h3>
               <p className="text-sm text-muted-foreground">Create and manage webinars</p>
             </Link>
+          </div>
+
+          {/* Reference Scans Manager */}
+          <div className="glass rounded-xl p-8 mb-14">
+            <h2 className="text-xl font-bold mb-2">Reference Scans (PDF)</h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              Upload, replace, or delete the 80 evaluation form PDFs shown on the References page.
+            </p>
+            <ReferenceScansManager password={sessionStorage.getItem(SESSION_KEY) ?? ""} />
           </div>
 
           {/* Blog Post Generator */}
