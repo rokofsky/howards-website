@@ -59,60 +59,23 @@ Learning expectations are clearly defined and shared with participants so that t
     date: "Mar 28, 2026",
     category: "Mindset",
     imageUrl: haraImg,
-    content: `In ancient Japan, to say that someone ‘thinks with their head’ was an
-insult. Thinking was understood as something that came from a point in
-the belly: the Hara. You’ve heard of Hara Kiri (ritualistic suicide by
-stabbing one’s self in the gut). There are many other references to this
-special spot in ancient martial arts and sexuality texts.
+    content: `In ancient Japan, to say that someone ‘thinks with their head’ was an insult. Thinking was understood as something that came from a point in the belly: the Hara. You’ve heard of Hara Kiri (ritualistic suicide by stabbing one’s self in the gut). There are many other references to this special spot in ancient martial arts and sexuality texts.
 
-According to these cultures, the body has its fulcrum in the Hara – (Dan
-tian in Chinese), (Seika Tanden or Kikai in Japanese). This point is
-considered the human’s physical and spiritual gravity center.
+According to these cultures, the body has its fulcrum in the Hara – (Dan tian in Chinese), (Seika Tanden or Kikai in Japanese). This point is considered the human’s physical and spiritual gravity center.
 
-After the brain, there are more nerve cells in the gut than any other
-body part, containing 100 million neurons – more than the spinal cord.
-The abdomen is, in neuro-physiological terms, a kind of ‘second brain’.
-It’s no coincidence that directing our attention there will have an
-immediate, physiological result.
+After the brain, there are more nerve cells in the gut than any other body part, containing 100 million neurons – more than the spinal cord. The abdomen is, in neuro-physiological terms, a kind of ‘second brain’. It’s no coincidence that directing our attention there will have an immediate, physiological result.
 
-Hara is located appx. 3 cm below the navel, and 3 cm inside (in the
-gut); you can feel it with your finger: probe around for the most
-sensitive spot in the area. It hurts when you press it. Concentrating
-(‘focusing your energy’) on this spot is accompanied by an instantaneous
-feeling of grounding and a physical feeling of balance. You can
-actually feel your weight getting redistributed. This grounding is
-accompanied by a sense of confidence. It not only feels good, it also
-visibly manifests in your body posture and presence – other people will
-sense your confidence, and that cannot be bad.
+Hara is located appx. 3 cm below the navel, and 3 cm inside (in the gut); you can feel it with your finger: probe around for the most sensitive spot in the area. It hurts when you press it. Concentrating (‘focusing your energy’) on this spot is accompanied by an instantaneous feeling of grounding and a physical feeling of balance. You can actually feel your weight getting redistributed. This grounding is
+accompanied by a sense of confidence. It not only feels good, it also visibly manifests in your body posture and presence – other people will sense your confidence, and that cannot be bad.
 
-The balance is cumulative: it gets easier with practice. Start with a
-few minutes a day, while walking on your daily rounds. The next time
-you feel you may lose your balance (on a rocky, icy, or uneven surface),
-just remember Hara and focus on it – equilibrium will appear, and you
-will not fall. Or when feeling uncertain or weak, anxiety’s kicking in…
-aim your mind at your hara, and don’t be surprised if you start feeling
-in control of yourself again. I credit Hara for enabling me to ride a
+The balance is cumulative: it gets easier with practice. Start with a few minutes a day, while walking on your daily rounds. The next time you feel you may lose your balance (on a rocky, icy, or uneven surface), just remember Hara and focus on it – equilibrium will appear, and you will not fall. Or when feeling uncertain or weak, anxiety’s kicking in, aim your mind at your hara, and don’t be surprised if you start feeling in control of yourself again. I credit Hara for enabling me to ride a
 bicycle in chaotic traffic all over Chinese roads without incident.
 
-In Kung Fu and Aikido, the hara is where all moves are based from.
-Figure skaters and acrobats know to concentrate on Hara to keep balance.
-It’s basically the Yogi secret for sitting in the freezing cold. Spies
-know that focusing on Hara makes torture easier to withstand. But it’s
-useful even for common things like walking on an icy street or standing
-in a moving bus. There is probably not a simpler, more basic technique
-that will have as broad an impact on your life. If breathing is the key,
-Hara is the door.
+In Kung Fu and Aikido, the hara is where all moves are based from. Figure skaters and acrobats know to concentrate on Hara to keep balance. It’s basically the Yogi secret for sitting in the freezing cold. Spies know that focusing on Hara makes torture easier to withstand. But it’s useful even for common things like walking on an icy street or standing in a moving bus. There is probably not a simpler, more basic technique that will have as broad an impact on your life. If breathing is the key, Hara is the door.
 
-What does this mean in business? A benevolent leader is always
-grounded and their instructions come across as confident, motivating,
-and trustworthy. Go to your Hara while speaking – your presentations
-will appear more comfortable and persuasive.
+What does this mean in business? A benevolent leader is always grounded and their instructions come across as confident, motivating, and trustworthy. Go to your Hara while speaking – your presentations will appear more comfortable and persuasive.
 
-According to the texts, the goal is to be aware of Hara 24/7, but
-that’s for yogis and the like. Just practice it when you’re walking, and
-it will get easier and easier. It works anywhere, anytime, from
-withstanding pain to stage-fright. Let me know if you lose your balance /
-step in dog poop / panic *a lot less*.`,
+According to the texts, the goal is to be aware of Hara 24/7, but that’s for yogis and the like. Just practice it when you’re walking, and it will get easier and easier. It works anywhere, anytime, from withstanding pain to stage-fright. Let me know if you lose your balance / step in dog poop / panic *a lot less*.`,
   },
   {
     slug: "my-secret-cv",
