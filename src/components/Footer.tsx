@@ -39,7 +39,15 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-wider mb-4 text-primary-foreground/80">Connect</h4>
             <div className="flex gap-4 mb-6">
-              <a href="https://www.linkedin.com/in/rokofsky/" target="_blank" rel="noopener noreferrer" className="text-primary-foreground/60 hover:text-primary-foreground transition-colors" aria-label="LinkedIn"><LinkedInIcon /></a>
+              <a
+                href="https://www.linkedin.com/in/rokofsky/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+                aria-label="LinkedIn"
+              >
+                <LinkedInIcon />
+              </a>
               <a href="#" className="text-primary-foreground/60 hover:text-primary-foreground transition-colors" aria-label="Twitter"><TwitterIcon /></a>
               <a href="#" className="text-primary-foreground/60 hover:text-primary-foreground transition-colors" aria-label="Instagram"><InstagramIcon /></a>
             </div>
