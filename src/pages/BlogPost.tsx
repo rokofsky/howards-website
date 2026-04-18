@@ -34,7 +34,7 @@ const BlogPost = () => {
               ← Back to all articles
             </Link>
             <time className="text-sm text-muted-foreground font-light block mb-2">{post.date}</time>
-            <h1 className="text-3xl md:text-4xl font-bold mb-6">{post.title}</h1>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 leading-tight">{post.title}</h1>
             {post.imageUrl && (
               <img
                 src={post.imageUrl}
@@ -47,8 +47,8 @@ const BlogPost = () => {
                 {post.category}
               </span>
             )}
-            <div className="glass rounded-lg p-8">
-              <p className="text-foreground/80 leading-relaxed whitespace-pre-line font-medium">
+            <div className="glass rounded-lg p-5 sm:p-8">
+              <p className="text-base sm:text-lg text-foreground/80 leading-[1.75] whitespace-pre-line font-medium">
                 {post.content.split(/(\*\*.*?\*\*)/).map((part, i) => 
                   part.startsWith('**') && part.endsWith('**') ? 
                   <strong key={i} className="font-bold">{part.slice(2, -2)}</strong> : 
