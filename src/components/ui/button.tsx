@@ -21,11 +21,11 @@ const buttonVariants = cva(
         cta: "glass-button bg-gold text-gold-foreground hover:bg-gold/90 font-semibold glow-gold",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        xl: "h-14 rounded-lg px-10 text-base",
-        icon: "h-10 w-10",
+        default: "min-h-11 px-5 py-2.5",
+        sm: "min-h-10 rounded-md px-4",
+        lg: "min-h-12 rounded-md px-8",
+        xl: "min-h-14 rounded-lg px-10 text-base",
+        icon: "h-11 w-11",
       },
     },
     defaultVariants: {
