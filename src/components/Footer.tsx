@@ -16,10 +16,10 @@ const Footer = () => {
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="container mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
           <div>
             <Link to="/bio" className="text-lg font-semibold mb-4 block hover:no-underline text-primary-foreground">Howard</Link>
-            <p className="text-primary-foreground/60 font-light text-sm leading-relaxed max-w-xs">
+            <p className="text-primary-foreground/60 font-light text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
               Helping people find their voice, one story at a time. Because the best meetings are the ones where everyone forgets they're in a meeting.
             </p>
             <Link to="/rokofsky-admin" className="text-[10px] text-primary-foreground/[0.08] block mt-1">Admin</Link>
@@ -27,7 +27,7 @@ const Footer = () => {
 
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-wider mb-4 text-primary-foreground/80">Quick Links</h4>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 items-center md:items-start">
               <Link to="/bio" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Who is Howard</Link>
               <Link to="/references" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">What clients say</Link>
               <Link to="/storytelling-workshops" className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Storytelling sessions</Link>
@@ -38,24 +38,24 @@ const Footer = () => {
 
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-wider mb-4 text-primary-foreground/80">Connect</h4>
-            <div className="flex gap-4 mb-6">
+            <div className="flex gap-4 mb-6 justify-center md:justify-start">
               <a
                 href="https://www.linkedin.com/in/rokofsky/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+                className="text-primary-foreground/60 hover:text-primary-foreground transition-colors p-2 -m-2"
                 aria-label="LinkedIn"
               >
                 <LinkedInIcon />
               </a>
-              <a href="#" className="text-primary-foreground/60 hover:text-primary-foreground transition-colors" aria-label="Twitter"><TwitterIcon /></a>
-              <a href="#" className="text-primary-foreground/60 hover:text-primary-foreground transition-colors" aria-label="Instagram"><InstagramIcon /></a>
+              <a href="#" className="text-primary-foreground/60 hover:text-primary-foreground transition-colors p-2 -m-2" aria-label="Twitter"><TwitterIcon /></a>
+              <a href="#" className="text-primary-foreground/60 hover:text-primary-foreground transition-colors p-2 -m-2" aria-label="Instagram"><InstagramIcon /></a>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex gap-6 text-xs text-primary-foreground/40 font-light">
+        <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center">
+          <div className="flex flex-wrap justify-center gap-6 text-xs text-primary-foreground/40 font-light">
             <Link to="/privacy-policy" className="hover:text-primary-foreground/60 transition-colors">Privacy Policy</Link>
             <Link to="/gdpr" className="hover:text-primary-foreground/60 transition-colors">GDPR</Link>
             <Link to="/terms-of-service" className="hover:text-primary-foreground/60 transition-colors">Terms</Link>
