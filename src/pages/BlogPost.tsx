@@ -48,7 +48,13 @@ const BlogPost = () => {
               </span>
             )}
             <div className="glass rounded-lg p-8">
-              <p className="text-foreground/80 leading-relaxed whitespace-pre-line font-medium">{post.content}</p>
+              <p className="text-foreground/80 leading-relaxed whitespace-pre-line font-medium">
+                {post.content.split(/(\*\*.*?\*\*)/).map((part, i) => 
+                  part.startsWith('**') && part.endsWith('**') ? 
+                  <strong key={i} className="font-bold">{part.slice(2, -2)}</strong> : 
+                  part
+                )}
+              </p>
             </div>
             <div className="mt-10">
               <Link to="/blog" className="text-sm text-accent hover:text-foreground transition-colors font-medium">
