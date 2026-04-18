@@ -121,49 +121,34 @@ step in dog poop / panic *a lot less*.`,
     date: "Mar 15, 2026",
     category: "Personal",
     imageUrl: cvImg,
-    content: `**Newspaper carrier**: from the ages of 13 to 16, every day the Long Island edition of Newsday magically got delivered to a route of 30+ homes in Plainview (it took about 2 hours a day; less if my brother or sister helped me, longer if I took my baby brother or the dog). In addition, I had to collect the weekly fees and tips from each customer on the route. There were always people who were hard to reach, or just didn’t like to pay. Looking back, it was an unlikely livelihood but what else could I do? Length of job: 2.5 years
+    content: `**Newspaper carrier**: from the ages of 13 to 16, I delivered the daily paper "Newsday" on a route of 30+ homes in Plainview, NY (it took about 2 hours a day, longer if I took my baby brother or the dog). In addition, I had to collect the weekly fees and tips from each customer on the route. There were always people who were hard to reach, or just didn’t like to pay. Looking back, it was an unlikely livelihood but what else could I do at that age? This opened up for me the worlds of responsibility, independence and perseverance. Probably time management as well. Length of job: 2.5 years.
 
-This opened up for me the worlds of responsibility, independence and perseverance. Probably time management as well.
+**Babysitter**: for about 4 teenage years, while my friends were out drinking and gallivanting, I regularly babysat for 6 families in Long Island, NY. Yeah, even on New Years Eve.
 
-**Baseball cards**: over 150,000 cards flowed in and out of my parents’ house during my childhood until I was 17. I must have done 500 transactions, including selling by mail order. This was all before internet, so I placed ads in trade papers and county weeklies. My nearsightedness is probably a result of reading and memorizing the stats on the back of the cards. I financed my first two European trips, bought countless books and gadgets and still have thousands of cards I don’t know what to do with. Teenage years, then later sporadically liquidated inventory.
+**Baseball card dealer**: as a teenager, over 150,000 cards flowed in and out of the family home. I must have made over 500 transactions, including renting tables at collectors' conventions and selling by mail order. This was all before internet, so I placed ads in trade papers and local weeklies. My nearsightedness is probably a result of reading and memorizing the stats on the back of those cards. This work financed my first two European trips, countless books and LP records. As I was dealing mostly with middle-aged, emotionally-stunted men, this experience taught me not only negotiation, but also patience and communicational versatility.
 
-I was dealing with much older geeks, who all had a lot more experience than I did; I learned how to negotiate. This must be how I manage to come up with the answers to the most difficult questions in seminars.
+**University Security Department “Escort” service**
+Night shifts during my first year at Binghamton University. If someone felt unsafe walking around campus at night, they could call Security and I would get a call by walkie-talkie: who to escort where. Between escorts I would monitor the peace and fire extinguishers in the dormitories, basements, lecture halls etc. I learned how to wield authority and responsibility professionally and friendly, even as a ‘security guy’.
 
-**University Security Department “Escort” service.**
-If someone felt unsafe walking around campus at night, they could call Security and they would call us by walkie-talkie: who to escort where. Between escorts I would monitor the peace and all fire extinguishers in the dormitories, basements, lecture halls etc. I started this job in my first semester. 1.5 years of night-shifts.
+**Oxygen delivery**: for 4 summers while at university, I delivering (heavy) liquid oxygen tanks to dying patients all over NYC and Long Island. It paid well, thanks to hazard pay and heavy lifting. I regularly visited and spent time with these patients, each deathly afraid of not getting their O2 on time. I learned to organize my schedule so as to deliver the right amount of oxygen at the right time. And I got to refine my 'bedside manner'.
 
-I learned how to wield authority and responsibility: professionally and friendly, even as a ‘security guy’.
+**Asbestos abatement, South Bronx, NYC**
+I wasn’t actually removing the asbestos, but I had to don a hazmat suit at 8am to set up the air meter, and again at 4pm to take readings. In between, I either slept in the car and/or wandered around the most dangerous neighborhood in the City.
 
-**Oxygen service**: summer job delivering liquid oxygen tanks to dying patients all over Long Island and the City. Good money thanks to the on-call and hazard pay, and heavy tanks. I regularly visited these patients, each deathly afraid of not getting
-their O2 on time. 4 summers.
+**Bartender, The Last Waterhole, red light district, Amsterdam, 1991-92**: probably the best job I ever had. Live band every night. I learned how to persuade drunk and sometimes aggressive people to go home at closing time. I never had to use the emergency 'protection' hotline to call the Hell's Angels.
 
-I learned to organize my schedule so as to deliver the right amount of oxygen at the right time. And practice bedside manner.
+**Illicit interpreter**: 2 weeks in 1992, Amsterdam, NL. I was responsible for translating drug deals (English/Italian ↔ Dutch) and the subsequent damage control. I enjoyed the translating, but not so much the damage control.
 
-**Asbestos removal, South Bronx, NY.**
-I wasn’t actually removing the asbestos, but I had to don a hazmat suit at 8am to set up the air meter and at 4pm again to take it away. In between I either slept in the car and/or wandered around the most dangerous neighborhood in NYC.
+**Cook**: kitchen work in various restaurants (1990s) in Amsterdam, NL. Managed the kitchen in two of these restaurants, in Diemen, and on Zeedijk.
 
-**Bartender, Red light district, The Last Waterhole, Amsterdam**: probably the best job I ever had. Live band every night. 4 or 5 months in 1991. 
-I learned how to persuade drunk and sometimes aggressive people to go home at closing time. I never had to use the emergency hotline to Hell's Angels.
+**Rhetorical consultant, “Network CV”** Amsterdam, NL, 1991-1993. Established a CV and resume writing service. I made flyers and placed them in employment agencies, eventually coaching job candidates at all levels. 
 
-**Illicit interpreter** I was responsible for translating deals and damage control. Quit after the second hassle. 2 weeks in 1992, Amsterdam, NL.
+**Sauna Fenomeen**: Weekly shifts behind the bar, volunteer on the board. My mandate at this official squatter's club was to make an illegal sauna legal, incl. all regulations. It turned out to be more difficult than I thought, as diplomat and henchman. The legendary sauna is now defunct. Amsterdam, NL, 1995- 1999. I learned a lot about diplomacy.
 
-**Cook**: various restaurants in Amsterdam. Mostly American and European food. 
-3 restaurants in the 1990s. Managed the kitchen in the third, on the Zeedijk. 
+**Telemarketing fake lottery tickets**, 3 months, 1994. Selling 'international lottery tickets’ to Brits over the phone. I eventually figured out that the company was not actually buying any lottery tickets, but was instead acting as the lottery. That pissed me off but I finished out the contract.
 
-**Rhetorical consultant, “Network CV”** – a CV and resume writing service. I made flyers and placed them in employment agencies (they let me do this for free), eventually coaching job candidates at all levels. Amsterdam, NL, 1991-1993.
+**Last and least, my horoscope**. Western: Taurus; Chinese: Fire Horse. This combination, according to the sources on such detailed matters, is particularly inauspicious. Just ask my mother.`,
 
-**Sauna Fenomeen**: Weekly shifts behind the bar, volunteer on the board. My mandate at this official squatter's club was to make an illegal sauna legal, incl. all regulations. It turned out to be more difficult than I thought, as diplomat and henchman. The legendary sauna is now defunct. Amsterdam, NL, 1995- 1999.
-I learned a lot about diplomacy.
-
-**Telemarketing fake lottery tickets**,
-Selling 'international lottery tickets’ to Brits. I eventually figured out that we did not have agents in each country buying tickets. In fact the company was acting as the lottery. That pissed me off but I finished out the contract. 3 months, 1994.
-
-**Suggestopedic teacher**:
-Even before I got into teaching, I was reading books on alternative learning methods. I tried some out, used them to learn Dutch and teach English. This was my professional entry when I moved to Prague.Then I got an offer to do this in China, which I did not turn down! 
-
-I learned the delicate art of communication, to groups and to individuals. This has been useful to say the least in my current challenges as coach and (group) trainer.
-
-**Last and least, my horoscope.** West: Taurus. Chinese: Fire Horse. This combination, according to the rare sources on such detailed matters, is particularly inauspicious. I just have to live with that.`,
   },
   {
     slug: "storytelling-is-not-optional-anymore",
