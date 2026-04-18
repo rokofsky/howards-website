@@ -14,6 +14,45 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "howards-principles-of-methodology",
+    title: "Howard's Principles of Methodology",
+    excerpt: "Training and Learning Strategies",
+    date: "Apr 18, 2026",
+    category: "Communication",
+    imageUrl: "https://i.postimg.cc/QxWSm4KL/methodology-2.jpg",
+    content: `The Learning Environment
+
+The place where we learn is of paramount importance; we have to be comfortable and constantly stimulated. All our five senses contribute to absorbing the learning experience. The room is cozy, chairs are comfortable, walls are decorated with colorful pictures, music fills the air. Challenges, rewards and anticipation all create excitement. Music and games stimulate the brain. In all our workshops, the experience consists of all this plus, of course, the techniques. This is accelerated learning.
+
+Emotional State
+
+In traditional lessons, students were expected to draw on logic, opinions and knowledge. Therefore, retention was limited to (cognitive) abilities which did not appeal to everyone´s preferred learning style. When emotion is involved, motivation is created. People learn best when they are simultaneously stimulated and relaxed. When they are enjoying themselves. Emotional states and learning capacity are enhanced by the trainer’s applications of elements: games, mysteries, movement, music, et al.
+
+Voice and body language training
+
+We may have neglected developing basic things in adult life like posture and voice. Proper vocal use is essential in all verbal communication, and body language is perhaps even more important. A simple regiment of voice exercises will make you sound clearer, more resounding and more serious. Practicing proper body language emphasizes our communication and aids clarity. In addition, we learn how to read others’ non-verbal language, helping us to understand the other’s meaning. When we realize that the true meaning is in how the receiver receives the information and adapt our communication to best suit our purposes, our skills in persuasion increase remarkably.
+
+Personal Motivation
+
+Robert Epstein, internationally acclaimed expert on human behavior, defines motivation as “an internal state of arousal that (often) precedes behavior.” The basic two human motivations are either (1) towards pleasure or (2) away from pain; the more we structure our behaviors to number (1), the more we retain control our lives and the more motivated we are. We will learn how to plan our lives, set goals and keep promises to ourselves!
+
+The Role of Music
+
+Music is an important element in training. The right music at the right time stimulates emotional engagement and invokes retention. The tempos and keys in the music parallel the pacing of the environment.
+
+Movement & Imagination
+
+Imaginative, role-playing games and physical movement enrich verbal and written information with more meaning and, as a result, positive emotions are stimulated. This helps greatly in the learning process. Movement activates the so-called ´kinesthetic´ feeling onto the scene. Visualization skills enhance memory and creativity. The metaphors employed bring stronger meaning to the subject matter. You will assimilate and remember more.
+
+Team Learning and Cooperation
+
+In a cooperative work environment, more things get done in less time and with less hassle. Therefore we employ dynamic, social and cooperative activities that encourage participants to refine their talents as mentors, learners and colleagues. In this way, interpersonal skills are enriched and creative talents are stimulated. This element of teamwork is omnipresent in all the workshops.
+
+Results, Feedback and Improvement
+
+Learning expectations are clearly defined and shared with participants so that they can comprehend the relevance of the subject matter and measure progress. The data from this process is used to continuously improve and add value to planning, assessment, and improvement. To this end we have various means of feedback: constant review, questionnaires and meeting with the participants and constituents. Improvement can thus be guaranteed.`,
+  },
+  {
     slug: "hara-so-you-dont-fall-down",
     title: "Hara, so you don't fall down",
     excerpt: "Discover the ancient Japanese secret of Hara: finding your center of gravity for balance, confidence, and control.",
