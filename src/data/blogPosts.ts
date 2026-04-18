@@ -117,7 +117,7 @@ step in dog poop / panic *a lot less*.`,
   {
     slug: "my-secret-cv",
     title: "12 jobs you won’t find on my CV",
-    excerpt: "12 former jobs that led me to where I am today",
+    excerpt: "Former jobs that led me to where I am today",
     date: "Mar 15, 2026",
     category: "Personal",
     imageUrl: cvImg,
