@@ -84,8 +84,19 @@ According to the texts, the goal is to be aware of Hara 24/7, but that’s for y
     date: "Mar 15, 2026",
     category: "Personal",
     imageUrl: cvImg,
-`,
+    content: `Newspaper carrier: from the ages of 13 to 16, I delivered the daily paper "Newsday" on a route of 30+ homes in Plainview, NY (it took about 2 hours a day, longer if I took my baby brother or the dog). In addition, I had to collect the weekly fees and tips from each customer on the route. There were always people who were hard to reach, or just didn’t like to pay. Looking back, it was an unlikely livelihood but what else could I do at that age? This opened up for me the worlds of responsibility, independence and perseverance.
 
+Babysitter: for about 4 teenage years, while my friends were out drinking and gallivanting, I regularly babysat for 6 families in Long Island, NY. Yeah, even on New Years Eve.
+
+Handyman at "Casual Corner", Plainview, NY. I worked in this woman's clothing store doing whatever the ladies wanted me to do. As the only male in the store, including customers, I enjoyed the "special attention" afforded to the outlier.
+
+Flower delivery: Pennock Wholesale Flowers, Plainview, NY.
+Delivered flowers to florists around Long Island. I had to know the names of all flowers we sold. My mom liked all the flowers I would bring home every day.
+
+University Law Enforcement Department (ULED) “Escort” service
+Night shifts during my first year at Binghamton University. If someone felt unsafe walking around campus at night, they could call Security and I would get a call by walkie-talkie: who to escort where. Between escorts I would monitor the peace and fire extinguishers in the dormitories, basements, lecture halls etc. I learned how to wield authority and responsibility professionally and friendly, even as a ‘security guy’.
+
+`,
   },
   {
     slug: "storytelling-is-not-optional-anymore",
