@@ -51,8 +51,7 @@ const StorytellingWorkshops = () => {
 
   const openRegistration = (session: Session) => {
     setSelectedSession(session);
-    setFirstName("");
-    setLastName("");
+    setName("");
     setEmail("");
     setSuccess(null);
     setModalOpen(true);
@@ -60,14 +59,13 @@ const StorytellingWorkshops = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedSession || !firstName.trim() || !lastName.trim() || !email.trim()) return;
+    if (!selectedSession || !name.trim() || !email.trim()) return;
 
     setSubmitting(true);
     try {
       const { data, error } = await supabase.functions.invoke("signup-for-session", {
         body: {
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
+          name: name.trim(),
           email: email.trim(),
           session_id: selectedSession.id,
         },
