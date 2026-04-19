@@ -50,10 +50,11 @@ const BlogPost = () => {
             <div className="glass rounded-lg p-5 sm:p-8">
               <div className="text-base sm:text-lg text-foreground/80 leading-[1.75] whitespace-pre-line font-medium">
                 {post.content.split(/(\*\*.*?\*\*)/).map((part, i) => {
+                  const key = `${i}-${part.length}`;
                   if (part.startsWith('**') && part.endsWith('**')) {
-                    return <strong key={i} className="font-bold">{part.slice(2, -2)}</strong>;
+                    return <strong key={key} className="font-bold">{part.slice(2, -2)}</strong>;
                   }
-                  return <span key={i}>{part}</span>;
+                  return <span key={key}>{part}</span>;
                 })}
               </div>
             </div>
