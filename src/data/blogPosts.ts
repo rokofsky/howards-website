@@ -96,9 +96,7 @@ Delivered flowers to florists around Long Island. I had to know the names of all
 University Law Enforcement Department (ULED) “Escort” service
 Night shifts during my first year at Binghamton University. If someone felt unsafe walking around campus at night, they could call Security and I would get a call by walkie-talkie: who to escort where. Between escorts I would monitor the peace and fire extinguishers in the dormitories, basements, lecture halls etc. I learned how to wield authority and responsibility professionally and friendly, even as a ‘security guy’.
 
-
 Oxygen delivery: for 4 summers while at university, I delivering (heavy) liquid oxygen tanks to dying patients all over NYC and Long Island. It paid well, thanks to hazard pay and heavy lifting. I regularly visited and spent time with these patients, each deathly afraid of not getting their O2 on time. I learned to organize my schedule so as to deliver the right amount of oxygen at the right time. And I got to refine my 'bedside manner'.
-
 
 Asbestos abatement: South Bronx, NYC, 1990
 I wasn’t actually removing the asbestos, but I had to don a hazmat suit at 8am to set up the air meter, and again at 4pm to take readings. In between, I either slept in the car and/or wandered around the most dangerous neighborhood in the City.
