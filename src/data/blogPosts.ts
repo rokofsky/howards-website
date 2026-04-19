@@ -115,7 +115,7 @@ I wasn’t actually removing the asbestos, but I had to don a hazmat suit at 8am
 
 
 
-**Sauna Fenomeen**: Amsterdam, NL, 1995-1999: Weekly shifts behind the bar, volunteer on the board. My mandate at this official squatter's club was to make an illegal sauna legal, incl. all regulations. It turned out to be more development than I thought, as diplomat and henchman. The legendary sauna is now defunct. I learned a lot about diplomacy.
+**Sauna Fenomeen**: Amsterdam, NL, 1995-1999: Weekly shifts behind the bar, volunteer on the board. My mandate at this official squatter's club was to make an illegal sauna legal, incl. all regulations. It turned out to be more difficult than I thought, as diplomat and henchman. The legendary sauna is now defunct. I learned a lot about diplomacy.
 
 
 **Last and least, my horoscope**: Western: Taurus; Chinese: Fire Horse. This combination, according to the sources on such detailed matters, is particularly inauspicious. Just ask my mother.`,
