@@ -11,17 +11,20 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
-    const firstName = (body.first_name ?? "").trim();
-    const lastName = (body.last_name ?? "").trim();
+    const fullName = (body.name ?? `${body.first_name ?? ""} ${body.last_name ?? ""}`).trim();
     const email = (body.email ?? "").trim();
     const sessionId = body.session_id;
 
-    if (!sessionId || !email || !firstName || !lastName) {
+    if (!sessionId || !email || !fullName) {
       return new Response(
-        JSON.stringify({ error: "first_name, last_name, email, and session_id are required" }),
+        JSON.stringify({ error: "name, email, and session_id are required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    const nameParts = fullName.split(/\s+/);
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(" ") || firstName;
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return new Response(
