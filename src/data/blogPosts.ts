@@ -88,7 +88,7 @@ According to the texts, the goal is to be aware of Hara 24/7, but that’s for y
 
 **Babysitter**: for about 4 teenage years, while my friends were out drinking and gallivanting, I regularly babysat for 6 families in Long Island, NY. Yeah, even on New Years Eve.
 
-**Handyman** at Casual Corner, Plainview, NY.
+**Handyman**at Casual Corner, Plainview, NY.
 I worked in this woman's clothing store doing whatever the ladies wanted me to do. As the only male in the store, including customers, I enjoyed the "special attention" afforded to the outlier. 
 
 **University Security Department “Escort” service**
