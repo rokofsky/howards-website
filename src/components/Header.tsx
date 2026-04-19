@@ -7,6 +7,7 @@ import bookCover from "@/assets/book-cover.png";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
+  { label: "Home", href: "/" },
   { label: "Services", href: "/#services" },
   { label: "FAQ", href: "/#faq" },
   { label: "Pricing", href: "/#pricing" },
