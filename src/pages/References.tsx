@@ -49,7 +49,7 @@ const References = () => {
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">References</h1>
-            <p className="text-muted-foreground font-light mb-12 max-w-2xl whitespace-nowrap">
+            <p className="text-muted-foreground font-light mb-12 max-w-2xl">
               Don't take Howard's word for it. Here's what people say when he's not looking.
             </p>
           </motion.div>
