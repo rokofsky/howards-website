@@ -57,8 +57,11 @@ const Header = () => {
       const id = href.slice(2);
       if (location.pathname === "/") {
         e.preventDefault();
-        scrollToElement(id);
+        setMobileOpen(false);
         window.history.replaceState(null, "", `/#${id}`);
+        // Wait for mobile menu collapse to finish so offsets are correct
+        setTimeout(() => scrollToElement(id), 250);
+        return;
       }
       // If on another page, let <Link> navigate to "/#id" — the effect below handles scroll on arrival.
     }
