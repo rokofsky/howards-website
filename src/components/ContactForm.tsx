@@ -209,7 +209,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <label htmlFor="name" className="text-sm text-muted-foreground mb-1.5 block font-medium">Name</label>
+          <label htmlFor="name" className="text-sm text-muted-foreground mb-1.5 block font-medium">Name <span className="text-gold">* (required)</span></label>
           <input
             id="name"
             name="name"
@@ -222,7 +222,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
           />
         </div>
         <div>
-          <label htmlFor="email" className="text-sm text-muted-foreground mb-1.5 block font-medium">Email</label>
+          <label htmlFor="email" className="text-sm text-muted-foreground mb-1.5 block font-medium">Email <span className="text-gold">* (required)</span></label>
           <input
             id="email"
             name="email"
@@ -298,7 +298,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
       )}
 
       <div>
-        <label htmlFor="message" className="text-sm text-muted-foreground mb-1.5 block font-medium">Message</label>
+        <label htmlFor="message" className="text-sm text-muted-foreground mb-1.5 block font-medium">Message <span className="text-gold">* (required)</span></label>
         <textarea
           id="message"
           name="message"
