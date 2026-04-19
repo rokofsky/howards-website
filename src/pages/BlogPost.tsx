@@ -48,13 +48,14 @@ const BlogPost = () => {
               </span>
             )}
             <div className="glass rounded-lg p-5 sm:p-8">
-              <p className="text-base sm:text-lg text-foreground/80 leading-[1.75] whitespace-pre-line font-medium">
-                {post.content.split(/(\*\*.*?\*\*)/).map((part, i) => 
-                  part.startsWith('**') && part.endsWith('**') ? 
-                  <strong key={i} className="font-bold">{part.slice(2, -2)}</strong> : 
-                  part
-                )}
-              </p>
+              <div className="text-base sm:text-lg text-foreground/80 leading-[1.75] whitespace-pre-line font-medium">
+                {post.content.split(/(\*\*.*?\*\*)/).map((part, i) => {
+                  if (part.startsWith('**') && part.endsWith('**')) {
+                    return <strong key={i} className="font-bold">{part.slice(2, -2)}</strong>;
+                  }
+                  return <span key={i}>{part}</span>;
+                })}
+              </div>
             </div>
             <div className="mt-10">
               <Link to="/blog" className="text-sm text-accent hover:text-foreground transition-colors font-medium">
