@@ -84,43 +84,36 @@ According to the texts, the goal is to be aware of Hara 24/7, but that’s for y
     date: "Mar 15, 2026",
     category: "Personal",
     imageUrl: cvImg,
-    content: `**Newspaper carrier**: from the ages of 13 to 16, I delivered the daily paper "Newsday" on a route of 30+ homes in Plainview, NY (it took about 2 hours a day, longer if I took my baby brother or the dog). In addition, I had to collect the weekly fees and tips from each customer on the route. There were always people who were hard to reach, or just didn’t like to pay. Looking back, it was an unlikely livelihood but what else could I do at that age? This opened up for me the worlds of responsibility, independence and perseverance.
+    content: `Newspaper carrier: from the ages of 13 to 16, I delivered the daily paper "Newsday" on a route of 30+ homes in Plainview, NY (it took about 2 hours a day, longer if I took my baby brother or the dog). In addition, I had to collect the weekly fees and tips from each customer on the route. There were always people who were hard to reach, or just didn’t like to pay. Looking back, it was an unlikely livelihood but what else could I do at that age? This opened up for me the worlds of responsibility, independence and perseverance.
 
-**Babysitter**: for about 4 teenage years, while my friends were out drinking and gallivanting, I regularly babysat for 6 families in Long Island, NY. Yeah, even on New Years Eve.
+Babysitter: for about 4 teenage years, while my friends were out drinking and gallivanting, I regularly babysat for 6 families in Long Island, NY. Yeah, even on New Years Eve.
 
-**Handyman** at "Casual Corner", Plainview, NY. I worked in this woman's clothing store doing whatever the ladies wanted me to do. As the only male in the store, including customers, I enjoyed the "special attention" afforded to the outlier.
+Handyman at "Casual Corner", Plainview, NY. I worked in this woman's clothing store doing whatever the ladies wanted me to do. As the only male in the store, including customers, I enjoyed the "special attention" afforded to the outlier.
 
-**Flower delivery**: Pennock Wholesale Flowers, Plainview, NY.
+Flower delivery: Pennock Wholesale Flowers, Plainview, NY.
 Delivered flowers to florists around Long Island. I had to know the names of all flowers we sold. My mom liked all the flowers I would bring home every day.
 
-**University Law Enforcement Department (ULED) “Escort” service**
-
+University Law Enforcement Department (ULED) “Escort” service
 Night shifts during my first year at Binghamton University. If someone felt unsafe walking around campus at night, they could call Security and I would get a call by walkie-talkie: who to escort where. Between escorts I would monitor the peace and fire extinguishers in the dormitories, basements, lecture halls etc. I learned how to wield authority and responsibility professionally and friendly, even as a ‘security guy’.
 
 
-**Oxygen delivery**: for 4 summers while at university, I delivering (heavy) liquid oxygen tanks to dying patients all over NYC and Long Island. It paid well, thanks to hazard pay and heavy lifting. I regularly visited and spent time with these patients, each deathly afraid of not getting their O2 on time. I learned to organize my schedule so as to deliver the right amount of oxygen at the right time. And I got to refine my 'bedside manner'.
+Oxygen delivery: for 4 summers while at university, I delivering (heavy) liquid oxygen tanks to dying patients all over NYC and Long Island. It paid well, thanks to hazard pay and heavy lifting. I regularly visited and spent time with these patients, each deathly afraid of not getting their O2 on time. I learned to organize my schedule so as to deliver the right amount of oxygen at the right time. And I got to refine my 'bedside manner'.
 
 
-**Asbestos abatement**: South Bronx, NYC, 1990
+Asbestos abatement: South Bronx, NYC, 1990
 I wasn’t actually removing the asbestos, but I had to don a hazmat suit at 8am to set up the air meter, and again at 4pm to take readings. In between, I either slept in the car and/or wandered around the most dangerous neighborhood in the City.
 
-**Bartender**: "The Last Waterhole", red light district, Amsterdam, 1991-92. Probably the most fun job I ever had. Live band every night! I learned how to persuade drunk and sometimes aggressive people to go home at closing time. I never had to use the emergency 'protection' hotline to call the Hell's Angels.
+Bartender: "The Last Waterhole", red light district, Amsterdam, 1991-92. Probably the most fun job I ever had. Live band every night! I learned how to persuade drunk and sometimes aggressive people to go home at closing time. I never had to use the emergency 'protection' hotline to call the Hell's Angels.
 
+Cook: kitchen work in various restaurants (1990s) in Amsterdam, NL. Managed the kitchen in two of these restaurants, in Diemen, and on Zeedijk.
 
-**Cook**: kitchen work in various restaurants (1990s) in Amsterdam, NL. Managed the kitchen in two of these restaurants, in Diemen, and on Zeedijk.
+Rhetorical consultant: “Network CV” Amsterdam, NL, 1991-1993. Established a CV and resume writing service. I made flyers and placed them in employment agencies, eventually coaching job candidates at all levels.
 
+Telemarketing: Amsterdam, NL, 1994. Selling 'international lottery tickets’ to Brits over the phone. I eventually figured out that the company was not actually buying any lottery tickets, but was instead acting as the lottery. That pissed me off but I finished out the contract.
 
-**Rhetorical consultant**: “Network CV” Amsterdam, NL, 1991-1993. Established a CV and resume writing service. I made flyers and placed them in employment agencies, eventually coaching job candidates at all levels.
+Sauna Fenomeen: Amsterdam, NL, 1995-1999: Weekly shifts behind the bar, volunteer on the board. My mandate at this official squatter's club was to make an illegal sauna legal, incl. all regulations. It turned out to be more difficult than I thought, as diplomat and henchman. The legendary sauna is now defunct. I learned a lot about diplomacy.
 
-
-
-**Telemarketing**: Amsterdam, NL, 1994. Selling 'international lottery tickets’ to Brits over the phone. I eventually figured out that the company was not actually buying any lottery tickets, but was instead acting as the lottery. That pissed me off but I finished out the contract.
-
-
-**Sauna Fenomeen**: Amsterdam, NL, 1995-1999: Weekly shifts behind the bar, volunteer on the board. My mandate at this official squatter's club was to make an illegal sauna legal, incl. all regulations. It turned out to be more difficult than I thought, as diplomat and henchman. The legendary sauna is now defunct. I learned a lot about diplomacy.
-
-
-**Last and least, my horoscope**: Western: Taurus; Chinese: Fire Horse. This combination, according to the sources on such detailed matters, is particularly inauspicious. Just ask my mother.`,
+Last and least, my horoscope: Western: Taurus; Chinese: Fire Horse. This combination, according to the sources on such detailed matters, is particularly inauspicious. Just ask my mother.`,
 
   },
   {
