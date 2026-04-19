@@ -90,10 +90,10 @@ According to the texts, the goal is to be aware of Hara 24/7, but that’s for y
 
 **Handyman** at "Casual Corner", Plainview, NY. I worked in this woman's clothing store doing whatever the ladies wanted me to do. As the only male in the store, including customers, I enjoyed the "special attention" afforded to the outlier.
 
-Flower delivery guy: Pennock Wholesale Flowers, Plainview, NY.
+**Flower delivery**: Pennock Wholesale Flowers, Plainview, NY.
 Delivered flowers to florists around Long Island. I had to know the names of all flowers we sold. My mom liked all the flowers I would bring home every day.
 
-University Law Enforcement Department (ULED) “Escort” service
+**University Law Enforcement Department (ULED) “Escort” service**
 
 Night shifts during my first year at Binghamton University. If someone felt unsafe walking around campus at night, they could call Security and I would get a call by walkie-talkie: who to escort where. Between escorts I would monitor the peace and fire extinguishers in the dormitories, basements, lecture halls etc. I learned how to wield authority and responsibility professionally and friendly, even as a ‘security guy’.
 
@@ -106,13 +106,15 @@ I wasn’t actually removing the asbestos, but I had to don a hazmat suit at 8am
 
 **Bartender**: "The Last Waterhole", red light district, Amsterdam, 1991-92. Probably the most fun job I ever had. Live band every night! I learned how to persuade drunk and sometimes aggressive people to go home at closing time. I never had to use the emergency 'protection' hotline to call the Hell's Angels.
 
+
 **Cook**: kitchen work in various restaurants (1990s) in Amsterdam, NL. Managed the kitchen in two of these restaurants, in Diemen, and on Zeedijk.
 
 
 **Rhetorical consultant**: “Network CV” Amsterdam, NL, 1991-1993. Established a CV and resume writing service. I made flyers and placed them in employment agencies, eventually coaching job candidates at all levels.
 
-**Telemarketing**: Amsterdam, NL, 1994. Selling 'international lottery tickets’ to Brits over the phone. I eventually figured out that the company was not actually buying any lottery tickets, but was instead acting as the lottery. That pissed me off but I finished out the contract.
 
+
+**Telemarketing**: Amsterdam, NL, 1994. Selling 'international lottery tickets’ to Brits over the phone. I eventually figured out that the company was not actually buying any lottery tickets, but was instead acting as the lottery. That pissed me off but I finished out the contract.
 
 
 **Sauna Fenomeen**: Amsterdam, NL, 1995-1999: Weekly shifts behind the bar, volunteer on the board. My mandate at this official squatter's club was to make an illegal sauna legal, incl. all regulations. It turned out to be more difficult than I thought, as diplomat and henchman. The legendary sauna is now defunct. I learned a lot about diplomacy.
