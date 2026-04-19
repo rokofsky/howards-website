@@ -57,7 +57,9 @@ const Header = () => {
       if (location.pathname === "/") {
         e.preventDefault();
         scrollToElement(id);
+        window.history.replaceState(null, "", `/#${id}`);
       }
+      // If on another page, let <Link> navigate to "/#id" — the effect below handles scroll on arrival.
     }
     setMobileOpen(false);
   };
