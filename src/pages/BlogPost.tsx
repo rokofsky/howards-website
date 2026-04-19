@@ -48,13 +48,15 @@ const BlogPost = () => {
               </span>
             )}
             <div className="glass rounded-lg p-5 sm:p-8">
-              <div className="text-base sm:text-lg text-foreground/80 leading-[1.75] whitespace-pre-line font-medium">
-                {post.content.split(/(\*\*.*?\*\*)/).map((part, i) => {
-                  const key = `${i}-${part.length}`;
+              <div
+                key={post.slug}
+                className="text-base sm:text-lg text-foreground/80 leading-[1.75] whitespace-pre-line font-medium"
+              >
+                {post.content.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
                   if (part.startsWith('**') && part.endsWith('**')) {
-                    return <strong key={key} className="font-bold">{part.slice(2, -2)}</strong>;
+                    return <strong key={i} className="font-bold">{part.slice(2, -2)}</strong>;
                   }
-                  return <span key={key}>{part}</span>;
+                  return <span key={i}>{part}</span>;
                 })}
               </div>
             </div>
