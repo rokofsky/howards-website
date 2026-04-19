@@ -74,7 +74,6 @@ const ServiceDetail = () => {
       });
       if (res.data?.ok) {
         sessionStorage.setItem("admin_auth", "true");
-        sessionStorage.setItem("admin_pw", adminPassword);
         navigate("/admin/webinars");
       } else {
         const next = attempts + 1;
