@@ -26,8 +26,7 @@ const StorytellingWorkshops = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<{ title: string; date: string } | null>(null);
@@ -52,8 +51,7 @@ const StorytellingWorkshops = () => {
 
   const openRegistration = (session: Session) => {
     setSelectedSession(session);
-    setFirstName("");
-    setLastName("");
+    setName("");
     setEmail("");
     setSuccess(null);
     setModalOpen(true);
@@ -61,14 +59,13 @@ const StorytellingWorkshops = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedSession || !firstName.trim() || !lastName.trim() || !email.trim()) return;
+    if (!selectedSession || !name.trim() || !email.trim()) return;
 
     setSubmitting(true);
     try {
       const { data, error } = await supabase.functions.invoke("signup-for-session", {
         body: {
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
+          name: name.trim(),
           email: email.trim(),
           session_id: selectedSession.id,
         },
@@ -180,37 +177,22 @@ const StorytellingWorkshops = () => {
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4 mt-2">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label htmlFor="firstName" className="text-sm font-medium mb-1 block">
-                        First name
-                      </label>
-                      <Input
-                        id="firstName"
-                        placeholder="First name"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                        required
-                        maxLength={100}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="lastName" className="text-sm font-medium mb-1 block">
-                        Last name
-                      </label>
-                      <Input
-                        id="lastName"
-                        placeholder="Last name"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        required
-                        maxLength={100}
-                      />
-                    </div>
-                  </div>
+                <div>
+                  <label htmlFor="name" className="text-sm font-medium mb-1 block">
+                    Name <span className="text-gold">* (required)</span>
+                  </label>
+                  <Input
+                    id="name"
+                    placeholder="Your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    maxLength={200}
+                  />
+                </div>
                 <div>
                   <label htmlFor="email" className="text-sm font-medium mb-1 block">
-                    Email
+                    Email <span className="text-gold">* (required)</span>
                   </label>
                   <Input
                     id="email"
