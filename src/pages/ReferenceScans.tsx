@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { FileText } from "lucide-react";
@@ -76,9 +76,9 @@ const ReferenceScans = () => {
                   transition={{ delay: Math.min(i * 0.01, 0.5) }}
                 >
                   {url ? (
-                    <a href={url} target="_blank" rel="noopener noreferrer">
+                    <Link to={`/references/scans/${slot}`}>
                       {inner}
-                    </a>
+                    </Link>
                   ) : (
                     inner
                   )}

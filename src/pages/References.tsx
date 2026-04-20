@@ -103,7 +103,7 @@ const References = () => {
                   </div>
                 );
                 return url ? (
-                  <a key={i} href={url} target="_blank" rel="noopener noreferrer">{inner}</a>
+                  <Link key={i} to={`/references/scans/${i}`}>{inner}</Link>
                 ) : (
                   <div key={i}>{inner}</div>
                 );
