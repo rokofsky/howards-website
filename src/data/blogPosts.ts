@@ -87,7 +87,7 @@ According to the texts, the goal is to be aware of Hara 24/7, but that’s for y
     content: `**Newspaper carrier**: from the ages of 13 to 16, I delivered the daily paper "Newsday" on a route of 30+ homes in Plainview, NY (it took about 2 hours a day, longer if I took my baby brother or the dog). In addition, I had to collect the weekly fees and tips from each customer on the route. There were always people who were hard to reach, or just didn’t like to pay. Looking back, it was an unlikely livelihood but what else could I do at that age? This opened up for me the worlds of responsibility, independence and perseverance.
 
 **Babysitter**: for about 4 teenage years, while my friends were out drinking and gallivanting, I regularly babysat for 6 families in Long Island, NY. Yeah, even on New Years Eve. 
-Handyman at "Casual Corner", Plainview, NY. I worked in this woman's clothing store doing whatever the ladies wanted me to do. As the only male in the store, including customers, I enjoyed the "special attention" afforded to the outlier.
+
 
 **Flower delivery**: Pennock Wholesale Flowers, Plainview, NY. Delivered flowers to florists around Long Island. I had to know the names of all flowers we sold. My mom liked all the flowers I would bring home every day.
 
@@ -108,7 +108,8 @@ Established a CV and resume writing service. I made flyers and placed them in em
 **Telemarketing**: Amsterdam, NL, 1994. Selling 'international lottery tickets’ to Brits over the phone. I eventually figured out that the company was not actually buying any lottery tickets, but was instead acting as the lottery. That pissed me off but I finished out the contract.
 
 **Manager at Sauna Fenomeen**: Amsterdam, NL, 1995-1999.
-Volunteer on the board and weekly shifts behind the bar. My mandate at this official squatter's club was to make the illegal sauna into a legal one, following all ⚖️ regulations. It turned out to be more difficult than I thought, as diplomat and henchman. The legendary sauna is now defunct. I learned a lot about diplomacy.
+Volunteer on the board and weekly shifts behind the bar. My mandate at this 
+
 
 **Last and least, my horoscope**: Western: Taurus; Chinese: Fire Horse. This combination, according to the sources on such detailed matters, is particularly inauspicious. Just ask my mother.`,
   },
