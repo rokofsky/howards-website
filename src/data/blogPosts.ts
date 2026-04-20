@@ -104,7 +104,8 @@ According to the texts, the goal is to be aware of Hara 24/7, but that’s for y
 
 **Telemarketing**: Amsterdam, NL, 1994. Selling 'international lottery tickets’ to Brits over the phone. I eventually figured out that the company was not actually buying any lottery tickets, but was instead acting as the lottery. That pissed me off but I finished out the contract.
 
-**Manager at Sauna Fenomeen**: Amsterdam, NL, 1995-1999.\nVolunteer on the board and weekly shifts behind the bar. My mandate at this official squatter's club was to make the illegal sauna into a legal one, following all ⚖️ regulations. It turned out to be more difficult than I thought, as diplomat and henchman. The legendary sauna is now defunct. I learned a lot about diplomacy.
+**Manager at Sauna Fenomeen**: Amsterdam, NL, 1995-1999.
+Volunteer on the board and weekly shifts behind the bar. My mandate at this official squatter's club was to make the illegal sauna into a legal one, following all ⚖️ regulations. It turned out to be more difficult than I thought, as diplomat and henchman. The legendary sauna is now defunct. I learned a lot about diplomacy.
 
 **Last and least, my horoscope**: Western: Taurus; Chinese: Fire Horse. This combination, according to the sources on such detailed matters, is particularly inauspicious. Just ask my mother.`,
   },
