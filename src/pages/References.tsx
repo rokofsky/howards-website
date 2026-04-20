@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import PdfThumbnail from "@/components/PdfThumbnail";
 
 const testimonials = [
   { name: "Sarah K., VP People, TechCorp", text: "Howard completely transformed how our leadership team communicates. The storytelling framework he taught us is now embedded in our culture." },
@@ -91,22 +92,18 @@ const References = () => {
               {[1, 2, 3, 4, 5, 6].map((i) => {
                 const scan = previewScans[i];
                 const url = scan ? publicUrl(scan.pdf_path) : undefined;
-                const inner = (
-                  <div className="aspect-[3/4] glass rounded-lg flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-shadow p-3">
-                    <span className="text-sm text-muted-foreground font-light">
-                      {scan?.title ?? `Scan #${i}`}
-                    </span>
-                    {!url && (
-                      <span className="text-[10px] text-muted-foreground/60 mt-1 uppercase tracking-wider">
-                        Placeholder
-                      </span>
-                    )}
+                if (url) {
+                  return (
+                    <Link key={i} to={`/references/scans/${i}`} className="block hover:shadow-lg transition-shadow rounded-lg">
+                      <PdfThumbnail url={url} title={scan?.title ?? `Scan #${i}`} />
+                    </Link>
+                  );
+                }
+                return (
+                  <div key={i} className="aspect-[3/4] glass rounded-lg flex flex-col items-center justify-center p-3">
+                    <span className="text-sm text-muted-foreground font-light">Scan #{i}</span>
+                    <span className="text-[10px] text-muted-foreground/60 mt-1 uppercase tracking-wider">Placeholder</span>
                   </div>
-                );
-                return url ? (
-                  <Link key={i} to={`/references/scans/${i}`}>{inner}</Link>
-                ) : (
-                  <div key={i}>{inner}</div>
                 );
               })}
             </div>

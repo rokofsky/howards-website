@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
-import { FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import PdfThumbnail from "@/components/PdfThumbnail";
 
 const TOTAL_SCANS = 80;
 const BUCKET = "reference-scans";
@@ -54,19 +54,26 @@ const ReferenceScans = () => {
             {Array.from({ length: TOTAL_SCANS }, (_, i) => i + 1).map((slot, i) => {
               const scan = scans[slot];
               const url = scan ? publicUrl(scan.pdf_path) : undefined;
-              const inner = (
-                <div className="aspect-[3/4] glass rounded-lg flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-shadow p-3 text-center">
-                  <FileText className="w-8 h-8 text-muted-foreground mb-2" />
-                  <span className="text-xs text-muted-foreground font-light">
-                    {scan?.title ?? `Scan #${slot}`}
-                  </span>
-                  {!url && (
-                    <span className="text-[10px] text-muted-foreground/60 mt-1 uppercase tracking-wider">
-                      Placeholder
-                    </span>
-                  )}
-                </div>
-              );
+
+              if (!url) {
+                return (
+                  <motion.div
+                    key={slot}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: Math.min(i * 0.01, 0.5) }}
+                  >
+                    <div className="aspect-[3/4] glass rounded-lg flex flex-col items-center justify-center p-3 text-center">
+                      <span className="text-xs text-muted-foreground font-light">
+                        Scan #{slot}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground/60 mt-1 uppercase tracking-wider">
+                        Placeholder
+                      </span>
+                    </div>
+                  </motion.div>
+                );
+              }
 
               return (
                 <motion.div
@@ -75,13 +82,9 @@ const ReferenceScans = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: Math.min(i * 0.01, 0.5) }}
                 >
-                  {url ? (
-                    <Link to={`/references/scans/${slot}`}>
-                      {inner}
-                    </Link>
-                  ) : (
-                    inner
-                  )}
+                  <Link to={`/references/scans/${slot}`} className="block hover:shadow-lg transition-shadow rounded-lg">
+                    <PdfThumbnail url={url} title={scan?.title ?? `Scan #${slot}`} />
+                  </Link>
                 </motion.div>
               );
             })}
