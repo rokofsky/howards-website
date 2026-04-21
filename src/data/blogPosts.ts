@@ -86,7 +86,7 @@ According to the texts, the goal is to be aware of Hara 24/7, but that’s for y
     imageUrl: cvImg,
     content: `**Newspaper carrier**: from the ages of 13 to 16, I delivered the daily paper "Newsday" on a route of 30+ homes in Plainview, NY (it took about 2 hours a day, longer if I took my baby brother or the dog). In addition, I had to collect the weekly fees and tips from each customer on the route. There were always people who were hard to reach, or just didn’t like to pay. Looking back, it was an unlikely livelihood but what else could I do at that age? This opened up for me the worlds of responsibility, independence and perseverance.
 
-**Babysitter**: for about 4 teenage years, while my friends were out drinking and gallivanting, I regularly babysat for 6 families in Long Island, NY. Yeah, even on New Years Eve. 
+**Babysitter**: for about 4 teenage years, while my friends were out drinking and gallivanting, I regularly babysat for 6 families in Long Island, NY. Yeah, even on New Years Eve.
 
 **Flower delivery**: Pennock Wholesale Flowers, Plainview, NY. Delivered flowers to florists around Long Island. I had to know the names of all flowers we sold. My mom liked all the flowers I would bring home every day.
 
@@ -94,22 +94,20 @@ According to the texts, the goal is to be aware of Hara 24/7, but that’s for y
 
 **Home Oxygen delivery**: for 4 summers while at university, I delivering (heavy) liquid oxygen tanks to dying patients all over NYC and Long Island. It paid well, thanks to hazard pay and heavy lifting. I regularly visited and spent time with these patients, each deathly afraid of not getting their O2 on time. I learned to organize my schedule so as to deliver the right amount of oxygen at the right time. And I got to refine my 'bedside manner'.
 
-**Asbestos abatement**: South Bronx, NYC, 1990. 
+**Asbestos abatement**: South Bronx, NYC, 1990.
 I wasn’t actually removing the asbestos, but I had to don a hazmat suit at 8am to set up the air meter, and again at 4pm to take readings. In between, I either slept in the car and/or wandered around the most dangerous neighborhood in the City.
 
 **Bartender**: "The Last Waterhole", red light district, Amsterdam, 1991-92. Probably the most fun job I ever had. Live band every night! I learned how to persuade drunk and sometimes aggressive people to go home at closing time. I never had to use the emergency 'protection' hotline to call the Hell's Angels.
 
 **Cook**: kitchen work in various restaurants (1990s) in Amsterdam, NL. Managed the kitchen in two of these restaurants, in Diemen, and on Zeedijk.
 
-**Rhetorical consultant**: “Network CV” Amsterdam, NL, 1991-1993. 
+**Rhetorical consultant**: “Network CV” Amsterdam, NL, 1991-1993.
 Established a CV and resume writing service. I made flyers and placed them in employment agencies, eventually coaching job candidates at all levels.
 
 **Telemarketing**: Amsterdam, NL, 1994. Selling 'international lottery tickets’ to Brits over the phone. I eventually figured out that the company was not actually buying any lottery tickets, but was instead acting as the lottery. That pissed me off but I finished out the contract.
 
 **Manager at Sauna Fenomeen**: Amsterdam, NL, 1995-1999.
-Volunteer on the board and weekly shifts behind the bar. My mandate at this squatter's sauna club was to turn it from an illegal club to a legal one, with all the associated regulations. As most of the members were anarchists, this was an exercise in diplomacy, to say the least. I had to fire several people :(
-
-**Last and least, my horoscope**: Western: Taurus; Chinese: Fire Horse. This combination, according to the sources on such detailed matters, is particularly inauspicious. Just ask my mother.`,
+Volunteer on the board and weekly shifts behind the bar. My mandate at this squatter's sauna club was to turn it from an illegal club to a legal one, with all the associated regulations. As most of the members were anarchists, this was an exercise in diplomacy, to say the least. I had to fire several people :(`,
   },
   {
     slug: "storytelling-is-not-optional-anymore",
