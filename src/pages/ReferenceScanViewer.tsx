@@ -8,7 +8,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const BUCKET = "reference-scans";
 
@@ -68,12 +68,15 @@ const ReferenceScanViewer = () => {
 
   return (
     <Layout>
-      <section className="section-padding pt-24 pb-12">
-        {/* Click-to-exit backdrop on desktop */}
+      {/* Full-height click-to-exit backdrop */}
+      <section
+        className="section-padding pt-24 pb-12 min-h-[calc(100vh-4rem)] cursor-pointer"
+        onClick={handleBackdropClick}
+        role="presentation"
+      >
         <div
-          className="max-w-4xl mx-auto"
-          onClick={handleBackdropClick}
-          role="presentation"
+          className="max-w-4xl mx-auto cursor-default"
+          onClick={(e) => e.stopPropagation()}
         >
           <Button variant="outline" size="default" asChild className="mb-6">
             <Link to="/references">

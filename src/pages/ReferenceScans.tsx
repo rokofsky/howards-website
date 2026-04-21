@@ -50,7 +50,7 @@ const ReferenceScans = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 px-0 lg:px-8">
             {Array.from({ length: TOTAL_SCANS }, (_, i) => i + 1).map((slot, i) => {
               const scan = scans[slot];
               const url = scan ? publicUrl(scan.pdf_path) : undefined;
@@ -82,7 +82,10 @@ const ReferenceScans = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: Math.min(i * 0.01, 0.5) }}
                 >
-                  <Link to={`/references/scans/${slot}`} className="block hover:shadow-lg transition-shadow rounded-lg">
+                  <Link
+                    to={`/references/scans/${slot}`}
+                    className="block rounded-lg transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl"
+                  >
                     <PdfThumbnail url={url} title={scan?.title ?? `Scan #${slot}`} />
                   </Link>
                 </motion.div>
