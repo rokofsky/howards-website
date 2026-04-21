@@ -56,7 +56,7 @@ const ReferenceScans = () => {
             </Link>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Evaluation Forms Archive</h1>
             <p className="text-muted-foreground font-light mb-12 max-w-2xl">
-              Scanned evaluation sheets from past workshops. Click any scan to open the full PDF.
+              Scanned evaluation sheets from participants from past workshops. Click any scan to open the full form.
             </p>
           </motion.div>
 
