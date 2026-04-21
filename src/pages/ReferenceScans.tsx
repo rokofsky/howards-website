@@ -76,13 +76,12 @@ const ReferenceScans = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4 }}
                     >
-                      <div className="aspect-[3/4] glass rounded-lg flex flex-col items-center justify-center p-3 text-center">
-                        <span className="text-xs text-muted-foreground font-light">
-                          Scan #{slot}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground/60 mt-1 uppercase tracking-wider">
-                          Placeholder
-                        </span>
+                      <div className="aspect-[3/4] rounded-lg overflow-hidden bg-muted/30 animate-pulse">
+                        <div className="h-full w-full flex flex-col items-center justify-center gap-2 p-3">
+                          <div className="w-3/4 h-2 bg-muted-foreground/10 rounded" />
+                          <div className="w-1/2 h-2 bg-muted-foreground/10 rounded" />
+                          <div className="w-2/3 h-2 bg-muted-foreground/10 rounded" />
+                        </div>
                       </div>
                     </motion.div>
                   );
