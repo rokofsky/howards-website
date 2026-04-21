@@ -50,7 +50,7 @@ const BlogPost = () => {
             <div className="glass rounded-lg p-5 sm:p-8">
               <div
                 key={post.slug}
-                className="text-base sm:text-lg text-foreground/80 leading-[1.75] whitespace-pre-line font-semibold"
+                className="text-base sm:text-lg text-foreground/80 leading-[1.75] whitespace-pre-line font-light"
               >
                 {post.content.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
                   if (part.startsWith('**') && part.endsWith('**')) {
