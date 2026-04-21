@@ -40,7 +40,7 @@ const ReferenceScans = () => {
   const allRevealed = visibleCount >= TOTAL_SCANS;
 
   const scrollToTop = () => {
-    gridTopRef.current?.scrollIntoView({ behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -117,16 +117,14 @@ const ReferenceScans = () => {
                 >
                   More evaluation forms from participants
                 </Button>
-                {visibleCount > PAGE_SIZE && (
-                  <div>
-                    <button
-                      onClick={scrollToTop}
-                      className="text-sm text-accent hover:text-foreground transition-colors font-medium"
-                    >
-                      ↑ Scroll to Top of Evaluations
-                    </button>
-                  </div>
-                )}
+                <div>
+                  <button
+                    onClick={scrollToTop}
+                    className="text-sm text-accent hover:text-foreground transition-colors font-medium"
+                  >
+                    ↑ Scroll to Top
+                  </button>
+                </div>
               </>
             ) : (
               <>
