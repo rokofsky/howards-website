@@ -20,7 +20,7 @@ const Bio = () => {
                 className="w-full md:w-[45%] md:float-left md:mr-8 md:mb-4 rounded-lg object-cover aspect-[3/4]"
               />
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Who is Howard</h1>
-              <p className="mb-4 font-medium">No excuses!</p>
+              <p className="mb-4 text-lg font-semibold">No excuses!</p>
               <p className="mb-4">I'm Howard, a trainer/consultant with 24 years of experience focusing on practical productivity and interpersonal communication. I don't teach theory — I teach techniques and systems that immediately improve how you work, and how people work together.</p>
               <p className="mb-4">As a hobby, I collected baseball cards, memorizing the serial numbers, the photos on the front, the stats on the back… it was those cards that destroyed my vision. In addition to music, I listened to talk radio a lot.</p>
               <p className="mb-4">At 13, I started delivering the daily Newsday door-to-door, for 2½ years. We had to collect the subscription fees every week – a teenager tracking down deadbeat customers seems absurd nowadays (newspapers are now delivered by adults in vans). I babysat, shoveled snow, painted houses, installed insulation in neighbors' crawl-spaces, whatever anyone was willing to pay me to do.</p>
