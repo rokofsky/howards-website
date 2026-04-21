@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
@@ -14,34 +14,60 @@ interface PdfThumbnailProps {
 const PdfThumbnail = ({ url, title, className = "" }: PdfThumbnailProps) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
+  const [inView, setInView] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div
+      ref={ref}
       className={`aspect-[3/4] rounded-lg overflow-hidden bg-white relative ${className}`}
     >
-      {!loaded && !error && (
+      {!inView && (
+        <div className="absolute inset-0 flex items-center justify-center bg-muted/30">
+          <span className="text-xs text-muted-foreground">{title}</span>
+        </div>
+      )}
+      {inView && !loaded && !error && (
         <div className="absolute inset-0 flex items-center justify-center bg-muted/30 animate-pulse">
           <span className="text-xs text-muted-foreground">Loading…</span>
         </div>
       )}
-      {error && (
+      {inView && error && (
         <div className="absolute inset-0 flex items-center justify-center bg-muted/20">
           <span className="text-xs text-muted-foreground">{title}</span>
         </div>
       )}
-      <Document
-        file={url}
-        onLoadSuccess={() => setLoaded(true)}
-        onLoadError={() => setError(true)}
-        loading={null}
-      >
-        <Page
-          pageNumber={1}
-          width={280}
-          renderTextLayer={false}
-          renderAnnotationLayer={false}
-        />
-      </Document>
+      {inView && (
+        <Document
+          file={url}
+          onLoadSuccess={() => setLoaded(true)}
+          onLoadError={() => setError(true)}
+          loading={null}
+        >
+          <Page
+            pageNumber={1}
+            width={280}
+            renderTextLayer={false}
+            renderAnnotationLayer={false}
+          />
+        </Document>
+      )}
     </div>
   );
 };
