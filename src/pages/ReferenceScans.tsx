@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import PdfThumbnail from "@/components/PdfThumbnail";
+import { Button } from "@/components/ui/button";
 
 const TOTAL_SCANS = 80;
+const PAGE_SIZE = 10;
 const BUCKET = "reference-scans";
 
 interface ScanRow {
@@ -16,6 +18,8 @@ interface ScanRow {
 
 const ReferenceScans = () => {
   const [scans, setScans] = useState<Record<number, ScanRow>>({});
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const gridTopRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     supabase
@@ -32,6 +36,12 @@ const ReferenceScans = () => {
 
   const publicUrl = (path: string) =>
     supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+
+  const allRevealed = visibleCount >= TOTAL_SCANS;
+
+  const scrollToTop = () => {
+    gridTopRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <Layout>
@@ -50,47 +60,87 @@ const ReferenceScans = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 px-0 lg:px-8">
-            {Array.from({ length: TOTAL_SCANS }, (_, i) => i + 1).map((slot, i) => {
-              const scan = scans[slot];
-              const url = scan ? publicUrl(scan.pdf_path) : undefined;
+          <div ref={gridTopRef} />
 
-              if (!url) {
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 px-0 lg:px-8">
+            <AnimatePresence>
+              {Array.from({ length: Math.min(visibleCount, TOTAL_SCANS) }, (_, i) => i + 1).map((slot) => {
+                const scan = scans[slot];
+                const url = scan ? publicUrl(scan.pdf_path) : undefined;
+
+                if (!url) {
+                  return (
+                    <motion.div
+                      key={slot}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4 }}
+                    >
+                      <div className="aspect-[3/4] glass rounded-lg flex flex-col items-center justify-center p-3 text-center">
+                        <span className="text-xs text-muted-foreground font-light">
+                          Scan #{slot}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground/60 mt-1 uppercase tracking-wider">
+                          Placeholder
+                        </span>
+                      </div>
+                    </motion.div>
+                  );
+                }
+
                 return (
                   <motion.div
                     key={slot}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: Math.min(i * 0.01, 0.5) }}
+                    transition={{ duration: 0.4 }}
                   >
-                    <div className="aspect-[3/4] glass rounded-lg flex flex-col items-center justify-center p-3 text-center">
-                      <span className="text-xs text-muted-foreground font-light">
-                        Scan #{slot}
-                      </span>
-                      <span className="text-[10px] text-muted-foreground/60 mt-1 uppercase tracking-wider">
-                        Placeholder
-                      </span>
-                    </div>
+                    <Link
+                      to={`/references/scans/${slot}`}
+                      className="block rounded-lg transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl"
+                    >
+                      <PdfThumbnail url={url} title={scan?.title ?? `Scan #${slot}`} />
+                    </Link>
                   </motion.div>
                 );
-              }
+              })}
+            </AnimatePresence>
+          </div>
 
-              return (
-                <motion.div
-                  key={slot}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: Math.min(i * 0.01, 0.5) }}
+          <div className="text-center mt-10 space-y-4">
+            {!allRevealed ? (
+              <>
+                <Button
+                  variant="glass"
+                  size="lg"
+                  onClick={() => setVisibleCount((c) => Math.min(c + PAGE_SIZE, TOTAL_SCANS))}
                 >
-                  <Link
-                    to={`/references/scans/${slot}`}
-                    className="block rounded-lg transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl"
-                  >
-                    <PdfThumbnail url={url} title={scan?.title ?? `Scan #${slot}`} />
-                  </Link>
-                </motion.div>
-              );
-            })}
+                  More evaluation forms from participants
+                </Button>
+                {visibleCount > PAGE_SIZE && (
+                  <div>
+                    <button
+                      onClick={scrollToTop}
+                      className="text-sm text-accent hover:text-foreground transition-colors font-medium"
+                    >
+                      ↑ Scroll to Top of Evaluations
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <p className="text-muted-foreground font-light">
+                  All evaluation forms have been displayed.
+                </p>
+                <button
+                  onClick={scrollToTop}
+                  className="text-sm text-accent hover:text-foreground transition-colors font-medium"
+                >
+                  ↑ Scroll to Top
+                </button>
+              </>
+            )}
           </div>
         </div>
       </section>
