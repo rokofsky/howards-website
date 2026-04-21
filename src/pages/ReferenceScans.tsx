@@ -14,6 +14,7 @@ interface ScanRow {
   slot_number: number;
   pdf_path: string;
   title: string | null;
+  thumbnail_path: string | null;
 }
 
 const ReferenceScans = () => {
@@ -24,7 +25,7 @@ const ReferenceScans = () => {
   useEffect(() => {
     supabase
       .from("reference_scans")
-      .select("slot_number,pdf_path,title")
+      .select("slot_number,pdf_path,title,thumbnail_path")
       .order("slot_number", { ascending: true })
       .then(({ data }) => {
         if (!data) return;
@@ -98,7 +99,7 @@ const ReferenceScans = () => {
                       to={`/references/scans/${slot}`}
                       className="block rounded-lg transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl"
                     >
-                      <PdfThumbnail url={url} title={scan?.title ?? `Scan #${slot}`} />
+                      <PdfThumbnail url={url} title={scan?.title ?? `Scan #${slot}`} thumbnailUrl={scan?.thumbnail_path ? publicUrl(scan.thumbnail_path) : undefined} />
                     </Link>
                   </motion.div>
                 );
