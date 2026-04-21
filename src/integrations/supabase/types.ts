@@ -65,6 +65,7 @@ export type Database = {
           id: string
           pdf_path: string
           slot_number: number
+          thumbnail_path: string | null
           title: string | null
           updated_at: string
         }
@@ -73,6 +74,7 @@ export type Database = {
           id?: string
           pdf_path: string
           slot_number: number
+          thumbnail_path?: string | null
           title?: string | null
           updated_at?: string
         }
@@ -81,6 +83,7 @@ export type Database = {
           id?: string
           pdf_path?: string
           slot_number?: number
+          thumbnail_path?: string | null
           title?: string | null
           updated_at?: string
         }
