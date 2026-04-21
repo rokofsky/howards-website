@@ -88,13 +88,17 @@ const References = () => {
             <p className="text-muted-foreground font-light mb-8">
               Scanned evaluation sheets from past workshops. Click to view full size.
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
               {[1, 2, 3, 4, 5, 6].map((i) => {
                 const scan = previewScans[i];
                 const url = scan ? publicUrl(scan.pdf_path) : undefined;
                 if (url) {
                   return (
-                    <Link key={i} to={`/references/scans/${i}`} className="block hover:shadow-lg transition-shadow rounded-lg">
+                    <Link
+                      key={i}
+                      to={`/references/scans/${i}`}
+                      className="block rounded-lg transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl"
+                    >
                       <PdfThumbnail url={url} title={scan?.title ?? `Scan #${i}`} />
                     </Link>
                   );
