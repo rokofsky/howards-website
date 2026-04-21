@@ -44,8 +44,13 @@ const PdfThumbnail = ({ url, title, className = "" }: PdfThumbnailProps) => {
         </div>
       )}
       {inView && !loaded && !error && (
-        <div className="absolute inset-0 flex items-center justify-center bg-muted/30 animate-pulse">
-          <span className="text-xs text-muted-foreground">Loading…</span>
+        <div className="absolute inset-0 bg-muted/30 animate-pulse">
+          <div className="h-full w-full flex flex-col items-center justify-center gap-2 p-4">
+            <div className="w-3/4 h-2 bg-muted-foreground/10 rounded" />
+            <div className="w-1/2 h-2 bg-muted-foreground/10 rounded" />
+            <div className="w-2/3 h-2 bg-muted-foreground/10 rounded" />
+            <div className="w-1/2 h-2 bg-muted-foreground/10 rounded" />
+          </div>
         </div>
       )}
       {inView && error && (
