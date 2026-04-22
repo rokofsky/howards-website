@@ -120,6 +120,7 @@ Deno.serve(async (req) => {
 
     return json({ error: "Unknown action" });
   } catch (err) {
-    return json({ error: (err as Error).message }, 500);
+    console.error("admin-reference-scans error:", err);
+    return json({ error: "An internal error occurred" }, 500);
   }
 });
