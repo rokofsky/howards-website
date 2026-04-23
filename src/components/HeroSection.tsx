@@ -27,6 +27,7 @@ const slidePositions: Record<number, string> = {
 
 const HeroSection = () => {
   const { t } = useTranslation();
+  const lp = useLocalizedPath();
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => {
