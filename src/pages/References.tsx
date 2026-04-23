@@ -28,6 +28,7 @@ interface ScanRow {
 
 const References = () => {
   const { t } = useTranslation();
+  const lp = useLocalizedPath();
   const [showAllTestimonials, setShowAllTestimonials] = useState(false);
   const visibleTestimonials = showAllTestimonials ? testimonials : testimonials.slice(0, 3);
   const [previewScans, setPreviewScans] = useState<Record<number, ScanRow>>({});
@@ -100,7 +101,7 @@ const References = () => {
                   return (
                     <Link
                       key={i}
-                      to={`/references/scans/${i}`}
+                      to={lp(`/references/scans/${i}`)}
                       className="block rounded-lg transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl"
                     >
                       <PdfThumbnail url={url} title={scan?.title ?? `Scan #${i}`} thumbnailUrl={scan?.thumbnail_path ? publicUrl(scan.thumbnail_path) : undefined} />
@@ -117,7 +118,7 @@ const References = () => {
             </div>
             <div className="text-center">
               <Button variant="glass" size="lg" asChild>
-                <a href="/references/scans">{t("references.moreEvalForms")}</a>
+                <a href={lp("/references/scans")}>{t("references.moreEvalForms")}</a>
               </Button>
             </div>
           </div>
