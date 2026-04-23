@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import PdfThumbnail from "@/components/PdfThumbnail";
+import { useTranslation } from "react-i18next";
 
 const testimonials = [
   { name: "Sarah K., VP People, TechCorp", text: "Howard completely transformed how our leadership team communicates. The storytelling framework he taught us is now embedded in our culture." },
@@ -25,6 +26,7 @@ interface ScanRow {
 }
 
 const References = () => {
+  const { t } = useTranslation();
   const [showAllTestimonials, setShowAllTestimonials] = useState(false);
   const visibleTestimonials = showAllTestimonials ? testimonials : testimonials.slice(0, 3);
   const [previewScans, setPreviewScans] = useState<Record<number, ScanRow>>({});
@@ -51,9 +53,9 @@ const References = () => {
       <section className="section-padding pt-24">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">References</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">{t("references.heading")}</h1>
             <p className="text-muted-foreground font-light mb-12 max-w-2xl">
-              Don't take Howard's word for it. Here's what people say when he's not looking.
+              {t("references.subheading")}
             </p>
           </motion.div>
 
@@ -76,7 +78,7 @@ const References = () => {
           {!showAllTestimonials && (
             <div className="text-center mb-12">
               <Button variant="glass" size="lg" onClick={() => setShowAllTestimonials(true)}>
-                More testimonials from clients and participants
+                {t("references.moreTestimonials")}
               </Button>
             </div>
           )}
@@ -84,10 +86,10 @@ const References = () => {
           {/* Evaluation Forms Link - always visible */}
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">Evaluation forms from participants</h2>
+              <h2 className="text-2xl font-bold">{t("references.evalHeading")}</h2>
             </div>
             <p className="text-muted-foreground font-light mb-8">
-              Scanned evaluation sheets from past workshops. Click to view full size.
+              {t("references.evalSubheading")}
             </p>
             <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
               {[1, 2, 3, 4, 5, 6].map((i) => {
@@ -114,7 +116,7 @@ const References = () => {
             </div>
             <div className="text-center">
               <Button variant="glass" size="lg" asChild>
-                <a href="/references/scans">More Evaluation-forms from participants</a>
+                <a href="/references/scans">{t("references.moreEvalForms")}</a>
               </Button>
             </div>
           </div>
