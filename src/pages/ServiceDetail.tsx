@@ -38,6 +38,7 @@ interface DbWebinar {
 }
 
 const ServiceDetail = () => {
+  const lp = useLocalizedPath();
   const { slug } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
