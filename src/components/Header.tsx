@@ -3,28 +3,31 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import bookCover from "@/assets/book-cover.png";
 import logo from "@/assets/logo.png";
-
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Services", href: "/#services" },
-  { label: "FAQ", href: "/#faq" },
-  { label: "Pricing", href: "/#pricing" },
-  { label: "References", href: "/references" },
-  {
-    label: "My book",
-    href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN",
-    external: true,
-  },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/#contact-area" },
-];
+import LanguageToggle from "./LanguageToggle";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { t } = useTranslation();
+
+  const navLinks = [
+    { label: t("nav.home"), href: "/" },
+    { label: t("nav.services"), href: "/#services" },
+    { label: t("nav.faq"), href: "/#faq" },
+    { label: t("nav.pricing"), href: "/#pricing" },
+    { label: t("nav.references"), href: "/references" },
+    {
+      label: t("nav.myBook"),
+      href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN",
+      external: true,
+    },
+    { label: t("nav.blog"), href: "/blog" },
+    { label: t("nav.contact"), href: "/#contact-area" },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -59,11 +62,9 @@ const Header = () => {
         e.preventDefault();
         setMobileOpen(false);
         window.history.replaceState(null, "", `/#${id}`);
-        // Wait for mobile menu collapse to finish so offsets are correct
         setTimeout(() => scrollToElement(id), 250);
         return;
       }
-      // If on another page, let <Link> navigate to "/#id" — the effect below handles scroll on arrival.
     }
     setMobileOpen(false);
   };
@@ -136,21 +137,25 @@ const Header = () => {
               </Link>
             ),
           )}
+          <LanguageToggle />
         </nav>
 
         <div className="hidden md:block">
           <Button variant="cta" size="lg" asChild>
-            <Link to="/storytelling-workshops">Storytelling Sessions</Link>
+            <Link to="/storytelling-workshops">{t("buttons.storytellingSessions")}</Link>
           </Button>
         </div>
 
-        <button
-          className="md:hidden p-2 text-foreground"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex md:hidden items-center gap-3">
+          <LanguageToggle />
+          <button
+            className="p-2 text-foreground"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -192,7 +197,7 @@ const Header = () => {
                 ),
               )}
               <Button variant="cta" size="lg" asChild className="mt-2">
-                <Link to="/storytelling-workshops">Storytelling Sessions</Link>
+                <Link to="/storytelling-workshops">{t("buttons.storytellingSessions")}</Link>
               </Button>
             </nav>
           </motion.div>
