@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { openCalendly } from "@/lib/calendly";
+import { useTranslation } from "react-i18next";
 
 const BookingSection = () => {
+  const { t } = useTranslation();
   return (
     <section id="contact-area" className="section-padding bg-primary text-primary-foreground">
       <motion.div
@@ -11,14 +13,13 @@ const BookingSection = () => {
         viewport={{ once: true }}
         className="max-w-4xl mx-auto text-center"
       >
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">Book a Zoom Call</h2>
-        <p className="text-primary-foreground/70 font-light mb-10 max-w-md mx-auto">
-          Skip the email tennis. Pick a time, get a link,<br />
-          and let's talk like actual humans.
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("booking.heading")}</h2>
+        <p className="text-primary-foreground/70 font-light mb-10 max-w-md mx-auto whitespace-pre-line">
+          {t("booking.subheading")}
         </p>
 
         <Button variant="glassPetrol" size="xl" onClick={openCalendly}>
-          Book a free call with Howard
+          {t("buttons.bookFreeCall")}
         </Button>
       </motion.div>
     </section>

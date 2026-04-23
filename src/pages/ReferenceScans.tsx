@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import PdfThumbnail from "@/components/PdfThumbnail";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const TOTAL_SCANS = 80;
 const PAGE_SIZE = 10;
@@ -18,6 +19,7 @@ interface ScanRow {
 }
 
 const ReferenceScans = () => {
+  const { t } = useTranslation();
   const [scans, setScans] = useState<Record<number, ScanRow>>({});
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const gridTopRef = useRef<HTMLDivElement>(null);
@@ -53,11 +55,11 @@ const ReferenceScans = () => {
               to="/references"
               className="text-sm text-accent hover:text-foreground transition-colors mb-6 inline-block font-medium"
             >
-              ← Back to References
+              {t("referenceScans.backToReferences")}
             </Link>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Evaluation Forms Archive</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">{t("referenceScans.heading")}</h1>
             <p className="text-muted-foreground font-light mb-12 max-w-2xl">
-              Scanned evaluation sheets from participants from past workshops. Click any scan to open the full form.
+              {t("referenceScans.subheading")}
             </p>
           </motion.div>
 
@@ -115,27 +117,27 @@ const ReferenceScans = () => {
                   size="lg"
                   onClick={() => setVisibleCount((c) => Math.min(c + PAGE_SIZE, TOTAL_SCANS))}
                 >
-                  More evaluation forms from participants
+                  {t("referenceScans.moreEvalForms")}
                 </Button>
                 <div>
                   <button
                     onClick={scrollToTop}
                     className="text-sm text-accent hover:text-foreground transition-colors font-medium"
                   >
-                    ↑ Scroll to Top
+                    {t("referenceScans.scrollToTop")}
                   </button>
                 </div>
               </>
             ) : (
               <>
                 <p className="text-muted-foreground font-light">
-                  All evaluation forms have been displayed.
+                  {t("referenceScans.allDisplayed")}
                 </p>
                 <button
                   onClick={scrollToTop}
                   className="text-sm text-accent hover:text-foreground transition-colors font-medium"
                 >
-                  ↑ Scroll to Top
+                  {t("referenceScans.scrollToTop")}
                 </button>
               </>
             )}

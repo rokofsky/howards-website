@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 const FAQSection = () => {
+  const { t } = useTranslation();
   const faqs = [
     { q: "What makes Howard different from other consultants?", a: "He simply does things differently — this will be apparent from the outset, from uncommon professional ethics through transparent communication to generous outputs. You'll immediately notice a lack of (tolerance for) fluff, and a focus on clarity, open-mindedness, and new options. Because he believes in skin in the game, he offers success-fee structures on certain activities. It keeps him sharp and you certain." },
     { q: "Do you work with remote teams?", a: "Absolutely. Howard has run over 200 virtual workshops and events since Covid. Telling a story works just as well through a screen — as long as you're not on mute." },
@@ -17,8 +19,8 @@ const FAQSection = () => {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">Frequently Asked Questions</h2>
-        <p className="font-semibold text-primary">Questions I hope you're asking</p>
+        <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("faq.heading")}</h2>
+        <p className="font-semibold text-primary">{t("faq.subheading")}</p>
       </motion.div>
 
       <div className="max-w-3xl mx-auto space-y-4">

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
@@ -24,6 +25,7 @@ const slidePositions: Record<number, string> = {
 // Per-slide initial scale (default 1.08); higher = starts more zoomed, zooms out more
 
 const HeroSection = () => {
+  const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => {
@@ -94,7 +96,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          Soft skills trainer & storytelling maestro
+          {t("hero.subtitle")}
         </motion.p>
       </div>
 

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { services } from "@/data/services";
 import serviceBg from "@/assets/service-bg.jpg";
 
@@ -64,6 +65,7 @@ const ServiceCard = ({
 };
 
 const ServicesGrid = () => {
+  const { t } = useTranslation();
   return (
     <section id="services" className="section-padding">
       <motion.div
@@ -72,9 +74,9 @@ const ServicesGrid = () => {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">What can I do for you?</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("services.heading")}</h2>
         <p className="max-w-md mx-auto whitespace-pre-line text-primary font-semibold">
-          Nine practical tools to immediately improve how{"\n"}you and your team functions
+          {t("services.subheading")}
         </p>
       </motion.div>
 
