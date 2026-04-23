@@ -20,6 +20,7 @@ const ServiceCard = ({
   index: number;
   showSecondaryText: boolean;
 }) => {
+  const lp = useLocalizedPath();
   const hasSubtitle = subtitle && subtitle.trim() !== "" && subtitle !== "\\n";
   const hasHook = hook && hook.trim() !== "" && hook !== "\\n";
   const secondaryText = hasSubtitle ? subtitle : hasHook ? hook : "";
@@ -32,7 +33,7 @@ const ServiceCard = ({
       transition={{ delay: index * 0.05, duration: 0.4 }}
     >
       <Link
-        to={`/services/${slug}`}
+        to={lp(`/services/${slug}`)}
         className="group block relative h-28 md:h-64 rounded-lg overflow-hidden transition-transform duration-300 md:hover:scale-[1.03] active:brightness-90 active:duration-150"
       >
         <img
