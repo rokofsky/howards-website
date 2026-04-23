@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 const PricingSection = () => {
+  const { t } = useTranslation();
   const tiers = [
     {
       name: "Online Workshops",
@@ -31,8 +33,8 @@ const PricingSection = () => {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">Investment</h2>
-        <p className="text-primary font-semibold">No hidden fees. No surprise "strategy sessions." Just clear pricing.</p>
+        <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("pricing.heading")}</h2>
+        <p className="text-primary font-semibold">{t("pricing.subheading")}</p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
