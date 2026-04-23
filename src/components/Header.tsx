@@ -7,26 +7,32 @@ import { useTranslation } from "react-i18next";
 import bookCover from "@/assets/book-cover.png";
 import logo from "@/assets/logo.png";
 import LanguageToggle from "./LanguageToggle";
+import { useLocalizedPath, useIsCzech } from "@/hooks/useLanguageRouting";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { t } = useTranslation();
+  const lp = useLocalizedPath();
+  const isCz = useIsCzech();
+
+  // Determine if we're on the language root
+  const isRoot = location.pathname === "/" || location.pathname === "/cz" || location.pathname === "/cz/";
 
   const navLinks = [
-    { label: t("nav.home"), href: "/" },
-    { label: t("nav.services"), href: "/#services" },
-    { label: t("nav.faq"), href: "/#faq" },
-    { label: t("nav.pricing"), href: "/#pricing" },
-    { label: t("nav.references"), href: "/references" },
+    { label: t("nav.home"), href: lp("/") },
+    { label: t("nav.services"), href: lp("/#services") },
+    { label: t("nav.faq"), href: lp("/#faq") },
+    { label: t("nav.pricing"), href: lp("/#pricing") },
+    { label: t("nav.references"), href: lp("/references") },
     {
       label: t("nav.myBook"),
       href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN",
       external: true,
     },
-    { label: t("nav.blog"), href: "/blog" },
-    { label: t("nav.contact"), href: "/#contact-area" },
+    { label: t("nav.blog"), href: lp("/blog") },
+    { label: t("nav.contact"), href: lp("/#contact-area") },
   ];
 
   useEffect(() => {
@@ -56,22 +62,22 @@ const Header = () => {
   };
 
   const handleNavClick = (e: React.MouseEvent, href: string) => {
-    if (href.startsWith("/#")) {
-      const id = href.slice(2);
-      if (location.pathname === "/") {
-        e.preventDefault();
-        setMobileOpen(false);
-        window.history.replaceState(null, "", `/#${id}`);
-        setTimeout(() => scrollToElement(id), 250);
-        return;
-      }
+    // Handle hash links on current root page
+    const hashMatch = href.match(/#(.+)$/);
+    if (hashMatch && isRoot) {
+      e.preventDefault();
+      setMobileOpen(false);
+      const id = hashMatch[1];
+      window.history.replaceState(null, "", `${isCz ? "/cz" : "/"}#${id}`);
+      setTimeout(() => scrollToElement(id), 250);
+      return;
     }
     setMobileOpen(false);
   };
 
   const handleLogoClick = (e: React.MouseEvent) => {
     setMobileOpen(false);
-    if (location.pathname === "/") {
+    if (isRoot) {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
@@ -80,7 +86,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (location.pathname === "/" && location.hash) {
+    if (isRoot && location.hash) {
       const id = location.hash.slice(1);
       setTimeout(() => scrollToElement(id), 400);
     }
@@ -94,7 +100,7 @@ const Header = () => {
     >
       <div className="container mx-auto flex h-16 md:h-[72px] items-center justify-between px-6">
         <Link
-          to="/"
+          to={lp("/")}
           onClick={handleLogoClick}
           className="flex h-full items-center self-stretch bg-transparent transition-all duration-200 hover:scale-[1.02] hover:opacity-80"
           style={{ backgroundColor: "transparent" }}
@@ -142,7 +148,7 @@ const Header = () => {
 
         <div className="hidden md:block">
           <Button variant="cta" size="lg" asChild>
-            <Link to="/storytelling-workshops">{t("buttons.storytellingSessions")}</Link>
+            <Link to={lp("/storytelling-workshops")}>{t("buttons.storytellingSessions")}</Link>
           </Button>
         </div>
 
@@ -197,7 +203,7 @@ const Header = () => {
                 ),
               )}
               <Button variant="cta" size="lg" asChild className="mt-2">
-                <Link to="/storytelling-workshops">{t("buttons.storytellingSessions")}</Link>
+                <Link to={lp("/storytelling-workshops")}>{t("buttons.storytellingSessions")}</Link>
               </Button>
             </nav>
           </motion.div>

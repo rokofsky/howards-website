@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -26,6 +27,7 @@ const slidePositions: Record<number, string> = {
 
 const HeroSection = () => {
   const { t } = useTranslation();
+  const lp = useLocalizedPath();
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => {
@@ -43,7 +45,7 @@ const HeroSection = () => {
 
   return (
     <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
-      <Link to="/bio" className="block w-full h-full relative">
+      <Link to={lp("/bio")} className="block w-full h-full relative">
         <AnimatePresence mode="wait">
           <motion.img
             key={current}

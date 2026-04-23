@@ -1,4 +1,5 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { openCalendly } from "@/lib/calendly";
 import { useEffect, useState } from "react";
 import MobileTruncatedText from "@/components/MobileTruncatedText";
@@ -37,6 +38,7 @@ interface DbWebinar {
 }
 
 const ServiceDetail = () => {
+  const lp = useLocalizedPath();
   const { slug } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -256,7 +258,7 @@ const ServiceDetail = () => {
                           {slug === "keynote-speaking" && item.includes("Still, you'll probably laugh") && (
                             <>
                               {" "}
-                              <Link to="/keynote-topics" className="text-gold hover:text-gold/80 underline underline-offset-2 transition-colors">
+                              <Link to={lp("/keynote-topics")} className="text-gold hover:text-gold/80 underline underline-offset-2 transition-colors">
                                 Click to see some of the topics you can choose from
                               </Link>
                             </>

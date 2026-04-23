@@ -1,10 +1,12 @@
 import { useParams, Link } from "react-router-dom";
+import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { getPostBySlug, subscribe } from "@/data/blogStore";
 import { motion } from "framer-motion";
 
 const BlogPost = () => {
+  const lp = useLocalizedPath();
   const { slug } = useParams();
   const [, force] = useState(0);
   const post = getPostBySlug(slug ?? "");
@@ -19,7 +21,7 @@ const BlogPost = () => {
       <Layout>
         <div className="section-padding pt-24 text-center">
           <h1 className="text-3xl font-bold">Post not found</h1>
-          <Link to="/" className="text-accent hover:underline mt-4 inline-block">Back to home</Link>
+          <Link to={lp("/")} className="text-accent hover:underline mt-4 inline-block">Back to home</Link>
         </div>
       </Layout>
     );
@@ -30,7 +32,7 @@ const BlogPost = () => {
       <section className="section-padding pt-24">
         <div className="max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Link to="/blog" className="text-sm text-accent hover:text-foreground transition-colors mb-6 inline-block font-medium">
+            <Link to={lp("/blog")} className="text-sm text-accent hover:text-foreground transition-colors mb-6 inline-block font-medium">
               ← Back to all articles
             </Link>
             <time className="text-sm text-muted-foreground font-light block mb-2">{post.date}</time>
@@ -61,7 +63,7 @@ const BlogPost = () => {
               </div>
             </div>
             <div className="mt-10">
-              <Link to="/blog" className="text-sm text-accent hover:text-foreground transition-colors font-medium">
+              <Link to={lp("/blog")} className="text-sm text-accent hover:text-foreground transition-colors font-medium">
                 ← Back to all articles
               </Link>
             </div>

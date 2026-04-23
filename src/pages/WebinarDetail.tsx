@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { openCalendly } from "@/lib/calendly";
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
@@ -15,6 +16,7 @@ interface DbWebinar {
 }
 
 const WebinarDetail = () => {
+  const lp = useLocalizedPath();
   const { slug } = useParams();
   const [webinar, setWebinar] = useState<DbWebinar | null>(null);
   const [loading, setLoading] = useState(true);
@@ -35,7 +37,7 @@ const WebinarDetail = () => {
       <Layout>
         <div className="section-padding pt-24 text-center">
           <h1 className="text-3xl font-bold">Webinar not found</h1>
-          <Link to="/services/online-webinars" className="text-gold hover:text-gold/80 underline mt-4 inline-block">
+          <Link to={lp("/services/online-webinars")} className="text-gold hover:text-gold/80 underline mt-4 inline-block">
             ← Back to Online Webinars
           </Link>
         </div>
@@ -48,7 +50,7 @@ const WebinarDetail = () => {
       <section className="section-padding pt-24">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Link to="/services/online-webinars" className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 inline-block">
+            <Link to={lp("/services/online-webinars")} className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 inline-block">
               ← Back to Online Webinars
             </Link>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">{webinar.title}</h1>

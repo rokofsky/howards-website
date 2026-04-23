@@ -22,6 +22,8 @@ import RokofAdmin from "./pages/RokofAdmin";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import GDPR from "./pages/GDPR";
 import TermsOfService from "./pages/TermsOfService";
+import SeoHead from "./components/SeoHead";
+import { useLanguageSync } from "./hooks/useLanguageRouting";
 
 const queryClient = new QueryClient();
 
@@ -31,34 +33,62 @@ function ScrollToTop() {
   return null;
 }
 
+function LanguageSyncWrapper({ children }: { children: React.ReactNode }) {
+  useLanguageSync();
+  return <>{children}</>;
+}
+
+/** Shared page routes — rendered at root and under /cz */
+function PageRoutes() {
+  return (
+    <>
+      <Route index element={<Index />} />
+      <Route path="bio" element={<Bio />} />
+      <Route path="references" element={<References />} />
+      <Route path="reference" element={<References />} />
+      <Route path="references/scans" element={<ReferenceScans />} />
+      <Route path="reference/scans" element={<ReferenceScans />} />
+      <Route path="references/scans/:slot" element={<ReferenceScanViewer />} />
+      <Route path="reference/scans/:slot" element={<ReferenceScanViewer />} />
+      <Route path="storytelling-workshops" element={<StorytellingWorkshops />} />
+      <Route path="services/:slug" element={<ServiceDetail />} />
+      <Route path="keynote-topics" element={<KeynoteTopics />} />
+      <Route path="blog" element={<Blog />} />
+      <Route path="blog/:slug" element={<BlogPost />} />
+      <Route path="webinars/:slug" element={<WebinarDetail />} />
+      <Route path="privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="ochrana-soukromi" element={<PrivacyPolicy />} />
+      <Route path="gdpr" element={<GDPR />} />
+      <Route path="terms-of-service" element={<TermsOfService />} />
+      <Route path="obchodni-podminky" element={<TermsOfService />} />
+    </>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/bio" element={<Bio />} />
-          <Route path="/references" element={<References />} />
-          <Route path="/references/scans" element={<ReferenceScans />} />
-          <Route path="/references/scans/:slot" element={<ReferenceScanViewer />} />
-          <Route path="/storytelling-workshops" element={<StorytellingWorkshops />} />
-          <Route path="/services/:slug" element={<ServiceDetail />} />
-          <Route path="/keynote-topics" element={<KeynoteTopics />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/webinars/:slug" element={<WebinarDetail />} />
-          <Route path="/admin/sessions" element={<AdminSessions />} />
-          <Route path="/admin/webinars" element={<AdminWebinars />} />
-          <Route path="/rokofsky-admin" element={<RokofAdmin />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/gdpr" element={<GDPR />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <LanguageSyncWrapper>
+          <ScrollToTop />
+          <SeoHead />
+          <Routes>
+            {/* English routes (root) */}
+            <Route path="/">{PageRoutes()}</Route>
+
+            {/* Czech routes (/cz prefix) */}
+            <Route path="/cz">{PageRoutes()}</Route>
+
+            {/* Admin routes — no language prefix needed */}
+            <Route path="/admin/sessions" element={<AdminSessions />} />
+            <Route path="/admin/webinars" element={<AdminWebinars />} />
+            <Route path="/rokofsky-admin" element={<RokofAdmin />} />
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </LanguageSyncWrapper>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
