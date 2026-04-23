@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { services } from "@/data/services";
