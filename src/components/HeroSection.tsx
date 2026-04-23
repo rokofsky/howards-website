@@ -44,7 +44,7 @@ const HeroSection = () => {
 
   return (
     <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
-      <Link to="/bio" className="block w-full h-full relative">
+      <Link to={lp("/bio")} className="block w-full h-full relative">
         <AnimatePresence mode="wait">
           <motion.img
             key={current}
