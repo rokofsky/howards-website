@@ -4,8 +4,23 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import en from "./en";
 import cz from "./cz";
 
+// Custom path detector: /cz → "cs"
+const pathDetector = {
+  name: "pathDetector",
+  lookup() {
+    if (typeof window !== "undefined") {
+      const path = window.location.pathname;
+      if (path === "/cz" || path.startsWith("/cz/")) return "cs";
+    }
+    return undefined;
+  },
+};
+
+const languageDetector = new LanguageDetector();
+languageDetector.addDetector(pathDetector);
+
 i18n
-  .use(LanguageDetector)
+  .use(languageDetector)
   .use(initReactI18next)
   .init({
     resources: {
@@ -15,7 +30,7 @@ i18n
     fallbackLng: "en",
     supportedLngs: ["en", "cs"],
     detection: {
-      order: ["localStorage", "navigator"],
+      order: ["pathDetector", "localStorage", "navigator"],
       lookupLocalStorage: "i18nextLng",
       caches: ["localStorage"],
     },
