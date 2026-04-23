@@ -21,6 +21,7 @@ interface ScanRow {
 
 const ReferenceScans = () => {
   const { t } = useTranslation();
+  const lp = useLocalizedPath();
   const [scans, setScans] = useState<Record<number, ScanRow>>({});
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const gridTopRef = useRef<HTMLDivElement>(null);
@@ -53,7 +54,7 @@ const ReferenceScans = () => {
         <div className="max-w-6xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <Link
-              to="/references"
+              to={lp("/references")}
               className="text-sm text-accent hover:text-foreground transition-colors mb-6 inline-block font-medium"
             >
               {t("referenceScans.backToReferences")}
@@ -99,7 +100,7 @@ const ReferenceScans = () => {
                     transition={{ duration: 0.4 }}
                   >
                     <Link
-                      to={`/references/scans/${slot}`}
+                      to={lp(`/references/scans/${slot}`)}
                       className="block rounded-lg transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl"
                     >
                       <PdfThumbnail url={url} title={scan?.title ?? `Scan #${slot}`} thumbnailUrl={scan?.thumbnail_path ? publicUrl(scan.thumbnail_path) : undefined} />

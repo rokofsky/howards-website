@@ -20,6 +20,7 @@ interface ScanRow {
 }
 
 const ReferenceScanViewer = () => {
+  const lp = useLocalizedPath();
   const { slot } = useParams<{ slot: string }>();
   const navigate = useNavigate();
   const [scan, setScan] = useState<ScanRow | null>(null);
@@ -80,7 +81,7 @@ const ReferenceScanViewer = () => {
           onClick={(e) => e.stopPropagation()}
         >
           <Button variant="outline" size="default" asChild className="mb-6">
-            <Link to="/references">
+            <Link to={lp("/references")}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to References
             </Link>
