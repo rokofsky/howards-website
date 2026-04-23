@@ -1,4 +1,5 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { openCalendly } from "@/lib/calendly";
 import { useEffect, useState } from "react";
 import MobileTruncatedText from "@/components/MobileTruncatedText";

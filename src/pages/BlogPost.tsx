@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { getPostBySlug, subscribe } from "@/data/blogStore";

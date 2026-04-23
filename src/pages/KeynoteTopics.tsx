@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { ArrowLeft } from "lucide-react";
 
 const topics = [
