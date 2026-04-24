@@ -139,14 +139,20 @@ const Header = () => {
                 {link.label}
               </a>
             ) : link.isHome ? (
-              <a
+              <Link
                 key={link.label}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
+                to={link.href}
+                onClick={(e) => {
+                  setMobileOpen(false);
+                  if (isRoot) {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                }}
                 className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold"
               >
                 {link.label}
-              </a>
+              </Link>
             ) : (
               <Link
                 key={link.label}
@@ -207,14 +213,20 @@ const Header = () => {
                     {link.label}
                   </a>
                 ) : link.isHome ? (
-                  <a
+                  <Link
                     key={link.label}
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
+                    to={link.href}
+                    onClick={(e) => {
+                      setMobileOpen(false);
+                      if (isRoot) {
+                        e.preventDefault();
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }
+                    }}
                     className="text-base font-light text-foreground/70 hover:text-foreground py-2"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 ) : (
                   <Link
                     key={link.label}
