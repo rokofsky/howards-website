@@ -62,6 +62,12 @@ const Header = () => {
   };
 
   const handleNavClick = (e: React.MouseEvent, href: string) => {
+    // Home link should always navigate normally, no scroll-to-ID behavior
+    if (href === "/" || href === "/cz") {
+      setMobileOpen(false);
+      return; // Let the default Link behavior handle navigation
+    }
+
     // Handle hash links on current root page
     const hashMatch = href.match(/#(.+)$/);
     if (hashMatch && isRoot) {
