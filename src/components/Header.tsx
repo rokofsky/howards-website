@@ -21,7 +21,7 @@ const Header = () => {
   const isRoot = location.pathname === "/" || location.pathname === "/cz" || location.pathname === "/cz/";
 
   const navLinks = [
-    { label: t("nav.home"), href: isCz ? "/cz" : "/" },
+    { label: t("nav.home"), href: isCz ? "/cz" : "/", isHome: true },
     { label: t("nav.services"), href: lp("/#services") },
     { label: t("nav.faq"), href: lp("/#faq") },
     { label: t("nav.pricing"), href: lp("/#pricing") },
@@ -138,6 +138,15 @@ const Header = () => {
                 />
                 {link.label}
               </a>
+            ) : link.isHome ? (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold"
+              >
+                {link.label}
+              </a>
             ) : (
               <Link
                 key={link.label}
@@ -195,6 +204,15 @@ const Header = () => {
                       width={20}
                       height={28}
                     />
+                    {link.label}
+                  </a>
+                ) : link.isHome ? (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="text-base font-light text-foreground/70 hover:text-foreground py-2"
+                  >
                     {link.label}
                   </a>
                 ) : (
