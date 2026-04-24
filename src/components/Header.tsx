@@ -21,7 +21,7 @@ const Header = () => {
   const isRoot = location.pathname === "/" || location.pathname === "/cz" || location.pathname === "/cz/";
 
   const navLinks = [
-    { label: t("nav.home"), href: lp("/") },
+    { label: t("nav.home"), href: isCz ? "/cz" : "/" },
     { label: t("nav.services"), href: lp("/#services") },
     { label: t("nav.faq"), href: lp("/#faq") },
     { label: t("nav.pricing"), href: lp("/#pricing") },
