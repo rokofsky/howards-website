@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTranslation } from "react-i18next";
+import { useT } from "@/hooks/useT";
 import bookCover from "@/assets/book-cover.png";
 import logo from "@/assets/logo.png";
 import LanguageToggle from "./LanguageToggle";
@@ -13,7 +13,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
-  const { t } = useTranslation();
+  const t = useT();
   const lp = useLocalizedPath();
   const isCz = useIsCzech();
 
@@ -21,18 +21,18 @@ const Header = () => {
   const isRoot = location.pathname === "/" || location.pathname === "/cz" || location.pathname === "/cz/";
 
   const navLinks = [
-    { label: t("nav.home"), href: isCz ? "/cz" : "/", isHome: true },
-    { label: t("nav.services"), href: lp("/#services") },
-    { label: t("nav.faq"), href: lp("/#faq") },
-    { label: t("nav.pricing"), href: lp("/#pricing") },
-    { label: t("nav.references"), href: lp("/references") },
+    { label: t("Home", "Domů"), href: isCz ? "/cz" : "/", isHome: true },
+    { label: t("Services", "Služby"), href: lp("/#services") },
+    { label: t("FAQ", "FAQ"), href: lp("/#faq") },
+    { label: t("Pricing", "Ceník"), href: lp("/#pricing") },
+    { label: t("References", "Reference"), href: lp("/references") },
     {
-      label: t("nav.myBook"),
+      label: t("My book", "Moje kniha"),
       href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN",
       external: true,
     },
-    { label: t("nav.blog"), href: lp("/blog") },
-    { label: t("nav.contact"), href: lp("/#contact-area") },
+    { label: t("Blog", "Blog"), href: lp("/blog") },
+    { label: t("Contact", "Kontakt"), href: lp("/#contact-area") },
   ];
 
   useEffect(() => {
@@ -169,7 +169,7 @@ const Header = () => {
 
         <div className="hidden md:block">
           <Button variant="cta" size="lg" asChild>
-            <Link to={lp("/storytelling-workshops")}>{t("buttons.storytellingSessions")}</Link>
+            <Link to={lp("/storytelling-workshops")}>{t("Storytelling Sessions", "Rozprávění příběhů")}</Link>
           </Button>
         </div>
 
@@ -239,7 +239,7 @@ const Header = () => {
                 ),
               )}
               <Button variant="cta" size="lg" asChild className="mt-2">
-                <Link to={lp("/storytelling-workshops")}>{t("buttons.storytellingSessions")}</Link>
+                <Link to={lp("/storytelling-workshops")}>{t("Storytelling Sessions", "Rozprávění příběhů")}</Link>
               </Button>
             </nav>
           </motion.div>

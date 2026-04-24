@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTranslation } from "react-i18next";
+import { useT } from "@/hooks/useT";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
@@ -26,7 +26,7 @@ const slidePositions: Record<number, string> = {
 // Per-slide initial scale (default 1.08); higher = starts more zoomed, zooms out more
 
 const HeroSection = () => {
-  const { t } = useTranslation();
+  const t = useT();
   const lp = useLocalizedPath();
   const [current, setCurrent] = useState(0);
 
@@ -98,7 +98,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          {t("hero.subtitle")}
+          {t("Soft skills trainer & storytelling maestro", "Trenér měkkých dovedností a mistr vyprávění příběhů")}
         </motion.p>
       </div>
 

@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
+import { useT } from "@/hooks/useT";
 
 const VideoShowcase = () => {
-  const { t } = useTranslation();
+  const t = useT();
   return (
     <section className="section-padding">
       <motion.div
@@ -11,9 +11,14 @@ const VideoShowcase = () => {
         viewport={{ once: true }}
         className="max-w-4xl mx-auto"
       >
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-3">{t("video.heading")}</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-3">
+          {t("See Howard in Action", "Podívejte se na Howarda v akci")}
+        </h2>
         <p className="text-center mb-10 text-primary font-medium">
-          {t("video.subheading")}
+          {t(
+            "A video we made a long time ago. More coming soon.",
+            "Video, které jsme natočili před dlouhou dobou. Brzy přibudou další."
+          )}
         </p>
 
         <div className="relative aspect-video rounded-lg overflow-hidden glass">
