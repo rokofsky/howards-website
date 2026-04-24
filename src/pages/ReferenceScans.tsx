@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import PdfThumbnail from "@/components/PdfThumbnail";
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "react-i18next";
+import { useT } from "@/hooks/useT";
 
 const TOTAL_SCANS = 80;
 const PAGE_SIZE = 10;
@@ -20,7 +20,7 @@ interface ScanRow {
 }
 
 const ReferenceScans = () => {
-  const { t } = useTranslation();
+  const t = useT();
   const lp = useLocalizedPath();
   const [scans, setScans] = useState<Record<number, ScanRow>>({});
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -57,11 +57,16 @@ const ReferenceScans = () => {
               to={lp("/references")}
               className="text-sm text-accent hover:text-foreground transition-colors mb-6 inline-block font-medium"
             >
-              {t("referenceScans.backToReferences")}
+              {t("← Back to References", "← Zpět na reference")}
             </Link>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">{t("referenceScans.heading")}</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              {t("Evaluation Forms Archive", "Archiv hodnotících formulářů")}
+            </h1>
             <p className="text-muted-foreground font-light mb-12 max-w-2xl">
-              {t("referenceScans.subheading")}
+              {t(
+                "Scanned evaluation sheets from participants from past workshops. Click any scan to open the full form.",
+                "Naskenované hodnotící formuláře od účastníků z minulých workshopů. Kliknutím na libovolný sken otevřete celý formulář."
+              )}
             </p>
           </motion.div>
 
@@ -119,27 +124,33 @@ const ReferenceScans = () => {
                   size="lg"
                   onClick={() => setVisibleCount((c) => Math.min(c + PAGE_SIZE, TOTAL_SCANS))}
                 >
-                  {t("referenceScans.moreEvalForms")}
+                  {t(
+                    "More evaluation forms from participants",
+                    "Více hodnotících formulářů od účastníků"
+                  )}
                 </Button>
                 <div>
                   <button
                     onClick={scrollToTop}
                     className="text-sm text-accent hover:text-foreground transition-colors font-medium"
                   >
-                    {t("referenceScans.scrollToTop")}
+                    {t("↑ Scroll to Top", "↑ Zpět nahoru")}
                   </button>
                 </div>
               </>
             ) : (
               <>
                 <p className="text-muted-foreground font-light">
-                  {t("referenceScans.allDisplayed")}
+                  {t(
+                    "All evaluation forms have been displayed.",
+                    "Všechny hodnotící formuláře byly zobrazeny."
+                  )}
                 </p>
                 <button
                   onClick={scrollToTop}
                   className="text-sm text-accent hover:text-foreground transition-colors font-medium"
                 >
-                  {t("referenceScans.scrollToTop")}
+                  {t("↑ Scroll to Top", "↑ Zpět nahoru")}
                 </button>
               </>
             )}

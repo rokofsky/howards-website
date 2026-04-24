@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import hero9b from "@/assets/hero-9b.png";
 import { openCalendly } from "@/lib/calendly";
-import { useTranslation } from "react-i18next";
+import { useT } from "@/hooks/useT";
 
 const Bio = () => {
-  const { t } = useTranslation();
+  const t = useT();
   return (
     <Layout>
       <section className="section-padding pt-24 font-medium">
@@ -21,7 +21,7 @@ const Bio = () => {
                 alt="Howard"
                 className="w-full md:w-[45%] md:float-left md:mr-8 md:mb-4 rounded-lg object-cover aspect-[3/4]"
               />
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">{t("bio.heading")}</h1>
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">{t("Who is Howard", "Kdo je Howard")}</h1>
               <p className="mb-4 text-lg font-semibold">No excuses!</p>
               <p className="mb-4">I'm Howard, a trainer/consultant with 24 years of experience focusing on practical productivity and interpersonal communication. I don't teach theory — I teach techniques and systems that immediately improve how you work, and how people work together.</p>
               <p className="mb-4">As a hobby, I collected baseball cards, memorizing the serial numbers, the photos on the front, the stats on the back… it was those cards that destroyed my vision. I also listened to a lot of talk radio.</p>
@@ -49,7 +49,7 @@ const Bio = () => {
 
               <div className="clear-both text-center mt-12">
                 <Button variant="glassPetrol" size="lg" onClick={openCalendly}>
-                  {t("bio.bookCallButton")}
+                  {t("Book a free call with Howard", "Zamluvit bezplatný hovor s Howardem")}
                 </Button>
               </div>
             </div>
