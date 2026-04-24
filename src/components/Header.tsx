@@ -21,7 +21,7 @@ const Header = () => {
   const isRoot = location.pathname === "/" || location.pathname === "/cz" || location.pathname === "/cz/";
 
   const navLinks = [
-    { label: t("nav.home"), href: lp("/") },
+    { label: t("nav.home"), href: isCz ? "/cz" : "/" },
     { label: t("nav.services"), href: lp("/#services") },
     { label: t("nav.faq"), href: lp("/#faq") },
     { label: t("nav.pricing"), href: lp("/#pricing") },
@@ -62,6 +62,12 @@ const Header = () => {
   };
 
   const handleNavClick = (e: React.MouseEvent, href: string) => {
+    // Home link should always navigate normally, no scroll-to-ID behavior
+    if (href === "/" || href === "/cz") {
+      setMobileOpen(false);
+      return; // Let the default Link behavior handle navigation
+    }
+
     // Handle hash links on current root page
     const hashMatch = href.match(/#(.+)$/);
     if (hashMatch && isRoot) {
