@@ -169,7 +169,7 @@ const Header = () => {
 
         <div className="hidden md:block">
           <Button variant="cta" size="lg" asChild>
-            <Link to={lp("/storytelling-workshops")}>{t("buttons.storytellingSessions")}</Link>
+            <Link to={lp("/storytelling-workshops")}>{t("Storytelling Sessions", "Rozprávění příběhů")}</Link>
           </Button>
         </div>
 
@@ -239,7 +239,7 @@ const Header = () => {
                 ),
               )}
               <Button variant="cta" size="lg" asChild className="mt-2">
-                <Link to={lp("/storytelling-workshops")}>{t("buttons.storytellingSessions")}</Link>
+                <Link to={lp("/storytelling-workshops")}>{t("Storytelling Sessions", "Rozprávění příběhů")}</Link>
               </Button>
             </nav>
           </motion.div>
