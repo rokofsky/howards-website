@@ -138,6 +138,15 @@ const Header = () => {
                 />
                 {link.label}
               </a>
+            ) : link.isHome ? (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold"
+              >
+                {link.label}
+              </a>
             ) : (
               <Link
                 key={link.label}
