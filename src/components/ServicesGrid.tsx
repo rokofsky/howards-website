@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
+import { useT } from "@/hooks/useT";
 import { services } from "@/data/services";
 import serviceBg from "@/assets/service-bg.jpg";
 
@@ -67,7 +67,7 @@ const ServiceCard = ({
 };
 
 const ServicesGrid = () => {
-  const { t } = useTranslation();
+  const t = useT();
   return (
     <section id="services" className="section-padding">
       <motion.div
@@ -76,9 +76,14 @@ const ServicesGrid = () => {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("services.heading")}</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-3">
+          {t("What can I do for you?", "Co pro Vás mohu udělat?")}
+        </h2>
         <p className="max-w-md mx-auto whitespace-pre-line text-primary font-semibold">
-          {t("services.subheading")}
+          {t(
+            "Nine practical tools to immediately improve how\nyou and your team functions",
+            "Devět praktických nástrojů, které okamžitě zlepší,\njak fungujete Vy i Váš tým"
+          )}
         </p>
       </motion.div>
 

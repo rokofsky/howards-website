@@ -1,27 +1,50 @@
 import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
+import { useT } from "@/hooks/useT";
 
 const PricingSection = () => {
-  const { t } = useTranslation();
+  const t = useT();
   const tiers = [
     {
-      name: "Online Workshops",
-      price: "From CZK 4,000 (€165)",
-      description: "From 2 hours to a full day of interactive team learning.",
-      features: ["2–6 hour sessions", "Up to 100 participants", "Flexible timing options", "Follow-up resources", "Post-workshop debrief"],
+      name: t("Online Workshops", "Online workshopy"),
+      price: t("From CZK 4,000 (€165)", "Od 4 000 Kč (165 €)"),
+      description: t(
+        "From 2 hours to a full day of interactive team learning.",
+        "Od 2 hodin po celý den interaktivního týmového vzdělávání."
+      ),
+      features: [
+        t("2–6 hour sessions", "Setkání v délce 2–6 hodin"),
+        t("Up to 100 participants", "Až 100 účastníků"),
+        t("Flexible timing options", "Flexibilní časové možnosti"),
+        t("Follow-up resources", "Navazující materiály"),
+        t("Post-workshop debrief", "Vyhodnocení po workshopu"),
+      ],
       highlighted: true,
     },
     {
-      name: "Inhouse Workshops",
-      price: "From CZK 24,500 (€1000)",
-      description: "Training for teams.",
-      features: ["Modules can be combined", "Custom exercises & materials", "Team assessments", "Follow-up resources", "Post-workshop debrief"],
+      name: t("Inhouse Workshops", "Firemní workshopy"),
+      price: t("From CZK 24,500 (€1000)", "Od 24 500 Kč (1 000 €)"),
+      description: t("Training for teams.", "Školení pro týmy."),
+      features: [
+        t("Modules can be combined", "Moduly lze kombinovat"),
+        t("Custom exercises & materials", "Cvičení a materiály na míru"),
+        t("Team assessments", "Hodnocení týmu"),
+        t("Follow-up resources", "Navazující materiály"),
+        t("Post-workshop debrief", "Vyhodnocení po workshopu"),
+      ],
     },
     {
-      name: "Keynote Speaking",
-      price: "From CZK 30,000 (€1,200)",
-      description: "A one-time speaking engage-ment that your audience will talk about for days.",
-      features: ["60–90 minute session", "Custom topic & storytelling", "Q&A session included", "Recording rights available"],
+      name: t("Keynote Speaking", "Hlavní přednáška"),
+      price: t("From CZK 30,000 (€1,200)", "Od 30 000 Kč (1 200 €)"),
+      description: t(
+        "A one-time speaking engage-ment that your audience will talk about for days.",
+        "Jednorázové vystoupení, o kterém bude Vaše publikum mluvit ještě dlouhé dny."
+      ),
+      features: [
+        t("60–90 minute session", "Vystoupení v délce 60–90 minut"),
+        t("Custom topic & storytelling", "Téma a vyprávění na míru"),
+        t("Q&A session included", "Včetně diskuse s publikem"),
+        t("Recording rights available", "Možnost práv k záznamu"),
+      ],
     },
   ];
 
@@ -33,8 +56,15 @@ const PricingSection = () => {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("pricing.heading")}</h2>
-        <p className="text-primary font-semibold">{t("pricing.subheading")}</p>
+        <h2 className="text-3xl md:text-4xl font-bold mb-3">
+          {t("Investment", "Investice")}
+        </h2>
+        <p className="text-primary font-semibold">
+          {t(
+            "No hidden fees. No surprise \"strategy sessions.\" Just clear pricing.",
+            "Žádné skryté poplatky. Žádné překvapivé „strategické konzultace“. Jen jasná cena."
+          )}
+        </p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">

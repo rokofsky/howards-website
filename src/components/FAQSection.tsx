@@ -1,14 +1,50 @@
 import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
+import { useT } from "@/hooks/useT";
 
 const FAQSection = () => {
-  const { t } = useTranslation();
+  const t = useT();
   const faqs = [
-    { q: "What makes Howard different from other consultants?", a: "He simply does things differently — this will be apparent from the outset, from uncommon professional ethics through transparent communication to generous outputs. You'll immediately notice a lack of (tolerance for) fluff, and a focus on clarity, open-mindedness, and new options. Because he believes in skin in the game, he offers success-fee structures on certain activities. It keeps him sharp and you certain." },
-    { q: "Do you work with remote teams?", a: "Absolutely. Howard has run over 200 virtual workshops and events since Covid. Telling a story works just as well through a screen — as long as you're not on mute." },
-    { q: "How long are the workshops?", a: "Thanks to video conferencing, all workshops can be tailored to any amount of time (2-2½ hours recom-mended) and spread over any number of sessions. In-person training is usually 3-6 hours, for one or two days. Half-day sessions are the sweet spot for most, though Presentation Skills is usually two intensive days for a room full of people." },
-    { q: "What's the investment?", a: "Depending on the scope, group size, travel distance, we're talking a daily rate between 1000 and 2000 Euros, prorated. To all the overpriced consultants out there, there's no reason to be greedy. There are various success fee options for certain services, get in touch for a custom quote — I promise not to use the word 'synergy'." },
-    { q: "Is there some guarantee I'm not wasting money?", a: "Howard has always included a satisfaction guarantee in T&C since his first website in 2004. It reads: \"I am not satisfied until you are satisfied. If a client is disappointed with a service, we will agree to continue working on it at no extra charge, until client is satisfied. Or, you can fire me on the spot and I'll cancel the invoice.\" Simple as that." },
+    {
+      q: t(
+        "What makes Howard different from other consultants?",
+        "Čím se Howard liší od ostatních konzultantů?"
+      ),
+      a: t(
+        "He simply does things differently — this will be apparent from the outset, from uncommon professional ethics through transparent communication to generous outputs. You'll immediately notice a lack of (tolerance for) fluff, and a focus on clarity, open-mindedness, and new options. Because he believes in skin in the game, he offers success-fee structures on certain activities. It keeps him sharp and you certain.",
+        "Jednoduše dělá věci jinak — bude to patrné od samého začátku, od neobvyklé profesní etiky přes transparentní komunikaci až po štědré výstupy. Okamžitě si všimnete absence (a netolerance) prázdných řečí a důrazu na jasnost, otevřenost a nové možnosti. Protože věří v osobní zaangažovanost, nabízí u některých aktivit honorář vázaný na úspěch. Jeho to udržuje ve střehu a Vás v jistotě."
+      ),
+    },
+    {
+      q: t("Do you work with remote teams?", "Pracujete s týmy na dálku?"),
+      a: t(
+        "Absolutely. Howard has run over 200 virtual workshops and events since Covid. Telling a story works just as well through a screen — as long as you're not on mute.",
+        "Samozřejmě. Howard od pandemie Covid uspořádal více než 200 virtuálních workshopů a akcí. Vyprávění příběhu funguje skrze obrazovku stejně dobře — pokud nemáte vypnutý mikrofon."
+      ),
+    },
+    {
+      q: t("How long are the workshops?", "Jak dlouho workshopy trvají?"),
+      a: t(
+        "Thanks to video conferencing, all workshops can be tailored to any amount of time (2-2½ hours recom-mended) and spread over any number of sessions. In-person training is usually 3-6 hours, for one or two days. Half-day sessions are the sweet spot for most, though Presentation Skills is usually two intensive days for a room full of people.",
+        "Díky videokonferencím lze všechny workshopy přizpůsobit libovolnému časovému rozsahu (doporučujeme 2–2,5 hodiny) a rozdělit do libovolného počtu setkání. Prezenční školení obvykle trvá 3–6 hodin, jeden nebo dva dny. Půldenní setkání jsou pro většinu ideální, ačkoliv Prezentační dovednosti obvykle probíhají dva intenzivní dny pro plný sál účastníků."
+      ),
+    },
+    {
+      q: t("What's the investment?", "Jaká je investice?"),
+      a: t(
+        "Depending on the scope, group size, travel distance, we're talking a daily rate between 1000 and 2000 Euros, prorated. To all the overpriced consultants out there, there's no reason to be greedy. There are various success fee options for certain services, get in touch for a custom quote — I promise not to use the word 'synergy'.",
+        "V závislosti na rozsahu, velikosti skupiny a dojezdové vzdálenosti se denní sazba pohybuje mezi 1 000 a 2 000 eury, poměrově. Na rozdíl od předražených konzultantů nemá smysl být chamtivý. U některých služeb existují různé varianty honoráře vázaného na úspěch, ozvěte se pro individuální nabídku — slibuji, že nepoužiji slovo „synergie“."
+      ),
+    },
+    {
+      q: t(
+        "Is there some guarantee I'm not wasting money?",
+        "Existuje nějaká záruka, že neutratím peníze zbytečně?"
+      ),
+      a: t(
+        "Howard has always included a satisfaction guarantee in T&C since his first website in 2004. It reads: \"I am not satisfied until you are satisfied. If a client is disappointed with a service, we will agree to continue working on it at no extra charge, until client is satisfied. Or, you can fire me on the spot and I'll cancel the invoice.\" Simple as that.",
+        "Howard má od svých prvních webových stránek z roku 2004 ve smluvních podmínkách vždy zahrnutou záruku spokojenosti. Zní takto: „Nejsem spokojen, dokud nejste spokojeni Vy. Pokud je klient se službou nespokojen, dohodneme se na dalším pokračování bez příplatku, dokud nebude klient spokojen. Nebo mě můžete na místě propustit a já zruším fakturu.“ Tak jednoduché to je."
+      ),
+    },
   ];
 
   return (
@@ -19,8 +55,12 @@ const FAQSection = () => {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("faq.heading")}</h2>
-        <p className="font-semibold text-primary">{t("faq.subheading")}</p>
+        <h2 className="text-3xl md:text-4xl font-bold mb-3">
+          {t("Frequently Asked Questions", "Často kladené otázky")}
+        </h2>
+        <p className="font-semibold text-primary">
+          {t("Questions I hope you're asking", "Otázky, které doufám, že si kladete")}
+        </p>
       </motion.div>
 
       <div className="max-w-3xl mx-auto space-y-4">
