@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { useT } from "@/hooks/useT";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +23,7 @@ interface Session {
 }
 
 const StorytellingWorkshops = () => {
+  const t = useT();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
@@ -90,19 +92,25 @@ const StorytellingWorkshops = () => {
       <section className="section-padding pt-24">
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Storytelling Sessions</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              {t("Storytelling Sessions", "Setkání s vyprávěním příběhů")}
+            </h1>
             <p className="mb-10 max-w-2xl leading-relaxed font-semibold text-secondary-foreground">
-              Join us in a round of neighborly storytelling. We come together on Zoom and take
-              turns telling our story, anecdote, joke, whatever. If you want, get instant feedback
-              <br />from the others.
+              {t(
+                "Join us in a round of neighborly storytelling. We come together on Zoom and take turns telling our story, anecdote, joke, whatever. If you want, get instant feedback from the others.",
+                "Přidejte se k nám na sousedské vyprávění příběhů. Sejdeme se na Zoomu a po jednom vyprávíme svůj příběh, anekdotu, vtip — cokoliv. Pokud chcete, dostanete od ostatních okamžitou zpětnou vazbu."
+              )}
             </p>
 
             {loading ? (
-              <p className="text-muted-foreground font-light">Loading sessions...</p>
+              <p className="text-muted-foreground font-light">{t("Loading sessions...", "Načítám termíny…")}</p>
             ) : sessions.length === 0 ? (
               <div className="glass rounded-lg p-8">
                 <p className="text-muted-foreground font-light">
-                  No upcoming sessions scheduled yet. Check back soon!
+                  {t(
+                    "No upcoming sessions scheduled yet. Check back soon!",
+                    "Zatím nejsou naplánovány žádné nadcházející termíny. Podívejte se brzy znovu!"
+                  )}
                 </p>
               </div>
             ) : (
@@ -117,7 +125,7 @@ const StorytellingWorkshops = () => {
                   >
                     <div className="p-6 flex-1 flex flex-col">
                       <h3 className="text-lg font-semibold mb-2">
-                        {session.title || "Storytelling Session"}
+                        {session.title || t("Storytelling Session", "Setkání s vyprávěním")}
                       </h3>
                       <p className="text-sm text-gold font-medium mb-3">
                         {format(new Date(session.session_date), "EEEE, MMMM d, yyyy")}
@@ -136,7 +144,7 @@ const StorytellingWorkshops = () => {
                         className="w-full mt-auto"
                         onClick={() => openRegistration(session)}
                       >
-                        Reserve your spot
+                        {t("Reserve your spot", "Rezervovat místo")}
                       </Button>
                     </div>
                   </motion.div>
