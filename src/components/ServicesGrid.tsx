@@ -129,6 +129,7 @@ const ServiceGridInner = () => {
       </div>
     </>
   );
+};
 
 export default ServicesGrid;
 
