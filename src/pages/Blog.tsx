@@ -3,8 +3,12 @@ import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { getAllPosts, subscribe } from "@/data/blogStore";
 import { motion } from "framer-motion";
+import { useT } from "@/hooks/useT";
+import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 
 const Blog = () => {
+  const t = useT();
+  const lp = useLocalizedPath();
   const [posts, setPosts] = useState(getAllPosts());
   useEffect(() => subscribe(() => setPosts(getAllPosts())), []);
   return (
@@ -16,9 +20,12 @@ const Blog = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-14"
           >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">{t("Blog", "Blog")}</h1>
             <p className="text-lg text-muted-foreground font-medium max-w-xl mx-auto">
-              Thoughts on communication, storytelling, and the occasional rant.
+              {t(
+                "Thoughts on communication, storytelling, and the occasional rant.",
+                "Úvahy o komunikaci, vyprávění příběhů a občasný výlev."
+              )}
             </p>
           </motion.div>
 
@@ -31,7 +38,7 @@ const Blog = () => {
                 transition={{ delay: i * 0.1 }}
               >
                 <Link
-                  to={`/blog/${post.slug}`}
+                  to={lp(`/blog/${post.slug}`)}
                   className="group block glass rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full"
                 >
                   {/* Placeholder image area */}
@@ -45,7 +52,7 @@ const Blog = () => {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <span className="text-primary-foreground/30 text-sm font-light tracking-widest uppercase">
-                          Article
+                          {t("Article", "Článek")}
                         </span>
                       </div>
                     )}

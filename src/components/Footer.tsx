@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useLocalizedPath } from "@/hooks/useLanguageRouting";
+import { useT } from "@/hooks/useT";
 
 const LinkedInIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
@@ -15,6 +16,7 @@ const InstagramIcon = () => (
 
 const Footer = () => {
   const lp = useLocalizedPath();
+  const t = useT();
 
   return (
     <footer className="bg-primary text-primary-foreground">
@@ -23,24 +25,41 @@ const Footer = () => {
           <div>
             <Link to={lp("/bio")} className="text-lg font-semibold mb-4 block hover:no-underline text-primary-foreground">Howard</Link>
             <p className="text-primary-foreground/60 font-light text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
-              Helping people find their voice, one story at a time. Because the best meetings are the ones where everyone forgets they're in a meeting.
+              {t(
+                "Helping people find their voice, one story at a time. Because the best meetings are the ones where everyone forgets they're in a meeting.",
+                "Pomáháme lidem najít jejich hlas, jeden příběh po druhém. Protože nejlepší porady jsou ty, na kterých všichni zapomenou, že jsou na poradě."
+              )}
             </p>
             <Link to="/rokofsky-admin" className="text-[10px] text-primary-foreground/[0.08] block mt-1">Admin</Link>
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider mb-4 text-primary-foreground/80">Quick Links</h4>
+            <h4 className="text-sm font-semibold uppercase tracking-wider mb-4 text-primary-foreground/80">
+              {t("Quick Links", "Rychlé odkazy")}
+            </h4>
             <div className="flex flex-col gap-2 items-center md:items-start">
-              <Link to={lp("/bio")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Who is Howard</Link>
-              <Link to={lp("/references")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">What clients say</Link>
-              <Link to={lp("/storytelling-workshops")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Storytelling sessions</Link>
-              <Link to={lp("/blog")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Blog</Link>
-              <Link to={lp("/#contact-area")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">Contact</Link>
+              <Link to={lp("/bio")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">
+                {t("Who is Howard", "Kdo je Howard")}
+              </Link>
+              <Link to={lp("/references")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">
+                {t("What clients say", "Co říkají klienti")}
+              </Link>
+              <Link to={lp("/storytelling-workshops")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">
+                {t("Storytelling sessions", "Setkání s vyprávěním")}
+              </Link>
+              <Link to={lp("/blog")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">
+                {t("Blog", "Blog")}
+              </Link>
+              <Link to={lp("/#contact-area")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">
+                {t("Contact", "Kontakt")}
+              </Link>
             </div>
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider mb-4 text-primary-foreground/80">Connect</h4>
+            <h4 className="text-sm font-semibold uppercase tracking-wider mb-4 text-primary-foreground/80">
+              {t("Connect", "Spojte se")}
+            </h4>
             <div className="flex gap-4 mb-6 justify-center md:justify-start">
               <a
                 href="https://www.linkedin.com/in/rokofsky/"
@@ -59,13 +78,28 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center">
           <div className="flex flex-wrap justify-center gap-6 text-xs text-primary-foreground/40 font-light">
-            <Link to={lp("/privacy-policy")} className="hover:text-primary-foreground/60 transition-colors">Privacy Policy</Link>
-            <Link to={lp("/gdpr")} className="hover:text-primary-foreground/60 transition-colors">GDPR</Link>
-            <Link to={lp("/terms-of-service")} className="hover:text-primary-foreground/60 transition-colors">Terms</Link>
+            <Link to={lp("/privacy-policy")} className="hover:text-primary-foreground/60 transition-colors">
+              {t("Privacy Policy", "Ochrana soukromí")}
+            </Link>
+            <Link to={lp("/gdpr")} className="hover:text-primary-foreground/60 transition-colors">
+              {t("GDPR", "GDPR")}
+            </Link>
+            <Link to={lp("/terms-of-service")} className="hover:text-primary-foreground/60 transition-colors">
+              {t("Terms", "Obchodní podmínky")}
+            </Link>
           </div>
           <p className="text-xs text-primary-foreground/30 font-light italic">
-            "Every great leader is first a great storyteller." — Howard (probably)
+            {t(
+              "\"Every great leader is first a great storyteller.\" — Howard (probably)",
+              "„Každý velký lídr je nejdřív skvělý vypravěč.“ — Howard (asi)"
+            )}
           </p>
+        </div>
+
+        <div className="mt-6 text-center">
+          <Link to={lp("/")} className="text-xs text-primary-foreground/40 hover:text-primary-foreground/70 transition-colors font-light">
+            © 2026 Howard Rokofsky
+          </Link>
         </div>
       </div>
     </footer>
