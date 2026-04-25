@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { useLocalizedPath } from "@/hooks/useLanguageRouting";
+import { useLocalizedPath, useIsCzech } from "@/hooks/useLanguageRouting";
 import { motion } from "framer-motion";
 import { useT } from "@/hooks/useT";
 import { services } from "@/data/services";
+import { pickL } from "@/data/serviceDetails";
 import serviceBg from "@/assets/service-bg.jpg";
 
 const ServiceCard = ({
@@ -87,17 +88,50 @@ const ServicesGrid = () => {
         </p>
       </motion.div>
 
+      <ServiceGridInner />
+    </section>
+  );
+};
+
+const ServiceGridInner = () => {
+  const isCz = useIsCzech();
+  const lang: "en" | "cs" = isCz ? "cs" : "en";
+  return (
+    <>
       <div className="hidden md:grid grid-cols-3 gap-6 max-w-5xl mx-auto">
         {services.map((s, i) => (
-          <ServiceCard key={s.id} {...s} index={i} showSecondaryText />
+          <ServiceCard
+            key={s.id}
+            id={s.id}
+            slug={s.slug}
+            title={pickL(s.title, lang)}
+            subtitle={pickL(s.subtitle, lang)}
+            hook={pickL(s.hook, lang)}
+            index={i}
+            showSecondaryText
+          />
         ))}
       </div>
 
       <div className="md:hidden grid grid-cols-3 gap-2">
         {services.map((s, i) => (
-          <ServiceCard key={s.id} {...s} index={i} showSecondaryText={false} />
+          <ServiceCard
+            key={s.id}
+            id={s.id}
+            slug={s.slug}
+            title={pickL(s.title, lang)}
+            subtitle={pickL(s.subtitle, lang)}
+            hook={pickL(s.hook, lang)}
+            index={i}
+            showSecondaryText={false}
+          />
         ))}
       </div>
+    </>
+  );
+};
+
+const ServicesGridWrapper = () => null;
     </section>
   );
 };
