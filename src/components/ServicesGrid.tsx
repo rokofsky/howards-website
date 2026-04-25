@@ -129,11 +129,6 @@ const ServiceGridInner = () => {
       </div>
     </>
   );
-};
-
-const ServicesGridWrapper = () => null;
-    </section>
-  );
-};
 
 export default ServicesGrid;
+
