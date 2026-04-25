@@ -102,7 +102,6 @@ const ServiceGridInner = () => {
         {services.map((s, i) => (
           <ServiceCard
             key={s.id}
-            id={s.id}
             slug={s.slug}
             title={pickL(s.title, lang)}
             subtitle={pickL(s.subtitle, lang)}
@@ -117,7 +116,6 @@ const ServiceGridInner = () => {
         {services.map((s, i) => (
           <ServiceCard
             key={s.id}
-            id={s.id}
             slug={s.slug}
             title={pickL(s.title, lang)}
             subtitle={pickL(s.subtitle, lang)}
