@@ -45,7 +45,7 @@ const Footer = () => {
                 {t("What clients say", "Co říkají klienti")}
               </Link>
               <Link to={lp("/storytelling-workshops")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">
-                {t("Storytelling sessions", "Setkání s vyprávěním")}
+                {t("Storytelling sessions", "Rozprávění příběhů")}
               </Link>
               <Link to={lp("/blog")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">
                 {t("Blog", "Blog")}
