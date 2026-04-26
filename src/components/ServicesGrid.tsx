@@ -31,30 +31,31 @@ const ServiceCard = ({
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ delay: index * 0.05, duration: 0.4 }}
+      transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
     >
       <Link
         to={lp(`/services/${slug}`)}
-        className="group block relative h-28 md:h-64 rounded-lg overflow-hidden transition-transform duration-300 md:hover:scale-[1.03] active:brightness-90 active:duration-150"
+        className="group block relative h-32 sm:h-44 md:h-64 rounded-lg overflow-hidden transition-transform duration-300 md:hover:scale-[1.03] active:brightness-90 active:duration-150 [@media(hover:none)]:hover:scale-100"
       >
         <img
           src={serviceBg}
           alt={title}
           className="absolute inset-0 w-full h-full object-cover"
           loading="lazy"
+          decoding="async"
           width={800}
           height={800}
         />
-        <div className="absolute inset-0 bg-foreground/10 md:group-hover:bg-foreground/15 transition-colors duration-300" />
-        <div className="absolute inset-0 flex items-center justify-center p-2 md:p-6">
-          <div className="relative z-10 flex max-w-full flex-col items-center justify-center text-center">
-            <h3 className="mb-0.5 text-xs font-bold leading-tight text-primary-foreground transition-colors duration-300 ease-out md:mb-1 md:text-2xl md:group-hover:text-foreground">
+        <div className="absolute inset-0 bg-foreground/10 md:group-hover:bg-foreground/15 [@media(hover:none)]:group-hover:bg-foreground/10 transition-colors duration-300" />
+        <div className="absolute inset-0 flex items-center justify-center p-3 md:p-6">
+          <div className="relative z-10 flex max-w-full flex-col items-center justify-center text-center gap-1">
+            <h3 className="text-sm sm:text-base font-bold leading-tight text-primary-foreground transition-colors duration-300 ease-out md:text-2xl md:group-hover:text-foreground [@media(hover:none)]:group-hover:text-primary-foreground">
               <span id={`service-title-${slug}`} className="block">
                 {title}
               </span>
             </h3>
             {showSecondaryText ? (
-              <p className="min-h-[1.25rem] text-sm font-semibold leading-tight text-primary-foreground/85 transition-colors duration-300 ease-out md:group-hover:text-foreground">
+              <p className="text-xs sm:text-sm font-semibold leading-tight text-primary-foreground/85 transition-colors duration-300 ease-out md:group-hover:text-foreground [@media(hover:none)]:group-hover:text-primary-foreground/85">
                 <span id={`service-subtitle-${slug}`} className="block">
                   {secondaryText || "\u00A0"}
                 </span>
