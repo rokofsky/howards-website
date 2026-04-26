@@ -2,13 +2,16 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { getAllPosts, subscribe } from "@/data/blogStore";
+import { pickL } from "@/data/blogPosts";
 import { motion } from "framer-motion";
 import { useT } from "@/hooks/useT";
-import { useLocalizedPath } from "@/hooks/useLanguageRouting";
+import { useLocalizedPath, useIsCzech } from "@/hooks/useLanguageRouting";
 
 const Blog = () => {
   const t = useT();
   const lp = useLocalizedPath();
+  const isCz = useIsCzech();
+  const lang: "en" | "cs" = isCz ? "cs" : "en";
   const [posts, setPosts] = useState(getAllPosts());
   useEffect(() => subscribe(() => setPosts(getAllPosts())), []);
   return (
@@ -46,7 +49,7 @@ const Blog = () => {
                     {post.imageUrl ? (
                       <img
                         src={post.imageUrl}
-                        alt={post.title}
+                        alt={pickL(post.title, lang)}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -58,19 +61,19 @@ const Blog = () => {
                     )}
                     {/* Category tag */}
                     <span className="absolute top-3 right-3 bg-accent text-accent-foreground text-xs font-semibold px-2.5 py-1 rounded-full">
-                      {post.category}
+                      {pickL(post.category, lang)}
                     </span>
                   </div>
 
                   <div className="p-6">
                     <time className="text-xs text-muted-foreground font-light">
-                      {post.date}
+                      {pickL(post.date, lang)}
                     </time>
                     <h2 className="text-lg font-bold mt-2 mb-2 group-hover:text-accent transition-colors">
-                      {post.title}
+                      {pickL(post.title, lang)}
                     </h2>
                     <p className="text-sm text-muted-foreground leading-relaxed font-normal">
-                      {post.excerpt}
+                      {pickL(post.excerpt, lang)}
                     </p>
                   </div>
                 </Link>
