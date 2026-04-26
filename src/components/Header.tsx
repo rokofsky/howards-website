@@ -210,7 +210,7 @@ const Header = () => {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden glass border-t border-border/30"
           >
-            <nav className="flex flex-col px-6 py-4 gap-4">
+            <nav className="relative z-[1000] flex flex-col px-6 py-4 gap-4">
               {navOrder.map((link) => {
                 if (link.kind === "external") {
                   return (
@@ -248,10 +248,11 @@ const Header = () => {
                 // Plain link (Home, References, Blog) — exact same pattern, no preventDefault
                 const isHomeLink = link.href === homeHref;
                 const isBlogLink = link.href === lp("/blog");
+                const templateSwapHref = isHomeLink ? lp("/blog") : link.href;
                 return (
                   <Link
                     key={link.label}
-                    to={link.href}
+                    to={templateSwapHref}
                     onClick={() => {
                       if (isHomeLink) console.log("Home Clicked");
                       setMobileOpen(false);
