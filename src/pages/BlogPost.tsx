@@ -1,12 +1,17 @@
 import { useParams, Link } from "react-router-dom";
-import { useLocalizedPath } from "@/hooks/useLanguageRouting";
+import { useLocalizedPath, useIsCzech } from "@/hooks/useLanguageRouting";
+import { useT } from "@/hooks/useT";
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { getPostBySlug, subscribe } from "@/data/blogStore";
+import { pickL } from "@/data/blogPosts";
 import { motion } from "framer-motion";
 
 const BlogPost = () => {
   const lp = useLocalizedPath();
+  const t = useT();
+  const isCz = useIsCzech();
+  const lang: "en" | "cs" = isCz ? "cs" : "en";
   const { slug } = useParams();
   const [, force] = useState(0);
   const post = getPostBySlug(slug ?? "");
@@ -20,12 +25,17 @@ const BlogPost = () => {
     return (
       <Layout>
         <div className="section-padding pt-24 text-center">
-          <h1 className="text-3xl font-bold">Post not found</h1>
-          <Link to={lp("/")} className="text-accent hover:underline mt-4 inline-block">Back to home</Link>
+          <h1 className="text-3xl font-bold">{t("Post not found", "Příspěvek nenalezen")}</h1>
+          <Link to={lp("/")} className="text-accent hover:underline mt-4 inline-block">{t("Back to home", "Zpět na úvod")}</Link>
         </div>
       </Layout>
     );
   }
+
+  const title = pickL(post.title, lang);
+  const date = pickL(post.date, lang);
+  const category = pickL(post.category, lang);
+  const content = pickL(post.content, lang);
 
   return (
     <Layout>
@@ -33,28 +43,28 @@ const BlogPost = () => {
         <div className="max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <Link to={lp("/blog")} className="text-sm text-accent hover:text-foreground transition-colors mb-6 inline-block font-medium">
-              ← Back to all articles
+              ← {t("Back to all articles", "Zpět na všechny články")}
             </Link>
-            <time className="text-sm text-muted-foreground font-light block mb-2">{post.date}</time>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 leading-tight">{post.title}</h1>
+            <time className="text-sm text-muted-foreground font-light block mb-2">{date}</time>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 leading-tight">{title}</h1>
             {post.imageUrl && (
               <img
                 src={post.imageUrl}
-                alt={post.title}
+                alt={title}
                 className="w-full aspect-[16/9] object-cover rounded-lg mb-6"
               />
             )}
-            {post.category && (
+            {category && (
               <span className="inline-block bg-accent text-accent-foreground text-xs font-semibold px-2.5 py-1 rounded-full mb-6">
-                {post.category}
+                {category}
               </span>
             )}
             <div className="glass rounded-lg p-5 sm:p-8">
               <div
-                key={post.slug}
+                key={post.slug + lang}
                 className="text-base sm:text-lg text-foreground/80 leading-[1.75] whitespace-pre-line font-light"
               >
-                {post.content.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
+                {content.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
                   if (part.startsWith('**') && part.endsWith('**')) {
                     return <strong key={i} className="font-bold">{part.slice(2, -2)}</strong>;
                   }
@@ -64,7 +74,7 @@ const BlogPost = () => {
             </div>
             <div className="mt-10">
               <Link to={lp("/blog")} className="text-sm text-accent hover:text-foreground transition-colors font-medium">
-                ← Back to all articles
+                ← {t("Back to all articles", "Zpět na všechny články")}
               </Link>
             </div>
           </motion.div>

@@ -98,12 +98,12 @@ const RokofAdmin = () => {
 
     addSessionPost({
       slug,
-      title,
-      excerpt,
-      date: dateStr,
-      category,
+      title: { en: title, cs: title },
+      excerpt: { en: excerpt, cs: excerpt },
+      date: { en: dateStr, cs: dateStr },
+      category: { en: category, cs: category },
       imageUrl: imageUrl || undefined,
-      content,
+      content: { en: content, cs: content },
     });
 
     toast({
