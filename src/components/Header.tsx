@@ -203,21 +203,6 @@ const Header = () => {
                     />
                     {link.label}
                   </a>
-                ) : link.isHome ? (
-                  <Link
-                    key={link.label}
-                    to={link.href}
-                    onClick={(e) => {
-                      setMobileOpen(false);
-                      if (isRoot) {
-                        e.preventDefault();
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }
-                    }}
-                    className="text-base font-light text-foreground/70 hover:text-foreground py-2"
-                  >
-                    {link.label}
-                  </Link>
                 ) : (
                   <Link
                     key={link.label}
