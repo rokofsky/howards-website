@@ -62,10 +62,15 @@ const Header = () => {
   };
 
   const handleNavClick = (e: React.MouseEvent, href: string) => {
-    // Home link should always navigate normally, no scroll-to-ID behavior
+    // Home link should always navigate to root and clear any hash
     if (href === "/" || href === "/cz") {
       setMobileOpen(false);
-      return; // Let the default Link behavior handle navigation
+      if (isRoot) {
+        e.preventDefault();
+        window.history.replaceState(null, "", isCz ? "/cz" : "/");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      return;
     }
 
     // Handle hash links on current root page
@@ -85,6 +90,7 @@ const Header = () => {
     setMobileOpen(false);
     if (isRoot) {
       e.preventDefault();
+      window.history.replaceState(null, "", isCz ? "/cz" : "/");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       window.scrollTo({ top: 0, behavior: "auto" });
