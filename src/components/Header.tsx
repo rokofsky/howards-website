@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { flushSync } from "react-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,6 +14,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const t = useT();
   const lp = useLocalizedPath();
   const isCz = useIsCzech();
@@ -94,6 +96,13 @@ const Header = () => {
       window.history.replaceState(null, "", `${isCz ? "/cz" : "/"}#${id}`);
       setTimeout(() => scrollToElement(id), 250);
     }
+  };
+
+  const handleMobileHomeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    flushSync(() => setMobileOpen(false));
+    navigate(homeHref);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   };
 
   useEffect(() => {
@@ -247,16 +256,11 @@ const Header = () => {
                 }
                 // Plain link (Home, References, Blog) — exact same pattern, no preventDefault
                 const isHomeLink = link.href === homeHref;
-                const isBlogLink = link.href === lp("/blog");
-                const templateSwapHref = isHomeLink ? lp("/blog") : link.href;
                 return (
                   <Link
                     key={link.label}
-                    to={templateSwapHref}
-                    onClick={() => {
-                      if (isHomeLink) console.log("Home Clicked");
-                      setMobileOpen(false);
-                    }}
+                    to={link.href}
+                    onClick={isHomeLink ? handleMobileHomeClick : () => setMobileOpen(false)}
                     className={mobileLinkClass}
                   >
                     {link.label}
