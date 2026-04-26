@@ -133,7 +133,7 @@ const Header = () => {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide flex items-center gap-1.5 font-bold"
+                className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide flex items-center gap-1.5 font-bold relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-primary after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out [@media(hover:none)]:hover:after:scale-x-0"
               >
                 <img
                   src={bookCover}
@@ -144,27 +144,12 @@ const Header = () => {
                 />
                 {link.label}
               </a>
-            ) : link.isHome ? (
-              <Link
-                key={link.label}
-                to={link.href}
-                onClick={(e) => {
-                  setMobileOpen(false);
-                  if (isRoot) {
-                    e.preventDefault();
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }
-                }}
-                className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold"
-              >
-                {link.label}
-              </Link>
             ) : (
               <Link
                 key={link.label}
                 to={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold"
+                className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-primary after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out [@media(hover:none)]:hover:after:scale-x-0"
               >
                 {link.label}
               </Link>
