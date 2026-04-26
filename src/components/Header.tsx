@@ -19,9 +19,10 @@ const Header = () => {
 
   // Determine if we're on the language root
   const isRoot = location.pathname === "/" || location.pathname === "/cz" || location.pathname === "/cz/";
+  const homeHref = isCz ? "/cz" : "/";
 
   const navLinks = [
-    { label: t("Home", "Domů"), href: isCz ? "/cz" : "/", isHome: true },
+    { label: t("Home", "Domů"), href: homeHref, isHome: true },
     { label: t("Services", "Služby"), href: lp("/#services") },
     { label: t("FAQ", "FAQ"), href: lp("/#faq") },
     { label: t("Pricing", "Ceník"), href: lp("/#pricing") },
@@ -61,13 +62,13 @@ const Header = () => {
     tryScroll();
   };
 
-  const handleNavClick = (e: React.MouseEvent, href: string) => {
+  const handleNavClick = (e: React.MouseEvent, href: string, isHome = false) => {
     // Home link should always navigate to root and clear any hash
-    if (href === "/" || href === "/cz") {
+    if (isHome) {
       setMobileOpen(false);
       if (isRoot) {
         e.preventDefault();
-        window.history.replaceState(null, "", isCz ? "/cz" : "/");
+        window.history.replaceState(null, "", homeHref);
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
       return;
@@ -90,7 +91,7 @@ const Header = () => {
     setMobileOpen(false);
     if (isRoot) {
       e.preventDefault();
-      window.history.replaceState(null, "", isCz ? "/cz" : "/");
+      window.history.replaceState(null, "", homeHref);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       window.scrollTo({ top: 0, behavior: "auto" });
@@ -112,7 +113,7 @@ const Header = () => {
     >
       <div className="container mx-auto flex h-16 md:h-[72px] items-center justify-between px-6">
         <Link
-          to={lp("/")}
+          to={homeHref}
           onClick={handleLogoClick}
           className="flex h-full items-center self-stretch bg-transparent transition-all duration-200 hover:scale-[1.02] hover:opacity-80"
           style={{ backgroundColor: "transparent" }}
@@ -148,7 +149,7 @@ const Header = () => {
               <Link
                 key={link.label}
                 to={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
+                onClick={(e) => handleNavClick(e, link.href, link.isHome)}
                 className="text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-primary after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out [@media(hover:none)]:hover:after:scale-x-0"
               >
                 {link.label}
@@ -207,7 +208,7 @@ const Header = () => {
                   <Link
                     key={link.label}
                     to={link.href}
-                    onClick={(e) => handleNavClick(e, link.href)}
+                    onClick={(e) => handleNavClick(e, link.href, link.isHome)}
                     className="text-base font-light text-foreground/70 hover:text-foreground py-2"
                   >
                     {link.label}
