@@ -98,35 +98,19 @@ const ServiceGridInner = () => {
   const isCz = useIsCzech();
   const lang: "en" | "cs" = isCz ? "cs" : "en";
   return (
-    <>
-      <div className="hidden md:grid grid-cols-3 gap-6 max-w-5xl mx-auto">
-        {services.map((s, i) => (
-          <ServiceCard
-            key={s.id}
-            slug={s.slug}
-            title={pickL(s.title, lang)}
-            subtitle={pickL(s.subtitle, lang)}
-            hook={pickL(s.hook, lang)}
-            index={i}
-            showSecondaryText
-          />
-        ))}
-      </div>
-
-      <div className="md:hidden grid grid-cols-3 gap-2">
-        {services.map((s, i) => (
-          <ServiceCard
-            key={s.id}
-            slug={s.slug}
-            title={pickL(s.title, lang)}
-            subtitle={pickL(s.subtitle, lang)}
-            hook={pickL(s.hook, lang)}
-            index={i}
-            showSecondaryText={false}
-          />
-        ))}
-      </div>
-    </>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 max-w-5xl mx-auto">
+      {services.map((s, i) => (
+        <ServiceCard
+          key={s.id}
+          slug={s.slug}
+          title={pickL(s.title, lang)}
+          subtitle={pickL(s.subtitle, lang)}
+          hook={pickL(s.hook, lang)}
+          index={i}
+          showSecondaryText
+        />
+      ))}
+    </div>
   );
 };
 
