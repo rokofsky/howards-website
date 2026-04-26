@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,6 +13,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const t = useT();
   const lp = useLocalizedPath();
   const isCz = useIsCzech();
@@ -65,12 +66,10 @@ const Header = () => {
   const handleNavClick = (e: React.MouseEvent, href: string, isHome = false) => {
     // Home link should always navigate to root and clear any hash
     if (isHome) {
+      e.preventDefault();
       setMobileOpen(false);
-      if (isRoot) {
-        e.preventDefault();
-        window.history.replaceState(null, "", homeHref);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
+      navigate(homeHref, { replace: isRoot });
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
@@ -88,14 +87,10 @@ const Header = () => {
   };
 
   const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     setMobileOpen(false);
-    if (isRoot) {
-      e.preventDefault();
-      window.history.replaceState(null, "", homeHref);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      window.scrollTo({ top: 0, behavior: "auto" });
-    }
+    navigate(homeHref, { replace: isRoot });
+    window.scrollTo({ top: 0, behavior: isRoot ? "smooth" : "auto" });
   };
 
   useEffect(() => {
