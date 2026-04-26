@@ -93,7 +93,7 @@ const StorytellingWorkshops = () => {
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              {t("Storytelling Sessions", "Setkání s vyprávěním příběhů")}
+              {t("Storytelling Sessions", "Rozprávění příběhů")}
             </h1>
             <p className="mb-10 max-w-2xl leading-relaxed font-semibold text-secondary-foreground">
               {t(
@@ -125,7 +125,7 @@ const StorytellingWorkshops = () => {
                   >
                     <div className="p-6 flex-1 flex flex-col">
                       <h3 className="text-lg font-semibold mb-2">
-                        {session.title || t("Storytelling Session", "Setkání s vyprávěním")}
+                        {session.title || t("Storytelling Session", "Rozprávění příběhů")}
                       </h3>
                       <p className="text-sm text-gold font-medium mb-3">
                         {format(new Date(session.session_date), "EEEE, MMMM d, yyyy")}
