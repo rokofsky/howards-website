@@ -246,12 +246,17 @@ const Header = () => {
                   );
                 }
                 // Plain link (Home, References, Blog) — exact same pattern, no preventDefault
+                const isHomeLink = link.href === homeHref;
+                const isBlogLink = link.href === lp("/blog");
                 return (
                   <Link
                     key={link.label}
                     to={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={mobileLinkClass}
+                    onClick={() => {
+                      if (isHomeLink) console.log("Home Clicked");
+                      setMobileOpen(false);
+                    }}
+                    className={`${mobileLinkClass} ${isHomeLink ? "!text-red-600" : ""} ${isBlogLink ? "!text-green-600" : ""}`}
                   >
                     {link.label}
                   </Link>
