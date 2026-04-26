@@ -257,7 +257,7 @@ const Header = () => {
                       if (isHomeLink) console.log("Home Clicked");
                       setMobileOpen(false);
                     }}
-                    className={`${mobileLinkClass} ${isHomeLink ? "!text-red-600" : ""} ${isBlogLink ? "!text-green-600" : ""}`}
+                    className={mobileLinkClass}
                   >
                     {link.label}
                   </Link>
