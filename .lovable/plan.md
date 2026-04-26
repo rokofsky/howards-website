@@ -1,31 +1,23 @@
+I’m sorry — the current fix is still too clever and that is likely why it keeps failing on real mobile taps.
 
-Currently no — the `/references/scans` page reads from a hardcoded array in `ReferenceScans.tsx`, and slots only fill when a PDF is manually placed in `public/scans/` and the code is edited. There is no admin upload flow.
+Plan:
+1. Replace the mobile menu’s Home item with a plain React Router `<Link>` that mirrors Blog/References exactly:
+   - English: `to="/"`
+   - Czech: `to="/cz"`
+   - `onClick={() => setMobileOpen(false)}` only
+2. Do the same simplification for the logo:
+   - `to={homeHref}`
+   - close the menu if open
+   - do not call `preventDefault()` for normal cross-page Home navigation
+3. Keep the special scroll/hash logic only for section links like Services, FAQ, Pricing, Contact.
+4. Add a small mobile-menu-specific helper so Home cannot be accidentally handled as a hash/scroll link again.
+5. After implementation, verify the rendered code paths for:
+   - `/blog` → Home routes to `/`
+   - `/references` → Home routes to `/`
+   - `/cz/blog` → Domů routes to `/cz`
+   - `/cz/reference` → Domů routes to `/cz`
+   - hamburger closes immediately on click
 
-Here's a plan to make it admin-manageable:
-
-## Plan: Admin-managed reference scans
-
-**1. Storage**
-- Create a public Supabase storage bucket `reference-scans` for PDFs.
-- Create a `reference_scans` table: `id`, `slot_number` (1–80), `pdf_path`, `title`, `created_at`.
-- RLS: public can SELECT; only admin edge function can INSERT/UPDATE/DELETE (service role).
-
-**2. Admin upload UI (in `RokofAdmin.tsx`)**
-Add a new "Reference Scans" section with:
-- A grid of 80 numbered slots showing current state (filled / empty).
-- Per slot: file input (PDF only), optional title, Upload button, Replace, Delete.
-- Calls a new edge function `admin-reference-scans` (password-protected like `admin-sessions`) that handles upload to storage + DB upsert.
-
-**3. Public page (`ReferenceScans.tsx`)**
-- Replace the hardcoded array with a Supabase query to `reference_scans`, ordered by `slot_number`.
-- Render 80 slots; filled ones link to the public storage URL, empty ones stay as placeholders.
-
-**4. References landing (`References.tsx`)**
-- Update the 6 preview slots to also pull from the same table (first 6 by slot_number).
-
-**Files**
-- New: `supabase/functions/admin-reference-scans/index.ts`
-- New migration: bucket + table + RLS
-- Edit: `src/pages/RokofAdmin.tsx`, `src/pages/ReferenceScans.tsx`, `src/pages/References.tsx`
-
-After approval I'll switch to default mode and implement it.
+Technical fix target:
+- File: `src/components/Header.tsx`
+- Root cause: the Home link currently calls `e.preventDefault()` and uses programmatic `navigate(...)`, while Blog/References use normal `<Link to="...">` behavior. I will remove that difference for Home in the mobile drawer and logo.
