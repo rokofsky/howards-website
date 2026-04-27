@@ -251,10 +251,8 @@ const SeoHead = () => {
     const csUrl = `${SITE_ORIGIN}${csPath}`;
     const selfUrl = isCz ? csUrl : enUrl;
 
-    // Title + description (bilingual, route-driven)
+    // Social metadata fallback only. Page components own document.title and meta description.
     const meta = resolveMeta(enPath, isCz);
-    document.title = meta.title;
-    upsertMeta("description", meta.description);
     upsertProperty("og:title", meta.title);
     upsertProperty("og:description", meta.description);
     upsertProperty("og:url", selfUrl);

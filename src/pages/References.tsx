@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import PdfThumbnail from "@/components/PdfThumbnail";
 import { useT } from "@/hooks/useT";
+import { useIsCzech } from "@/hooks/useLanguageRouting";
+import { setPageSeo } from "@/lib/pageSeo";
 
 const testimonials = [
   { name: "Sarah K., VP People, TechCorp", text: "Howard completely transformed how our leadership team communicates. The storytelling framework he taught us is now embedded in our culture." },
@@ -29,9 +31,19 @@ interface ScanRow {
 const References = () => {
   const t = useT();
   const lp = useLocalizedPath();
+  const isCz = useIsCzech();
   const [showAllTestimonials, setShowAllTestimonials] = useState(false);
   const visibleTestimonials = showAllTestimonials ? testimonials : testimonials.slice(0, 3);
   const [previewScans, setPreviewScans] = useState<Record<number, ScanRow>>({});
+
+  useEffect(() => {
+    setPageSeo(
+      isCz ? "Klienti a projekty | Rokofsky" : "Clients & Projects | Rokofsky",
+      isCz
+        ? "Prohlédněte si reference, klientské projekty a hodnocení workshopů Howarda Rokofského z firemních tréninků."
+        : "Explore client references, project work and workshop evaluations from Howard Rokofsky's communication training engagements."
+    );
+  }, [isCz]);
 
   useEffect(() => {
     supabase

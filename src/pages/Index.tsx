@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Layout from "@/components/Layout";
 import HeroSection from "@/components/HeroSection";
 import SubHeroNav from "@/components/SubHeroNav";
@@ -10,9 +11,22 @@ import PricingSection from "@/components/PricingSection";
 import { Button } from "@/components/ui/button";
 import { openCalendly } from "@/lib/calendly";
 import { useT } from "@/hooks/useT";
+import { useIsCzech } from "@/hooks/useLanguageRouting";
+import { setPageSeo } from "@/lib/pageSeo";
 
 const Index = () => {
   const t = useT();
+  const isCz = useIsCzech();
+
+  useEffect(() => {
+    setPageSeo(
+      "Rokofsky Communication Training",
+      isCz
+        ? "Komunikační trénink v Praze: prezentace, storytelling, vyjednávání, koučink a mediace konfliktů pro týmy a lídry."
+        : "Communication training in Prague: presentations, storytelling, negotiation, coaching and conflict mediation for teams and leaders."
+    );
+  }, [isCz]);
+
   return (
     <Layout>
       <HeroSection />

@@ -98,11 +98,15 @@ const Header = () => {
     }
   };
 
-  const handleMobileHomeClick = (e: React.MouseEvent) => {
+  const goHome = (targetPath: string) => {
+    navigate(targetPath);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+  };
+
+  const handleHomeClick = (e: React.MouseEvent, targetPath = homeHref) => {
     e.preventDefault();
     flushSync(() => setMobileOpen(false));
-    navigate(homeHref);
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+    goHome(targetPath);
   };
 
   useEffect(() => {
@@ -125,10 +129,10 @@ const Header = () => {
       }`}
     >
       <div className="container mx-auto flex h-16 md:h-[72px] items-center justify-between px-6">
-        {/* Logo — plain Link, no preventDefault */}
-        <Link
-          to={homeHref}
-          onClick={() => setMobileOpen(false)}
+        {/* Logo — manual navigation so root routes always reset */}
+        <a
+          href={homeHref}
+          onClick={(e) => handleHomeClick(e)}
           className="flex h-full items-center self-stretch bg-transparent transition-all duration-200 hover:scale-[1.02] hover:opacity-80"
           style={{ backgroundColor: "transparent" }}
         >
@@ -138,7 +142,7 @@ const Header = () => {
             className="block h-8 md:h-10 w-auto shrink-0 object-contain"
             style={{ backgroundColor: "transparent" }}
           />
-        </Link>
+        </a>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-8">
@@ -173,6 +177,19 @@ const Header = () => {
                 >
                   {link.label}
                 </Link>
+              );
+            }
+            const isHomeLink = link.href === homeHref;
+            if (isHomeLink) {
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={(e) => handleHomeClick(e, link.href)}
+                  className={desktopLinkClass}
+                >
+                  {link.label}
+                </a>
               );
             }
             return (
@@ -254,13 +271,25 @@ const Header = () => {
                     </Link>
                   );
                 }
-                // Plain link (Home, References, Blog) — exact same pattern, no preventDefault
+                // Home uses manual navigation so / and /cz always close/reset, even on the same route.
                 const isHomeLink = link.href === homeHref;
+                if (isHomeLink) {
+                  return (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      onClick={(e) => handleHomeClick(e, link.href)}
+                      className={mobileLinkClass}
+                    >
+                      {link.label}
+                    </a>
+                  );
+                }
                 return (
                   <Link
                     key={link.label}
                     to={link.href}
-                    onClick={isHomeLink ? handleMobileHomeClick : () => setMobileOpen(false)}
+                    onClick={() => setMobileOpen(false)}
                     className={mobileLinkClass}
                   >
                     {link.label}
