@@ -179,6 +179,19 @@ const Header = () => {
                 </Link>
               );
             }
+            const isHomeLink = link.href === homeHref;
+            if (isHomeLink) {
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={(e) => handleHomeClick(e, link.href)}
+                  className={desktopLinkClass}
+                >
+                  {link.label}
+                </a>
+              );
+            }
             return (
               <Link
                 key={link.label}
