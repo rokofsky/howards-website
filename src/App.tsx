@@ -48,40 +48,115 @@ function GlobalTitleSync() {
     i18n.language?.startsWith("cs");
 
   useEffect(() => {
-    const path = pathname.replace(/^\/cz/, "") || "/";
-    const h = (hash || "").toLowerCase();
+    const resolve = (currentHash: string): { title: string; description: string } => {
+      const path = pathname.replace(/^\/cz/, "") || "/";
+      const h = (currentHash || "").toLowerCase();
 
-    const resolveTitle = (): string => {
       // Hash-based sections on the home page take precedence
       if (path === "/" || path === "") {
-        if (h.includes("faq")) return isCz ? "Časté dotazy | Rokofsky" : "FAQ | Rokofsky";
+        if (h.includes("faq"))
+          return {
+            title: isCz ? "Časté dotazy | Rokofsky" : "FAQ | Rokofsky",
+            description: isCz
+              ? "Odpovědi na nejčastější dotazy o komunikačních trénincích, workshopech a koučinku Howarda Rokofského."
+              : "Answers to frequently asked questions about Howard Rokofsky's communication trainings, workshops and coaching.",
+          };
         if (h.includes("pricing") || h.includes("cenik") || h.includes("ceník"))
-          return isCz ? "Ceník | Rokofsky" : "Pricing | Rokofsky";
+          return {
+            title: isCz ? "Ceník | Rokofsky" : "Pricing | Rokofsky",
+            description: isCz
+              ? "Transparentní ceník komunikačních tréninků, workshopů a koučinku Howarda Rokofského."
+              : "Transparent pricing for Howard Rokofsky's communication trainings, workshops and coaching.",
+          };
         if (h.includes("contact") || h.includes("kontakt"))
-          return isCz ? "Kontakt | Howard Rokofsky" : "Contact | Howard Rokofsky";
+          return {
+            title: isCz ? "Kontakt | Howard Rokofsky" : "Contact | Howard Rokofsky",
+            description: isCz
+              ? "Spojte se s Howardem Rokofským – odpovídám osobně nejpozději druhý den."
+              : "Get in touch with Howard Rokofsky — I personally reply by the next day.",
+          };
         if (h.includes("services") || h.includes("sluzby") || h.includes("služby"))
-          return isCz ? "Služby | Rokofsky" : "Services | Rokofsky";
-        return "Rokofsky Communication Training";
+          return {
+            title: isCz ? "Služby | Rokofsky" : "Services | Rokofsky",
+            description: isCz
+              ? "Komunikační služby: prezentace, storytelling, vyjednávání, koučink a mediace konfliktů."
+              : "Communication services: presentations, storytelling, negotiation, coaching and conflict mediation.",
+          };
+        return {
+          title: "Rokofsky Communication Training",
+          description: isCz
+            ? "Komunikační trénink v Praze: prezentace, storytelling, vyjednávání, koučink a mediace konfliktů."
+            : "Communication training in Prague: presentations, storytelling, negotiation, coaching and conflict mediation.",
+        };
       }
-      if (path.includes("/bio")) return isCz ? "O mně | Rokofsky" : "About Howard | Rokofsky";
+      if (path.includes("/bio"))
+        return {
+          title: isCz ? "O mně | Rokofsky" : "About Howard | Rokofsky",
+          description: isCz
+            ? "Seznamte se s Howardem Rokofským – trenérem soft skills a storytellingu."
+            : "Meet Howard Rokofsky — soft skills and storytelling trainer.",
+        };
       if (path.includes("/references") || path.includes("/reference"))
-        return isCz ? "Klienti a projekty | Rokofsky" : "Clients & Projects | Rokofsky";
-      if (path.includes("/blog")) return isCz ? "Postřehy a tipy | Rokofsky" : "Insights & Tips | Rokofsky";
+        return {
+          title: isCz ? "Klienti a projekty | Rokofsky" : "Clients & Projects | Rokofsky",
+          description: isCz
+            ? "Reference a hodnocení od klientů Howarda Rokofského."
+            : "Testimonials and evaluations from Howard Rokofsky's clients.",
+        };
+      if (path.includes("/blog"))
+        return {
+          title: isCz ? "Postřehy a tipy | Rokofsky" : "Insights & Tips | Rokofsky",
+          description: isCz
+            ? "Články a tipy o komunikaci, storytellingu a leadershipu."
+            : "Articles and tips on communication, storytelling and leadership.",
+        };
       if (path.includes("/services/") || path.includes("/storytelling-workshops") || path.includes("/keynote-topics"))
-        return isCz ? "Služby | Rokofsky" : "Services | Rokofsky";
-      return "Rokofsky Communication Training";
+        return {
+          title: isCz ? "Služby | Rokofsky" : "Services | Rokofsky",
+          description: isCz
+            ? "Komunikační služby na míru lídrům, týmům a organizacím."
+            : "Communication services tailored to leaders, teams and organizations.",
+        };
+      return {
+        title: "Rokofsky Communication Training",
+        description: isCz
+          ? "Komunikační trénink v Praze."
+          : "Communication training in Prague.",
+      };
     };
 
-    const apply = () => {
-      document.title = resolveTitle();
+    const upsertDesc = (content: string) => {
+      let el = document.head.querySelector<HTMLMetaElement>('meta[name="description"]');
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute("name", "description");
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
     };
-    apply();
-    // Win the race against page-level useEffects that also set document.title
-    const t1 = window.setTimeout(apply, 0);
-    const t2 = window.setTimeout(apply, 100);
+
+    const apply = (currentHash?: string) => {
+      const { title, description } = resolve(currentHash ?? window.location.hash);
+      document.title = title;
+      upsertDesc(description);
+    };
+
+    apply(hash);
+    // Win the race against any page-level useEffects that also set document.title
+    const t1 = window.setTimeout(() => apply(hash), 0);
+    const t2 = window.setTimeout(() => apply(hash), 100);
+    const t3 = window.setTimeout(() => apply(hash), 400);
+
+    // React-router doesn't always re-render on raw hashchange (e.g. anchor clicks
+    // that only update the fragment). Listen directly to keep titles in sync.
+    const onHashChange = () => apply(window.location.hash);
+    window.addEventListener("hashchange", onHashChange);
+
     return () => {
       window.clearTimeout(t1);
       window.clearTimeout(t2);
+      window.clearTimeout(t3);
+      window.removeEventListener("hashchange", onHashChange);
     };
   }, [pathname, hash, isCz, i18n.language]);
   return null;
