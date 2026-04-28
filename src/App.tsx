@@ -40,20 +40,50 @@ function LanguageSyncWrapper({ children }: { children: React.ReactNode }) {
 }
 
 function GlobalTitleSync() {
-  const { pathname } = useLocation();
-  const isCz = pathname.startsWith("/cz/") || pathname === "/cz";
+  const { pathname, hash } = useLocation();
+  const { i18n } = useTranslation();
+  const isCz =
+    pathname.startsWith("/cz/") ||
+    pathname === "/cz" ||
+    i18n.language?.startsWith("cs");
+
   useEffect(() => {
     const path = pathname.replace(/^\/cz/, "") || "/";
-    if (path.includes("/bio")) {
-      document.title = isCz ? "O mně | Rokofsky" : "About Howard | Rokofsky";
-    } else if (path.includes("/references") || path.includes("/reference")) {
-      document.title = isCz ? "Reference | Rokofsky" : "Clients & Projects | Rokofsky";
-    } else if (path.includes("/blog")) {
-      document.title = isCz ? "Blog | Rokofsky" : "Insights & Tips | Rokofsky";
-    } else {
-      document.title = "Rokofsky Communication Training";
-    }
-  }, [pathname, isCz]);
+    const h = (hash || "").toLowerCase();
+
+    const resolveTitle = (): string => {
+      // Hash-based sections on the home page take precedence
+      if (path === "/" || path === "") {
+        if (h.includes("faq")) return isCz ? "Časté dotazy | Rokofsky" : "FAQ | Rokofsky";
+        if (h.includes("pricing") || h.includes("cenik") || h.includes("ceník"))
+          return isCz ? "Ceník | Rokofsky" : "Pricing | Rokofsky";
+        if (h.includes("contact") || h.includes("kontakt"))
+          return isCz ? "Kontakt | Howard Rokofsky" : "Contact | Howard Rokofsky";
+        if (h.includes("services") || h.includes("sluzby") || h.includes("služby"))
+          return isCz ? "Služby | Rokofsky" : "Services | Rokofsky";
+        return "Rokofsky Communication Training";
+      }
+      if (path.includes("/bio")) return isCz ? "O mně | Rokofsky" : "About Howard | Rokofsky";
+      if (path.includes("/references") || path.includes("/reference"))
+        return isCz ? "Klienti a projekty | Rokofsky" : "Clients & Projects | Rokofsky";
+      if (path.includes("/blog")) return isCz ? "Postřehy a tipy | Rokofsky" : "Insights & Tips | Rokofsky";
+      if (path.includes("/services/") || path.includes("/storytelling-workshops") || path.includes("/keynote-topics"))
+        return isCz ? "Služby | Rokofsky" : "Services | Rokofsky";
+      return "Rokofsky Communication Training";
+    };
+
+    const apply = () => {
+      document.title = resolveTitle();
+    };
+    apply();
+    // Win the race against page-level useEffects that also set document.title
+    const t1 = window.setTimeout(apply, 0);
+    const t2 = window.setTimeout(apply, 100);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [pathname, hash, isCz, i18n.language]);
   return null;
 }
 
