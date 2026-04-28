@@ -219,20 +219,24 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <label htmlFor="name" className="text-sm text-muted-foreground mb-1.5 block font-medium">Name <span className="text-gold">* (required)</span></label>
+          <label htmlFor="name" className="text-sm text-muted-foreground mb-1.5 block font-medium">
+            {t("Name", "Jméno")} <span className="text-gold">* {t("(required)", "(povinné)")}</span>
+          </label>
           <input
             id="name"
             name="name"
             type="text"
             required
-            placeholder="The name people actually call you"
+            placeholder={t("The name people actually call you", "Jméno, kterým vás lidé skutečně oslovují")}
             value={form.name}
             onChange={handleChange}
             className={inputClasses}
           />
         </div>
         <div>
-          <label htmlFor="email" className="text-sm text-muted-foreground mb-1.5 block font-medium">Email <span className="text-gold">* (required)</span></label>
+          <label htmlFor="email" className="text-sm text-muted-foreground mb-1.5 block font-medium">
+            {t("Email", "Email")} <span className="text-gold">* {t("(required)", "(povinné)")}</span>
+          </label>
           <input
             id="email"
             name="email"
