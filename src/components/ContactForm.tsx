@@ -169,9 +169,14 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
         className="glass rounded-lg p-6 max-w-lg mx-auto"
       >
         <div className="text-center mb-4">
-          <h3 className="text-2xl font-bold mb-3">Thanks for the nudge</h3>
+          <h3 className="text-2xl font-bold mb-3">
+            {t("Thanks for the nudge", "Díky za připomenutí")}
+          </h3>
           <p className="text-muted-foreground font-normal">
-            Howard will be in touch faster than you can say "synergy". Check your email tomorrow.
+            {t(
+              'Howard will be in touch faster than you can say "synergy". Check your email tomorrow.',
+              'Howard se ozve dřív, než stačíš říct „synergie“. Zítra se podívejte na e-mail.'
+            )}
           </p>
         </div>
         <div className="flex justify-end">
@@ -193,7 +198,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
               });
             }}
           >
-            Say something more
+            {t("Say something more", "Říci něco dalšího")}
           </Button>
         </div>
       </motion.div>
