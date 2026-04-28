@@ -36,12 +36,7 @@ const References = () => {
   const [previewScans, setPreviewScans] = useState<Record<number, ScanRow>>({});
 
   useEffect(() => {
-    setPageSeo(
-      isCz ? "Klienti a projekty | Rokofsky" : "Clients & Projects | Rokofsky",
-      isCz
-        ? "Prohlédněte si reference, klientské projekty a hodnocení workshopů Howarda Rokofského z firemních tréninků."
-        : "Explore client references, project work and workshop evaluations from Howard Rokofsky's communication training engagements."
-    );
+    // SEO managed centrally by GlobalSeoSync in App.tsx
   }, [isCz]);
 
   useEffect(() => {
