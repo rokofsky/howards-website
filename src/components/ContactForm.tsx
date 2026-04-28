@@ -149,8 +149,11 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
     } catch (err) {
       console.error("Submit error:", err);
       toast({
-        title: "Something went wrong",
-        description: "Please try again or email info@rokofsky.com directly.",
+        title: t("Something went wrong", "Něco se pokazilo"),
+        description: t(
+          "Please try again or email info@rokofsky.com directly.",
+          "Zkuste to prosím znovu nebo napište přímo na info@rokofsky.com."
+        ),
         variant: "destructive",
       });
     } finally {
