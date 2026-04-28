@@ -38,6 +38,24 @@ function LanguageSyncWrapper({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function GlobalTitleSync() {
+  const { pathname } = useLocation();
+  const isCz = pathname.startsWith("/cz/") || pathname === "/cz";
+  useEffect(() => {
+    const path = pathname.replace(/^\/cz/, "") || "/";
+    if (path.includes("/bio")) {
+      document.title = isCz ? "O mně | Rokofsky" : "About Howard | Rokofsky";
+    } else if (path.includes("/references") || path.includes("/reference")) {
+      document.title = isCz ? "Reference | Rokofsky" : "Clients & Projects | Rokofsky";
+    } else if (path.includes("/blog")) {
+      document.title = isCz ? "Blog | Rokofsky" : "Insights & Tips | Rokofsky";
+    } else {
+      document.title = "Rokofsky Communication Training";
+    }
+  }, [pathname, isCz]);
+  return null;
+}
+
 /** Shared page routes — rendered at root and under /cz */
 function PageRoutes() {
   return (
