@@ -5,12 +5,10 @@ import { Button } from "@/components/ui/button";
 import hero9b from "@/assets/hero-9b.png";
 import { openCalendly } from "@/lib/calendly";
 import { useT } from "@/hooks/useT";
-import { useIsCzech } from "@/hooks/useLanguageRouting";
 // SEO managed centrally by GlobalSeoSync in App.tsx
 
 const Bio = () => {
   const t = useT();
-  const isCz = useIsCzech();
 
 
   return (
