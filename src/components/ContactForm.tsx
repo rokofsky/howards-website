@@ -88,6 +88,7 @@ const FormSelectField = ({
 };
 
 const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProps) => {
+  const t = useT();
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
