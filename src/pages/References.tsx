@@ -8,7 +8,6 @@ import { supabase } from "@/integrations/supabase/client";
 import PdfThumbnail from "@/components/PdfThumbnail";
 import { useT } from "@/hooks/useT";
 import { useIsCzech } from "@/hooks/useLanguageRouting";
-import { setPageSeo } from "@/lib/pageSeo";
 
 const testimonials = [
   { name: "Sarah K., VP People, TechCorp", text: "Howard completely transformed how our leadership team communicates. The storytelling framework he taught us is now embedded in our culture." },
