@@ -92,6 +92,7 @@ const App = () => (
         <LanguageSyncWrapper>
           <ScrollToTop />
           <SeoHead />
+          <GlobalTitleSync />
           <Routes>
             {/* English routes (root) */}
             <Route path="/">{PageRoutes()}</Route>
