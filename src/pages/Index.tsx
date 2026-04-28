@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import Layout from "@/components/Layout";
+// NOTE: document.title is now managed centrally by GlobalTitleSync in App.tsx.
+// We only set the meta description here so social previews still match the language.
 import HeroSection from "@/components/HeroSection";
 import SubHeroNav from "@/components/SubHeroNav";
 import ServicesGrid from "@/components/ServicesGrid";
@@ -12,15 +14,22 @@ import { Button } from "@/components/ui/button";
 import { openCalendly } from "@/lib/calendly";
 import { useT } from "@/hooks/useT";
 import { useIsCzech } from "@/hooks/useLanguageRouting";
-import { setPageSeo } from "@/lib/pageSeo";
+function upsertDescription(content: string) {
+  let el = document.head.querySelector<HTMLMetaElement>('meta[name="description"]');
+  if (!el) {
+    el = document.createElement("meta");
+    el.setAttribute("name", "description");
+    document.head.appendChild(el);
+  }
+  el.setAttribute("content", content);
+}
 
 const Index = () => {
   const t = useT();
   const isCz = useIsCzech();
 
   useEffect(() => {
-    setPageSeo(
-      "Rokofsky Communication Training",
+    upsertDescription(
       isCz
         ? "Komunikační trénink v Praze: prezentace, storytelling, vyjednávání, koučink a mediace konfliktů pro týmy a lídry."
         : "Communication training in Prague: presentations, storytelling, negotiation, coaching and conflict mediation for teams and leaders."
