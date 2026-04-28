@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useT } from "@/hooks/useT";
 import { useIsCzech } from "@/hooks/useLanguageRouting";
-import { setPageSeo } from "@/lib/pageSeo";
+// SEO managed centrally by GlobalSeoSync in App.tsx
 
 const NotFound = () => {
   const location = useLocation();
@@ -17,16 +17,6 @@ const NotFound = () => {
     );
   }, [location.pathname]);
 
-  useEffect(() => {
-    setPageSeo(
-      isCz
-        ? "Stránka nenalezena | Rokofsky Communication Training"
-        : "Page Not Found | Rokofsky Communication Training",
-      isCz
-        ? "Tato stránka neexistuje. Vraťte se na hlavní stránku Rokofsky Communication Training."
-        : "This page doesn't exist. Return to the Rokofsky Communication Training homepage."
-    );
-  }, [isCz]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted">
