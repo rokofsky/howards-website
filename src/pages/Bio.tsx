@@ -6,20 +6,12 @@ import hero9b from "@/assets/hero-9b.png";
 import { openCalendly } from "@/lib/calendly";
 import { useT } from "@/hooks/useT";
 import { useIsCzech } from "@/hooks/useLanguageRouting";
-import { setPageSeo } from "@/lib/pageSeo";
+// SEO managed centrally by GlobalSeoSync in App.tsx
 
 const Bio = () => {
   const t = useT();
   const isCz = useIsCzech();
 
-  useEffect(() => {
-    setPageSeo(
-      isCz ? "O mně | Rokofsky" : "About Howard | Rokofsky",
-      isCz
-        ? "Poznejte Howarda Rokofského, trenéra soft skills a storytellingu, který pomáhá týmům komunikovat jasně a s dopadem."
-        : "Meet Howard Rokofsky, a soft skills and storytelling trainer helping teams communicate with clarity, confidence and impact."
-    );
-  }, [isCz]);
 
   return (
     <Layout>

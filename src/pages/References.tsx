@@ -35,9 +35,6 @@ const References = () => {
   const visibleTestimonials = showAllTestimonials ? testimonials : testimonials.slice(0, 3);
   const [previewScans, setPreviewScans] = useState<Record<number, ScanRow>>({});
 
-  useEffect(() => {
-    // SEO managed centrally by GlobalSeoSync in App.tsx
-  }, [isCz]);
 
   useEffect(() => {
     supabase

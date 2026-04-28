@@ -6,7 +6,7 @@ import { pickL } from "@/data/blogPosts";
 import { motion } from "framer-motion";
 import { useT } from "@/hooks/useT";
 import { useLocalizedPath, useIsCzech } from "@/hooks/useLanguageRouting";
-import { setPageSeo } from "@/lib/pageSeo";
+// SEO managed centrally by GlobalSeoSync in App.tsx
 
 const Blog = () => {
   const t = useT();
@@ -15,14 +15,6 @@ const Blog = () => {
   const lang: "en" | "cs" = isCz ? "cs" : "en";
   const [posts, setPosts] = useState(getAllPosts());
 
-  useEffect(() => {
-    setPageSeo(
-      isCz ? "Postřehy a tipy | Rokofsky" : "Insights & Tips | Rokofsky",
-      isCz
-        ? "Články a praktické tipy Howarda Rokofského o komunikaci, storytellingu, vyjednávání, leadershipu a spolupráci."
-        : "Articles and practical tips from Howard Rokofsky on communication, storytelling, negotiation, leadership and collaboration."
-    );
-  }, [isCz]);
 
   useEffect(() => subscribe(() => setPosts(getAllPosts())), []);
   return (
