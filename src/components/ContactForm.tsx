@@ -253,7 +253,9 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
       {showServiceFields && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
-            <label htmlFor="companyName" className="text-sm text-muted-foreground mb-1.5 block font-medium">Company Name</label>
+            <label htmlFor="companyName" className="text-sm text-muted-foreground mb-1.5 block font-medium">
+              {t("Company Name", "Název společnosti")}
+            </label>
             <input
               id="companyName"
               name="companyName"
@@ -265,12 +267,14 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
             />
           </div>
           <div>
-            <label htmlFor="groupSize" className="text-sm text-muted-foreground mb-1.5 block font-medium">Estimated Group Size</label>
+            <label htmlFor="groupSize" className="text-sm text-muted-foreground mb-1.5 block font-medium">
+              {t("Estimated Group Size", "Předpokládaná velikost skupiny")}
+            </label>
             <input
               id="groupSize"
               name="groupSize"
               type="text"
-              placeholder="10-50 humans"
+              placeholder={t("10-50 humans", "10–50 lidí")}
               value={form.groupSize}
               onChange={handleChange}
               className={inputClasses}
@@ -278,11 +282,11 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
           </div>
           <FormSelectField
             id="preferredDates"
-            label="Preferred Dates"
+            label={t("Preferred Dates", "Preferované termíny")}
             name="preferredDates"
             onChange={handleChange}
             options={preferredDatesOptions}
-            placeholder="When do you need this"
+            placeholder={t("When do you need this", "Kdy to potřebujete")}
             value={form.preferredDates}
           />
         </div>
@@ -292,33 +296,35 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <FormSelectField
             id="projectType"
-            label="Project Type"
+            label={t("Project Type", "Typ projektu")}
             name="projectType"
             onChange={handleChange}
             options={projectTypeOptions}
-            placeholder="Select a project type"
+            placeholder={t("Select a project type", "Vyberte typ projektu")}
             value={form.projectType}
           />
           <FormSelectField
             id="timeline"
-            label="Timeline"
+            label={t("Timeline", "Časový plán")}
             name="timeline"
             onChange={handleChange}
             options={timelineOptions}
-            placeholder="When do you need this"
+            placeholder={t("When do you need this", "Kdy to potřebujete")}
             value={form.timeline}
           />
         </div>
       )}
 
       <div>
-        <label htmlFor="message" className="text-sm text-muted-foreground mb-1.5 block font-medium">Message <span className="text-gold">* (required)</span></label>
+        <label htmlFor="message" className="text-sm text-muted-foreground mb-1.5 block font-medium">
+          {t("Message", "Zpráva")} <span className="text-gold">* {t("(required)", "(povinné)")}</span>
+        </label>
         <textarea
           id="message"
           name="message"
           required
           rows={4}
-          placeholder="Tell me where it hurts."
+          placeholder={t("Tell me where it hurts.", "Řekněte mi, kde vás tlačí bota.")}
           value={form.message}
           onChange={handleChange}
           className="w-full px-4 py-3 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow resize-none min-h-[100px]"
@@ -334,11 +340,15 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
           onChange={handleChange}
           className="w-5 h-5 rounded border-input accent-gold"
         />
-        <label htmlFor="copyToMe" className="text-sm text-muted-foreground font-normal">Send me a copy</label>
+        <label htmlFor="copyToMe" className="text-sm text-muted-foreground font-normal">
+          {t("Send me a copy", "Pošlete mi kopii")}
+        </label>
       </div>
 
       <Button variant="glass" size="xl" type="submit" className="w-full" disabled={loading}>
-        {loading ? "Sending..." : "Send Message"}
+        {loading
+          ? t("Sending...", "Odesílám...")
+          : t("Send Message", "Odeslat zprávu")}
       </Button>
     </motion.form>
   );
