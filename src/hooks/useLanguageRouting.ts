@@ -21,7 +21,7 @@ const enSlugs: Record<string, string> = Object.fromEntries(
 /**
  * Convert an English path to its Czech equivalent and vice-versa.
  */
-export function toLanguagePath(path: string, targetLang: "en" | "cs"): string {
+export function toLanguagePath(path: string, targetLang: "en" | "cz"): string {
   // Strip existing /cz prefix
   const cleanPath = path.replace(/^\/cz(\/|$)/, "/");
 
@@ -32,7 +32,7 @@ export function toLanguagePath(path: string, targetLang: "en" | "cs"): string {
     return mapped.join("/") || "/";
   }
 
-  // targetLang === "cs"
+  // targetLang === "cz"
   const segments = cleanPath.split("/");
   const mapped = segments.map((s) => czSlugs[s] || s);
   const czPath = mapped.join("/") || "/";
@@ -56,7 +56,7 @@ export function useLanguageSync() {
   const isCz = useIsCzech();
 
   useEffect(() => {
-    const target = isCz ? "cs" : "en";
+    const target = isCz ? "cz" : "en";
     if (i18n.language !== target) {
       i18n.changeLanguage(target);
     }
