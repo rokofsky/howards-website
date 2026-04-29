@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import i18n from "./i18n";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -54,8 +55,8 @@ const TITLE_MAP: Record<string, Record<Lang, string>> = {
   "/services":    { en: "Services", cs: "Služby" },
   "/faq":         { en: "FAQ", cs: "Časté dotazy" },
   "/pricing":     { en: "Pricing", cs: "Ceník" },
-  "/references":  { en: "References", cs: "Reference" },
-  "/blog":        { en: "Blog", cs: "Blog" },
+  "/references":  { en: "Clients & Projects", cs: "Klienti a projekty" },
+  "/blog":        { en: "Insights & Tips", cs: "Postřehy a tipy" },
   "/contact":     { en: "Contact", cs: "Kontakt" },
 };
 
@@ -139,8 +140,9 @@ function upsertMetaProp(prop: string, content: string) {
 }
 
 function GlobalSeoSync() {
-  const { pathname, hash } = useLocation();
-  const { i18n } = useTranslation();
+  const location = useLocation();
+  const { pathname, hash } = location;
+  useTranslation();
   const lang: Lang =
     pathname.startsWith("/cz/") || pathname === "/cz" || i18n.language?.startsWith("cs")
       ? "cs"
@@ -164,13 +166,13 @@ function GlobalSeoSync() {
       upsertMetaProp("og:description", description);
     };
 
-    apply(hash);
+    apply(window.location.hash || hash);
 
     // Hash-only changes don't trigger react-router re-renders. Listen directly.
     const onHashChange = () => apply(window.location.hash);
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
-  }, [pathname, hash, lang]);
+  }, [pathname, hash, window.location.hash, i18n.language, lang]);
 
   return null;
 }

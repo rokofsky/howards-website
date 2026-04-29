@@ -12,7 +12,7 @@ const LanguageToggle = () => {
   const switchTo = (lang: "en" | "cs") => {
     const newPath = toLanguagePath(location.pathname, lang);
     i18n.changeLanguage(lang);
-    navigate(newPath + location.hash);
+    navigate(newPath + (window.location.hash || location.hash));
   };
 
   return (
