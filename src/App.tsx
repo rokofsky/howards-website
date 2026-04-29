@@ -45,16 +45,18 @@ function GlobalSeoSync() {
       const language = i18n.language?.toLowerCase() || "en";
       const isCz = href.includes("/cz") || language.startsWith("cz") || language.startsWith("cs");
 
-      if (href.includes("#services")) {
+      if (href.includes("#contact-area") || href.includes("#contact")) {
+        window.document.title = `${isCz ? "Kontakt" : "Contact"} | Rokofsky`;
+      } else if (href.includes("#services")) {
         window.document.title = `${isCz ? "Služby" : "Services"} | Rokofsky`;
       } else if (href.includes("#faq")) {
         window.document.title = `${isCz ? "Časté dotazy" : "FAQ"} | Rokofsky`;
       } else if (href.includes("#pricing")) {
         window.document.title = `${isCz ? "Ceník" : "Pricing"} | Rokofsky`;
       } else if (href.includes("/blog")) {
-        window.document.title = `${isCz ? "Postřehy a tipy" : "Insights & Tips"} | Rokofsky`;
+        window.document.title = `Blog | Rokofsky`;
       } else if (href.includes("/references") || href.includes("/reference")) {
-        window.document.title = `${isCz ? "Klienti a projekty" : "Clients & Projects"} | Rokofsky`;
+        window.document.title = `${isCz ? "Reference" : "References"} | Rokofsky`;
       } else {
         window.document.title = "Rokofsky Communication Training";
       }
