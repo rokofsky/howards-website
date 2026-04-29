@@ -23,7 +23,6 @@ import RokofAdmin from "./pages/RokofAdmin";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import GDPR from "./pages/GDPR";
 import TermsOfService from "./pages/TermsOfService";
-import SeoHead from "./components/SeoHead";
 import { useLanguageSync } from "./hooks/useLanguageRouting";
 
 const queryClient = new QueryClient();
@@ -211,7 +210,6 @@ const App = () => (
       <BrowserRouter>
         <LanguageSyncWrapper>
           <ScrollToTop />
-          <SeoHead />
           <GlobalSeoSync />
           <Routes>
             {/* English routes (root) */}
