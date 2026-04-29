@@ -9,7 +9,7 @@ const LanguageToggle = () => {
   const isCz = useIsCzech();
   const isEn = !isCz;
 
-  const switchTo = (lang: "en" | "cs") => {
+  const switchTo = (lang: "en" | "cz") => {
     const newPath = toLanguagePath(location.pathname, lang);
     i18n.changeLanguage(lang);
     navigate(newPath + (window.location.hash || location.hash));
@@ -25,7 +25,7 @@ const LanguageToggle = () => {
       </button>
       <span className="text-foreground/30">|</span>
       <button
-        onClick={() => switchTo("cs")}
+        onClick={() => switchTo("cz")}
         className={`transition-all ${!isEn ? "font-bold text-foreground" : "font-normal text-foreground/50 hover:text-foreground/70"}`}
       >
         CZ
