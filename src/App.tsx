@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import i18n from "./i18n";
@@ -39,140 +38,32 @@ function LanguageSyncWrapper({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-/**
- * GlobalSeoSync — single command center for document.title and meta description.
- * Driven by useLocation (path + hash) and i18n.language so it reacts to both
- * navigation and language toggles. NO page is allowed to set document.title;
- * all titles live in the TITLE_MAP / DESC_MAP below.
- */
-type Lang = "en" | "cs";
-const BRAND = "Rokofsky";
-
-// Path key → { en, cs } title (without brand suffix)
-const TITLE_MAP: Record<string, Record<Lang, string>> = {
-  "/":            { en: "Rokofsky Communication Training", cs: "Rokofsky Communication Training" },
-  "/bio":         { en: "About Howard", cs: "O mně" },
-  "/services":    { en: "Services", cs: "Služby" },
-  "/faq":         { en: "FAQ", cs: "Časté dotazy" },
-  "/pricing":     { en: "Pricing", cs: "Ceník" },
-  "/references":  { en: "Clients & Projects", cs: "Klienti a projekty" },
-  "/blog":        { en: "Insights & Tips", cs: "Postřehy a tipy" },
-  "/contact":     { en: "Contact", cs: "Kontakt" },
-};
-
-const DESC_MAP: Record<string, Record<Lang, string>> = {
-  "/":            {
-    en: "Communication training in Prague: presentations, storytelling, negotiation, coaching and conflict mediation for teams and leaders.",
-    cs: "Komunikační trénink v Praze: prezentace, storytelling, vyjednávání, koučink a mediace konfliktů pro týmy a lídry.",
-  },
-  "/bio":         {
-    en: "Meet Howard Rokofsky — soft skills and storytelling trainer helping teams communicate with clarity and impact.",
-    cs: "Seznamte se s Howardem Rokofským – trenérem soft skills a storytellingu, který pomáhá týmům komunikovat jasně a s dopadem.",
-  },
-  "/services":    {
-    en: "Communication services: presentations, storytelling, negotiation, coaching and conflict mediation.",
-    cs: "Komunikační služby: prezentace, storytelling, vyjednávání, koučink a mediace konfliktů.",
-  },
-  "/faq":         {
-    en: "Answers to frequently asked questions about Howard Rokofsky's communication trainings, workshops and coaching.",
-    cs: "Odpovědi na nejčastější dotazy o komunikačních trénincích, workshopech a koučinku Howarda Rokofského.",
-  },
-  "/pricing":     {
-    en: "Transparent pricing for Howard Rokofsky's communication trainings, workshops and coaching.",
-    cs: "Transparentní ceník komunikačních tréninků, workshopů a koučinku Howarda Rokofského.",
-  },
-  "/references":  {
-    en: "Testimonials and client projects from Howard Rokofsky's communication training engagements.",
-    cs: "Reference a klientské projekty z komunikačních tréninků Howarda Rokofského.",
-  },
-  "/blog":        {
-    en: "Articles and tips on communication, storytelling and leadership from Howard Rokofsky.",
-    cs: "Články a tipy o komunikaci, storytellingu a leadershipu od Howarda Rokofského.",
-  },
-  "/contact":     {
-    en: "Get in touch with Howard Rokofsky — I personally reply by the next day.",
-    cs: "Spojte se s Howardem Rokofským – odpovídám osobně nejpozději druhý den.",
-  },
-};
-
-/** Resolve the canonical key from raw URL pathname + hash. */
-function resolveKey(pathname: string, hash: string): string {
-  // Strip /cz prefix
-  const path = pathname.replace(/^\/cz(\/|$)/, "/") || "/";
-  const h = (hash || "").toLowerCase().replace(/^#/, "");
-
-  // Hash sections on home
-  if (path === "/") {
-    if (h.includes("faq")) return "/faq";
-    if (h.includes("pricing") || h.includes("cenik") || h.includes("ceník")) return "/pricing";
-    if (h.includes("contact") || h.includes("kontakt")) return "/contact";
-    if (h.includes("services") || h.includes("sluzby") || h.includes("služby")) return "/services";
-    return "/";
-  }
-  if (path.startsWith("/bio")) return "/bio";
-  if (path.startsWith("/references") || path.startsWith("/reference")) return "/references";
-  if (path.startsWith("/blog")) return "/blog";
-  if (
-    path.startsWith("/services/") ||
-    path.startsWith("/storytelling-workshops") ||
-    path.startsWith("/keynote-topics")
-  ) return "/services";
-  return "/";
-}
-
-function upsertMetaName(name: string, content: string) {
-  let el = document.head.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
-  if (!el) {
-    el = document.createElement("meta");
-    el.setAttribute("name", name);
-    document.head.appendChild(el);
-  }
-  el.setAttribute("content", content);
-}
-function upsertMetaProp(prop: string, content: string) {
-  let el = document.head.querySelector<HTMLMetaElement>(`meta[property="${prop}"]`);
-  if (!el) {
-    el = document.createElement("meta");
-    el.setAttribute("property", prop);
-    document.head.appendChild(el);
-  }
-  el.setAttribute("content", content);
-}
-
 function GlobalSeoSync() {
-  const location = useLocation();
-  const { pathname, hash } = location;
-  useTranslation();
-  const lang: Lang =
-    pathname.startsWith("/cz/") || pathname === "/cz" || i18n.language?.startsWith("cs")
-      ? "cs"
-      : "en";
-
   useEffect(() => {
-    const apply = (currentHash: string) => {
-      const key = resolveKey(pathname, currentHash);
-      const baseTitle = TITLE_MAP[key]?.[lang] ?? "Rokofsky Communication Training";
-      const description = DESC_MAP[key]?.[lang] ?? "";
+    const applyTitle = () => {
+      const href = window.location.href.toLowerCase();
+      const language = i18n.language?.toLowerCase() || "en";
+      const isCz = href.includes("/cz") || language.startsWith("cz") || language.startsWith("cs");
 
-      // Home gets no brand suffix (already contains it).
-      const fullTitle =
-        key === "/" ? baseTitle : `${baseTitle} | ${BRAND}`;
-
-      document.title = fullTitle;
-      upsertMetaName("description", description);
-      upsertMetaName("twitter:title", fullTitle);
-      upsertMetaName("twitter:description", description);
-      upsertMetaProp("og:title", fullTitle);
-      upsertMetaProp("og:description", description);
+      if (href.includes("#services")) {
+        window.document.title = `${isCz ? "Služby" : "Services"} | Rokofsky`;
+      } else if (href.includes("#faq")) {
+        window.document.title = `${isCz ? "Časté dotazy" : "FAQ"} | Rokofsky`;
+      } else if (href.includes("#pricing")) {
+        window.document.title = `${isCz ? "Ceník" : "Pricing"} | Rokofsky`;
+      } else if (href.includes("/blog")) {
+        window.document.title = `${isCz ? "Postřehy a tipy" : "Insights & Tips"} | Rokofsky`;
+      } else if (href.includes("/references") || href.includes("/reference")) {
+        window.document.title = `${isCz ? "Klienti a projekty" : "Clients & Projects"} | Rokofsky`;
+      } else {
+        window.document.title = "Rokofsky Communication Training";
+      }
     };
 
-    apply(window.location.hash || hash);
-
-    // Hash-only changes don't trigger react-router re-renders. Listen directly.
-    const onHashChange = () => apply(window.location.hash);
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
-  }, [pathname, hash, window.location.hash, i18n.language, lang]);
+    applyTitle();
+    const titleInterval = window.setInterval(applyTitle, 300);
+    return () => window.clearInterval(titleInterval);
+  }, []);
 
   return null;
 }
