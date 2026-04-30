@@ -115,7 +115,7 @@ const ServiceDetail = () => {
     : slug === "meetings-moderation"
     ? t("The Six Hats Method", "Metoda Šesti klobouků")
     : slug === "online-webinars"
-    ? t("Online webinar sessions", "Online webinářové bloky")
+    ? t("Online webinars", "Online webináře")
     : serviceTitle;
 
   return (
