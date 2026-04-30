@@ -83,7 +83,7 @@ const HeroSection = () => {
       </button>
 
       {/* CTA */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
+      <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none px-16 sm:px-20">
         <motion.h1
           className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-4 text-center tracking-tight"
           initial={{ opacity: 0, y: 20 }}
@@ -93,7 +93,7 @@ const HeroSection = () => {
           Howard
         </motion.h1>
         <motion.p
-          className="text-lg md:text-xl text-primary-foreground/80 font-light mb-8 text-center max-w-lg"
+          className="text-base sm:text-lg md:text-xl text-primary-foreground/80 font-light mb-8 text-center max-w-lg"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
