@@ -39,6 +39,8 @@ function LanguageSyncWrapper({ children }: { children: React.ReactNode }) {
 }
 
 function GlobalSeoSync() {
+  const location = useLocation();
+
   useEffect(() => {
     let activeServiceTitle: string | null = null;
     const DEFAULT_TITLE = "Rokofsky Communication Training";
@@ -95,9 +97,6 @@ function GlobalSeoSync() {
       }
     };
 
-    applyTitle();
-    const titleInterval = window.setInterval(applyTitle, 300);
-
     // IntersectionObserver: track which service card is most visible.
     let observer: IntersectionObserver | null = null;
     const visibility = new Map<Element, number>();
@@ -142,12 +141,13 @@ function GlobalSeoSync() {
             applyTitle();
           }
         },
-        { threshold: [0, 0.25, 0.5, 0.75, 1] }
+        { threshold: 0.5 }
       );
       cards.forEach((c) => observer!.observe(c));
     };
 
     // Initial setup + retries while the page hydrates.
+    applyTitle();
     setupObserver();
     const setupTimers = [200, 600, 1500, 3000].map((ms) =>
       window.setTimeout(setupObserver, ms)
@@ -155,17 +155,22 @@ function GlobalSeoSync() {
 
     // Re-evaluate on navigation changes.
     const onPopState = () => setupObserver();
+    const onLanguageChanged = () => {
+      setupObserver();
+      applyTitle();
+    };
     window.addEventListener("popstate", onPopState);
     window.addEventListener("rokofsky:service-active", onServiceActivated);
+    i18n.on("languageChanged", onLanguageChanged);
 
     return () => {
-      window.clearInterval(titleInterval);
       setupTimers.forEach((t) => window.clearTimeout(t));
       window.removeEventListener("popstate", onPopState);
       window.removeEventListener("rokofsky:service-active", onServiceActivated);
+      i18n.off("languageChanged", onLanguageChanged);
       observer?.disconnect();
     };
-  }, []);
+  }, [location.pathname, location.hash]);
 
   return null;
 }
