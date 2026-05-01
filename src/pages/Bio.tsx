@@ -38,7 +38,7 @@ const Bio = () => {
               </p>
               <p className="mb-4">
                 {t(
-                  "As a hobby, I collected baseball cards, memorizing the serial numbers, the photos on the front, the stats on the back… it was those cards that destroyed my vision. I also listened to a lot of talk radio.",
+                  "As a teenage hobby, I collected baseball cards, memorizing the serial numbers, the photos on the front and the tiny stats on the back. I'm sure it was that hobby that destroyed my vision. I also listened to a lot of talk radio.",
                   "Jako puberťák jsem sbíral baseballové kartičky a pamatoval si sériová čísla, fotky na přední straně i statistiky na zadní… Právě tyhle kartičky mi zničily zrak. Také jsem hodně poslouchal rozhlasové talk shows."
                 )}
               </p>
