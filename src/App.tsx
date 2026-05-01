@@ -40,33 +40,117 @@ function LanguageSyncWrapper({ children }: { children: React.ReactNode }) {
 
 function GlobalSeoSync() {
   useEffect(() => {
-    const applyTitle = () => {
+    let activeServiceTitle: string | null = null;
+
+    const computeBaseTitle = () => {
       const href = window.location.href.toLowerCase();
       const language = i18n.language?.toLowerCase() || "en";
       const isCz = href.includes("/cz") || language.startsWith("cz") || language.startsWith("cs");
 
       if (href.includes("#contact-area") || href.includes("#contact")) {
-        window.document.title = `${isCz ? "Kontakt" : "Contact"} | Rokofsky`;
+        return `${isCz ? "Kontakt" : "Contact"} | Rokofsky`;
       } else if (href.includes("#services")) {
-        window.document.title = `${isCz ? "Služby" : "Services"} | Rokofsky`;
+        return `${isCz ? "Služby" : "Services"} | Rokofsky`;
       } else if (href.includes("#faq")) {
-        window.document.title = `${isCz ? "Časté dotazy" : "FAQ"} | Rokofsky`;
+        return `${isCz ? "Časté dotazy" : "FAQ"} | Rokofsky`;
       } else if (href.includes("#pricing")) {
-        window.document.title = `${isCz ? "Ceník" : "Pricing"} | Rokofsky`;
+        return `${isCz ? "Ceník" : "Pricing"} | Rokofsky`;
       } else if (href.includes("/bio")) {
-        window.document.title = `Bio | Rokofsky`;
+        return `Bio | Rokofsky`;
       } else if (href.includes("/blog")) {
-        window.document.title = `Blog | Rokofsky`;
+        return `Blog | Rokofsky`;
       } else if (href.includes("/references") || href.includes("/reference")) {
-        window.document.title = `${isCz ? "Reference" : "References"} | Rokofsky`;
-      } else {
-        window.document.title = "Rokofsky Communication Training";
+        return `${isCz ? "Reference" : "References"} | Rokofsky`;
       }
+      return "Rokofsky Communication Training";
+    };
+
+    const isHomeRoute = () => {
+      const path = window.location.pathname.replace(/\/$/, "");
+      return path === "" || path === "/cz";
+    };
+
+    const applyTitle = () => {
+      // On home route, an active service card overrides the base title.
+      if (isHomeRoute() && activeServiceTitle) {
+        const next = `${activeServiceTitle} | Rokofsky`;
+        if (window.document.title !== next) window.document.title = next;
+        return;
+      }
+      const next = computeBaseTitle();
+      if (window.document.title !== next) window.document.title = next;
     };
 
     applyTitle();
     const titleInterval = window.setInterval(applyTitle, 300);
-    return () => window.clearInterval(titleInterval);
+
+    // IntersectionObserver: track which service card is most visible.
+    let observer: IntersectionObserver | null = null;
+    const visibility = new Map<Element, number>();
+
+    const setupObserver = () => {
+      if (!isHomeRoute()) {
+        observer?.disconnect();
+        observer = null;
+        visibility.clear();
+        if (activeServiceTitle !== null) {
+          activeServiceTitle = null;
+          applyTitle();
+        }
+        return;
+      }
+      const cards = document.querySelectorAll<HTMLElement>("[data-service-card]");
+      if (!cards.length) return;
+
+      observer?.disconnect();
+      visibility.clear();
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            visibility.set(e.target, e.isIntersecting ? e.intersectionRatio : 0);
+          }
+          let bestEl: Element | null = null;
+          let bestRatio = 0;
+          visibility.forEach((ratio, el) => {
+            if (ratio > bestRatio) {
+              bestRatio = ratio;
+              bestEl = el;
+            }
+          });
+          // Require a meaningful portion to be visible before overriding the title.
+          const MIN_RATIO = 0.5;
+          if (bestEl && bestRatio >= MIN_RATIO) {
+            const title = (bestEl as HTMLElement).getAttribute("data-service-title");
+            if (title && title !== activeServiceTitle) {
+              activeServiceTitle = title;
+              applyTitle();
+            }
+          } else if (activeServiceTitle !== null) {
+            activeServiceTitle = null;
+            applyTitle();
+          }
+        },
+        { threshold: [0, 0.25, 0.5, 0.75, 1] }
+      );
+      cards.forEach((c) => observer!.observe(c));
+    };
+
+    // Initial setup + retries while the page hydrates.
+    setupObserver();
+    const setupTimers = [200, 600, 1500, 3000].map((ms) =>
+      window.setTimeout(setupObserver, ms)
+    );
+
+    // Re-evaluate on navigation changes.
+    const onPopState = () => setupObserver();
+    window.addEventListener("popstate", onPopState);
+
+    return () => {
+      window.clearInterval(titleInterval);
+      setupTimers.forEach((t) => window.clearTimeout(t));
+      window.removeEventListener("popstate", onPopState);
+      observer?.disconnect();
+    };
   }, []);
 
   return null;
