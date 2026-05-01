@@ -345,13 +345,13 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     tone: "executive",
   },
   "keynote-speaking": {
-    pageTitle: { en: "Speaking Appearances", cs: "Řečnická vystoupení" },
+    pageTitle: { en: "\n", cs: "\n" },
     lead: { en: "Hire Howard to speak at your special event and they'll be talking about it a year later.", cs: "Najměte Howarda jako řečníka na svou významnou akci a ještě rok poté se o ní bude mluvit." },
     intro: [
       { en: "Are you looking for a unique surprise for your employees or guests?", cs: "Hledáte jedinečné překvapení pro své zaměstnance nebo hosty?" },
       { en: "Now you can hire Howard to speak at your event — his entertaining, educational themes and articulate, interactive speaking style are guaranteed to capture the attention of any audience and motivate them to action. They might even learn something along the way...", cs: "Howarda si můžete najmout jako řečníka na svou akci — jeho zábavná, vzdělávací témata a artikulovaný, interaktivní řečnický styl si zaručeně získají pozornost každého publika a motivují ho k akci. A možná se cestou i něco naučí…" },
       { en: "Charismatic, charming and quick-witted, Howard's engaging personality and stage presence make him a genuine crowd-pleaser.", cs: "Charismatický, šarmantní a pohotový — Howardova přitažlivá osobnost a jevištní přítomnost z něj dělají skutečného oblíbence publika." },
-      { en: "Available in English, Czech, Dutch.", cs: "K dispozici v angličtině, češtině, holandštině." },
+      { en: "\n", cs: "\n" },
     ],
     sections: [
       {
