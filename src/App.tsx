@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import i18n from "./i18n";
@@ -40,9 +40,9 @@ function LanguageSyncWrapper({ children }: { children: React.ReactNode }) {
 
 function GlobalSeoSync() {
   const location = useLocation();
+  const activeServiceTitle = useRef<string | null>(null);
 
   useEffect(() => {
-    let activeServiceTitle: string | null = null;
     const DEFAULT_TITLE = "Rokofsky Communication Training";
 
     const setTitle = (title: string) => {
@@ -80,9 +80,11 @@ function GlobalSeoSync() {
       return path === "" || path === "/cz";
     };
 
+    const isServiceRoute = () => window.location.pathname.includes("/services/");
+
     const applyTitle = () => {
-      if (isHomeRoute() && activeServiceTitle) {
-        setTitle(`${activeServiceTitle} | Rokofsky`);
+      if ((isHomeRoute() || isServiceRoute()) && activeServiceTitle.current) {
+        setTitle(`${activeServiceTitle.current} | Rokofsky`);
         return;
       }
       setTitle(isHomeRoute() ? DEFAULT_TITLE : computeRouteTitle());
@@ -91,8 +93,8 @@ function GlobalSeoSync() {
     const onServiceActivated = (event: Event) => {
       if (!isHomeRoute()) return;
       const title = (event as CustomEvent<string>).detail;
-      if (title && title !== activeServiceTitle) {
-        activeServiceTitle = title;
+      if (title && title !== activeServiceTitle.current) {
+        activeServiceTitle.current = title;
         applyTitle();
       }
     };
@@ -106,8 +108,8 @@ function GlobalSeoSync() {
         observer?.disconnect();
         observer = null;
         visibility.clear();
-        if (activeServiceTitle !== null) {
-          activeServiceTitle = null;
+        if (!isServiceRoute() && activeServiceTitle.current !== null) {
+          activeServiceTitle.current = null;
           applyTitle();
         }
         return;
@@ -132,12 +134,12 @@ function GlobalSeoSync() {
           });
           if (bestEl && bestRatio >= 0.5) {
             const title = (bestEl as HTMLElement).getAttribute("data-service-title");
-            if (title && title !== activeServiceTitle) {
-              activeServiceTitle = title;
+            if (title && title !== activeServiceTitle.current) {
+              activeServiceTitle.current = title;
               applyTitle();
             }
-          } else if (activeServiceTitle !== null) {
-            activeServiceTitle = null;
+          } else if (activeServiceTitle.current !== null) {
+            activeServiceTitle.current = null;
             applyTitle();
           }
         },
