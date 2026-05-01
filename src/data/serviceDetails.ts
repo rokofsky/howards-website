@@ -350,7 +350,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     intro: [
       { en: "\n", cs: "\n" },
       { en: "It has been universally affirmed that personal relationships are the most important factor in any business. Communication is the oil for the machine. With a few techniques you can make a good impression, be a good listener, maybe use some charisma, and motivate people. Understanding the nuances of communication will help you avoid misunderstandings, and fix them when they occur. Optional Leadership module. In this workshop, you will practice how to project yourself more effectively and persuasively by connecting with others, carefully following, guiding, and motivating them. Learn how to craft your message so as to evoke the response you desire. In practically any situation you may find yourself in.", cs: "Howarda si můžete najmout jako řečníka na svou akci — jeho zábavná, vzdělávací témata a artikulovaný, interaktivní řečnický styl si zaručeně získají pozornost každého publika a motivují ho k akci. A možná se cestou i něco naučí…" },
-      { en: "Charismatic, charming and quick-witted, Howard's engaging personality and stage presence make him a genuine crowd-pleaser.", cs: "Charismatický, šarmantní a pohotový — Howardova přitažlivá osobnost a jevištní přítomnost z něj dělají skutečného oblíbence publika." },
+      { en: "\n", cs: "\n" },
       { en: "\n", cs: "\n" },
     ],
     sections: [
