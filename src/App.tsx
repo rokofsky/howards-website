@@ -53,6 +53,8 @@ function GlobalSeoSync() {
         window.document.title = `${isCz ? "Časté dotazy" : "FAQ"} | Rokofsky`;
       } else if (href.includes("#pricing")) {
         window.document.title = `${isCz ? "Ceník" : "Pricing"} | Rokofsky`;
+      } else if (href.includes("/bio")) {
+        window.document.title = `Bio | Rokofsky`;
       } else if (href.includes("/blog")) {
         window.document.title = `Blog | Rokofsky`;
       } else if (href.includes("/references") || href.includes("/reference")) {
