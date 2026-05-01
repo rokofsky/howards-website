@@ -355,11 +355,11 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     ],
     sections: [
       {
-        title: { en: "Workshop Content\n...", cs: "Obsah workshopu\nHlasová hygiena — cvičení pro rezonující hlas\nZákladní komunikační styly jak se přizpůsobit a jak je zvládat\nHara: poznejte sílu mluvení z břicha\nHlasová intonace pro správnou autoritu\nAktivní naslouchání\nBudování vztahu (rapport)\nEmpatie: 180stupňové myšlení\nTake Me, Please! — hra na rozpoznání pracovních stylů\nHraní rolí na kameru, analýza a zpětná vazba\nPřekonávání námitek\nAsertivita — technika 2/4 kroků\nKonstruktivní zpětná vazba: dávat, přijímat a žádat o ni\n4 bariéry komunikace a jak je překonat\nJednání s obtížnými lidmi\nPřerámování — jak ho používat efektivně a eticky\nTechnika SOFTEN pro získávání přátel a ovlivňování lidí\nPřínosy\nMluvit klidně a sebejistě i pod stresem\nMaximalizovat důvěryhodnost a dopad neverbálními dovednostmi\nNaučit se techniky využitelné po celý život\nZvládat obtížné diskuze citlivě a konstruktivně\nAsertivita: prosadit svůj názor a obhájit svůj prostor\nPřekonat námitky a vyjádřit své požadavky i s obtížnými lidmi\nSnadnější zvládání konfliktů\nMotivovat ostatní k akci\nMetody tréninku\n\nZážitkový trénink formou hraní rolí a řešení modelových situací. Ty se nahrávají a trenér je analyzuje s odpovídající zpětnou vazbou.\n\nTrenér se zaměřuje na odhalení a opakování správného chování, předvedení nejužitečnějších rétorických formulací, neverbálních signálů a mechanismů sebekontroly. Zpětná vazba je vítána ve všech workshopech a seminářích. Každý je zdvořile vyzván k účasti a poskytnutí zpětné vazby. Prostor je pro všechny.\n\n\n" },
+        title: { en: "Available workshops\n", cs: "Dostupné workshopy\n" },
         bullets: [
           { en: "\n", cs: "\n" },
           { en: "\n", cs: "\n" },
-          { en: "Conference", cs: "Konferenci" },
+          { en: "Assertiveness\nIntercultural Communication\nEffective Feedback - Giving & Receiving\n\n\n", cs: "Asertivita\nMezikulturní komunikace\nEfektivní zpětná vazba – poskytování a přijímání\n\n\n" },
         ],
       },
       {
