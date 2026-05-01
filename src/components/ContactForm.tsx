@@ -72,7 +72,7 @@ const FormSelectField = ({
           onChange={onChange}
           className={`${inputClasses} appearance-none pr-10 ${value ? "text-foreground" : "text-transparent"}`}
         >
-          <option value="" disabled hidden aria-hidden="true">{" "}</option>
+          <option value="" disabled hidden>{" "}</option>
           {options.map((option) => (
             <option key={option.value} value={option.value} style={{ color: "#000", letterSpacing: "normal", wordSpacing: "normal" }}>
               {option.label}

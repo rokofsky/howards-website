@@ -25,6 +25,9 @@ const ServiceCard = ({
   const hasSubtitle = subtitle && subtitle.trim() !== "" && subtitle !== "\\n";
   const hasHook = hook && hook.trim() !== "" && hook !== "\\n";
   const secondaryText = hasSubtitle ? subtitle : hasHook ? hook : "";
+  const handleServiceClick = () => {
+    window.dispatchEvent(new CustomEvent("rokofsky:service-active", { detail: title }));
+  };
 
   return (
     <motion.div
@@ -37,6 +40,7 @@ const ServiceCard = ({
     >
       <Link
         to={lp(`/services/${slug}`)}
+        onClick={handleServiceClick}
         className="group block relative h-32 sm:h-44 md:h-64 rounded-lg overflow-hidden transition-transform duration-300 md:hover:scale-[1.03] active:brightness-90 active:duration-150 [@media(hover:none)]:hover:scale-100"
       >
         <img

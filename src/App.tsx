@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import i18n from "./i18n";
@@ -39,10 +39,20 @@ function LanguageSyncWrapper({ children }: { children: React.ReactNode }) {
 }
 
 function GlobalSeoSync() {
-  useEffect(() => {
-    let activeServiceTitle: string | null = null;
+  const location = useLocation();
+  const activeServiceTitle = useRef<string | null>(null);
 
-    const computeBaseTitle = () => {
+  useEffect(() => {
+    const DEFAULT_TITLE = "Rokofsky Communication Training";
+
+    const setTitle = (title: string) => {
+      if (window.document.title !== title) {
+        window.document.title = title;
+        console.log("New Title Set:", title);
+      }
+    };
+
+    const computeRouteTitle = () => {
       const href = window.location.href.toLowerCase();
       const language = i18n.language?.toLowerCase() || "en";
       const isCz = href.includes("/cz") || language.startsWith("cz") || language.startsWith("cs");
@@ -62,7 +72,7 @@ function GlobalSeoSync() {
       } else if (href.includes("/references") || href.includes("/reference")) {
         return `${isCz ? "Reference" : "References"} | Rokofsky`;
       }
-      return "Rokofsky Communication Training";
+      return DEFAULT_TITLE;
     };
 
     const isHomeRoute = () => {
@@ -70,19 +80,24 @@ function GlobalSeoSync() {
       return path === "" || path === "/cz";
     };
 
+    const isServiceRoute = () => window.location.pathname.includes("/services/");
+
     const applyTitle = () => {
-      // On home route, an active service card overrides the base title.
-      if (isHomeRoute() && activeServiceTitle) {
-        const next = `${activeServiceTitle} | Rokofsky`;
-        if (window.document.title !== next) window.document.title = next;
+      if ((isHomeRoute() || isServiceRoute()) && activeServiceTitle.current) {
+        setTitle(`${activeServiceTitle.current} | Rokofsky`);
         return;
       }
-      const next = computeBaseTitle();
-      if (window.document.title !== next) window.document.title = next;
+      setTitle(isHomeRoute() ? DEFAULT_TITLE : computeRouteTitle());
     };
 
-    applyTitle();
-    const titleInterval = window.setInterval(applyTitle, 300);
+    const onServiceActivated = (event: Event) => {
+      if (!isHomeRoute()) return;
+      const title = (event as CustomEvent<string>).detail;
+      if (title && title !== activeServiceTitle.current) {
+        activeServiceTitle.current = title;
+        applyTitle();
+      }
+    };
 
     // IntersectionObserver: track which service card is most visible.
     let observer: IntersectionObserver | null = null;
@@ -93,8 +108,8 @@ function GlobalSeoSync() {
         observer?.disconnect();
         observer = null;
         visibility.clear();
-        if (activeServiceTitle !== null) {
-          activeServiceTitle = null;
+        if (!isServiceRoute() && activeServiceTitle.current !== null) {
+          activeServiceTitle.current = null;
           applyTitle();
         }
         return;
@@ -117,25 +132,24 @@ function GlobalSeoSync() {
               bestEl = el;
             }
           });
-          // Require a meaningful portion to be visible before overriding the title.
-          const MIN_RATIO = 0.5;
-          if (bestEl && bestRatio >= MIN_RATIO) {
+          if (bestEl && bestRatio >= 0.5) {
             const title = (bestEl as HTMLElement).getAttribute("data-service-title");
-            if (title && title !== activeServiceTitle) {
-              activeServiceTitle = title;
+            if (title && title !== activeServiceTitle.current) {
+              activeServiceTitle.current = title;
               applyTitle();
             }
-          } else if (activeServiceTitle !== null) {
-            activeServiceTitle = null;
+          } else if (activeServiceTitle.current !== null) {
+            activeServiceTitle.current = null;
             applyTitle();
           }
         },
-        { threshold: [0, 0.25, 0.5, 0.75, 1] }
+        { threshold: 0.5 }
       );
       cards.forEach((c) => observer!.observe(c));
     };
 
     // Initial setup + retries while the page hydrates.
+    applyTitle();
     setupObserver();
     const setupTimers = [200, 600, 1500, 3000].map((ms) =>
       window.setTimeout(setupObserver, ms)
@@ -143,15 +157,22 @@ function GlobalSeoSync() {
 
     // Re-evaluate on navigation changes.
     const onPopState = () => setupObserver();
+    const onLanguageChanged = () => {
+      setupObserver();
+      applyTitle();
+    };
     window.addEventListener("popstate", onPopState);
+    window.addEventListener("rokofsky:service-active", onServiceActivated);
+    i18n.on("languageChanged", onLanguageChanged);
 
     return () => {
-      window.clearInterval(titleInterval);
       setupTimers.forEach((t) => window.clearTimeout(t));
       window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("rokofsky:service-active", onServiceActivated);
+      i18n.off("languageChanged", onLanguageChanged);
       observer?.disconnect();
     };
-  }, []);
+  }, [location.pathname, location.hash]);
 
   return null;
 }
