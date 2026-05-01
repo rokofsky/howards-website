@@ -199,7 +199,7 @@ const ServiceDetail = () => {
                 <MobileTruncatedText
                   paragraphs={
                     detail?.intro && detail.intro.length > 0
-                      ? detail.intro.map((p) => pickL(p, lang))
+                      ? detail.intro.map((p) => pickL(p, lang)).filter((s) => s.trim().length > 0)
                       : [
                           t(
                             "Howard brings his signature blend of storytelling, practical frameworks, and just enough humor to keep everyone awake. This service is tailored to your team's specific needs, challenges, and goals.",
@@ -227,8 +227,8 @@ const ServiceDetail = () => {
               const sectionTitle = pickL(section.title, lang);
               return (
                 <div key={sectionIndex} className={`${slug === "meetings-moderation" && sectionIndex === detail.sections.length - 1 ? "mb-4" : "mb-10"}`}>
-                  {detail?.tone !== "executive" && (
-                    <h3 className="text-2xl font-semibold mb-2">{sectionTitle}</h3>
+                  {detail?.tone !== "executive" && sectionTitle.trim().length > 0 && (
+                    <h3 className="text-2xl font-semibold mb-2 whitespace-pre-line">{sectionTitle}</h3>
                   )}
 
                   {section.paragraphs && (
