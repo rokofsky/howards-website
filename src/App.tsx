@@ -41,8 +41,16 @@ function LanguageSyncWrapper({ children }: { children: React.ReactNode }) {
 function GlobalSeoSync() {
   useEffect(() => {
     let activeServiceTitle: string | null = null;
+    const DEFAULT_TITLE = "Rokofsky Communication Training";
 
-    const computeBaseTitle = () => {
+    const setTitle = (title: string) => {
+      if (window.document.title !== title) {
+        window.document.title = title;
+        console.log("New Title Set:", title);
+      }
+    };
+
+    const computeRouteTitle = () => {
       const href = window.location.href.toLowerCase();
       const language = i18n.language?.toLowerCase() || "en";
       const isCz = href.includes("/cz") || language.startsWith("cz") || language.startsWith("cs");
@@ -62,7 +70,7 @@ function GlobalSeoSync() {
       } else if (href.includes("/references") || href.includes("/reference")) {
         return `${isCz ? "Reference" : "References"} | Rokofsky`;
       }
-      return "Rokofsky Communication Training";
+      return DEFAULT_TITLE;
     };
 
     const isHomeRoute = () => {
@@ -71,14 +79,20 @@ function GlobalSeoSync() {
     };
 
     const applyTitle = () => {
-      // On home route, an active service card overrides the base title.
       if (isHomeRoute() && activeServiceTitle) {
-        const next = `${activeServiceTitle} | Rokofsky`;
-        if (window.document.title !== next) window.document.title = next;
+        setTitle(`${activeServiceTitle} | Rokofsky`);
         return;
       }
-      const next = computeBaseTitle();
-      if (window.document.title !== next) window.document.title = next;
+      setTitle(isHomeRoute() ? DEFAULT_TITLE : computeRouteTitle());
+    };
+
+    const onServiceActivated = (event: Event) => {
+      if (!isHomeRoute()) return;
+      const title = (event as CustomEvent<string>).detail;
+      if (title && title !== activeServiceTitle) {
+        activeServiceTitle = title;
+        applyTitle();
+      }
     };
 
     applyTitle();
@@ -117,9 +131,7 @@ function GlobalSeoSync() {
               bestEl = el;
             }
           });
-          // Require a meaningful portion to be visible before overriding the title.
-          const MIN_RATIO = 0.5;
-          if (bestEl && bestRatio >= MIN_RATIO) {
+          if (bestEl && bestRatio >= 0.5) {
             const title = (bestEl as HTMLElement).getAttribute("data-service-title");
             if (title && title !== activeServiceTitle) {
               activeServiceTitle = title;
@@ -144,11 +156,13 @@ function GlobalSeoSync() {
     // Re-evaluate on navigation changes.
     const onPopState = () => setupObserver();
     window.addEventListener("popstate", onPopState);
+    window.addEventListener("rokofsky:service-active", onServiceActivated);
 
     return () => {
       window.clearInterval(titleInterval);
       setupTimers.forEach((t) => window.clearTimeout(t));
       window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("rokofsky:service-active", onServiceActivated);
       observer?.disconnect();
     };
   }, []);
