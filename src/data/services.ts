@@ -17,5 +17,5 @@ export const services: ServiceItem[] = [
   { id: "6", title: { en: "The Art of Storytelling", cs: "Umění vyprávění příběhů" }, subtitle: { en: "Facts tell, stories sell", cs: "Fakta informují, příběhy prodávají" }, hook: { en: "\n", cs: "\n" }, slug: "storytelling" },
   { id: "7", title: { en: "Individual Coaching Sessions", cs: "Individuální koučovací sezení" }, subtitle: { en: "", cs: "" }, hook: { en: "Explore new angles and discover new options", cs: "Objevte nové úhly pohledu a nové možnosti" }, slug: "communication-skills" },
   { id: "8", title: { en: "Negotiation Representation", cs: "Vyjednávání jako zástupce" }, subtitle: { en: "Need an advantage? Benefit from Howard's edge", cs: "Potřebujete výhodu? Využijte Howardovu zkušenost" }, hook: { en: "\n", cs: "\n" }, slug: "negotiation-skills" },
-  { id: "9", title: { en: "Keynote Speaking", cs: "Školení komunikace pro týmy" }, subtitle: { en: "Events that resonate for your guests", cs: "Akce, které ve vašich hostech rezonují" }, hook: { en: "\n", cs: "\n" }, slug: "keynote-speaking" },
+  { id: "9", title: { en: "Communication Training for Teams", cs: "Školení komunikace pro týmy" }, subtitle: { en: "Events that resonate for your guests", cs: "Akce, které ve vašich hostech rezonují" }, hook: { en: "\n", cs: "\n" }, slug: "keynote-speaking" },
 ];
