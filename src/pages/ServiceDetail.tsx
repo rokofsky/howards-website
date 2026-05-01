@@ -113,7 +113,7 @@ const ServiceDetail = () => {
   const inquiryTitle = slug === "conflict-resolution"
     ? t("Conflict mediation/resolution", "Mediace / řešení konfliktů")
     : slug === "meetings-moderation"
-    ? t("The Six Hats Method", "Metoda Šesti klobouků")
+    ? t("The Six Hats Method for Meetings", "Metoda Šesti klobouků pro porady")
     : slug === "online-webinars"
     ? t("Online webinars", "Online webináře")
     : serviceTitle;
