@@ -26,7 +26,7 @@ const ServiceCard = ({
   const hasHook = hook && hook.trim() !== "" && hook !== "\\n";
   const secondaryText = hasSubtitle ? subtitle : hasHook ? hook : "";
   const handleServiceClick = () => {
-    window.dispatchEvent(new CustomEvent("rokofsky:service-active", { detail: title }));
+    window.dispatchEvent(new CustomEvent("rokofsky:service-active", { detail: { slug } }));
   };
 
   return (

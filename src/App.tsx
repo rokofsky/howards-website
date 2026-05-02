@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { getServiceShortTitle } from "@/lib/serviceTitles";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import i18n from "./i18n";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -40,7 +41,7 @@ function LanguageSyncWrapper({ children }: { children: React.ReactNode }) {
 
 function GlobalSeoSync() {
   const location = useLocation();
-  const activeServiceTitle = useRef<string | null>(null);
+  const activeSlugRef = useRef<string | null>(null);
 
   useEffect(() => {
     const DEFAULT_TITLE = "Rokofsky Communication Training";
@@ -48,14 +49,29 @@ function GlobalSeoSync() {
     const setTitle = (title: string) => {
       if (window.document.title !== title) {
         window.document.title = title;
-        console.log("New Title Set:", title);
       }
+    };
+
+    const isCzNow = () => {
+      const path = window.location.pathname;
+      return path === "/cz" || path.startsWith("/cz/");
+    };
+
+    const isHomeRoute = () => {
+      const path = window.location.pathname.replace(/\/$/, "");
+      return path === "" || path === "/cz";
+    };
+
+    const isServiceRoute = () => window.location.pathname.includes("/services/");
+
+    const getServiceSlugFromPath = (): string | null => {
+      const m = window.location.pathname.match(/\/services\/([^/?#]+)/);
+      return m ? m[1] : null;
     };
 
     const computeRouteTitle = () => {
       const href = window.location.href.toLowerCase();
-      const language = i18n.language?.toLowerCase() || "en";
-      const isCz = href.includes("/cz") || language.startsWith("cz") || language.startsWith("cs");
+      const isCz = isCzNow();
 
       if (href.includes("#contact-area") || href.includes("#contact")) {
         return `${isCz ? "Kontakt" : "Contact"} | Rokofsky`;
@@ -75,102 +91,57 @@ function GlobalSeoSync() {
       return DEFAULT_TITLE;
     };
 
-    const isHomeRoute = () => {
-      const path = window.location.pathname.replace(/\/$/, "");
-      return path === "" || path === "/cz";
-    };
-
-    const isServiceRoute = () => window.location.pathname.includes("/services/");
-
     const applyTitle = () => {
-      if ((isHomeRoute() || isServiceRoute()) && activeServiceTitle.current) {
-        setTitle(`${activeServiceTitle.current} | Rokofsky`);
-        return;
+      const isCz = isCzNow();
+
+      // On a service detail route, derive slug from URL.
+      if (isServiceRoute()) {
+        const slug = getServiceSlugFromPath();
+        const short = slug ? getServiceShortTitle(slug, isCz) : null;
+        if (short) {
+          setTitle(`${short} | Rokofsky`);
+          return;
+        }
       }
+
+      // On home, use clicked-service slug (if any).
+      if (isHomeRoute() && activeSlugRef.current) {
+        const short = getServiceShortTitle(activeSlugRef.current, isCz);
+        if (short) {
+          setTitle(`${short} | Rokofsky`);
+          return;
+        }
+      }
+
       setTitle(isHomeRoute() ? DEFAULT_TITLE : computeRouteTitle());
     };
 
     const onServiceActivated = (event: Event) => {
-      if (!isHomeRoute()) return;
-      const title = (event as CustomEvent<string>).detail;
-      if (title && title !== activeServiceTitle.current) {
-        activeServiceTitle.current = title;
+      const detail = (event as CustomEvent).detail;
+      const slug = typeof detail === "string" ? null : detail?.slug;
+      if (slug && slug !== activeSlugRef.current) {
+        activeSlugRef.current = slug;
         applyTitle();
       }
     };
 
-    // IntersectionObserver: track which service card is most visible.
-    let observer: IntersectionObserver | null = null;
-    const visibility = new Map<Element, number>();
+    // Reset active slug when navigating away from home AND not on a service route.
+    if (!isHomeRoute() && !isServiceRoute()) {
+      activeSlugRef.current = null;
+    }
 
-    const setupObserver = () => {
-      if (!isHomeRoute()) {
-        observer?.disconnect();
-        observer = null;
-        visibility.clear();
-        if (!isServiceRoute() && activeServiceTitle.current !== null) {
-          activeServiceTitle.current = null;
-          applyTitle();
-        }
-        return;
-      }
-      const cards = document.querySelectorAll<HTMLElement>("[data-service-card]");
-      if (!cards.length) return;
-
-      observer?.disconnect();
-      visibility.clear();
-      observer = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries) {
-            visibility.set(e.target, e.isIntersecting ? e.intersectionRatio : 0);
-          }
-          let bestEl: Element | null = null;
-          let bestRatio = 0;
-          visibility.forEach((ratio, el) => {
-            if (ratio > bestRatio) {
-              bestRatio = ratio;
-              bestEl = el;
-            }
-          });
-          if (bestEl && bestRatio >= 0.5) {
-            const title = (bestEl as HTMLElement).getAttribute("data-service-title");
-            if (title && title !== activeServiceTitle.current) {
-              activeServiceTitle.current = title;
-              applyTitle();
-            }
-          } else if (activeServiceTitle.current !== null) {
-            activeServiceTitle.current = null;
-            applyTitle();
-          }
-        },
-        { threshold: 0.5 }
-      );
-      cards.forEach((c) => observer!.observe(c));
-    };
-
-    // Initial setup + retries while the page hydrates.
     applyTitle();
-    setupObserver();
-    const setupTimers = [200, 600, 1500, 3000].map((ms) =>
-      window.setTimeout(setupObserver, ms)
-    );
 
-    // Re-evaluate on navigation changes.
-    const onPopState = () => setupObserver();
-    const onLanguageChanged = () => {
-      setupObserver();
-      applyTitle();
-    };
+    const onPopState = () => applyTitle();
+    const onLanguageChanged = () => applyTitle();
     window.addEventListener("popstate", onPopState);
     window.addEventListener("rokofsky:service-active", onServiceActivated);
     i18n.on("languageChanged", onLanguageChanged);
 
     return () => {
-      setupTimers.forEach((t) => window.clearTimeout(t));
       window.removeEventListener("popstate", onPopState);
       window.removeEventListener("rokofsky:service-active", onServiceActivated);
       i18n.off("languageChanged", onLanguageChanged);
-      observer?.disconnect();
     };
   }, [location.pathname, location.hash]);
 
