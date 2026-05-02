@@ -13,6 +13,21 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Require admin password (matches admin-* function pattern)
+    const adminPassword = Deno.env.get("ADMIN_PASSWORD");
+    let body: { password?: string } = {};
+    try {
+      body = await req.json();
+    } catch {
+      // No body provided
+    }
+    if (!adminPassword || body?.password !== adminPassword) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
