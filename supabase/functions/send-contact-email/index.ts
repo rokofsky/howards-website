@@ -79,7 +79,6 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json();
-    const { type } = body;
 
     // Validate and sanitize inputs
     const name = (body.name ?? "").trim().slice(0, 200);
@@ -93,7 +92,7 @@ Deno.serve(async (req) => {
     const timeline = (body.timeline ?? "").trim().slice(0, 100);
     const copyToMe = body.copyToMe === true;
 
-    if (!type || !name || !email || !message) {
+    if (!name || !email || !message) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -109,62 +108,71 @@ Deno.serve(async (req) => {
     }
 
     // Save to database (service role bypasses RLS)
-    if (type === "notification") {
-      const supabase = createClient(
-        Deno.env.get("SUPABASE_URL")!,
-        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-      );
-      const { error: dbError } = await supabase.from("contact_submissions").insert({
-        name,
-        email,
-        message,
-        service: service || null,
-        company_name: companyName || null,
-        group_size: groupSize || null,
-        preferred_dates: preferredDates || null,
-        project_type: projectType || null,
-        timeline: timeline || null,
-        copy_to_me: copyToMe,
-      });
-      if (dbError) {
-        console.error("DB insert error:", dbError);
-      }
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+    const { error: dbError } = await supabase.from("contact_submissions").insert({
+      name,
+      email,
+      message,
+      service: service || null,
+      company_name: companyName || null,
+      group_size: groupSize || null,
+      preferred_dates: preferredDates || null,
+      project_type: projectType || null,
+      timeline: timeline || null,
+      copy_to_me: copyToMe,
+    });
+    if (dbError) {
+      console.error("DB insert error:", dbError);
     }
 
     const data = { name, email, message, service, companyName, groupSize, preferredDates, projectType, timeline };
 
-    const to = type === "copy" ? email : TO_EMAIL;
-    const subject = type === "copy"
-      ? `Copy of your message to Howard about ${data.service}`
-      : (data.service ? `New inquiry: ${data.service} — ${name}` : `New inquiry from ${name}`);
-    const html = type === "copy" ? copyHtml(data) : notificationHtml(data);
-
-    const emailPayload: Record<string, unknown> = {
-      from: `Howard Rokofsky <${FROM_EMAIL}>`,
-      to: [to],
-      subject,
-      html,
-    };
-    if (type !== "copy") {
-      emailPayload.reply_to = email;
+    async function sendEmail(payload: Record<string, unknown>) {
+      const r = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!r.ok) {
+        const errBody = await r.json().catch(() => ({}));
+        console.error("Resend error:", errBody);
+        return false;
+      }
+      return true;
     }
 
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify(emailPayload),
+    // Always send notification to the hardcoded inbox
+    const notifySubject = data.service
+      ? `New inquiry: ${data.service} — ${name}`
+      : `New inquiry from ${name}`;
+    const notifyOk = await sendEmail({
+      from: `Howard Rokofsky <${FROM_EMAIL}>`,
+      to: [TO_EMAIL],
+      subject: notifySubject,
+      html: notificationHtml(data),
+      reply_to: email,
     });
 
-    const result = await res.json();
-
-    if (!res.ok) {
-      console.error("Resend error:", result);
+    if (!notifyOk) {
       return new Response(JSON.stringify({ error: "Failed to send email" }), {
-        status: res.status,
+        status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // If requested, send copy ONLY to the submitter's own email (never an arbitrary address)
+    if (copyToMe) {
+      await sendEmail({
+        from: `Howard Rokofsky <${FROM_EMAIL}>`,
+        to: [email],
+        subject: `Copy of your message to Howard${data.service ? ` about ${data.service}` : ""}`,
+        html: copyHtml(data),
       });
     }
 

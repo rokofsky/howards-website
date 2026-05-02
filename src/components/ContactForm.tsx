@@ -115,7 +115,6 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
 
     try {
       const emailPayload = {
-        type: "notification",
         name: form.name,
         email: form.email,
         message: form.message,
@@ -134,15 +133,6 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
 
       if (notifError) {
         console.error("Notification email error:", notifError);
-      }
-
-      if (form.copyToMe) {
-        const { error: copyError } = await supabase.functions.invoke("send-contact-email", {
-          body: { ...emailPayload, type: "copy" },
-        });
-        if (copyError) {
-          console.error("Copy email error:", copyError);
-        }
       }
 
       setSubmitted(true);
