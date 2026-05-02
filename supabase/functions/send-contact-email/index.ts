@@ -79,7 +79,6 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json();
-    const { type } = body;
 
     // Validate and sanitize inputs
     const name = (body.name ?? "").trim().slice(0, 200);
