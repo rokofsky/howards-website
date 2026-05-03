@@ -65,11 +65,7 @@ const ServiceDetail = () => {
   }, [slug]);
 
   const handleAddWebinarClick = () => {
-    if (sessionStorage.getItem("admin_auth") === "true") {
-      navigate("/admin/webinars");
-    } else {
-      setShowPasswordPrompt(true);
-    }
+    setShowPasswordPrompt(true);
   };
 
   const handleAddWebinarAuth = async () => {
