@@ -56,7 +56,8 @@ const References = () => {
 
   return (
     <Layout>
-      <section className="section-padding pt-24">
+      <ClientLogosStrip />
+      <section className="section-padding pt-8">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
