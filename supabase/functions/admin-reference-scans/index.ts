@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === "upload") {
-      const { slot_number, file_base64, file_name, title } = body;
+      const { slot_number, file_base64, file_name, title, content_type } = body;
       if (!slot_number || !file_base64) {
         return json({ error: "slot_number and file_base64 required" });
       }
@@ -52,9 +52,20 @@ Deno.serve(async (req) => {
         return json({ error: "Invalid slot_number" });
       }
 
+      const allowedTypes = [
+        "application/pdf",
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+      ];
+      const ct = (content_type || "application/pdf").toLowerCase();
+      if (!allowedTypes.includes(ct)) {
+        return json({ error: "Unsupported file type. Use PDF, JPG, PNG, or WEBP." });
+      }
+
       // Decode base64
       const binary = Uint8Array.from(atob(file_base64), (c) => c.charCodeAt(0));
-      const safeName = (file_name || "scan.pdf").replace(/[^a-zA-Z0-9._-]/g, "_");
+      const safeName = (file_name || "scan").replace(/[^a-zA-Z0-9._-]/g, "_");
       const path = `slot-${slot}/${Date.now()}-${safeName}`;
 
       // Remove existing file for this slot if any
@@ -70,7 +81,7 @@ Deno.serve(async (req) => {
 
       const { error: upErr } = await supabase.storage
         .from(BUCKET)
-        .upload(path, binary, { contentType: "application/pdf", upsert: false });
+        .upload(path, binary, { contentType: ct, upsert: false });
       if (upErr) throw upErr;
 
       const { data, error } = await supabase
