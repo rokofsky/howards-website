@@ -11,13 +11,21 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
-    const fullName = (body.name ?? `${body.first_name ?? ""} ${body.last_name ?? ""}`).trim();
-    const email = (body.email ?? "").trim();
-    const sessionId = body.session_id;
+    const fullName = (body.name ?? `${body.first_name ?? ""} ${body.last_name ?? ""}`).trim().slice(0, 200);
+    const email = (body.email ?? "").trim().slice(0, 255);
+    const sessionId = (body.session_id ?? "").trim();
 
     if (!sessionId || !email || !fullName) {
       return new Response(
         JSON.stringify({ error: "name, email, and session_id are required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE.test(sessionId)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid session_id" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
