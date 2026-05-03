@@ -75,7 +75,6 @@ const ServiceDetail = () => {
         body: { password: adminPassword, action: "verify" },
       });
       if (res.data?.ok) {
-        sessionStorage.setItem("admin_auth", "true");
         navigate("/admin/webinars");
       } else {
         const next = attempts + 1;
