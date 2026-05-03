@@ -83,14 +83,14 @@ const ClientLogosStrip = () => {
           {logos.map((logo) => (
             <div
               key={logo.alt}
-              className={`flex items-center justify-center bg-white rounded ${logo.wide ? "col-span-2" : ""}`}
-              style={{ padding: "10px" }}
+              className={`group flex items-center justify-center bg-white rounded overflow-hidden ${logo.wide ? "col-span-2" : ""}`}
+              style={{ padding: "14px" }}
             >
               <img
                 src={logo.src}
                 alt={logo.alt}
                 loading="lazy"
-                className="object-contain opacity-90 hover:opacity-100 transition-opacity"
+                className="object-contain transition-transform duration-200 ease-out group-hover:scale-110 group-hover:brightness-110"
                 style={{ maxHeight: "35px", maxWidth: "100%" }}
               />
             </div>
