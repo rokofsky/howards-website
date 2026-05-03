@@ -74,7 +74,7 @@ const ClientLogosStrip = () => {
   const t = useT();
 
   return (
-    <section className="bg-white pt-24 pb-8 px-6 md:px-12">
+    <section className="pt-24 pb-8 px-6 md:px-12" style={{ backgroundColor: "#f8f9fa" }}>
       <div className="max-w-6xl mx-auto">
         <h2 className="text-xs uppercase tracking-widest text-neutral-500 text-center mb-6 font-medium">
           {t("Trusted by Clients", "Důvěřují")}
@@ -83,14 +83,14 @@ const ClientLogosStrip = () => {
           {logos.map((logo) => (
             <div
               key={logo.alt}
-              className={`flex items-center justify-center bg-white ${logo.wide ? "col-span-2" : ""}`}
-              style={{ padding: "5px" }}
+              className={`flex items-center justify-center bg-white rounded ${logo.wide ? "col-span-2" : ""}`}
+              style={{ padding: "10px" }}
             >
               <img
                 src={logo.src}
                 alt={logo.alt}
                 loading="lazy"
-                className="object-contain grayscale opacity-70"
+                className="object-contain opacity-90 hover:opacity-100 transition-opacity"
                 style={{ maxHeight: "35px", maxWidth: "100%" }}
               />
             </div>
