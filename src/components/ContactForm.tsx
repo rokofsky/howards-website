@@ -143,6 +143,8 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
         projectType: form.projectType,
         timeline: form.timeline,
         copyToMe: form.copyToMe,
+        website, // honeypot (empty)
+        elapsedMs: elapsed,
       };
 
       const { error: notifError } = await supabase.functions.invoke("send-contact-email", {
