@@ -57,6 +57,7 @@ const Header = () => {
       label: t("My book", "Moje kniha"),
       href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN",
     },
+    { kind: "plain", label: "CV", href: lp("/cv") }, // CV
     { kind: "plain", label: plainLinks[2].label, href: plainLinks[2].href }, // Blog
     { kind: "hash", ...hashLinks[3] }, // Contact
   ];

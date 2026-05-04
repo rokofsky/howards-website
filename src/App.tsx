@@ -9,6 +9,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Bio from "./pages/Bio";
+import CV from "./pages/CV";
 import References from "./pages/References";
 import ReferenceScans from "./pages/ReferenceScans";
 import ReferenceScanViewer from "./pages/ReferenceScanViewer";
@@ -154,6 +155,7 @@ function PageRoutes() {
     <>
       <Route index element={<Index />} />
       <Route path="bio" element={<Bio />} />
+      <Route path="cv" element={<CV />} />
       <Route path="references" element={<References />} />
       <Route path="reference" element={<References />} />
       <Route path="references/scans" element={<ReferenceScans />} />
