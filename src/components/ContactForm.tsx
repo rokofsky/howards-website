@@ -114,8 +114,23 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
+    // Bot defense 1: honeypot — if filled, silently "succeed" without sending
+    if (website.trim() !== "") {
+      setSubmitted(true);
+      return;
+    }
+    // Bot defense 2: time trap — must be open >3s
+    const elapsed = Date.now() - formOpenedAt.current;
+    if (elapsed < 3000) {
+      toast({
+        title: t("Just a moment", "Okamžik prosím"),
+        description: t("Please take a moment to review your message.", "Věnujte prosím chvíli kontrole zprávy."),
+      });
+      return;
+    }
+
+    setLoading(true);
     try {
       const emailPayload = {
         name: form.name,
