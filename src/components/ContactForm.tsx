@@ -102,6 +102,9 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
     preferredDates: "",
     copyToMe: false,
   });
+  const [website, setWebsite] = useState(""); // honeypot
+  const formOpenedAt = useRef<number>(Date.now());
+  useEffect(() => { formOpenedAt.current = Date.now(); }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const target = e.target;
