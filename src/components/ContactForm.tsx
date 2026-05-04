@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -102,6 +102,9 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
     preferredDates: "",
     copyToMe: false,
   });
+  const [website, setWebsite] = useState(""); // honeypot
+  const formOpenedAt = useRef<number>(Date.now());
+  useEffect(() => { formOpenedAt.current = Date.now(); }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const target = e.target;
@@ -111,8 +114,23 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
+    // Bot defense 1: honeypot — if filled, silently "succeed" without sending
+    if (website.trim() !== "") {
+      setSubmitted(true);
+      return;
+    }
+    // Bot defense 2: time trap — must be open >3s
+    const elapsed = Date.now() - formOpenedAt.current;
+    if (elapsed < 3000) {
+      toast({
+        title: t("Just a moment", "Okamžik prosím"),
+        description: t("Please take a moment to review your message.", "Věnujte prosím chvíli kontrole zprávy."),
+      });
+      return;
+    }
+
+    setLoading(true);
     try {
       const emailPayload = {
         name: form.name,
@@ -125,6 +143,8 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
         projectType: form.projectType,
         timeline: form.timeline,
         copyToMe: form.copyToMe,
+        website, // honeypot (empty)
+        elapsedMs: elapsed,
       };
 
       const { error: notifError } = await supabase.functions.invoke("send-contact-email", {
@@ -206,6 +226,20 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
       {serviceName && (
         <input type="hidden" name="service" value={serviceName} />
       )}
+
+      {/* Honeypot — must remain empty. Hidden from users & screen readers. */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}>
+        <label htmlFor="website">Website</label>
+        <input
+          id="website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+        />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>

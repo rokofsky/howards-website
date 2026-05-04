@@ -80,16 +80,42 @@ Deno.serve(async (req) => {
 
     const body = await req.json();
 
+    // Bot defenses (server-side)
+    // 1) Honeypot: if "website" is filled, silently accept and drop.
+    if (typeof body.website === "string" && body.website.trim() !== "") {
+      console.warn("Honeypot triggered, dropping submission");
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    // 2) Submission delay: form must have been open >3s.
+    const elapsedMs = Number(body.elapsedMs);
+    if (!Number.isFinite(elapsedMs) || elapsedMs < 3000) {
+      console.warn("Submission too fast, dropping. elapsedMs=", elapsedMs);
+      return new Response(JSON.stringify({ error: "Please take a moment before submitting." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Sanitize: strip control chars and HTML tags, then trim + cap length.
+    const clean = (v: unknown, max: number) =>
+      String(v ?? "")
+        .replace(/[\u0000-\u001F\u007F]/g, " ") // control chars
+        .replace(/<[^>]*>/g, "") // strip HTML tags
+        .trim()
+        .slice(0, max);
+
     // Validate and sanitize inputs
-    const name = (body.name ?? "").trim().slice(0, 200);
-    const email = (body.email ?? "").trim().slice(0, 255);
-    const message = (body.message ?? "").trim().slice(0, 5000);
-    const service = (body.service ?? "").trim().slice(0, 200);
-    const companyName = (body.companyName ?? "").trim().slice(0, 200);
-    const groupSize = (body.groupSize ?? "").trim().slice(0, 100);
-    const preferredDates = (body.preferredDates ?? "").trim().slice(0, 100);
-    const projectType = (body.projectType ?? "").trim().slice(0, 100);
-    const timeline = (body.timeline ?? "").trim().slice(0, 100);
+    const name = clean(body.name, 200);
+    const email = clean(body.email, 255);
+    const message = clean(body.message, 5000);
+    const service = clean(body.service, 200);
+    const companyName = clean(body.companyName, 200);
+    const groupSize = clean(body.groupSize, 100);
+    const preferredDates = clean(body.preferredDates, 100);
+    const projectType = clean(body.projectType, 100);
+    const timeline = clean(body.timeline, 100);
     const copyToMe = body.copyToMe === true;
 
     if (!name || !email || !message) {
