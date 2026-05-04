@@ -54,7 +54,7 @@ const Header = () => {
     { kind: "plain", label: plainLinks[1].label, href: plainLinks[1].href }, // References
     {
       kind: "external",
-      label: t("My book", "Moje kniha"),
+      label: t("My Book", "Moje kniha"),
       href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN",
     },
     { kind: "plain", label: "CV", href: lp("/cv") }, // CV

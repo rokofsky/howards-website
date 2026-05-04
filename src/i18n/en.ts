@@ -5,7 +5,7 @@ const en = {
     faq: "FAQ",
     pricing: "Pricing",
     references: "References",
-    myBook: "My book",
+    myBook: "My Book",
     blog: "Blog",
     contact: "Contact",
   },
