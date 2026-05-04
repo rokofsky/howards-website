@@ -227,6 +227,20 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
         <input type="hidden" name="service" value={serviceName} />
       )}
 
+      {/* Honeypot — must remain empty. Hidden from users & screen readers. */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}>
+        <label htmlFor="website">Website</label>
+        <input
+          id="website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+        />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
           <label htmlFor="name" className="text-sm text-muted-foreground mb-1.5 block font-medium">
