@@ -111,7 +111,7 @@ const CV = () => {
             <p>
               {t(
                 "English (native), Czech, Dutch (fluent), Italian, German, Spanish (fair), Mandarin (impressive)",
-                "Angličtina (rodilý mluvčí), čeština, nizozemština (plynně), italština, němčina, španělština (středně pokročilá úroveň), mandarínština (působivá úroveň)"
+                "Angličtina (rodilý mluvčí), čeština, nizozemština (plynně), italština, němčina, španělština (středně pokročilá), mandarínština (působivá)"
               )}
             </p>
           </section>
@@ -120,8 +120,8 @@ const CV = () => {
             <h2 className="text-2xl font-bold mb-3 text-foreground">{t("Book Published", "Vydaná kniha")}</h2>
             <p>
               {t(
-                "\"How to GET Great Service – Upgrade From Everyday Customer to VIP\"ISBN 9788090720916. Available at How to GET Great Service",
-                "\"How to GET Great Service – Upgrade From Everyday Customer to VIP\"\nISBN 9788090720916. K dispozici na: How to GET Great Service"
+                "\"How to GET Great Service – Upgrade From Everyday Customer to VIP\" ISBN 9788090720916. Available at How to GET Great Service",
+                "\"How to GET Great Service – Upgrade From Everyday Customer to VIP\" ISBN 9788090720916. K dispozici na: How to GET Great Service"
               )}
               <br />
               <a
