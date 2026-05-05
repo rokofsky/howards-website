@@ -120,10 +120,9 @@ const CV = () => {
             <h2 className="text-2xl font-bold mb-3 text-foreground">{t("Book Published", "Vydaná kniha")}</h2>
             <p>
               {t(
-                "\"How to GET Great Service – Upgrade From Everyday Customer to VIP\" ISBN 9788090720916. Available at How to GET Great Service",
-                "\"How to GET Great Service – Upgrade From Everyday Customer to VIP\" ISBN 9788090720916. K dispozici na: How to GET Great Service"
+                "\"How to GET Great Service – Upgrade From Everyday Customer to VIP\" ISBN 9788090720916. Available at ",
+                "\"How to GET Great Service – Upgrade From Everyday Customer to VIP\" ISBN 9788090720916. K dispozici na: "
               )}
-              <br />
               <a
                 href="https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN"
                 target="_blank"
