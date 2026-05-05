@@ -47,47 +47,47 @@ const CV = () => {
 
             <div className="space-y-6">
               <div>
-                <p><strong>2002 – pres:</strong> <em>Seminar Trainer: Rokofsky Communication Training</em></p>
+                <p className="font-medium"><strong>2002 – pres:</strong> <em>Seminar Trainer: Rokofsky Communication Training</em></p>
                 <p>Programs: Presentations, Negotiations, Assertiveness, Stress/Conflict Mgmt, Persuasion, NLP, Intercultural Communication, Business Writing, Storytelling</p>
               </div>
 
               <div>
-                <p><strong>2020 – pres:</strong> <em>Online Webinars and Storytelling Sessions</em></p>
+                <p className="font-medium"><strong>2020 – pres:</strong> <em>Online Webinars and Storytelling Sessions</em></p>
                 <p>&gt;150 webinars and sessions for ±6-96 participants including Effective Feedback, EQ, NLP, Cultural Intelligence, Storytelling Skills, Six Hats Thinking Meetings, Multiple Intelligences, Zazen Meditation, Image-streaming, Behavioral Economics.</p>
               </div>
 
               <div>
-                <p><strong>2018 – 2022:</strong> <em>English teacher: Trojské Gymnázium, Euroškola, Prague, CZ</em></p>
+                <p className="font-medium"><strong>2018 – 2022:</strong> <em>English teacher: Trojské Gymnázium, Euroškola, Prague, CZ</em></p>
                 <p>After an injury and – due to long-term crutches – the inability to resume corporate training, I took the opportunity to teach children fulltime at a local prep school.</p>
               </div>
 
               <div>
-                <p><strong>2012 – 2014:</strong> <em>Lecturer: Clinical Empathy, Charles University, First Medical Faculty, Prague, CZ</em></p>
+                <p className="font-medium"><strong>2012 – 2014:</strong> <em>Lecturer: Clinical Empathy, Charles University, First Medical Faculty, Prague, CZ</em></p>
                 <p>Training communication skills and 'bedside manner' to medical students.</p>
               </div>
 
               <div>
-                <p><strong>2008 – 2009:</strong> <em>Intensive English course: University of Aerospace and Aeronautics, Nanjing, China</em></p>
+                <p className="font-medium"><strong>2008 – 2009:</strong> <em>Intensive English course: University of Aerospace and Aeronautics, Nanjing, China</em></p>
                 <p>Two 9-week intensive courses for Juneyao pilots. IELTS exam success rate was 93%.</p>
               </div>
 
               <div>
-                <p><strong>2002 &amp; 2006:</strong> <em>Suggestopedic English Instructor: Provincial Gov't Planning Dept., Hainan, China</em></p>
+                <p className="font-medium"><strong>2002 &amp; 2006:</strong> <em>Suggestopedic English Instructor: Provincial Gov't Planning Dept., Hainan, China</em></p>
                 <p>Led three 8-week intensive Suggestopedic English language courses, and assisted Lonny Gold in two others.</p>
               </div>
 
               <div>
-                <p><strong>1999 – 2002:</strong> <em>English Language Instructor Prague, CZ</em></p>
+                <p className="font-medium"><strong>1999 – 2002:</strong> <em>English Language Instructor Prague, CZ</em></p>
                 <p>Specialized English: Legal, Business, Financial, Medical, Technical, exam preparation. Small, international, and state-owned enterprises; references upon request.</p>
               </div>
 
               <div>
-                <p><strong>1996 – 1998:</strong> <em>College English Instructor, Amsterdam Academy for Banking and Finance, NL</em></p>
+                <p className="font-medium"><strong>1996 – 1998:</strong> <em>College English Instructor, Amsterdam Academy for Banking and Finance, NL</em></p>
                 <p>Polytechnic and University students at this institute for finance. Courses: Presentation &amp; Negotiation Skills, English for Banking and Finance.</p>
               </div>
 
               <div>
-                <p><strong>1996 – 1998:</strong> <em>College English Instructor, Hogeschool (Polytechnic) Holland, Amsterdam, NL</em></p>
+                <p className="font-medium"><strong>1996 – 1998:</strong> <em>College English Instructor, Hogeschool (Polytechnic) Holland, Amsterdam, NL</em></p>
                 <p>Substituted whole semesters including Tourism, Literature, Education, Writing, Translation, Government, English for older adults, Rhetoric, Public Speaking.</p>
               </div>
             </div>
