@@ -25,45 +25,43 @@ const CV = () => {
 
         <article className="prose prose-lg max-w-none text-foreground/90 space-y-10">
           <section>
-            <h2 className="text-2xl font-bold mb-3 text-foreground">Summary of Qualifications</h2>
-            <p>
-              Refined interpersonal/teaching skills, inexhaustible flexibility and empathy,
-              experience with a multitude of students and professionals from various
-              industries and markets in diverse countries.
+            <h2 className="text-2xl font-bold mb-3 text-foreground">{t("Summary of Qualifications", "Přehled kvalifikace")}</h2>
+            <p className="text-base">
+              {t("Refined interpersonal/teaching skills, inexhaustible flexibility and empathy, experience with a multitude of students and professionals from various industries and markets in diverse countries.", "Vyspělé mezilidské a pedagogické dovednosti, neomezená flexibilita a empatie, zkušenosti s celou řadou studentů a odborníků z různých odvětví a trhů v nejrůznějších zemích.")}
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold mb-3 text-foreground">Advantages</h2>
+            <h2 className="text-2xl font-bold mb-3 text-foreground">{t("Advantages", "Výhody")}</h2>
             <ul className="list-disc pl-6 space-y-1">
-              <li>Polyglot (CZ-NL-ENG) saves time with multilingual explanations</li>
-              <li>Long-term experience enables immediate answers to most-asked questions</li>
-              <li>Knowledge is assimilated quickly in a comfortable, relaxed, playful environment</li>
+              <li className="text-base">{t("Polyglot (CZ-NL-ENG) saves time with multilingual explanations", "Jazyková vybavenost (ČS-NL-ENG) šetří čas díky vícejazyčným vysvětlením")}</li>
+              <li className="text-base">{t("Long-term experience enables immediate answers to most-asked questions", "Dlouholeté zkušenosti umožňují okamžité odpovědi na nejčastější dotazy")}</li>
+              <li className="text-base">{t("Knowledge is assimilated quickly in a comfortable, relaxed, playful environment", "Znalosti se rychle vstřebávají v příjemném, uvolněném a hravém prostředí")}</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold mb-4 text-foreground">Professional Experience</h2>
+            <h2 className="text-2xl font-bold mb-4 text-foreground">{t("Professional Experience", "Pracovní zkušenosti")}</h2>
 
             <div className="space-y-6">
               <div>
-                <p className="font-medium"><strong>2002 – pres:</strong> <em>Seminar Trainer: Rokofsky Communication Training</em></p>
-                <p>Programs: Presentations, Negotiations, Assertiveness, Stress/Conflict Mgmt, Persuasion, NLP, Intercultural Communication, Business Writing, Storytelling</p>
+                <p className="font-medium text-base"><strong>{t("2002 – pres:", "2002 – dosud: ")}</strong> <em>{t("Seminar Trainer: Rokofsky Communication Training", "Lektor seminářů: Rokofsky Communication Training")}</em></p>
+                <p className="text-base">{t("Programs: Presentations, Negotiations, Assertiveness, Stress/Conflict Mgmt, Persuasion, NLP, Intercultural Communication, Business Writing, Storytelling", "Programy: Prezentace, vyjednávání, asertivita, zvládání stresu a konfliktů, přesvědčování, NLP, mezikulturní komunikace, obchodní korespondence, vyprávění příběhů")}</p>
               </div>
 
               <div>
-                <p className="font-medium"><strong>2020 – pres:</strong> <em>Online Webinars and Storytelling Sessions</em></p>
+                <p className="font-medium"><strong>{t("2020 – pres:", "2020 – dosud: ")}</strong> <em>{t("Online Webinars and Storytelling Sessions", "Online webináře a sezení zaměřená na vyprávění příběhů")}</em></p>
                 <p>&gt;150 webinars and sessions for ±6-96 participants including Effective Feedback, EQ, NLP, Cultural Intelligence, Storytelling Skills, Six Hats Thinking Meetings, Multiple Intelligences, Zazen Meditation, Image-streaming, Behavioral Economics.</p>
               </div>
 
               <div>
-                <p className="font-medium"><strong>2018 – 2022:</strong> <em>English teacher: Trojské Gymnázium, Euroškola, Prague, CZ</em></p>
+                <p className="font-medium"><strong>2018 – 2022:</strong> <em>{t("English teacher: Trojské Gymnázium, Euroškola, Prague, CZ", "Učitel angličtiny: Trojské gymnázium, Euroškola, Praha, CZ")}</em></p>
                 <p>After an injury and – due to long-term crutches – the inability to resume corporate training, I took the opportunity to teach children fulltime at a local prep school.</p>
               </div>
 
               <div>
-                <p className="font-medium"><strong>2012 – 2014:</strong> <em>Lecturer: Clinical Empathy, Charles University, First Medical Faculty, Prague, CZ</em></p>
-                <p>Training communication skills and 'bedside manner' to medical students.</p>
+                <p className="font-medium"><strong>2012 – 2014:</strong> <em>{t("Lecturer: Clinical Empathy, Charles University, First Medical Faculty, Prague, CZ", "Přednášející: „Klinická empatie“, Univerzita Karlova, První lékařská fakulta, Praha, CZ")}</em></p>
+                <p>{t("Training communication skills and 'bedside manner' to medical students.", "Výuka komunikačních dovedností a „přístupu k pacientům“ pro studenty medicíny.")}</p>
               </div>
 
               <div>
