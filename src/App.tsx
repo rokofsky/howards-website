@@ -106,7 +106,7 @@ function GlobalSeoSync() {
         const slug = getServiceSlugFromPath();
         const short = slug ? getServiceShortTitle(slug, isCz) : null;
         if (short) {
-          setTitle(`${short} | Rokofsky`);
+          setTitle(`${short} | ${BRAND}`);
           return;
         }
       }
@@ -115,12 +115,12 @@ function GlobalSeoSync() {
       if (isHomeRoute() && activeSlugRef.current) {
         const short = getServiceShortTitle(activeSlugRef.current, isCz);
         if (short) {
-          setTitle(`${short} | Rokofsky`);
+          setTitle(`${short} | ${BRAND}`);
           return;
         }
       }
 
-      setTitle(isHomeRoute() ? DEFAULT_TITLE : computeRouteTitle());
+      setTitle(isHomeRoute() ? (isCz ? DEFAULT_TITLE_CZ : DEFAULT_TITLE) : computeRouteTitle());
     };
 
     const onServiceActivated = (event: Event) => {
