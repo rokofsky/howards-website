@@ -46,7 +46,7 @@ const CV = () => {
             <div className="space-y-6">
               <div>
                 <p className="font-medium text-base"><strong>{t("2002 – pres:", "2002 – dosud: ")}</strong> <em>{t("Seminar Trainer: Rokofsky Communication Training", "Lektor seminářů: Rokofsky Communication Training")}</em></p>
-                <p className="text-base">{t("Programs: Presentations, Negotiations, Assertiveness, Stress/Conflict Mgmt, Persuasion, NLP, Intercultural Communication, Business Writing, Storytelling", "Programy: Prezentace, vyjednávání, asertivita, zvládání stresu a konfliktů, přesvědčování, NLP, mezikulturní komunikace, obchodní korespondence, vyprávění příběhů")}</p>
+                <p className="text-base">{t("Programs: Presentations, Negotiations, Assertiveness, Stress/Conflict Mgmt, Persuasion, NLP, Intercultural Communication, Business Writing, Storytelling", "Programy: Prezentační dovednosti, Vyjednávací dovednosti, Asertivita, Zvládání stresu a konfliktů, Přesvědčování, NLP, Mezikulturní komunikace, Obchodní korespondence, Vyprávění příběhů")}</p>
               </div>
 
               <div>
