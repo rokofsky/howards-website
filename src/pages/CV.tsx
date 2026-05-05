@@ -25,38 +25,38 @@ const CV = () => {
 
         <article className="prose prose-lg max-w-none text-foreground/90 space-y-10">
           <section>
-            <h2 className="text-2xl font-bold mb-3 text-foreground">{t("Summary of Qualifications", "Přehled kvalifikace")}</h2>
+            <h2 className="text-2xl font-bold mb-3 text-foreground">{t("Summary of Qualifications", "Shrnutí kvalifikace")}</h2>
             <p className="text-base">
-              {t("Refined interpersonal/teaching skills, inexhaustible flexibility and empathy, experience with a multitude of students and professionals from various industries and markets in diverse countries.", "Vyspělé mezilidské a pedagogické dovednosti, neomezená flexibilita a empatie, zkušenosti s celou řadou studentů a odborníků z různých odvětví a trhů v nejrůznějších zemích.")}
+              {t("Refined interpersonal/teaching skills, inexhaustible flexibility and empathy, experience with a multitude of students and professionals from various industries and markets in diverse countries.", "Vytříbené interpersonální a pedagogické dovednosti, nevyčerpatelná flexibilita a empatie, zkušenosti s širokou škálou studentů i profesionálů z různých odvětví a trhů v mnoha zemích.")}
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold mb-3 text-foreground">{t("Advantages", "Výhody")}</h2>
             <ul className="list-disc pl-6 space-y-1">
-              <li className="text-base">{t("Polyglot (CZ-NL-ENG) saves time with multilingual explanations", "Jazyková vybavenost (ČS-NL-ENG) šetří čas díky vícejazyčným vysvětlením")}</li>
-              <li className="text-base">{t("Long-term experience enables immediate answers to most-asked questions", "Dlouholeté zkušenosti umožňují okamžité odpovědi na nejčastější dotazy")}</li>
-              <li className="text-base">{t("Knowledge is assimilated quickly in a comfortable, relaxed, playful environment", "Znalosti se rychle vstřebávají v příjemném, uvolněném a hravém prostředí")}</li>
+              <li className="text-base">{t("Polyglot (CZ-NL-ENG) saves time with multilingual explanations", "Jazyková vybavenost (angličtina – čeština – nizozemština) který šetří čas díky vízejazyčnému vysvětlování")}</li>
+              <li className="text-base">{t("Long-term experience enables immediate answers to most-asked questions", "Dlouholetá praxe umožňuje okamžitě odpovědět na nejčastější otázky")}</li>
+              <li className="text-base">{t("Knowledge is assimilated quickly in a comfortable, relaxed, playful environment", "Znalosti si účastníci osvojují rychle v příjemném, uvolněném a hravém prostředí")}</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold mb-4 text-foreground">{t("Professional Experience", "Pracovní zkušenosti")}</h2>
+            <h2 className="text-2xl font-bold mb-4 text-foreground">{t("Professional Experience", "Profesní zkušenosti")}</h2>
 
             <div className="space-y-6">
               <div>
-                <p className="font-medium text-base"><strong>{t("2002 – pres:", "2002 – dosud: ")}</strong> <em>{t("Seminar Trainer: Rokofsky Communication Training", "Lektor seminářů: Rokofsky Communication Training")}</em></p>
-                <p className="text-base">{t("Programs: Presentations, Negotiations, Assertiveness, Stress/Conflict Mgmt, Persuasion, NLP, Intercultural Communication, Business Writing, Storytelling", "Programy: Prezentační dovednosti, Vyjednávací dovednosti, Asertivita, Zvládání stresu a konfliktů, Přesvědčování, NLP, Mezikulturní komunikace, Obchodní korespondence, Vyprávění příběhů")}</p>
+                <p className="font-normal text-base"><strong>{t("2002 – pres:", "2002 – dosud: ")}</strong> <em>{t("Seminar Trainer: Rokofsky Communication Training", "Lektor seminářů: Rokofsky Communication Training")}</em></p>
+                <p className="text-base">{t("Programs: Presentations, Negotiations, Assertiveness, Stress/Conflict Mgmt, Persuasion, NLP, Intercultural Communication, Business Writing, Storytelling", "Programy: Prezentační dovednosti, Vyjednávací dovednosti, Asertivita, Zvládání stresu a konfliktů, Přesvědčování, NLP, Mezikulturní komunikace, Obchodní korespondence, Storytelling.")}</p>
               </div>
 
               <div>
                 <p className="font-medium"><strong>{t("2020 – pres:", "2020 – dosud: ")}</strong> <em>{t("Online Webinars and Storytelling Sessions", "Online webináře a sezení zaměřená na vyprávění příběhů")}</em></p>
-                <p>&gt;150 webinars and sessions for ±6-96 participants including Effective Feedback, EQ, NLP, Cultural Intelligence, Storytelling Skills, Six Hats Thinking Meetings, Multiple Intelligences, Zazen Meditation, Image-streaming, Behavioral Economics.</p>
+                <p>{t(">150 webinars and sessions for ±6-96 participants including Effective Feedback, EQ, NLP, Cultural Intelligence, Storytelling Skills, Six Hats Thinking Meetings, Multiple Intelligences, Zazen Meditation, Image-streaming, Behavioral Economics.", "Více než 150 webinářů a setkání pro přibližně 6 až 96 účastníků, včetně témat jako efektivní zpětná vazba, emoční inteligence, NLP, kulturní inteligence, storytelling, setkání metodou Šesti klobouků, teorie mnoha inteligencí, meditace zazen, image-streaming a behaviorální ekonomie.")}</p>
               </div>
 
               <div>
                 <p className="font-medium"><strong>2018 – 2022:</strong> <em>{t("English teacher: Trojské Gymnázium, Euroškola, Prague, CZ", "Učitel angličtiny: Trojské gymnázium, Euroškola, Praha, CZ")}</em></p>
-                <p>After an injury and – due to long-term crutches – the inability to resume corporate training, I took the opportunity to teach children fulltime at a local prep school.</p>
+                <p>{t("After an injury and – due to long-term crutches – the inability to resume corporate training, I took the opportunity to teach children fulltime at a local prep school.", "Po úrazu a kvůli dlouhodobému používání berlí, které mi znemožnilo návrat ke korporátním školením, jsem využil příležitosti učit děti na plný úvazek na místní gymnázium.")}</p>
               </div>
 
               <div>
@@ -65,68 +65,72 @@ const CV = () => {
               </div>
 
               <div>
-                <p className="font-medium"><strong>2008 – 2009:</strong> <em>Intensive English course: University of Aerospace and Aeronautics, Nanjing, China</em></p>
-                <p>Two 9-week intensive courses for Juneyao pilots. IELTS exam success rate was 93%.</p>
+                <p className="font-medium"><strong>2008 – 2009:</strong> <em>{t("Intensive English course: University of Aerospace and Aeronautics, Nanjing, China", "Intenzivní kurz angličtiny: University of Aerospace and Aeronautics, Nanking, Čína")}</em></p>
+                <p>{t("Two 9-week intensive courses for Juneyao pilots. IELTS exam success rate was 93%.", "Dva devítitýdenní intenzivní kurzy pro piloty společnosti Juneyao Airlines. Úspěšnost u zkoušky IELTS dosáhla 93%.")}</p>
               </div>
 
               <div>
-                <p className="font-medium"><strong>2002 &amp; 2006:</strong> <em>Suggestopedic English Instructor: Provincial Gov't Planning Dept., Hainan, China</em></p>
-                <p>Led three 8-week intensive Suggestopedic English language courses, and assisted Lonny Gold in two others.</p>
+                <p className="font-medium"><strong>2002 & 2006:</strong> <em>{t("Suggestopedic English Instructor: Provincial Gov't Planning Dept., Hainan, China", "Lektor sugestopedické angličtiny: Provincial Government Planning Department, Hainan, Čína")}</em></p>
+                <p>{t("Led three 8-week intensive Suggestopedic English language courses, and assisted Lonny Gold in two others.", "Vedl tři osmítýdenní intenzivní kurzy sugestopedické výuky angličtiny a ve dvou dalších asistoval Lonnymu Goldovi.")}</p>
               </div>
 
               <div>
-                <p className="font-medium"><strong>1999 – 2002:</strong> <em>English Language Instructor Prague, CZ</em></p>
-                <p>Specialized English: Legal, Business, Financial, Medical, Technical, exam preparation. Small, international, and state-owned enterprises; references upon request.</p>
+                <p className="font-medium"><strong>1999 – 2002:</strong> <em>{t("English Language Instructor Prague, CZ", "Lektor anglického jazyka, Praha, ČR")}</em></p>
+                <p>{t("Specialized English: Legal, Business, Financial, Medical, Technical, exam preparation. Small, international, and state-owned enterprises; references upon request.", "Odborná angličtina: právní, obchodní, finanční, lékařská, technická, příprava na zkoušky.\nMalé, mezinárodní i státní podniky.")}</p>
               </div>
 
               <div>
-                <p className="font-medium"><strong>1996 – 1998:</strong> <em>College English Instructor, Amsterdam Academy for Banking and Finance, NL</em></p>
-                <p>Polytechnic and University students at this institute for finance. Courses: Presentation &amp; Negotiation Skills, English for Banking and Finance.</p>
+                <p className="font-medium"><strong>1996 – 1998:</strong> <em>{t("College English Instructor, Amsterdam Academy for Banking and Finance, NL", "Vysokoškolský lektor angličtiny, Amsterdam Academy for Banking and Finance, Nizozemsko")}</em></p>
+                <p>{t("Polytechnic and University students at this institute for finance. Courses: Presentation & Negotiation Skills, English for Banking and Finance.", "Výuka studentů polytechniky a univerzity na institutu zaměřeném na finance. Kurzy: prezentační a vyjednávací dovednosti, angličtina pro bankovnictví a finance.")}</p>
               </div>
 
               <div>
-                <p className="font-medium"><strong>1996 – 1998:</strong> <em>College English Instructor, Hogeschool (Polytechnic) Holland, Amsterdam, NL</em></p>
-                <p>Substituted whole semesters including Tourism, Literature, Education, Writing, Translation, Government, English for older adults, Rhetoric, Public Speaking.</p>
+                <p className="font-medium"><strong>1996 – 1998:</strong> <em>{t("College English Instructor, Hogeschool (Polytechnic) Holland, Amsterdam, NL", "Vysokoškolský lektor angličtiny, Hogeschool Holland, Amsterdam, Nizozemsko")}</em></p>
+                <p>{t("Substituted whole semesters including Tourism, Literature, Education, Writing, Translation, Government, English for older adults, Rhetoric, Public Speaking.", "Zastupoval celé semestry ve výuce předmětů jako cestovní ruch, literatura, pedagogika, psaní, překlad, veřejná správa, angličtina pro starší dospělé, rétorika a veřejné vystupování.")}</p>
               </div>
             </div>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold mb-3 text-foreground">Education</h2>
+            <h2 className="text-2xl font-bold mb-3 text-foreground">{t("Education", "Vzdělání")}</h2>
             <div className="space-y-4">
               <div>
                 <p><strong>SUNY-Binghamton, Binghamton, New York, USA</strong></p>
-                <p><em>Bachelor's program: Literature/Rhetoric, 1984-1989</em></p>
+                <p><em>{t("Bachelor's program: Literature/Rhetoric, 1984-1989", "BA: literatura / rétorika, 1984-1989")}</em></p>
                 <p>Minor in Philosophy</p>
               </div>
               <div>
-                <p><strong>University of Amsterdam, Amsterdam, NL</strong></p>
-                <p><em>Master's program: English Literature, 1990-1993</em></p>
+                <p><strong>{t("University of Amsterdam, Amsterdam, NL", "University of Amsterdam, Amsterdam, Nizozemsko")}</strong></p>
+                <p><em>{t("Master's program: English Literature, 1990-1993", "Magisterský program: anglická literatura, 1990-1993")}</em></p>
               </div>
             </div>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold mb-3 text-foreground">Languages</h2>
+            <h2 className="text-2xl font-bold mb-3 text-foreground">{t("Languages", "Jazyky")}</h2>
             <p>
-              <strong>English</strong> (native), <strong>Czech</strong>, <strong>Dutch</strong> (fluent),{" "}
-              <em>Italian, German, Spanish</em> (fair), <em>Mandarin</em> (impressive)
+              {t(
+                "English (native), Czech, Dutch (fluent), Italian, German, Spanish (fair), Mandarin (impressive)",
+                "Angličtina (rodilý mluvčí), čeština, nizozemština (plynně), italština, němčina, španělština (středně pokročilá úroveň), mandarínština (působivá úroveň)"
+              )}
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold mb-3 text-foreground">Book Published</h2>
+            <h2 className="text-2xl font-bold mb-3 text-foreground">{t("Book Published", "Vydaná kniha")}</h2>
             <p>
-              <em>"How to GET Great Service – Upgrade From Everyday Customer to VIP"</em>
+              {t(
+                "\"How to GET Great Service – Upgrade From Everyday Customer to VIP\"ISBN 9788090720916. Available at How to GET Great Service",
+                "\"How to GET Great Service – Upgrade From Everyday Customer to VIP\"\nISBN 9788090720916. K dispozici na: How to GET Great Service"
+              )}
               <br />
-              ISBN 9788090720916. Available at{" "}
               <a
                 href="https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary underline hover:no-underline"
               >
-                How to GET Great Service
+                {t("How to GET Great Service", "How to GET Great Service")}
               </a>
             </p>
           </section>
