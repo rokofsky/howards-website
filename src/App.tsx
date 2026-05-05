@@ -45,7 +45,9 @@ function GlobalSeoSync() {
   const activeSlugRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const DEFAULT_TITLE = "Rokofsky Communication Training";
+    const BRAND = "Rokofsky Communication";
+    const DEFAULT_TITLE = `${BRAND} | Training & Coaching`;
+    const DEFAULT_TITLE_CZ = `${BRAND} | Trénink a koučink`;
 
     const setTitle = (title: string) => {
       if (window.document.title !== title) {
@@ -72,24 +74,28 @@ function GlobalSeoSync() {
 
     const computeRouteTitle = () => {
       const href = window.location.href.toLowerCase();
+      const path = window.location.pathname.toLowerCase();
       const isCz = isCzNow();
+      const suffix = ` | ${BRAND}`;
 
       if (href.includes("#contact-area") || href.includes("#contact")) {
-        return `${isCz ? "Kontakt" : "Contact"} | Rokofsky`;
+        return `${isCz ? "Kontakt" : "Contact"}${suffix}`;
       } else if (href.includes("#services")) {
-        return `${isCz ? "Služby" : "Services"} | Rokofsky`;
+        return `${isCz ? "Služby" : "Services"}${suffix}`;
       } else if (href.includes("#faq")) {
-        return `${isCz ? "Časté dotazy" : "FAQ"} | Rokofsky`;
+        return `${isCz ? "Časté dotazy" : "FAQ"}${suffix}`;
       } else if (href.includes("#pricing")) {
-        return `${isCz ? "Ceník" : "Pricing"} | Rokofsky`;
-      } else if (href.includes("/bio")) {
-        return `Bio | Rokofsky`;
-      } else if (href.includes("/blog")) {
-        return `Blog | Rokofsky`;
-      } else if (href.includes("/references") || href.includes("/reference")) {
-        return `${isCz ? "Reference" : "References"} | Rokofsky`;
+        return `${isCz ? "Ceník" : "Pricing"}${suffix}`;
+      } else if (path.includes("/cv")) {
+        return `CV${suffix}`;
+      } else if (path.includes("/bio")) {
+        return `Bio${suffix}`;
+      } else if (path.includes("/blog")) {
+        return `Blog${suffix}`;
+      } else if (path.includes("/references") || path.includes("/reference")) {
+        return `${isCz ? "Reference" : "References"}${suffix}`;
       }
-      return DEFAULT_TITLE;
+      return isCz ? DEFAULT_TITLE_CZ : DEFAULT_TITLE;
     };
 
     const applyTitle = () => {
