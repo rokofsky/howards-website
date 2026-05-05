@@ -97,10 +97,10 @@ const CV = () => {
               <div>
                 <p><strong>SUNY-Binghamton, Binghamton, New York, USA</strong></p>
                 <p><em>{t("Bachelor's program: Literature/Rhetoric, 1984-1989", "BA: literatura / rétorika, 1984-1989")}</em></p>
-                <p>Minor in Philosophy</p>
+                <p>{t("Minor in Philosophy", "Vedlejší obor: filozofie")}</p>
               </div>
               <div>
-                <p><strong>{t("University of Amsterdam, Amsterdam, NL", "University of Amsterdam, Amsterdam, Nizozemsko")}</strong></p>
+                <p><strong>{t("University of Amsterdam, Amsterdam, NL", "Universiteit van Amsterdam (UvA), Amsterdam, Nizozemsko")}</strong></p>
                 <p><em>{t("Master's program: English Literature, 1990-1993", "Magisterský program: anglická literatura, 1990-1993")}</em></p>
               </div>
             </div>
