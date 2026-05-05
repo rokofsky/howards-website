@@ -66,7 +66,14 @@ Deno.serve(async (req) => {
       // Decode base64
       const binary = Uint8Array.from(atob(file_base64), (c) => c.charCodeAt(0));
       const safeName = (file_name || "scan").replace(/[^a-zA-Z0-9._-]/g, "_");
-      const path = `slot-${slot}/${Date.now()}-${safeName}`;
+      const extMatch = safeName.match(/\.[a-zA-Z0-9]+$/);
+      const ext = extMatch ? extMatch[0] : "";
+      // Long, random, unguessable filename (two UUIDs + 16 random hex chars = ~160 bits entropy)
+      const randomBytes = new Uint8Array(16);
+      crypto.getRandomValues(randomBytes);
+      const randomHex = Array.from(randomBytes, (b) => b.toString(16).padStart(2, "0")).join("");
+      const randomName = `${crypto.randomUUID()}-${crypto.randomUUID()}-${randomHex}${ext}`;
+      const path = `slot-${slot}/${randomName}`;
 
       // Remove existing file for this slot if any
       const { data: existing } = await supabase
