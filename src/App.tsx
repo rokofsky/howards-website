@@ -140,13 +140,37 @@ function GlobalSeoSync() {
     applyTitle();
 
     const onPopState = () => applyTitle();
+    const onHashChange = () => applyTitle();
+    const onLocationChange = () => applyTitle();
     const onLanguageChanged = () => applyTitle();
     window.addEventListener("popstate", onPopState);
+    window.addEventListener("hashchange", onHashChange);
+    window.addEventListener("rokofsky:locationchange", onLocationChange);
     window.addEventListener("rokofsky:service-active", onServiceActivated);
     i18n.on("languageChanged", onLanguageChanged);
 
+    // Patch history methods once so replaceState/pushState trigger title updates.
+    const w = window as unknown as { __rokofskyHistoryPatched?: boolean };
+    if (!w.__rokofskyHistoryPatched) {
+      w.__rokofskyHistoryPatched = true;
+      const origPush = window.history.pushState.bind(window.history);
+      const origReplace = window.history.replaceState.bind(window.history);
+      window.history.pushState = (...args: Parameters<typeof origPush>) => {
+        const r = origPush(...args);
+        window.dispatchEvent(new Event("rokofsky:locationchange"));
+        return r;
+      };
+      window.history.replaceState = (...args: Parameters<typeof origReplace>) => {
+        const r = origReplace(...args);
+        window.dispatchEvent(new Event("rokofsky:locationchange"));
+        return r;
+      };
+    }
+
     return () => {
       window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("hashchange", onHashChange);
+      window.removeEventListener("rokofsky:locationchange", onLocationChange);
       window.removeEventListener("rokofsky:service-active", onServiceActivated);
       i18n.off("languageChanged", onLanguageChanged);
     };
