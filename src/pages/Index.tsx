@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 import i18n from "@/i18n";
 import Layout from "@/components/Layout";
 import HeroSection from "@/components/HeroSection";
@@ -20,7 +20,7 @@ const Index = () => {
   const t = useT();
   const isCz = useIsCzech();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const homeTitle = isCz
       ? `${BRAND} | Trénink a koučink`
       : `${BRAND} | Training & Coaching`;
