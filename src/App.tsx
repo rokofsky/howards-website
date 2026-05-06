@@ -183,6 +183,7 @@ function GlobalSeoSync() {
       window.removeEventListener("rokofsky:locationchange", onLocationChange);
       window.removeEventListener("rokofsky:service-active", onServiceActivated);
       i18n.off("languageChanged", onLanguageChanged);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
     };
   }, [location.pathname, location.hash]);
 
