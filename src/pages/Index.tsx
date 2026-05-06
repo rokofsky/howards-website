@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
+import i18n from "@/i18n";
 import Layout from "@/components/Layout";
 import HeroSection from "@/components/HeroSection";
 import SubHeroNav from "@/components/SubHeroNav";
@@ -19,7 +20,7 @@ const Index = () => {
   const t = useT();
   const isCz = useIsCzech();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const homeTitle = isCz
       ? `${BRAND} | Trénink a koučink`
       : `${BRAND} | Training & Coaching`;
@@ -38,6 +39,7 @@ const Index = () => {
     apply();
     window.addEventListener("hashchange", apply);
     window.addEventListener("popstate", apply);
+    i18n.on("languageChanged", apply);
 
     // Header uses history.replaceState for in-page hash navigation, which does
     // NOT fire hashchange. Wrap it so we can react to those updates too.
@@ -60,6 +62,7 @@ const Index = () => {
     return () => {
       window.removeEventListener("hashchange", apply);
       window.removeEventListener("popstate", apply);
+      i18n.off("languageChanged", apply);
       window.history.replaceState = origReplace;
       window.history.pushState = origPush;
       window.clearInterval(interval);
