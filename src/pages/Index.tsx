@@ -37,7 +37,33 @@ const Index = () => {
 
     apply();
     window.addEventListener("hashchange", apply);
-    return () => window.removeEventListener("hashchange", apply);
+    window.addEventListener("popstate", apply);
+
+    // Header uses history.replaceState for in-page hash navigation, which does
+    // NOT fire hashchange. Wrap it so we can react to those updates too.
+    const origReplace = window.history.replaceState;
+    const origPush = window.history.pushState;
+    window.history.replaceState = function (...args) {
+      const r = origReplace.apply(this, args as Parameters<typeof origReplace>);
+      apply();
+      return r;
+    };
+    window.history.pushState = function (...args) {
+      const r = origPush.apply(this, args as Parameters<typeof origPush>);
+      apply();
+      return r;
+    };
+
+    // Also catch smooth-scroll driven hash updates as a safety net.
+    const interval = window.setInterval(apply, 500);
+
+    return () => {
+      window.removeEventListener("hashchange", apply);
+      window.removeEventListener("popstate", apply);
+      window.history.replaceState = origReplace;
+      window.history.pushState = origPush;
+      window.clearInterval(interval);
+    };
   }, [isCz]);
 
   return (
