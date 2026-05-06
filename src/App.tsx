@@ -73,20 +73,11 @@ function GlobalSeoSync() {
     };
 
     const computeRouteTitle = () => {
-      const href = window.location.href.toLowerCase();
       const path = window.location.pathname.toLowerCase();
       const isCz = isCzNow();
       const suffix = ` | ${BRAND}`;
 
-      if (href.includes("#contact-area") || href.includes("#contact")) {
-        return `${isCz ? "Kontakt" : "Contact"}${suffix}`;
-      } else if (href.includes("#services")) {
-        return `${isCz ? "Služby" : "Services"}${suffix}`;
-      } else if (href.includes("#faq")) {
-        return `${isCz ? "Časté dotazy" : "FAQ"}${suffix}`;
-      } else if (href.includes("#pricing")) {
-        return `${isCz ? "Ceník" : "Pricing"}${suffix}`;
-      } else if (path.includes("/cv")) {
+      if (path.includes("/cv")) {
         return `CV${suffix}`;
       } else if (path.includes("/bio")) {
         return `Bio${suffix}`;
