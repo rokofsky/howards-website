@@ -1,5 +1,5 @@
+import { useEffect } from "react";
 import Layout from "@/components/Layout";
-// SEO (document.title and meta description) managed centrally by GlobalSeoSync in App.tsx
 import HeroSection from "@/components/HeroSection";
 import SubHeroNav from "@/components/SubHeroNav";
 import ServicesGrid from "@/components/ServicesGrid";
@@ -11,9 +11,34 @@ import PricingSection from "@/components/PricingSection";
 import { Button } from "@/components/ui/button";
 import { openCalendly } from "@/lib/calendly";
 import { useT } from "@/hooks/useT";
+import { useIsCzech } from "@/hooks/useLanguageRouting";
+
+const BRAND = "Rokofsky Communication";
 
 const Index = () => {
   const t = useT();
+  const isCz = useIsCzech();
+
+  useEffect(() => {
+    const homeTitle = isCz
+      ? `${BRAND} | Trénink a koučink`
+      : `${BRAND} | Training & Coaching`;
+
+    const apply = () => {
+      const hash = window.location.hash.toLowerCase();
+      const suffix = ` | ${BRAND}`;
+      let next = homeTitle;
+      if (hash.includes("contact")) next = `${isCz ? "Kontakt" : "Contact"}${suffix}`;
+      else if (hash.includes("services")) next = `${isCz ? "Služby" : "Services"}${suffix}`;
+      else if (hash.includes("faq")) next = `FAQ${suffix}`;
+      else if (hash.includes("pricing")) next = `${isCz ? "Ceník" : "Pricing"}${suffix}`;
+      if (document.title !== next) document.title = next;
+    };
+
+    apply();
+    window.addEventListener("hashchange", apply);
+    return () => window.removeEventListener("hashchange", apply);
+  }, [isCz]);
 
   return (
     <Layout>
