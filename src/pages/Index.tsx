@@ -80,6 +80,7 @@ const Index = () => {
       window.history.replaceState = origReplace;
       window.history.pushState = origPush;
       window.clearInterval(interval);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
     };
   }, [isCz]);
 
