@@ -31,7 +31,18 @@ const queryClient = new QueryClient();
 
 function ScrollToTop() {
   const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior }); }, [pathname]);
+  const prevRef = useRef<string | null>(null);
+  useEffect(() => {
+    const normalize = (p: string) => p.replace(/^\/cz(\/|$)/, "/").replace(/\/$/, "") || "/";
+    const current = normalize(pathname);
+    if (prevRef.current !== null && prevRef.current === current) {
+      // Language toggle on the same page — preserve scroll position.
+      prevRef.current = current;
+      return;
+    }
+    prevRef.current = current;
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+  }, [pathname]);
   return null;
 }
 
