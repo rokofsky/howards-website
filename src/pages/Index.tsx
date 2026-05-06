@@ -25,7 +25,7 @@ const Index = () => {
       ? `${BRAND} | Trénink a koučink`
       : `${BRAND} | Training & Coaching`;
 
-    const apply = () => {
+    const compute = () => {
       const hash = window.location.hash.toLowerCase();
       const suffix = ` | ${BRAND}`;
       let next = homeTitle;
@@ -33,7 +33,21 @@ const Index = () => {
       else if (hash.includes("services")) next = `${isCz ? "Služby" : "Services"}${suffix}`;
       else if (hash.includes("faq")) next = `FAQ${suffix}`;
       else if (hash.includes("pricing")) next = `${isCz ? "Ceník" : "Pricing"}${suffix}`;
-      if (document.title !== next) document.title = next;
+      return next;
+    };
+
+    let rafId: number | null = null;
+    let pendingTitle: string | null = null;
+    const apply = () => {
+      pendingTitle = compute();
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        if (pendingTitle && document.title !== pendingTitle) {
+          document.title = pendingTitle;
+        }
+        pendingTitle = null;
+      });
     };
 
     apply();
@@ -66,6 +80,7 @@ const Index = () => {
       window.history.replaceState = origReplace;
       window.history.pushState = origPush;
       window.clearInterval(interval);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
     };
   }, [isCz]);
 

@@ -60,10 +60,18 @@ function GlobalSeoSync() {
     const DEFAULT_TITLE = `${BRAND} | Training & Coaching`;
     const DEFAULT_TITLE_CZ = `${BRAND} | Trénink a koučink`;
 
+    let rafId: number | null = null;
+    let pendingTitle: string | null = null;
     const setTitle = (title: string) => {
-      if (window.document.title !== title) {
-        window.document.title = title;
-      }
+      pendingTitle = title;
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        if (pendingTitle && window.document.title !== pendingTitle) {
+          window.document.title = pendingTitle;
+        }
+        pendingTitle = null;
+      });
     };
 
     const isCzNow = () => {
@@ -175,6 +183,7 @@ function GlobalSeoSync() {
       window.removeEventListener("rokofsky:locationchange", onLocationChange);
       window.removeEventListener("rokofsky:service-active", onServiceActivated);
       i18n.off("languageChanged", onLanguageChanged);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
     };
   }, [location.pathname, location.hash]);
 
