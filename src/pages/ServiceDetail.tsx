@@ -342,7 +342,7 @@ const ServiceDetail = () => {
             <ContactForm serviceName={serviceTitle} showServiceFields />
             <div className="text-center mt-8">
               <Button variant="glassPetrol" size="lg" onClick={() => openCalendly(isCz ? "cs" : "en")}>
-                {t("Book a Call", "Rezervovat hovor")}
+                {t("Book a Call", "Zamluvit bezplatný hovor")}
               </Button>
             </div>
           </div>

@@ -26,7 +26,7 @@ const BookingSection = () => {
         </p>
 
         <Button variant="glassPetrol" size="xl" onClick={() => openCalendly(isCz ? "cs" : "en")}>
-          {t("Book a Call", "Rezervovat hovor")}
+          {t("Book a Call", "Zamluvit bezplatný hovor")}
         </Button>
       </motion.div>
     </section>
