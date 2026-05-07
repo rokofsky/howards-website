@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useLocalizedPath } from "@/hooks/useLanguageRouting";
+import { useLocalizedPath, useIsCzech } from "@/hooks/useLanguageRouting";
 import { openCalendly } from "@/lib/calendly";
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
@@ -7,6 +7,7 @@ import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
+import { useT } from "@/hooks/useT";
 
 interface DbWebinar {
   id: string;
@@ -17,6 +18,8 @@ interface DbWebinar {
 
 const WebinarDetail = () => {
   const lp = useLocalizedPath();
+  const isCz = useIsCzech();
+  const t = useT();
   const { slug } = useParams();
   const [webinar, setWebinar] = useState<DbWebinar | null>(null);
   const [loading, setLoading] = useState(true);
@@ -70,8 +73,8 @@ const WebinarDetail = () => {
             </p>
             <ContactForm serviceName={webinar.title} showServiceFields />
             <div className="text-center mt-8">
-              <Button variant="glassPetrol" size="lg" onClick={openCalendly}>
-                Skip the email, book a call now
+              <Button variant="glassPetrol" size="lg" onClick={() => openCalendly(isCz ? "cs" : "en")}>
+                {t("Book a Call", "Rezervovat hovor")}
               </Button>
             </div>
           </div>
