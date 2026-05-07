@@ -11,8 +11,22 @@ const LanguageToggle = () => {
 
   const switchTo = (lang: "en" | "cz") => {
     const newPath = toLanguagePath(location.pathname, lang);
+    // Preserve exact scroll position across the language toggle. Re-navigating
+    // with a hash causes the browser to jump to that section, and even without
+    // a hash some layout shifts can nudge the viewport. Snapshot scrollY now
+    // and restore it on the next frames until the DOM settles.
+    const scrollY = window.scrollY;
+    const restore = () => window.scrollTo({ top: scrollY, left: 0, behavior: "instant" as ScrollBehavior });
+
     i18n.changeLanguage(lang);
-    navigate(newPath + (window.location.hash || location.hash));
+    // Drop the hash on toggle to avoid the browser auto-scrolling to #section.
+    navigate(newPath, { replace: false });
+
+    // Restore across a few frames to beat any post-navigation scroll handlers.
+    requestAnimationFrame(restore);
+    requestAnimationFrame(() => requestAnimationFrame(restore));
+    setTimeout(restore, 0);
+    setTimeout(restore, 50);
   };
 
   return (
