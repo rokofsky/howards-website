@@ -1,7 +1,7 @@
 declare global {
   interface Window {
     Calendly?: {
-      initPopupWidget: (opts: { url: string }) => void;
+      initPopupWidget: (opts: { url: string; locale?: string }) => void;
     };
   }
 }
@@ -16,6 +16,9 @@ export function getCalendlyUrl(locale?: "cs" | "en") {
 
 export function openCalendly(locale?: "cs" | "en") {
   if (window.Calendly) {
-    window.Calendly.initPopupWidget({ url: getCalendlyUrl(locale) });
+    window.Calendly.initPopupWidget({
+      url: getCalendlyUrl(locale),
+      locale: locale,
+    });
   }
 }
