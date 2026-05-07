@@ -146,8 +146,8 @@ const Bio = () => {
               </p>
 
               <div className="clear-both text-center mt-12">
-                <Button variant="glassPetrol" size="lg" onClick={() => openCalendly(isCz ? "cs" : "en")}>
-                  {t("Book a Call", "Zamluvit bezplatný hovor")}
+                <Button variant="glassPetrol" size="lg" onClick={openCalendly}>
+                  {t("Book a free call with Howard", "Zamluvit bezplatný hovor s Howardem")}
                 </Button>
               </div>
             </div>

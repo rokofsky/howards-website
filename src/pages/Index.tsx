@@ -110,8 +110,8 @@ const Index = () => {
         </div>
         <ContactForm />
         <div className="text-center mt-8">
-          <Button variant="glassPetrol" size="lg" onClick={() => openCalendly(isCz ? "cs" : "en")}>
-            {t("Book a Call", "Zamluvit bezplatný hovor")}
+          <Button variant="glassPetrol" size="lg" onClick={openCalendly}>
+            {t("Skip the email, book a call now", "Zapomeňte na e-mail – rovnou si domluvte hovor")}
           </Button>
         </div>
       </section>

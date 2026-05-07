@@ -2,11 +2,9 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { openCalendly } from "@/lib/calendly";
 import { useT } from "@/hooks/useT";
-import { useIsCzech } from "@/hooks/useLanguageRouting";
 
 const BookingSection = () => {
   const t = useT();
-  const isCz = useIsCzech();
   return (
     <section id="contact-area" className="section-padding bg-primary text-primary-foreground">
       <motion.div
@@ -25,8 +23,8 @@ const BookingSection = () => {
           )}
         </p>
 
-        <Button variant="glassPetrol" size="xl" onClick={() => openCalendly(isCz ? "cs" : "en")}>
-          {t("Book a Call", "Zamluvit bezplatný hovor")}
+        <Button variant="glassPetrol" size="xl" onClick={openCalendly}>
+          {t("Book a free call with Howard", "Zamluvit bezplatný hovor s Howardem")}
         </Button>
       </motion.div>
     </section>
