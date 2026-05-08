@@ -1,14 +1,10 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useLocalizedPath } from "@/hooks/useLanguageRouting";
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import PdfThumbnail from "@/components/PdfThumbnail";
 import ClientLogosStrip from "@/components/ClientLogosStrip";
+import EvaluationsGallery from "@/components/EvaluationsGallery";
 import { useT } from "@/hooks/useT";
-import { useIsCzech } from "@/hooks/useLanguageRouting";
 
 const testimonials = [
   { name: "Sarah K., VP People, TechCorp", text: "Howard completely transformed how our leadership team communicates. The storytelling framework he taught us is now embedded in our culture." },
@@ -18,41 +14,10 @@ const testimonials = [
   { name: "Thomas B., Managing Director, Kiefel GmbH", text: "Howard's negotiation workshop saved us more in one quarter than we spent on the entire training program. No exaggeration." },
   { name: "Lisa M., L&D Manager, Allianz", text: "The brainstorming session Howard facilitated produced more actionable ideas in three hours than our team had generated in six months." },
 ];
-
-const BUCKET = "reference-scans";
-
-interface ScanRow {
-  slot_number: number;
-  pdf_path: string;
-  title: string | null;
-  thumbnail_path: string | null;
-}
-
 const References = () => {
   const t = useT();
-  const lp = useLocalizedPath();
-  const isCz = useIsCzech();
   const [showAllTestimonials, setShowAllTestimonials] = useState(false);
   const visibleTestimonials = showAllTestimonials ? testimonials : testimonials.slice(0, 3);
-  const [previewScans, setPreviewScans] = useState<Record<number, ScanRow>>({});
-
-
-  useEffect(() => {
-    supabase
-      .from("reference_scans")
-      .select("slot_number,pdf_path,title,thumbnail_path")
-      .lte("slot_number", 6)
-      .order("slot_number", { ascending: true })
-      .then(({ data }) => {
-        if (!data) return;
-        const map: Record<number, ScanRow> = {};
-        for (const r of data as ScanRow[]) map[r.slot_number] = r;
-        setPreviewScans(map);
-      });
-  }, []);
-
-  const publicUrl = (path: string) =>
-    supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
 
   return (
     <Layout>
@@ -111,39 +76,7 @@ const References = () => {
                 "Naskenované hodnotící formuláře z minulých workshopů. Kliknutím zobrazíte v plné velikosti."
               )}
             </p>
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-              {[1, 2, 3, 4, 5, 6].map((i) => {
-                const scan = previewScans[i];
-                const url = scan ? publicUrl(scan.pdf_path) : undefined;
-                if (url) {
-                  return (
-                    <Link
-                      key={i}
-                      to={lp(`/references/scans/${i}`)}
-                      className="block rounded-lg transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl"
-                    >
-                      <PdfThumbnail url={url} title={scan?.title ?? `Scan #${i}`} thumbnailUrl={scan?.thumbnail_path ? publicUrl(scan.thumbnail_path) : undefined} />
-                    </Link>
-                  );
-                }
-                return (
-                  <div key={i} className="aspect-[3/4] glass rounded-lg flex flex-col items-center justify-center p-3">
-                    <span className="text-sm text-muted-foreground font-light">Scan #{i}</span>
-                    <span className="text-[10px] text-muted-foreground/60 mt-1 uppercase tracking-wider">Placeholder</span>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="text-center">
-              <Button variant="glass" size="lg" asChild>
-                <a href={lp("/references/scans")}>
-                  {t(
-                    "More Evaluation-forms from participants",
-                    "Více hodnotících formulářů od účastníků"
-                  )}
-                </a>
-              </Button>
-            </div>
+            <EvaluationsGallery />
           </div>
         </div>
       </section>
