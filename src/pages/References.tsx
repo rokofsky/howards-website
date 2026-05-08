@@ -26,29 +26,8 @@ interface ScanRow {
 
 const References = () => {
   const t = useT();
-  const lp = useLocalizedPath();
-  const isCz = useIsCzech();
   const [showAllTestimonials, setShowAllTestimonials] = useState(false);
   const visibleTestimonials = showAllTestimonials ? testimonials : testimonials.slice(0, 3);
-  const [previewScans, setPreviewScans] = useState<Record<number, ScanRow>>({});
-
-
-  useEffect(() => {
-    supabase
-      .from("reference_scans")
-      .select("slot_number,pdf_path,title,thumbnail_path")
-      .lte("slot_number", 6)
-      .order("slot_number", { ascending: true })
-      .then(({ data }) => {
-        if (!data) return;
-        const map: Record<number, ScanRow> = {};
-        for (const r of data as ScanRow[]) map[r.slot_number] = r;
-        setPreviewScans(map);
-      });
-  }, []);
-
-  const publicUrl = (path: string) =>
-    supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
 
   return (
     <Layout>
