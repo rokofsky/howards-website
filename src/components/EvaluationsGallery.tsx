@@ -13,6 +13,10 @@ type Item = { src: string; orientation: "portrait" | "landscape"; key: string };
 
 const pad = (n: number) => String(n).padStart(3, "0");
 
+// Cache-buster: bump when files are replaced on disk so browsers re-fetch
+// the rotated/updated versions instead of serving stale cached images.
+const ASSET_VERSION = "v2";
+
 /**
  * Build a deterministic, interleaved list of candidate filenames.
  * Landscape images are sprinkled in every ~5th slot so the dense grid
@@ -65,7 +69,7 @@ const EvaluationsGallery = () => {
   return (
     <div className="mb-12">
       <div
-        className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8"
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8"
         style={{ gridAutoFlow: "dense" }}
       >
         <AnimatePresence>
@@ -85,7 +89,7 @@ const EvaluationsGallery = () => {
                 }`}
               >
                 <img
-                  src={item.src}
+                  src={`${item.src}?${ASSET_VERSION}`}
                   alt={t("Evaluation form scan", "Sken hodnotícího formuláře")}
                   loading="lazy"
                   onError={() =>
@@ -120,7 +124,7 @@ const EvaluationsGallery = () => {
         <DialogContent className="max-w-[95vw] md:max-w-5xl p-2 bg-background/95 border-none">
           {lightbox && (
             <img
-              src={lightbox.src}
+              src={`${lightbox.src}?${ASSET_VERSION}`}
               alt={t("Evaluation form scan", "Sken hodnotícího formuláře")}
               className="w-full h-auto max-h-[88vh] object-contain rounded"
             />
