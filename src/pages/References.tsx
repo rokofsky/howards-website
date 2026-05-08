@@ -14,16 +14,6 @@ const testimonials = [
   { name: "Thomas B., Managing Director, Kiefel GmbH", text: "Howard's negotiation workshop saved us more in one quarter than we spent on the entire training program. No exaggeration." },
   { name: "Lisa M., L&D Manager, Allianz", text: "The brainstorming session Howard facilitated produced more actionable ideas in three hours than our team had generated in six months." },
 ];
-
-const BUCKET = "reference-scans";
-
-interface ScanRow {
-  slot_number: number;
-  pdf_path: string;
-  title: string | null;
-  thumbnail_path: string | null;
-}
-
 const References = () => {
   const t = useT();
   const [showAllTestimonials, setShowAllTestimonials] = useState(false);
