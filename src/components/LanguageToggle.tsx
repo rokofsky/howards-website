@@ -16,11 +16,22 @@ const LanguageToggle = () => {
     // a hash some layout shifts can nudge the viewport. Snapshot scrollY now
     // and restore it on the next frames until the DOM settles.
     const scrollY = window.scrollY;
+    const hash = window.location.hash;
     const restore = () => window.scrollTo({ top: scrollY, left: 0, behavior: "instant" as ScrollBehavior });
 
     i18n.changeLanguage(lang);
-    // Drop the hash on toggle to avoid the browser auto-scrolling to #section.
+    // Navigate without the hash to avoid the browser auto-scrolling to #section.
     navigate(newPath, { replace: false });
+
+    // Re-attach the hash silently via replaceState so title logic (which keys
+    // off location.hash) stays in sync with the active section. replaceState
+    // does not trigger a scroll, but does fire our patched locationchange.
+    if (hash) {
+      requestAnimationFrame(() => {
+        window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search + hash);
+        restore();
+      });
+    }
 
     // Restore across a few frames to beat any post-navigation scroll handlers.
     requestAnimationFrame(restore);
