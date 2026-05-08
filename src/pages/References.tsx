@@ -86,39 +86,7 @@ const References = () => {
                 "Naskenované hodnotící formuláře z minulých workshopů. Kliknutím zobrazíte v plné velikosti."
               )}
             </p>
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-              {[1, 2, 3, 4, 5, 6].map((i) => {
-                const scan = previewScans[i];
-                const url = scan ? publicUrl(scan.pdf_path) : undefined;
-                if (url) {
-                  return (
-                    <Link
-                      key={i}
-                      to={lp(`/references/scans/${i}`)}
-                      className="block rounded-lg transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl"
-                    >
-                      <PdfThumbnail url={url} title={scan?.title ?? `Scan #${i}`} thumbnailUrl={scan?.thumbnail_path ? publicUrl(scan.thumbnail_path) : undefined} />
-                    </Link>
-                  );
-                }
-                return (
-                  <div key={i} className="aspect-[3/4] glass rounded-lg flex flex-col items-center justify-center p-3">
-                    <span className="text-sm text-muted-foreground font-light">Scan #{i}</span>
-                    <span className="text-[10px] text-muted-foreground/60 mt-1 uppercase tracking-wider">Placeholder</span>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="text-center">
-              <Button variant="glass" size="lg" asChild>
-                <a href={lp("/references/scans")}>
-                  {t(
-                    "More Evaluation-forms from participants",
-                    "Více hodnotících formulářů od účastníků"
-                  )}
-                </a>
-              </Button>
-            </div>
+            <EvaluationsGallery />
           </div>
         </div>
       </section>
