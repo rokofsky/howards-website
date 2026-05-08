@@ -1,14 +1,10 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useLocalizedPath } from "@/hooks/useLanguageRouting";
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import PdfThumbnail from "@/components/PdfThumbnail";
 import ClientLogosStrip from "@/components/ClientLogosStrip";
+import EvaluationsGallery from "@/components/EvaluationsGallery";
 import { useT } from "@/hooks/useT";
-import { useIsCzech } from "@/hooks/useLanguageRouting";
 
 const testimonials = [
   { name: "Sarah K., VP People, TechCorp", text: "Howard completely transformed how our leadership team communicates. The storytelling framework he taught us is now embedded in our culture." },
