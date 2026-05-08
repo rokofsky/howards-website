@@ -89,7 +89,7 @@ const EvaluationsGallery = () => {
                 }`}
               >
                 <img
-                  src={item.src}
+                  src={`${item.src}?${ASSET_VERSION}`}
                   alt={t("Evaluation form scan", "Sken hodnotícího formuláře")}
                   loading="lazy"
                   onError={() =>
@@ -124,7 +124,7 @@ const EvaluationsGallery = () => {
         <DialogContent className="max-w-[95vw] md:max-w-5xl p-2 bg-background/95 border-none">
           {lightbox && (
             <img
-              src={lightbox.src}
+              src={`${lightbox.src}?${ASSET_VERSION}`}
               alt={t("Evaluation form scan", "Sken hodnotícího formuláře")}
               className="w-full h-auto max-h-[88vh] object-contain rounded"
             />
