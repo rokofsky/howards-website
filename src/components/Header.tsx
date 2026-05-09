@@ -210,7 +210,7 @@ const Header = () => {
         <div className="hidden md:block">
           <Button variant="cta" size="lg" asChild>
             <Link to={lp("/storytelling-workshops")}>
-              {t("Storytelling Sessions", "Rozprávění příběhů")}
+              {t("Free Storytelling Sessions!", "Bezplatná sezení Storytellingu!")}
             </Link>
           </Button>
         </div>
@@ -302,7 +302,7 @@ const Header = () => {
                   to={lp("/storytelling-workshops")}
                   onClick={() => setMobileOpen(false)}
                 >
-                  {t("Storytelling Sessions", "Rozprávění příběhů")}
+                  {t("Free Storytelling Sessions!", "Bezplatná sezení Storytellingu!")}
                 </Link>
               </Button>
             </nav>

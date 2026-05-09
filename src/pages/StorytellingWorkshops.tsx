@@ -93,7 +93,7 @@ const StorytellingWorkshops = () => {
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              {t("Storytelling Sessions", "Rozprávění příběhů")}
+              {t("Free Storytelling Sessions!", "Bezplatná sezení Storytellingu!")}
             </h1>
             <p className="mb-10 max-w-2xl leading-relaxed font-semibold text-secondary-foreground">
               {t(
@@ -125,7 +125,7 @@ const StorytellingWorkshops = () => {
                   >
                     <div className="p-6 flex-1 flex flex-col">
                       <h3 className="text-lg font-semibold mb-2">
-                        {session.title || t("Storytelling Session", "Rozprávění příběhů")}
+                        {session.title || t("Storytelling Session", "Sezení Storytellingu")}
                       </h3>
                       <p className="text-sm text-gold font-medium mb-3">
                         {format(new Date(session.session_date), "EEEE, MMMM d, yyyy")}
@@ -179,7 +179,7 @@ const StorytellingWorkshops = () => {
               <DialogHeader>
                 <DialogTitle className="text-xl">Reserve your spot</DialogTitle>
                 <DialogDescription>
-                  {selectedSession?.title || "Storytelling Session"} —{" "}
+                  {selectedSession?.title || t("Storytelling Session", "Sezení Storytellingu")} —{" "}
                   {selectedSession &&
                     format(new Date(selectedSession.session_date), "d MMMM, yyyy 'at' h:mm a 'CET'")}
                 </DialogDescription>
