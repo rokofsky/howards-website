@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import ClientLogosStrip from "@/components/ClientLogosStrip";
-import EvaluationsGallery from "@/components/EvaluationsGallery";
+import EvaluationsGallery, { ASSET_VERSION } from "@/components/EvaluationsGallery";
 import { useT } from "@/hooks/useT";
 
 const testimonials = [
