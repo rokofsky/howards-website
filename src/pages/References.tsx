@@ -79,6 +79,9 @@ const References = () => {
             <EvaluationsGallery />
           </div>
         </div>
+        <p className="text-center text-[10px] text-muted-foreground/40 font-light mt-8">
+          v{ASSET_VERSION}
+        </p>
       </section>
     </Layout>
   );
