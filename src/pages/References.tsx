@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import ClientLogosStrip from "@/components/ClientLogosStrip";
-import EvaluationsGallery from "@/components/EvaluationsGallery";
+import EvaluationsGallery, { ASSET_VERSION } from "@/components/EvaluationsGallery";
 import { useT } from "@/hooks/useT";
 
 const testimonials = [
@@ -79,6 +79,9 @@ const References = () => {
             <EvaluationsGallery />
           </div>
         </div>
+        <p className="text-center text-[10px] text-muted-foreground/40 font-light mt-8">
+          v{ASSET_VERSION}
+        </p>
       </section>
     </Layout>
   );

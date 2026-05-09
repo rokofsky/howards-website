@@ -10,7 +10,7 @@ const INITIAL = 20;
 type Item = { src: string; key: string };
 
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
-const ASSET_VERSION = "202605091200";
+export const ASSET_VERSION = "202605091307";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
