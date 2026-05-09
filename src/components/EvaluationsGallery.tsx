@@ -12,8 +12,8 @@ type Item = { src: string; key: string };
 
 const pad = (n: number) => String(n).padStart(3, "0");
 
-// Cache-buster: bump to force browsers to drop stale cached images.
-const ASSET_VERSION = "v3";
+// Cache-buster: update this date to force browsers to drop stale cached images.
+const ASSET_VERSION = "20260509";
 
 /**
  * Build candidate filenames strictly matching eval-[number].jpg.
