@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/generate-eval-manifest.mjs",
     "build": "vite build",
-    "build:dev": "vite build --mode development",
+    "build:dev": "node scripts/generate-eval-manifest.mjs && vite build --mode development",
+    "generate:evals": "node scripts/generate-eval-manifest.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
