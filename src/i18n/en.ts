@@ -10,7 +10,7 @@ const en = {
     contact: "Contact",
   },
   buttons: {
-    storytellingSessions: "Storytelling Sessions",
+    storytellingSessions: "Free Storytelling Sessions!",
     whoIsHoward: "Who is Howard",
     bookFreeCall: "Book a free call with Howard",
     skipEmail: "Skip the email, book a call now",
