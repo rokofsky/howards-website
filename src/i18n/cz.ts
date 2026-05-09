@@ -10,7 +10,7 @@ const cz = {
     contact: "Kontakt",
   },
   buttons: {
-    storytellingSessions: "Rozprávění příběhů",
+    storytellingSessions: "Bezplatná sezení Storytellingu!",
     whoIsHoward: "Kdo je Howard",
     bookFreeCall: "Zamluvit bezplatný hovor s Howardem",
     skipEmail: "Zapomeňte na e-mail – rovnou si domluvte hovor",
