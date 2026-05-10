@@ -1,13 +1,22 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useT } from "@/hooks/useT";
+import { Search } from "lucide-react";
 
 const PAGE_SIZE = 20;
-const INITIAL = 20;
 
-type Item = { src: string; key: string };
+type Item = { src: string; key: string; num: string };
 
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
 export const ASSET_VERSION = "202605091307";
@@ -167,67 +176,161 @@ const VALID_EVAL_FILES = [
 ] as const;
 
 const buildCandidates = (): Item[] =>
-  VALID_EVAL_FILES.map((filename) => ({
-    src: `/evaluations/${filename}`,
-    key: filename,
-  }));
+  VALID_EVAL_FILES.map((filename) => {
+    const num = filename.match(/eval-(\d{3})\.jpg/i)?.[1] ?? "";
+    return {
+      src: `/evaluations/${filename}`,
+      key: filename,
+      num,
+    };
+  });
 
 const EvaluationsGallery = () => {
   const t = useT();
   const candidates = useMemo(buildCandidates, []);
-  const [visibleCount, setVisibleCount] = useState(INITIAL);
-  const [broken, setBroken] = useState<Record<string, true>>({});
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
   const [lightbox, setLightbox] = useState<Item | null>(null);
 
-  const visible = candidates.slice(0, visibleCount);
-  const allShown = visibleCount >= candidates.length;
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return candidates;
+    return candidates.filter(
+      (c) => c.num.includes(q) || c.key.toLowerCase().includes(q)
+    );
+  }, [candidates, query]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const visible = filtered.slice(start, start + PAGE_SIZE);
+
+  const goTo = (p: number) => {
+    setPage(Math.min(Math.max(1, p), totalPages));
+  };
+
+  // Build a compact page list with ellipses
+  const pageNumbers: (number | "ellipsis")[] = useMemo(() => {
+    const pages: (number | "ellipsis")[] = [];
+    const window = 1;
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - window && i <= currentPage + window)
+      ) {
+        pages.push(i);
+      } else if (pages[pages.length - 1] !== "ellipsis") {
+        pages.push("ellipsis");
+      }
+    }
+    return pages;
+  }, [totalPages, currentPage]);
 
   return (
     <div className="mb-12">
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-        <AnimatePresence>
-          {visible.map((item) => {
-            if (broken[item.key]) return null;
-            return (
-              <motion.button
-                key={item.key}
-                type="button"
-                onClick={() => setLightbox(item)}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="block rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl bg-muted/30 aspect-[3/4]"
-              >
-                <img
-                  src={`${item.src}?v=${ASSET_VERSION}`}
-                  alt={t("Evaluation form scan", "Sken hodnotícího formuláře")}
-                  loading="lazy"
-                  onError={() =>
-                    setBroken((prev) => ({ ...prev, [item.key]: true }))
-                  }
-                  className="w-full h-full object-cover"
-                />
-              </motion.button>
-            );
-          })}
-        </AnimatePresence>
+      {/* Search */}
+      <div className="relative mb-6 max-w-sm">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          type="search"
+          inputMode="numeric"
+          placeholder={t(
+            "Search by number (e.g. 065)",
+            "Hledat podle čísla (např. 065)"
+          )}
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setPage(1);
+          }}
+          className="pl-9"
+        />
       </div>
 
-      {!allShown && (
-        <div className="text-center">
-          <Button
-            variant="glass"
-            size="lg"
-            onClick={() =>
-              setVisibleCount((c) => Math.min(c + PAGE_SIZE, candidates.length))
-            }
-          >
-            {t(
-              "More Evaluation-forms from participants",
-              "Více hodnotících formulářů od účastníků"
-            )}
-          </Button>
-        </div>
+      {filtered.length === 0 ? (
+        <p className="text-muted-foreground font-light text-sm py-8 text-center">
+          {t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")}
+        </p>
+      ) : (
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+            <AnimatePresence mode="popLayout">
+              {visible.map((item) => (
+                <motion.button
+                  key={item.key}
+                  type="button"
+                  onClick={() => setLightbox(item)}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="block rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl bg-muted/30 aspect-[3/4]"
+                >
+                  <img
+                    src={`${item.src}?v=${ASSET_VERSION}`}
+                    alt={t("Evaluation form scan", "Sken hodnotícího formuláře")}
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                  />
+                </motion.button>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {totalPages > 1 && (
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      goTo(currentPage - 1);
+                    }}
+                    className={
+                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                    }
+                  />
+                </PaginationItem>
+                {pageNumbers.map((p, i) =>
+                  p === "ellipsis" ? (
+                    <PaginationItem key={`e-${i}`}>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  ) : (
+                    <PaginationItem key={p}>
+                      <PaginationLink
+                        href="#"
+                        isActive={p === currentPage}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          goTo(p);
+                        }}
+                      >
+                        {p}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )
+                )}
+                <PaginationItem>
+                  <PaginationNext
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      goTo(currentPage + 1);
+                    }}
+                    className={
+                      currentPage === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          )}
+        </>
       )}
 
       <Dialog open={!!lightbox} onOpenChange={(o) => !o && setLightbox(null)}>
