@@ -19,7 +19,7 @@ const PAGE_SIZE = 20;
 type Item = { src: string; key: string; num: string };
 
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
-export const ASSET_VERSION = "202605091307";
+export const ASSET_VERSION = "202605101455";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
