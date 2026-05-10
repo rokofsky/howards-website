@@ -19,7 +19,7 @@ const PAGE_SIZE = 20;
 type Item = { src: string; key: string; num: string };
 
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
-export const ASSET_VERSION = "202605101455";
+export const ASSET_VERSION = "20260510";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -86,6 +86,10 @@ const VALID_EVAL_FILES = [
   "eval-062.jpg",
   "eval-063.jpg",
   "eval-064.jpg",
+  "eval-065.jpg",
+  "eval-066.jpg",
+  "eval-067.jpg",
+  "eval-068.jpg",
   "eval-069.jpg",
   "eval-070.jpg",
   "eval-071.jpg",
@@ -166,13 +170,9 @@ const VALID_EVAL_FILES = [
   "eval-146.jpg",
   "eval-147.jpg",
   "eval-148.jpg",
+  "eval-149.jpg",
   "eval-150.jpg",
   "eval-151.jpg",
-  "eval-152.jpg",
-  "eval-153.jpg",
-  "eval-154.jpg",
-  "eval-155.jpg",
-  "eval-156.jpg",
 ] as const;
 
 const buildCandidates = (): Item[] =>
