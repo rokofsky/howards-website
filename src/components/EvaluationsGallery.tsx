@@ -19,7 +19,7 @@ const PAGE_SIZE = 20;
 type Item = { src: string; key: string; num: string };
 
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
-export const ASSET_VERSION = "202605101455";
+export const ASSET_VERSION = "20260510";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -86,6 +86,10 @@ const VALID_EVAL_FILES = [
   "eval-062.jpg",
   "eval-063.jpg",
   "eval-064.jpg",
+  "eval-065.jpg",
+  "eval-066.jpg",
+  "eval-067.jpg",
+  "eval-068.jpg",
   "eval-069.jpg",
   "eval-070.jpg",
   "eval-071.jpg",
@@ -166,13 +170,9 @@ const VALID_EVAL_FILES = [
   "eval-146.jpg",
   "eval-147.jpg",
   "eval-148.jpg",
+  "eval-149.jpg",
   "eval-150.jpg",
   "eval-151.jpg",
-  "eval-152.jpg",
-  "eval-153.jpg",
-  "eval-154.jpg",
-  "eval-155.jpg",
-  "eval-156.jpg",
 ] as const;
 
 const buildCandidates = (): Item[] =>
@@ -248,6 +248,13 @@ const EvaluationsGallery = () => {
         />
       </div>
 
+      {/* Results count */}
+      <p className="text-sm text-muted-foreground font-light mb-4">
+        {filtered.length === candidates.length
+          ? `${candidates.length} ${t("evaluations", "hodnocení")}`
+          : `${filtered.length} / ${candidates.length} ${t("evaluations", "hodnocení")}`}
+      </p>
+
       {filtered.length === 0 ? (
         <p className="text-muted-foreground font-light text-sm py-8 text-center">
           {t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")}
@@ -265,14 +272,17 @@ const EvaluationsGallery = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="block rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl bg-muted/30 aspect-[3/4]"
+                  className="relative block rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl bg-muted/30 aspect-[3/4]"
                 >
                   <img
                     src={`${item.src}?v=${ASSET_VERSION}`}
-                    alt={t("Evaluation form scan", "Sken hodnotícího formuláře")}
+                    alt={t("Evaluation form scan", "Sken hodnotícího formuláře") + ` #${item.num}`}
                     loading="lazy"
                     className="w-full h-full object-cover"
                   />
+                  <span className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-background/70 backdrop-blur-sm text-[10px] font-medium tabular-nums text-foreground/80">
+                    #{item.num}
+                  </span>
                 </motion.button>
               ))}
             </AnimatePresence>
