@@ -132,16 +132,35 @@ const EvaluationsGallery = () => {
     return pages;
   }, [totalPages, currentPage]);
 
-  const lightboxItem = lightboxIndex !== null ? filtered[lightboxIndex] : null;
+  const lightboxItem = lightboxIndex !== null ? allSorted[lightboxIndex] : null;
+
+  const syncPageToItem = useCallback(
+    (item: Item) => {
+      const inFiltered = filtered.indexOf(item);
+      if (inFiltered === -1) {
+        // Item hidden by current search — clear search so the grid can show it.
+        setQueryInput("");
+        setQuery("");
+        const idxAll = allSorted.indexOf(item);
+        if (idxAll !== -1) setPage(Math.floor(idxAll / PAGE_SIZE) + 1);
+      } else {
+        setPage(Math.floor(inFiltered / PAGE_SIZE) + 1);
+      }
+    },
+    [filtered, allSorted]
+  );
 
   const navLightbox = useCallback(
     (dir: 1 | -1) => {
       setLightboxIndex((idx) => {
-        if (idx === null || filtered.length === 0) return idx;
-        return (idx + dir + filtered.length) % filtered.length;
+        if (idx === null || allSorted.length === 0) return idx;
+        const next = (idx + dir + allSorted.length) % allSorted.length;
+        const item = allSorted[next];
+        if (item) syncPageToItem(item);
+        return next;
       });
     },
-    [filtered.length]
+    [allSorted, syncPageToItem]
   );
 
   useEffect(() => {
