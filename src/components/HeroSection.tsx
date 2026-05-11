@@ -102,19 +102,6 @@ const HeroSection = () => {
         </motion.p>
       </div>
 
-      {/* Slide indicators */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              i === current ? "bg-primary-foreground w-6" : "bg-primary-foreground/40"
-            }`}
-            aria-label={`Go to slide ${i + 1}`}
-          />
-        ))}
-      </div>
     </section>
   );
 };
