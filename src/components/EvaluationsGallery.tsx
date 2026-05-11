@@ -91,18 +91,19 @@ const EvaluationsGallery = () => {
     return () => clearTimeout(id);
   }, [queryInput]);
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    const base = !q
-      ? candidates
-      : candidates.filter(
-          (c) => c.num.includes(q) || c.key.toLowerCase().includes(q)
-        );
-    const sorted = [...base].sort((a, b) =>
+  const allSorted = useMemo(() => {
+    return [...candidates].sort((a, b) =>
       sort === "asc" ? a.num.localeCompare(b.num) : b.num.localeCompare(a.num)
     );
-    return sorted;
-  }, [candidates, query, sort]);
+  }, [candidates, sort]);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return allSorted;
+    return allSorted.filter(
+      (c) => c.num.includes(q) || c.key.toLowerCase().includes(q)
+    );
+  }, [allSorted, query]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -131,16 +132,35 @@ const EvaluationsGallery = () => {
     return pages;
   }, [totalPages, currentPage]);
 
-  const lightboxItem = lightboxIndex !== null ? filtered[lightboxIndex] : null;
+  const lightboxItem = lightboxIndex !== null ? allSorted[lightboxIndex] : null;
+
+  const syncPageToItem = useCallback(
+    (item: Item) => {
+      const inFiltered = filtered.indexOf(item);
+      if (inFiltered === -1) {
+        // Item hidden by current search — clear search so the grid can show it.
+        setQueryInput("");
+        setQuery("");
+        const idxAll = allSorted.indexOf(item);
+        if (idxAll !== -1) setPage(Math.floor(idxAll / PAGE_SIZE) + 1);
+      } else {
+        setPage(Math.floor(inFiltered / PAGE_SIZE) + 1);
+      }
+    },
+    [filtered, allSorted]
+  );
 
   const navLightbox = useCallback(
     (dir: 1 | -1) => {
       setLightboxIndex((idx) => {
-        if (idx === null || filtered.length === 0) return idx;
-        return (idx + dir + filtered.length) % filtered.length;
+        if (idx === null || allSorted.length === 0) return idx;
+        const next = (idx + dir + allSorted.length) % allSorted.length;
+        const item = allSorted[next];
+        if (item) syncPageToItem(item);
+        return next;
       });
     },
-    [filtered.length]
+    [allSorted, syncPageToItem]
   );
 
   useEffect(() => {
@@ -215,7 +235,7 @@ const EvaluationsGallery = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
             <AnimatePresence mode="popLayout">
               {visible.map((item) => {
-                const globalIdx = filtered.indexOf(item);
+                const globalIdx = allSorted.indexOf(item);
                 return (
                   <motion.button
                     key={item.key}
@@ -312,10 +332,10 @@ const EvaluationsGallery = () => {
               <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground">
                 #{lightboxItem.num}
                 <span className="ml-2 text-muted-foreground font-light">
-                  {(lightboxIndex ?? 0) + 1} / {filtered.length}
+                  {(lightboxIndex ?? 0) + 1} / {allSorted.length}
                 </span>
               </span>
-              {filtered.length > 1 && (
+              {allSorted.length > 1 && (
                 <>
                   <button
                     type="button"
