@@ -91,18 +91,19 @@ const EvaluationsGallery = () => {
     return () => clearTimeout(id);
   }, [queryInput]);
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    const base = !q
-      ? candidates
-      : candidates.filter(
-          (c) => c.num.includes(q) || c.key.toLowerCase().includes(q)
-        );
-    const sorted = [...base].sort((a, b) =>
+  const allSorted = useMemo(() => {
+    return [...candidates].sort((a, b) =>
       sort === "asc" ? a.num.localeCompare(b.num) : b.num.localeCompare(a.num)
     );
-    return sorted;
-  }, [candidates, query, sort]);
+  }, [candidates, sort]);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return allSorted;
+    return allSorted.filter(
+      (c) => c.num.includes(q) || c.key.toLowerCase().includes(q)
+    );
+  }, [allSorted, query]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
