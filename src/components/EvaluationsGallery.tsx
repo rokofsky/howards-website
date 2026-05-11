@@ -332,10 +332,10 @@ const EvaluationsGallery = () => {
               <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground">
                 #{lightboxItem.num}
                 <span className="ml-2 text-muted-foreground font-light">
-                  {(lightboxIndex ?? 0) + 1} / {filtered.length}
+                  {(lightboxIndex ?? 0) + 1} / {allSorted.length}
                 </span>
               </span>
-              {filtered.length > 1 && (
+              {allSorted.length > 1 && (
                 <>
                   <button
                     type="button"
