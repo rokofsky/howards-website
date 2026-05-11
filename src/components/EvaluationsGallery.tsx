@@ -235,7 +235,7 @@ const EvaluationsGallery = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
             <AnimatePresence mode="popLayout">
               {visible.map((item) => {
-                const globalIdx = filtered.indexOf(item);
+                const globalIdx = allSorted.indexOf(item);
                 return (
                   <motion.button
                     key={item.key}
