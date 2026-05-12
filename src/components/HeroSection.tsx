@@ -69,17 +69,19 @@ const HeroSection = () => {
       {/* Navigation arrows */}
       <button
         onClick={(e) => { e.preventDefault(); prev(); }}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-background/30 hover:bg-background/50 backdrop-blur-sm rounded-full p-2 transition-all"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-background/30 hover:bg-background/50 backdrop-blur-sm rounded-full p-3 transition-all shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/50"
         aria-label="Previous slide"
       >
-        <ChevronLeft className="w-6 h-6 text-primary-foreground" />
+        <ChevronLeft className="w-8 h-8 text-primary-foreground drop-shadow-md" />
+        <span className="sr-only">Previous slide</span>
       </button>
       <button
         onClick={(e) => { e.preventDefault(); next(); }}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/30 hover:bg-background/50 backdrop-blur-sm rounded-full p-2 transition-all"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/30 hover:bg-background/50 backdrop-blur-sm rounded-full p-3 transition-all shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/50"
         aria-label="Next slide"
       >
-        <ChevronRight className="w-6 h-6 text-primary-foreground" />
+        <ChevronRight className="w-8 h-8 text-primary-foreground drop-shadow-md" />
+        <span className="sr-only">Next slide</span>
       </button>
 
       {/* CTA */}
