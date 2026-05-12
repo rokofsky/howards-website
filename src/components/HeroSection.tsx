@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useLocalizedPath } from "@/hooks/useLanguageRouting";
-import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useT } from "@/hooks/useT";
 import { ChevronLeft, ChevronRight } from "lucide-react";
