@@ -107,11 +107,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
         >
-          <Button variant="hero" size="lg" asChild className="pointer-events-auto">
-            <Link to={lp("/bio")}>
-              {t("Who is Howard?", "Kdo je Howard?")}
-            </Link>
-          </Button>
+          {/* CTA button lives in SubHeroNav below the hero */}
         </motion.div>
       </div>
 
