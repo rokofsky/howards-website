@@ -27,7 +27,7 @@ type Item = { src: string; key: string; num: string };
 type SortOrder = "asc" | "desc";
 
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
-export const ASSET_VERSION = "202605111842";
+export const ASSET_VERSION = "202605121549";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
