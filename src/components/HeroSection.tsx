@@ -102,6 +102,17 @@ const HeroSection = () => {
         >
           {t("Soft skills trainer & storytelling maestro", "Trenér měkkých dovedností a mistr vyprávění příběhů")}
         </motion.p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+        >
+          <Button variant="hero" size="lg" asChild className="pointer-events-auto">
+            <Link to={lp("/bio")}>
+              {t("Who is Howard?", "Kdo je Howard?")}
+            </Link>
+          </Button>
+        </motion.div>
       </div>
 
     </section>
