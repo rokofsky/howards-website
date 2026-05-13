@@ -9,6 +9,14 @@ const SubHeroNav = () => {
     <div className="relative -mt-24 z-20 flex items-center justify-center pb-10 border-b border-border pt-4">
       <Link
         to={lp("/bio")}
+        onClick={() => {
+          if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
+            (window as any).gtag("event", "click", {
+              event_category: "engagement",
+              event_label: "who_is_howard_button",
+            });
+          }
+        }}
         className="rounded-full bg-background/60 px-6 py-3 text-base font-bold text-foreground hover:bg-background/75 transition-colors tracking-wide relative group backdrop-blur-md shadow-sm"
       >
         {t("Who is Howard?", "Kdo je Howard?")}
