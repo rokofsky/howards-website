@@ -58,6 +58,7 @@ const StorytellingWorkshops = () => {
     setEmail("");
     setSuccess(null);
     setModalOpen(true);
+    trackCTA("storytelling_reserve_open", { session_id: session.id, session_date: session.session_date });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
