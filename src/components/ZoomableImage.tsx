@@ -17,13 +17,13 @@ const ZoomableImage = ({ src, alt, onSwipeNext, onSwipePrev }: Props) => {
   const swipedRef = useRef(false);
 
   const isAtLeftEdge = () => {
-    const s = wrapperRef.current?.instance?.transformState;
+    const s = wrapperRef.current?.state;
     if (!s) return true;
     return s.positionX >= -EDGE_TOLERANCE;
   };
   const isAtRightEdge = () => {
     const inst = wrapperRef.current?.instance;
-    const s = inst?.transformState;
+    const s = wrapperRef.current?.state;
     const wrap = inst?.wrapperComponent;
     const content = inst?.contentComponent;
     if (!s || !wrap || !content) return true;
