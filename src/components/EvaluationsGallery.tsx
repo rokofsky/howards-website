@@ -548,9 +548,29 @@ const EvaluationsGallery = () => {
       )}
 
       <Dialog open={lightboxIndex !== null} onOpenChange={(o) => !o && setLightboxIndex(null)}>
-        <DialogContent className="max-w-[98vw] md:max-w-6xl p-2 bg-background/95 border-none">
+        <DialogContent
+          className="max-w-[98vw] md:max-w-6xl p-2 sm:p-4 bg-background/95 border-none [&>button]:hidden"
+          onClick={(e) => {
+            // Close when tapping the padding/backdrop (not children)
+            if (e.target === e.currentTarget) setLightboxIndex(null);
+          }}
+        >
           {lightboxItem && (
-            <div className="relative">
+            <div className="relative" onClick={(e) => e.stopPropagation()}>
+              {/* Preload neighbors for smooth navigation */}
+              {allSorted
+                .map((it, i) => ({ it, i }))
+                .filter(({ i }) => {
+                  const cur = lightboxIndex ?? 0;
+                  const len = allSorted.length;
+                  return (
+                    i === (cur - 1 + len) % len ||
+                    i === (cur + 1) % len
+                  );
+                })
+                .map(({ it }) => (
+                  <link key={it.key} rel="preload" as="image" href={`${it.src}?v=${ASSET_VERSION}`} />
+                ))}
               <ZoomableImage
                 key={lightboxItem.key}
                 src={`${lightboxItem.src}?v=${ASSET_VERSION}`}
@@ -564,13 +584,22 @@ const EvaluationsGallery = () => {
                   {(lightboxIndex ?? 0) + 1} / {allSorted.length}
                 </span>
               </span>
+              {/* Custom close button — 44x44 thumb-friendly hit area */}
+              <button
+                type="button"
+                aria-label={t("Close", "Zavřít")}
+                onClick={() => setLightboxIndex(null)}
+                className="absolute top-2 right-2 z-20 inline-flex items-center justify-center w-11 h-11 rounded-full bg-sky-400/15 backdrop-blur-md border border-sky-200/40 text-white shadow-[0_0_24px_rgba(125,200,255,0.35)] hover:bg-sky-400/25 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/60"
+              >
+                <X className="h-5 w-5" />
+              </button>
               {allSorted.length > 1 && (
                 <>
                   <button
                     type="button"
                     aria-label={t("Previous", "Předchozí")}
                     onClick={() => navLightbox(-1)}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 backdrop-blur-xl text-white border-0 portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(99,179,255,0.45)] hover:bg-white/20 transition-colors z-10"
+                    className="absolute left-1 sm:left-3 lg:left-6 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-12 h-12 rounded-full bg-sky-400/15 backdrop-blur-md border border-sky-200/40 text-white portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(125,200,255,0.45)] hover:bg-sky-400/25 transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/60"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
@@ -578,7 +607,7 @@ const EvaluationsGallery = () => {
                     type="button"
                     aria-label={t("Next", "Další")}
                     onClick={() => navLightbox(1)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 backdrop-blur-xl text-white border-0 portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(99,179,255,0.45)] hover:bg-white/20 transition-colors z-10"
+                    className="absolute right-1 sm:right-3 lg:right-6 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-12 h-12 rounded-full bg-sky-400/15 backdrop-blur-md border border-sky-200/40 text-white portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(125,200,255,0.45)] hover:bg-sky-400/25 transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/60"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </button>
