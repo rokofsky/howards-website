@@ -14,3 +14,5 @@ User-agent: *
 Allow: /
 Disallow: /rokofsky-admin
 Disallow: /admin/
+
+Sitemap: https://howards-website.lovable.app/sitemap.xml
