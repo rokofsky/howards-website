@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { useLocalizedPath, useIsCzech } from "@/hooks/useLanguageRouting";
 import { useT } from "@/hooks/useT";
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import { getPostBySlug, subscribe } from "@/data/blogStore";
 import { pickL } from "@/data/blogPosts";
