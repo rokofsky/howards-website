@@ -548,15 +548,17 @@ const EvaluationsGallery = () => {
       )}
 
       <Dialog open={lightboxIndex !== null} onOpenChange={(o) => !o && setLightboxIndex(null)}>
-        <DialogContent className="max-w-[95vw] md:max-w-5xl p-2 bg-background/95 border-none">
+        <DialogContent className="max-w-[98vw] md:max-w-6xl p-2 bg-background/95 border-none">
           {lightboxItem && (
             <div className="relative">
-              <img
+              <ZoomableImage
+                key={lightboxItem.key}
                 src={`${lightboxItem.src}?v=${ASSET_VERSION}`}
                 alt={t("Evaluation form scan", "Sken hodnotícího formuláře") + ` #${lightboxItem.num}`}
-                className="w-full h-auto max-h-[88vh] object-contain rounded"
+                onSwipeNext={() => navLightbox(1)}
+                onSwipePrev={() => navLightbox(-1)}
               />
-              <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground">
+              <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground z-10">
                 #{lightboxItem.num}
                 <span className="ml-2 text-muted-foreground font-light">
                   {(lightboxIndex ?? 0) + 1} / {allSorted.length}
@@ -568,7 +570,7 @@ const EvaluationsGallery = () => {
                     type="button"
                     aria-label={t("Previous", "Předchozí")}
                     onClick={() => navLightbox(-1)}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-background/80 backdrop-blur-sm text-foreground hover:bg-background transition-colors"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 backdrop-blur-xl text-white border-0 portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(99,179,255,0.45)] hover:bg-white/20 transition-colors z-10"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
@@ -576,7 +578,7 @@ const EvaluationsGallery = () => {
                     type="button"
                     aria-label={t("Next", "Další")}
                     onClick={() => navLightbox(1)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-background/80 backdrop-blur-sm text-foreground hover:bg-background transition-colors"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 backdrop-blur-xl text-white border-0 portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(99,179,255,0.45)] hover:bg-white/20 transition-colors z-10"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </button>
