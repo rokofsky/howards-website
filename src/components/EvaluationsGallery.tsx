@@ -200,6 +200,8 @@ const EvaluationsGallery = () => {
 
   const stripRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  // Per-item depth: 1 = centered, 0 = far edge
+  const [depths, setDepths] = useState<Record<string, number>>({});
 
   // Debounce search
   useEffect(() => {
@@ -221,27 +223,34 @@ const EvaluationsGallery = () => {
     return allSorted.filter((c) => c.num.includes(q) || c.key.toLowerCase().includes(q));
   }, [allSorted, query]);
 
-  // Detect centered card via scroll position
+  // Compute per-item depth (1 at center, 0 at edge) → V-shape recede
   useEffect(() => {
     const strip = stripRef.current;
     if (!strip) return;
     const update = () => {
       const stripRect = strip.getBoundingClientRect();
       const center = stripRect.left + stripRect.width / 2;
+      // Falloff distance: half viewport width works well across breakpoints
+      const falloff = stripRect.width * 0.45;
       let bestKey: string | null = null;
       let bestDist = Infinity;
+      const next: Record<string, number> = {};
       for (const item of filtered) {
         const el = itemRefs.current[item.key];
         if (!el) continue;
         const r = el.getBoundingClientRect();
         const c = r.left + r.width / 2;
         const d = Math.abs(c - center);
+        const ratio = Math.max(0, 1 - d / falloff);
+        // ease for smoother V curve
+        next[item.key] = ratio * ratio * (3 - 2 * ratio);
         if (d < bestDist) {
           bestDist = d;
           bestKey = item.key;
         }
       }
       setActiveKey(bestKey);
+      setDepths(next);
     };
     update();
     strip.addEventListener("scroll", update, { passive: true });
