@@ -64,6 +64,7 @@ const StorytellingWorkshops = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedSession || !name.trim() || !email.trim()) return;
+    trackCTA("storytelling_register_submit", { session_id: selectedSession.id });
 
     setSubmitting(true);
     try {
