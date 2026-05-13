@@ -218,7 +218,8 @@ const EvaluationsGallery = () => {
   }, [candidates, sort]);
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    // Normalize: treat letter o/O as digit 0 (common typo for "065")
+    const q = query.trim().toLowerCase().replace(/o/g, "0");
     if (!q) return allSorted;
     return allSorted.filter(
       (c) => c.num.includes(q) || c.key.toLowerCase().includes(q)
