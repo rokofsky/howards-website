@@ -38,8 +38,36 @@ const BlogPost = () => {
   const category = pickL(post.category, lang);
   const content = pickL(post.content, lang);
 
+  const excerpt = pickL(post.excerpt, lang) || `${title} — Rokofsky Communication`;
+  const description = excerpt.length > 160 ? excerpt.slice(0, 157) + "…" : excerpt;
+  const canonical = `https://howards-website.lovable.app${isCz ? "/cz" : ""}/blog/${post.slug}`;
+  const fullTitle = `${title} | Rokofsky`;
+
   return (
     <Layout>
+      <Helmet>
+        <title>{fullTitle}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={fullTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        {post.imageUrl && <meta property="og:image" content={post.imageUrl} />}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: title,
+            description,
+            datePublished: pickL(post.date, "en"),
+            author: { "@type": "Person", name: "Howard Rokofsky" },
+            publisher: { "@type": "Organization", name: "Rokofsky Communication" },
+            image: post.imageUrl ? [post.imageUrl] : undefined,
+            mainEntityOfPage: canonical,
+          })}
+        </script>
+      </Helmet>
       <section className="section-padding pt-24">
         <div className="max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
