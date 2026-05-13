@@ -157,6 +157,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
       }
 
       setSubmitted(true);
+      trackCTA("contact_form_submit", { service: serviceName || "general" });
     } catch (err) {
       console.error("Submit error:", err);
       toast({
