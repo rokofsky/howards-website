@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useT } from "@/hooks/useT";
+import { trackCTA, trackClick } from "@/lib/analytics";
 import {
   Dialog,
   DialogContent,
@@ -57,11 +58,13 @@ const StorytellingWorkshops = () => {
     setEmail("");
     setSuccess(null);
     setModalOpen(true);
+    trackCTA("storytelling_reserve_open", { session_id: session.id, session_date: session.session_date });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedSession || !name.trim() || !email.trim()) return;
+    trackCTA("storytelling_register_submit", { session_id: selectedSession.id });
 
     setSubmitting(true);
     try {

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useT } from "@/hooks/useT";
+import { trackCTA } from "@/lib/analytics";
 
 interface SelectOption {
   label: string;
@@ -156,6 +157,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
       }
 
       setSubmitted(true);
+      trackCTA("contact_form_submit", { service: serviceName || "general" });
     } catch (err) {
       console.error("Submit error:", err);
       toast({

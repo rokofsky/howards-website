@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { openCalendly } from "@/lib/calendly";
 import { useT } from "@/hooks/useT";
+import { trackCTA } from "@/lib/analytics";
 
 const BookingSection = () => {
   const t = useT();
@@ -23,7 +24,7 @@ const BookingSection = () => {
           )}
         </p>
 
-        <Button variant="glassPetrol" size="xl" onClick={openCalendly}>
+        <Button variant="glassPetrol" size="xl" onClick={() => { trackCTA("book_free_call_zoom_section"); openCalendly(); }}>
           {t("Book a free call with Howard", "Zamluvit bezplatný hovor s Howardem")}
         </Button>
       </motion.div>

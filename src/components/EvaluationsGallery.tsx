@@ -200,6 +200,8 @@ const EvaluationsGallery = () => {
 
   const stripRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  // Per-item depth: 1 = centered, 0 = far edge
+  const [depths, setDepths] = useState<Record<string, number>>({});
 
   // Debounce search
   useEffect(() => {
@@ -221,27 +223,34 @@ const EvaluationsGallery = () => {
     return allSorted.filter((c) => c.num.includes(q) || c.key.toLowerCase().includes(q));
   }, [allSorted, query]);
 
-  // Detect centered card via scroll position
+  // Compute per-item depth (1 at center, 0 at edge) → V-shape recede
   useEffect(() => {
     const strip = stripRef.current;
     if (!strip) return;
     const update = () => {
       const stripRect = strip.getBoundingClientRect();
       const center = stripRect.left + stripRect.width / 2;
+      // Falloff distance: half viewport width works well across breakpoints
+      const falloff = stripRect.width * 0.45;
       let bestKey: string | null = null;
       let bestDist = Infinity;
+      const next: Record<string, number> = {};
       for (const item of filtered) {
         const el = itemRefs.current[item.key];
         if (!el) continue;
         const r = el.getBoundingClientRect();
         const c = r.left + r.width / 2;
         const d = Math.abs(c - center);
+        const ratio = Math.max(0, 1 - d / falloff);
+        // ease for smoother V curve
+        next[item.key] = ratio * ratio * (3 - 2 * ratio);
         if (d < bestDist) {
           bestDist = d;
           bestKey = item.key;
         }
       }
       setActiveKey(bestKey);
+      setDepths(next);
     };
     update();
     strip.addEventListener("scroll", update, { passive: true });
@@ -302,6 +311,56 @@ const EvaluationsGallery = () => {
     if (!strip) return;
     strip.scrollBy({ left: dir * strip.clientWidth * 0.6, behavior: "smooth" });
   };
+
+  // Drag-to-scroll (mouse). Touch swipe is native.
+  useEffect(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    let isDown = false;
+    let startX = 0;
+    let startScroll = 0;
+    let moved = false;
+
+    const onDown = (e: MouseEvent) => {
+      // Only left button, ignore drags starting on interactive nav arrows
+      if (e.button !== 0) return;
+      isDown = true;
+      moved = false;
+      startX = e.pageX;
+      startScroll = strip.scrollLeft;
+      strip.classList.add("cursor-grabbing");
+    };
+    const onMove = (e: MouseEvent) => {
+      if (!isDown) return;
+      const dx = e.pageX - startX;
+      if (Math.abs(dx) > 4) moved = true;
+      strip.scrollLeft = startScroll - dx;
+    };
+    const endDrag = () => {
+      isDown = false;
+      strip.classList.remove("cursor-grabbing");
+    };
+    const onClickCapture = (e: MouseEvent) => {
+      if (moved) {
+        e.stopPropagation();
+        e.preventDefault();
+        moved = false;
+      }
+    };
+
+    strip.addEventListener("mousedown", onDown);
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", endDrag);
+    strip.addEventListener("mouseleave", endDrag);
+    strip.addEventListener("click", onClickCapture, true);
+    return () => {
+      strip.removeEventListener("mousedown", onDown);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", endDrag);
+      strip.removeEventListener("mouseleave", endDrag);
+      strip.removeEventListener("click", onClickCapture, true);
+    };
+  }, []);
 
   return (
     <div className="mb-12">
@@ -374,11 +433,15 @@ const EvaluationsGallery = () => {
 
           <div
             ref={stripRef}
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth py-12 px-[40%] no-scrollbar"
+            className="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth py-12 px-[40%] sm:px-[35%] lg:px-[30%] no-scrollbar cursor-grab select-none"
             style={{ scrollbarWidth: "none" }}
           >
             {filtered.map((item, i) => {
               const isActive = activeKey === item.key;
+              const depth = depths[item.key] ?? 0; // 1 center → 0 edge
+              const scale = 0.75 + depth * 0.35; // 0.75 → 1.10
+              const opacity = 0.5 + depth * 0.5; // 0.5 → 1.0
+              const translateY = (1 - depth) * 18; // recede slightly downward
               return (
                 <motion.button
                   key={item.key}
@@ -390,9 +453,9 @@ const EvaluationsGallery = () => {
                   transition={{ delay: Math.min(i * 0.05, 1.5), duration: 0.4, ease: "easeOut" }}
                   className="relative shrink-0 snap-center w-[200px] sm:w-[240px] aspect-[3/4] rounded-lg overflow-hidden bg-muted/30 group"
                   style={{
-                    transform: `scale(${isActive ? 1.1 : 1})`,
-                    opacity: isActive ? 1 : 0.7,
-                    transition: "transform 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease",
+                    transform: `translateY(${translateY}px) scale(${scale})`,
+                    opacity,
+                    transition: "transform 0.35s ease, opacity 0.35s ease, box-shadow 0.35s ease",
                     boxShadow: isActive
                       ? "0 20px 60px -10px hsl(var(--primary) / 0.35), 0 0 40px -5px hsl(var(--accent) / 0.25)"
                       : "none",
@@ -402,7 +465,8 @@ const EvaluationsGallery = () => {
                     src={`${item.src}?v=${ASSET_VERSION}`}
                     alt={t("Evaluation form scan", "Sken hodnotícího formuláře") + ` #${item.num}`}
                     loading="lazy"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover pointer-events-none"
+                    draggable={false}
                   />
                   <span className="absolute bottom-2 left-2 text-xs font-medium px-2 py-0.5 rounded bg-background/80 backdrop-blur-sm text-foreground/90">
                     #{item.num}

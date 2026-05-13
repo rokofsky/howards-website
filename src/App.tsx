@@ -26,8 +26,18 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import GDPR from "./pages/GDPR";
 import TermsOfService from "./pages/TermsOfService";
 import { useLanguageSync } from "./hooks/useLanguageRouting";
+import { initGlobalTracking, initScrollDepth } from "./lib/analytics";
 
 const queryClient = new QueryClient();
+
+function AnalyticsBootstrap() {
+  useEffect(() => {
+    initGlobalTracking();
+    const teardown = initScrollDepth();
+    return teardown;
+  }, []);
+  return null;
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -227,6 +237,7 @@ const App = () => (
         <LanguageSyncWrapper>
           <ScrollToTop />
           <GlobalSeoSync />
+          <AnalyticsBootstrap />
           <Routes>
             {/* English routes (root) */}
             <Route path="/">{PageRoutes()}</Route>
