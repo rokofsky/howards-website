@@ -479,12 +479,12 @@ const EvaluationsGallery = () => {
           <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10" />
           <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10" />
 
-          {/* Strip nav arrows */}
+          {/* Glassmorphic strip nav arrows — adaptive scaling */}
           <button
             type="button"
             aria-label={t("Scroll left", "Posunout vlevo")}
             onClick={() => scrollStrip(-1)}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-background/80 backdrop-blur-sm text-foreground hover:bg-background transition-colors shadow-md"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white/10 backdrop-blur-xl text-white border-0 portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(99,179,255,0.45)] hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -492,14 +492,14 @@ const EvaluationsGallery = () => {
             type="button"
             aria-label={t("Scroll right", "Posunout vpravo")}
             onClick={() => scrollStrip(1)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-background/80 backdrop-blur-sm text-foreground hover:bg-background transition-colors shadow-md"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white/10 backdrop-blur-xl text-white border-0 portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(99,179,255,0.45)] hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
 
           <div
             ref={stripRef}
-            className="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth py-12 px-[40%] sm:px-[35%] lg:px-[30%] no-scrollbar cursor-grab select-none"
+            className="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto snap-x snap-proximity py-12 px-[40%] sm:px-[35%] lg:px-[30%] no-scrollbar cursor-grab select-none"
             style={{ scrollbarWidth: "none" }}
           >
             {filtered.map((item, i) => {
