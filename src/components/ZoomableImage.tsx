@@ -70,9 +70,9 @@ const ZoomableImage = ({ src, alt, onSwipeNext, onSwipePrev }: Props) => {
 
   return (
     <div
-      className="w-full h-[88vh] flex items-center justify-center touch-none"
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
+      className="w-full h-[88vh] flex items-center justify-center"
+      onTouchStartCapture={onTouchStart}
+      onTouchEndCapture={onTouchEnd}
     >
       <TransformWrapper
         ref={wrapperRef}
