@@ -145,6 +145,14 @@
   .section-padding {
     @apply px-6 py-20 md:px-12 lg:px-20 xl:px-32;
   }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 html {
