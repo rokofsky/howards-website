@@ -312,6 +312,56 @@ const EvaluationsGallery = () => {
     strip.scrollBy({ left: dir * strip.clientWidth * 0.6, behavior: "smooth" });
   };
 
+  // Drag-to-scroll (mouse). Touch swipe is native.
+  useEffect(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    let isDown = false;
+    let startX = 0;
+    let startScroll = 0;
+    let moved = false;
+
+    const onDown = (e: MouseEvent) => {
+      // Only left button, ignore drags starting on interactive nav arrows
+      if (e.button !== 0) return;
+      isDown = true;
+      moved = false;
+      startX = e.pageX;
+      startScroll = strip.scrollLeft;
+      strip.classList.add("cursor-grabbing");
+    };
+    const onMove = (e: MouseEvent) => {
+      if (!isDown) return;
+      const dx = e.pageX - startX;
+      if (Math.abs(dx) > 4) moved = true;
+      strip.scrollLeft = startScroll - dx;
+    };
+    const endDrag = () => {
+      isDown = false;
+      strip.classList.remove("cursor-grabbing");
+    };
+    const onClickCapture = (e: MouseEvent) => {
+      if (moved) {
+        e.stopPropagation();
+        e.preventDefault();
+        moved = false;
+      }
+    };
+
+    strip.addEventListener("mousedown", onDown);
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", endDrag);
+    strip.addEventListener("mouseleave", endDrag);
+    strip.addEventListener("click", onClickCapture, true);
+    return () => {
+      strip.removeEventListener("mousedown", onDown);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", endDrag);
+      strip.removeEventListener("mouseleave", endDrag);
+      strip.removeEventListener("click", onClickCapture, true);
+    };
+  }, []);
+
   return (
     <div className="mb-12">
       {/* Controls */}
