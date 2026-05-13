@@ -111,7 +111,7 @@ const Index = () => {
         </div>
         <ContactForm />
         <div className="text-center mt-8">
-          <Button variant="glassPetrol" size="lg" onClick={openCalendly}>
+          <Button variant="glassPetrol" size="lg" onClick={() => { trackCTA("book_call_contact_section"); openCalendly(); }}>
             {t("Skip the email, book a call now", "Zapomeňte na e-mail – rovnou si domluvte hovor")}
           </Button>
         </div>
