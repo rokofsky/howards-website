@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useT } from "@/hooks/useT";
+import { Helmet } from "react-helmet-async";
 
 import whiteHat from "@/assets/hats/white-hat.jpg";
 import blackHat from "@/assets/hats/black-hat.jpg";
@@ -113,8 +114,34 @@ const ServiceDetail = () => {
     ? t("Online webinars", "Online webináře")
     : serviceTitle;
 
+  const subtitle = pickL(service.subtitle, lang);
+  const seoDescRaw = (detail?.lead ? pickL(detail.lead, lang) : "") || subtitle || serviceHook || `${serviceTitle} — Rokofsky Communication`;
+  const seoDesc = (seoDescRaw.replace(/\s+/g, " ").trim().slice(0, 157) + (seoDescRaw.length > 157 ? "…" : "")).trim();
+  const canonical = `https://howards-website.lovable.app${isCz ? "/cz" : ""}/services/${slug}`;
+  const fullTitle = `${serviceTitle} | Rokofsky`;
+
   return (
     <Layout>
+      <Helmet>
+        <title>{fullTitle}</title>
+        <meta name="description" content={seoDesc} />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={fullTitle} />
+        <meta property="og:description" content={seoDesc} />
+        <meta property="og:url" content={canonical} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: serviceTitle,
+            description: seoDesc,
+            provider: { "@type": "Organization", name: "Rokofsky Communication", url: "https://howards-website.lovable.app/" },
+            areaServed: "Prague, Czech Republic",
+            url: canonical,
+          })}
+        </script>
+      </Helmet>
       <section className="section-padding pt-24">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
