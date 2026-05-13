@@ -195,90 +195,97 @@ const EvaluationsGallery = () => {
   const [queryInput, setQueryInput] = useState("");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortOrder>("asc");
-  const [page, setPage] = useState(1);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [activeKey, setActiveKey] = useState<string | null>(null);
 
-  // Debounce search input
+  const stripRef = useRef<HTMLDivElement | null>(null);
+  const itemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  // Debounce search
   useEffect(() => {
-    const id = setTimeout(() => {
-      setQuery(queryInput);
-      setPage(1);
-    }, 200);
+    const id = setTimeout(() => setQuery(queryInput), 200);
     return () => clearTimeout(id);
   }, [queryInput]);
 
-  const allSorted = useMemo(() => {
-    return [...candidates].sort((a, b) =>
-      sort === "asc" ? a.num.localeCompare(b.num) : b.num.localeCompare(a.num)
-    );
-  }, [candidates, sort]);
+  const allSorted = useMemo(
+    () =>
+      [...candidates].sort((a, b) =>
+        sort === "asc" ? a.num.localeCompare(b.num) : b.num.localeCompare(a.num)
+      ),
+    [candidates, sort]
+  );
 
   const filtered = useMemo(() => {
-    // Normalize: treat letter o/O as digit 0 (common typo for "065")
     const q = query.trim().toLowerCase().replace(/o/g, "0");
     if (!q) return allSorted;
-    return allSorted.filter(
-      (c) => c.num.includes(q) || c.key.toLowerCase().includes(q)
-    );
+    return allSorted.filter((c) => c.num.includes(q) || c.key.toLowerCase().includes(q));
   }, [allSorted, query]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const currentPage = Math.min(page, totalPages);
-  const start = (currentPage - 1) * PAGE_SIZE;
-  const visible = filtered.slice(start, start + PAGE_SIZE);
-  const showingTo = Math.min(start + PAGE_SIZE, filtered.length);
-
-  const goTo = (p: number) => {
-    setPage(Math.min(Math.max(1, p), totalPages));
-  };
-
-  const pageNumbers: (number | "ellipsis")[] = useMemo(() => {
-    const pages: (number | "ellipsis")[] = [];
-    const window = 1;
-    for (let i = 1; i <= totalPages; i++) {
-      if (
-        i === 1 ||
-        i === totalPages ||
-        (i >= currentPage - window && i <= currentPage + window)
-      ) {
-        pages.push(i);
-      } else if (pages[pages.length - 1] !== "ellipsis") {
-        pages.push("ellipsis");
+  // Detect centered card via scroll position
+  useEffect(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    const update = () => {
+      const stripRect = strip.getBoundingClientRect();
+      const center = stripRect.left + stripRect.width / 2;
+      let bestKey: string | null = null;
+      let bestDist = Infinity;
+      for (const item of filtered) {
+        const el = itemRefs.current[item.key];
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        const c = r.left + r.width / 2;
+        const d = Math.abs(c - center);
+        if (d < bestDist) {
+          bestDist = d;
+          bestKey = item.key;
+        }
       }
-    }
-    return pages;
-  }, [totalPages, currentPage]);
+      setActiveKey(bestKey);
+    };
+    update();
+    strip.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      strip.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [filtered]);
+
+  // On search change, scroll first matching result to center
+  useEffect(() => {
+    if (!filtered.length) return;
+    const first = filtered[0];
+    const el = itemRefs.current[first.key];
+    if (el) el.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [query, sort, filtered]);
 
   const lightboxItem = lightboxIndex !== null ? allSorted[lightboxIndex] : null;
 
-  const syncPageToItem = useCallback(
-    (item: Item) => {
-      const inFiltered = filtered.indexOf(item);
-      if (inFiltered === -1) {
-        // Item hidden by current search — clear search so the grid can show it.
-        setQueryInput("");
-        setQuery("");
-        const idxAll = allSorted.indexOf(item);
-        if (idxAll !== -1) setPage(Math.floor(idxAll / PAGE_SIZE) + 1);
-      } else {
-        setPage(Math.floor(inFiltered / PAGE_SIZE) + 1);
-      }
-    },
-    [filtered, allSorted]
-  );
+  const openLightbox = (item: Item) => {
+    const idx = allSorted.indexOf(item);
+    setLightboxIndex(idx);
+    trackEvent("evaluation_open", { evaluation_number: item.num });
+  };
 
   const navLightbox = useCallback(
     (dir: 1 | -1) => {
       setLightboxIndex((idx) => {
         if (idx === null || allSorted.length === 0) return idx;
         const next = (idx + dir + allSorted.length) % allSorted.length;
-        const item = allSorted[next];
-        if (item) syncPageToItem(item);
         return next;
       });
     },
-    [allSorted, syncPageToItem]
+    [allSorted]
   );
+
+  // When lightbox index changes, scroll the underlying strip to that item
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const item = allSorted[lightboxIndex];
+    const el = itemRefs.current[item?.key];
+    if (el) el.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [lightboxIndex, allSorted]);
 
   useEffect(() => {
     if (lightboxIndex === null) return;
@@ -290,6 +297,12 @@ const EvaluationsGallery = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [lightboxIndex, navLightbox]);
 
+  const scrollStrip = (dir: 1 | -1) => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    strip.scrollBy({ left: dir * strip.clientWidth * 0.6, behavior: "smooth" });
+  };
+
   return (
     <div className="mb-12">
       {/* Controls */}
@@ -299,10 +312,7 @@ const EvaluationsGallery = () => {
           <Input
             type="search"
             inputMode="numeric"
-            placeholder={t(
-              "Search by number (e.g. 065)",
-              "Hledat podle čísla (např. 065)"
-            )}
+            placeholder={t("Search by number (e.g. 065)", "Hledat podle čísla (např. 065)")}
             value={queryInput}
             onChange={(e) => setQueryInput(e.target.value)}
             className="pl-9 pr-9"
@@ -323,121 +333,91 @@ const EvaluationsGallery = () => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="asc">
-              {t("Number ↑ (Ascending)", "Číslo ↑ (Vzestupně)")}
-            </SelectItem>
-            <SelectItem value="desc">
-              {t("Number ↓ (Descending)", "Číslo ↓ (Sestupně)")}
-            </SelectItem>
+            <SelectItem value="asc">{t("Number ↑ (Ascending)", "Číslo ↑ (Vzestupně)")}</SelectItem>
+            <SelectItem value="desc">{t("Number ↓ (Descending)", "Číslo ↓ (Sestupně)")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      {/* Results summary */}
       <p className="text-sm text-muted-foreground font-light mb-6">
         {filtered.length === 0
           ? t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")
           : t(
-              `Showing ${start + 1}–${showingTo} of ${filtered.length}${
-                filtered.length !== candidates.length ? ` (of ${candidates.length})` : ""
-              } evaluations`,
-              `Zobrazeno ${start + 1}–${showingTo} z ${filtered.length}${
-                filtered.length !== candidates.length ? ` (z ${candidates.length})` : ""
-              } hodnocení`
+              `Showing ${filtered.length} of ${candidates.length} evaluations`,
+              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`
             )}
       </p>
 
       {filtered.length > 0 && (
-        <>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-            <AnimatePresence mode="popLayout">
-              {visible.map((item) => {
-                const globalIdx = allSorted.indexOf(item);
-                return (
-                  <motion.button
-                    key={item.key}
-                    type="button"
-                    onClick={() => setLightboxIndex(globalIdx)}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="relative block rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:brightness-90 hover:shadow-xl bg-muted/30 aspect-[3/4] group"
-                  >
-                    <img
-                      src={`${item.src}?v=${ASSET_VERSION}`}
-                      alt={t("Evaluation form scan", "Sken hodnotícího formuláře") + ` #${item.num}`}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
-                    <span className="absolute bottom-2 left-2 text-xs font-medium px-2 py-0.5 rounded bg-background/80 backdrop-blur-sm text-foreground/90">
-                      #{item.num}
-                    </span>
-                  </motion.button>
-                );
-              })}
-            </AnimatePresence>
-          </div>
+        <div className="relative">
+          {/* Edge fades */}
+          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10" />
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10" />
 
-          {totalPages > 1 && (
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      goTo(currentPage - 1);
-                    }}
-                    className={
-                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
-                    }
+          {/* Strip nav arrows */}
+          <button
+            type="button"
+            aria-label={t("Scroll left", "Posunout vlevo")}
+            onClick={() => scrollStrip(-1)}
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-background/80 backdrop-blur-sm text-foreground hover:bg-background transition-colors shadow-md"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            aria-label={t("Scroll right", "Posunout vpravo")}
+            onClick={() => scrollStrip(1)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-background/80 backdrop-blur-sm text-foreground hover:bg-background transition-colors shadow-md"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+
+          <div
+            ref={stripRef}
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth py-12 px-[40%] no-scrollbar"
+            style={{ scrollbarWidth: "none" }}
+          >
+            {filtered.map((item, i) => {
+              const isActive = activeKey === item.key;
+              return (
+                <motion.button
+                  key={item.key}
+                  ref={(el) => (itemRefs.current[item.key] = el)}
+                  type="button"
+                  onClick={() => openLightbox(item)}
+                  initial={{ opacity: 0, x: 80 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: Math.min(i * 0.05, 1.5), duration: 0.4, ease: "easeOut" }}
+                  className="relative shrink-0 snap-center w-[200px] sm:w-[240px] aspect-[3/4] rounded-lg overflow-hidden bg-muted/30 group"
+                  style={{
+                    transform: `scale(${isActive ? 1.1 : 1})`,
+                    opacity: isActive ? 1 : 0.7,
+                    transition: "transform 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease",
+                    boxShadow: isActive
+                      ? "0 20px 60px -10px hsl(var(--primary) / 0.35), 0 0 40px -5px hsl(var(--accent) / 0.25)"
+                      : "none",
+                  }}
+                >
+                  <img
+                    src={`${item.src}?v=${ASSET_VERSION}`}
+                    alt={t("Evaluation form scan", "Sken hodnotícího formuláře") + ` #${item.num}`}
+                    loading="lazy"
+                    className="w-full h-full object-cover"
                   />
-                </PaginationItem>
-                {pageNumbers.map((p, i) =>
-                  p === "ellipsis" ? (
-                    <PaginationItem key={`e-${i}`}>
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  ) : (
-                    <PaginationItem key={p}>
-                      <PaginationLink
-                        href="#"
-                        isActive={p === currentPage}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          goTo(p);
-                        }}
-                      >
-                        {p}
-                      </PaginationLink>
-                    </PaginationItem>
-                  )
-                )}
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      goTo(currentPage + 1);
-                    }}
-                    className={
-                      currentPage === totalPages
-                        ? "pointer-events-none opacity-50"
-                        : ""
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          )}
-        </>
+                  <span className="absolute bottom-2 left-2 text-xs font-medium px-2 py-0.5 rounded bg-background/80 backdrop-blur-sm text-foreground/90">
+                    #{item.num}
+                  </span>
+                  {isActive && (
+                    <span className="absolute inset-0 rounded-lg ring-1 ring-primary/20 pointer-events-none" />
+                  )}
+                </motion.button>
+              );
+            })}
+          </div>
+        </div>
       )}
 
-      <Dialog
-        open={lightboxIndex !== null}
-        onOpenChange={(o) => !o && setLightboxIndex(null)}
-      >
+      <Dialog open={lightboxIndex !== null} onOpenChange={(o) => !o && setLightboxIndex(null)}>
         <DialogContent className="max-w-[95vw] md:max-w-5xl p-2 bg-background/95 border-none">
           {lightboxItem && (
             <div className="relative">
@@ -481,3 +461,4 @@ const EvaluationsGallery = () => {
 };
 
 export default EvaluationsGallery;
+
