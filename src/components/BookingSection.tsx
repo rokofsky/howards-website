@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { openCalendly } from "@/lib/calendly";
 import { useT } from "@/hooks/useT";
+import { trackCTA } from "@/lib/analytics";
 
 const BookingSection = () => {
   const t = useT();
