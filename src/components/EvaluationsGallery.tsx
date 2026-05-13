@@ -313,21 +313,68 @@ const EvaluationsGallery = () => {
     strip.scrollBy({ left: dir * strip.clientWidth * 0.6, behavior: "smooth" });
   };
 
-  // Drag-to-scroll (mouse). Touch swipe is native.
+  // Drag-to-scroll with inertia/momentum (mouse). Touch uses native momentum.
   useEffect(() => {
     const strip = stripRef.current;
     if (!strip) return;
     let isDown = false;
     let startX = 0;
     let startScroll = 0;
+    let lastX = 0;
+    let lastT = 0;
+    let velocity = 0; // px per ms
     let moved = false;
+    let rafId: number | null = null;
+
+    const cancelMomentum = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    };
+
+    const snapToNearest = () => {
+      const stripRect = strip.getBoundingClientRect();
+      const center = stripRect.left + stripRect.width / 2;
+      let bestEl: HTMLElement | null = null;
+      let bestDist = Infinity;
+      for (const key in itemRefs.current) {
+        const el = itemRefs.current[key];
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        const d = Math.abs(r.left + r.width / 2 - center);
+        if (d < bestDist) {
+          bestDist = d;
+          bestEl = el;
+        }
+      }
+      if (bestEl) bestEl.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    };
+
+    const momentum = () => {
+      const friction = 0.94;
+      const step = () => {
+        velocity *= friction;
+        strip.scrollLeft -= velocity * 16; // approx per frame
+        if (Math.abs(velocity) > 0.05) {
+          rafId = requestAnimationFrame(step);
+        } else {
+          rafId = null;
+          snapToNearest();
+        }
+      };
+      rafId = requestAnimationFrame(step);
+    };
 
     const onDown = (e: MouseEvent) => {
-      // Only left button, ignore drags starting on interactive nav arrows
       if (e.button !== 0) return;
+      cancelMomentum();
       isDown = true;
       moved = false;
       startX = e.pageX;
+      lastX = e.pageX;
+      lastT = performance.now();
+      velocity = 0;
       startScroll = strip.scrollLeft;
       strip.classList.add("cursor-grabbing");
     };
@@ -336,10 +383,25 @@ const EvaluationsGallery = () => {
       const dx = e.pageX - startX;
       if (Math.abs(dx) > 4) moved = true;
       strip.scrollLeft = startScroll - dx;
+      const now = performance.now();
+      const dt = now - lastT;
+      if (dt > 0) {
+        // smooth velocity (px/ms)
+        const v = (e.pageX - lastX) / dt;
+        velocity = velocity * 0.6 + v * 0.4;
+      }
+      lastX = e.pageX;
+      lastT = now;
     };
     const endDrag = () => {
+      if (!isDown) return;
       isDown = false;
       strip.classList.remove("cursor-grabbing");
+      if (Math.abs(velocity) > 0.05) {
+        momentum();
+      } else if (moved) {
+        snapToNearest();
+      }
     };
     const onClickCapture = (e: MouseEvent) => {
       if (moved) {
@@ -354,12 +416,15 @@ const EvaluationsGallery = () => {
     window.addEventListener("mouseup", endDrag);
     strip.addEventListener("mouseleave", endDrag);
     strip.addEventListener("click", onClickCapture, true);
+    strip.addEventListener("wheel", cancelMomentum, { passive: true });
     return () => {
+      cancelMomentum();
       strip.removeEventListener("mousedown", onDown);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", endDrag);
       strip.removeEventListener("mouseleave", endDrag);
       strip.removeEventListener("click", onClickCapture, true);
+      strip.removeEventListener("wheel", cancelMomentum);
     };
   }, []);
 
