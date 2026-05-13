@@ -118,18 +118,14 @@ function GlobalSeoSync() {
       return isCz ? DEFAULT_TITLE_CZ : DEFAULT_TITLE;
     };
 
+    const isBlogPostRoute = () =>
+      /\/blog\/[^/?#]+/.test(window.location.pathname);
+
     const applyTitle = () => {
       const isCz = isCzNow();
 
-      // On a service detail route, derive slug from URL.
-      if (isServiceRoute()) {
-        const slug = getServiceSlugFromPath();
-        const short = slug ? getServiceShortTitle(slug, isCz) : null;
-        if (short) {
-          setTitle(`${short} | ${BRAND}`);
-          return;
-        }
-      }
+      // Helmet manages title for blog posts and service details.
+      if (isBlogPostRoute() || isServiceRoute()) return;
 
       // On home, use clicked-service slug (if any).
       if (isHomeRoute() && activeSlugRef.current) {
