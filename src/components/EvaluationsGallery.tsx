@@ -433,11 +433,15 @@ const EvaluationsGallery = () => {
 
           <div
             ref={stripRef}
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth py-12 px-[40%] no-scrollbar"
+            className="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth py-12 px-[40%] sm:px-[35%] lg:px-[30%] no-scrollbar cursor-grab select-none"
             style={{ scrollbarWidth: "none" }}
           >
             {filtered.map((item, i) => {
               const isActive = activeKey === item.key;
+              const depth = depths[item.key] ?? 0; // 1 center → 0 edge
+              const scale = 0.75 + depth * 0.35; // 0.75 → 1.10
+              const opacity = 0.5 + depth * 0.5; // 0.5 → 1.0
+              const translateY = (1 - depth) * 18; // recede slightly downward
               return (
                 <motion.button
                   key={item.key}
@@ -449,9 +453,9 @@ const EvaluationsGallery = () => {
                   transition={{ delay: Math.min(i * 0.05, 1.5), duration: 0.4, ease: "easeOut" }}
                   className="relative shrink-0 snap-center w-[200px] sm:w-[240px] aspect-[3/4] rounded-lg overflow-hidden bg-muted/30 group"
                   style={{
-                    transform: `scale(${isActive ? 1.1 : 1})`,
-                    opacity: isActive ? 1 : 0.7,
-                    transition: "transform 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease",
+                    transform: `translateY(${translateY}px) scale(${scale})`,
+                    opacity,
+                    transition: "transform 0.35s ease, opacity 0.35s ease, box-shadow 0.35s ease",
                     boxShadow: isActive
                       ? "0 20px 60px -10px hsl(var(--primary) / 0.35), 0 0 40px -5px hsl(var(--accent) / 0.25)"
                       : "none",
@@ -461,7 +465,8 @@ const EvaluationsGallery = () => {
                     src={`${item.src}?v=${ASSET_VERSION}`}
                     alt={t("Evaluation form scan", "Sken hodnotícího formuláře") + ` #${item.num}`}
                     loading="lazy"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover pointer-events-none"
+                    draggable={false}
                   />
                   <span className="absolute bottom-2 left-2 text-xs font-medium px-2 py-0.5 rounded bg-background/80 backdrop-blur-sm text-foreground/90">
                     #{item.num}
