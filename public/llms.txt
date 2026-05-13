@@ -1,0 +1,31 @@
+# Rokofsky Communication
+
+> Communication training and coaching in Prague — presentation skills, negotiation, storytelling, Six Hats meetings method, conflict mediation, and team training. Czech and English.
+
+## Pages
+
+- [Home](/): Overview of services, references, and how Rokofsky turns friction into strategic breakthroughs.
+- [Bio](/bio): Background and approach of Howard Rokofsky.
+- [CV](/cv): Professional CV.
+- [References](/references): Client evaluation forms and testimonials.
+- [Blog](/blog): Articles on communication, training methodology, storytelling, and coaching.
+- [Storytelling Workshops](/storytelling-workshops): Group workshops on the art of storytelling.
+- [Keynote Topics](/keynote-topics): Available keynote speaking topics.
+
+## Services
+
+- [Presentation & Speaking Skills](/services/presentation-speaking-skills): Speak like a pro and own the room.
+- [Live Webinar Sessions](/services/online-webinars): Live online sessions on a range of communication topics.
+- [Six Hats Method for Meetings](/services/meetings-moderation): Turn meetings into actionable decisions.
+- [Conflict Mediation](/services/conflict-resolution): Turn battles into breakthroughs.
+- [Brainstorming Sessions](/services/brainstorming-sessions): Where ideas go to multiply.
+- [Storytelling](/services/storytelling): Facts tell, stories sell.
+- [Individual Coaching](/services/communication-skills): One-on-one coaching to discover new options.
+- [Negotiation Representation](/services/negotiation-skills): Howard negotiates on your behalf.
+- [Team Communication Training](/services/keynote-speaking): Events that resonate for your guests.
+
+## Optional
+
+- [Privacy Policy](/privacy-policy)
+- [GDPR](/gdpr)
+- [Terms of Service](/terms-of-service)
