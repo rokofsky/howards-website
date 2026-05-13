@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useT } from "@/hooks/useT";
+import { Helmet } from "react-helmet-async";
 
 import whiteHat from "@/assets/hats/white-hat.jpg";
 import blackHat from "@/assets/hats/black-hat.jpg";
