@@ -11,6 +11,7 @@ import {
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useT } from "@/hooks/useT";
 import { Search, X, ChevronLeft, ChevronRight } from "lucide-react";
+import ZoomableImage from "./ZoomableImage";
 
 type Item = { src: string; key: string; num: string };
 type SortOrder = "asc" | "desc";
@@ -312,21 +313,68 @@ const EvaluationsGallery = () => {
     strip.scrollBy({ left: dir * strip.clientWidth * 0.6, behavior: "smooth" });
   };
 
-  // Drag-to-scroll (mouse). Touch swipe is native.
+  // Drag-to-scroll with inertia/momentum (mouse). Touch uses native momentum.
   useEffect(() => {
     const strip = stripRef.current;
     if (!strip) return;
     let isDown = false;
     let startX = 0;
     let startScroll = 0;
+    let lastX = 0;
+    let lastT = 0;
+    let velocity = 0; // px per ms
     let moved = false;
+    let rafId: number | null = null;
+
+    const cancelMomentum = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    };
+
+    const snapToNearest = () => {
+      const stripRect = strip.getBoundingClientRect();
+      const center = stripRect.left + stripRect.width / 2;
+      let bestEl: HTMLElement | null = null;
+      let bestDist = Infinity;
+      for (const key in itemRefs.current) {
+        const el = itemRefs.current[key];
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        const d = Math.abs(r.left + r.width / 2 - center);
+        if (d < bestDist) {
+          bestDist = d;
+          bestEl = el;
+        }
+      }
+      if (bestEl) bestEl.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    };
+
+    const momentum = () => {
+      const friction = 0.94;
+      const step = () => {
+        velocity *= friction;
+        strip.scrollLeft -= velocity * 16; // approx per frame
+        if (Math.abs(velocity) > 0.05) {
+          rafId = requestAnimationFrame(step);
+        } else {
+          rafId = null;
+          snapToNearest();
+        }
+      };
+      rafId = requestAnimationFrame(step);
+    };
 
     const onDown = (e: MouseEvent) => {
-      // Only left button, ignore drags starting on interactive nav arrows
       if (e.button !== 0) return;
+      cancelMomentum();
       isDown = true;
       moved = false;
       startX = e.pageX;
+      lastX = e.pageX;
+      lastT = performance.now();
+      velocity = 0;
       startScroll = strip.scrollLeft;
       strip.classList.add("cursor-grabbing");
     };
@@ -335,10 +383,25 @@ const EvaluationsGallery = () => {
       const dx = e.pageX - startX;
       if (Math.abs(dx) > 4) moved = true;
       strip.scrollLeft = startScroll - dx;
+      const now = performance.now();
+      const dt = now - lastT;
+      if (dt > 0) {
+        // smooth velocity (px/ms)
+        const v = (e.pageX - lastX) / dt;
+        velocity = velocity * 0.6 + v * 0.4;
+      }
+      lastX = e.pageX;
+      lastT = now;
     };
     const endDrag = () => {
+      if (!isDown) return;
       isDown = false;
       strip.classList.remove("cursor-grabbing");
+      if (Math.abs(velocity) > 0.05) {
+        momentum();
+      } else if (moved) {
+        snapToNearest();
+      }
     };
     const onClickCapture = (e: MouseEvent) => {
       if (moved) {
@@ -353,12 +416,15 @@ const EvaluationsGallery = () => {
     window.addEventListener("mouseup", endDrag);
     strip.addEventListener("mouseleave", endDrag);
     strip.addEventListener("click", onClickCapture, true);
+    strip.addEventListener("wheel", cancelMomentum, { passive: true });
     return () => {
+      cancelMomentum();
       strip.removeEventListener("mousedown", onDown);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", endDrag);
       strip.removeEventListener("mouseleave", endDrag);
       strip.removeEventListener("click", onClickCapture, true);
+      strip.removeEventListener("wheel", cancelMomentum);
     };
   }, []);
 
@@ -413,12 +479,12 @@ const EvaluationsGallery = () => {
           <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10" />
           <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10" />
 
-          {/* Strip nav arrows */}
+          {/* Glassmorphic strip nav arrows — adaptive scaling */}
           <button
             type="button"
             aria-label={t("Scroll left", "Posunout vlevo")}
             onClick={() => scrollStrip(-1)}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-background/80 backdrop-blur-sm text-foreground hover:bg-background transition-colors shadow-md"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white/10 backdrop-blur-xl text-white border-0 portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(99,179,255,0.45)] hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -426,14 +492,14 @@ const EvaluationsGallery = () => {
             type="button"
             aria-label={t("Scroll right", "Posunout vpravo")}
             onClick={() => scrollStrip(1)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-background/80 backdrop-blur-sm text-foreground hover:bg-background transition-colors shadow-md"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white/10 backdrop-blur-xl text-white border-0 portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(99,179,255,0.45)] hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
 
           <div
             ref={stripRef}
-            className="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth py-12 px-[40%] sm:px-[35%] lg:px-[30%] no-scrollbar cursor-grab select-none"
+            className="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto snap-x snap-proximity py-12 px-[40%] sm:px-[35%] lg:px-[30%] no-scrollbar cursor-grab select-none"
             style={{ scrollbarWidth: "none" }}
           >
             {filtered.map((item, i) => {
@@ -482,15 +548,17 @@ const EvaluationsGallery = () => {
       )}
 
       <Dialog open={lightboxIndex !== null} onOpenChange={(o) => !o && setLightboxIndex(null)}>
-        <DialogContent className="max-w-[95vw] md:max-w-5xl p-2 bg-background/95 border-none">
+        <DialogContent className="max-w-[98vw] md:max-w-6xl p-2 bg-background/95 border-none">
           {lightboxItem && (
             <div className="relative">
-              <img
+              <ZoomableImage
+                key={lightboxItem.key}
                 src={`${lightboxItem.src}?v=${ASSET_VERSION}`}
                 alt={t("Evaluation form scan", "Sken hodnotícího formuláře") + ` #${lightboxItem.num}`}
-                className="w-full h-auto max-h-[88vh] object-contain rounded"
+                onSwipeNext={() => navLightbox(1)}
+                onSwipePrev={() => navLightbox(-1)}
               />
-              <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground">
+              <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground z-10">
                 #{lightboxItem.num}
                 <span className="ml-2 text-muted-foreground font-light">
                   {(lightboxIndex ?? 0) + 1} / {allSorted.length}
@@ -502,7 +570,7 @@ const EvaluationsGallery = () => {
                     type="button"
                     aria-label={t("Previous", "Předchozí")}
                     onClick={() => navLightbox(-1)}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-background/80 backdrop-blur-sm text-foreground hover:bg-background transition-colors"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 backdrop-blur-xl text-white border-0 portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(99,179,255,0.45)] hover:bg-white/20 transition-colors z-10"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
@@ -510,7 +578,7 @@ const EvaluationsGallery = () => {
                     type="button"
                     aria-label={t("Next", "Další")}
                     onClick={() => navLightbox(1)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-background/80 backdrop-blur-sm text-foreground hover:bg-background transition-colors"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 backdrop-blur-xl text-white border-0 portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(99,179,255,0.45)] hover:bg-white/20 transition-colors z-10"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </button>

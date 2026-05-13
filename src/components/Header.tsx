@@ -129,7 +129,7 @@ const Header = () => {
         scrolled ? "glass" : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto flex h-16 md:h-[72px] items-center justify-between px-6">
+      <div className="container mx-auto flex h-16 md:h-[72px] max-lg:landscape:h-11 items-center justify-between px-6 max-lg:landscape:px-4">
         {/* Logo — manual navigation so root routes always reset */}
         <a
           href={homeHref}
@@ -140,7 +140,7 @@ const Header = () => {
           <img
             src={logo}
             alt="Rokofsky Communication Consulting Logo"
-            className="block h-8 md:h-10 w-auto shrink-0 object-contain"
+            className="block h-8 md:h-10 max-lg:landscape:h-6 w-auto shrink-0 object-contain"
             style={{ backgroundColor: "transparent" }}
           />
         </a>
