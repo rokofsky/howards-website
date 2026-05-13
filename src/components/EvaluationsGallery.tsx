@@ -11,6 +11,7 @@ import {
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useT } from "@/hooks/useT";
 import { Search, X, ChevronLeft, ChevronRight } from "lucide-react";
+import ZoomableImage from "./ZoomableImage";
 
 type Item = { src: string; key: string; num: string };
 type SortOrder = "asc" | "desc";
