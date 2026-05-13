@@ -1,15 +1,6 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-  PaginationEllipsis,
-} from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -21,10 +12,15 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useT } from "@/hooks/useT";
 import { Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 
-const PAGE_SIZE = 20;
-
 type Item = { src: string; key: string; num: string };
 type SortOrder = "asc" | "desc";
+
+const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
+  if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
+    (window as any).gtag("event", "click", { event_category: "engagement", event_label: label, ...params });
+  }
+};
+
 
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
 export const ASSET_VERSION = "202605121549";
