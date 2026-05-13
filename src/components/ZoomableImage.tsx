@@ -53,7 +53,7 @@ const ZoomableImage = ({ src, alt, onSwipeNext, onSwipePrev }: Props) => {
     const dx = t.clientX - start.x;
     const dy = t.clientY - start.y;
     if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) < Math.abs(dy) * 1.2) return;
-    const scale = wrapperRef.current?.instance?.transformState?.scale ?? 1;
+    const scale = wrapperRef.current?.state?.scale ?? 1;
     if (scale <= 1.02) {
       dx < 0 ? onSwipeNext() : onSwipePrev();
       swipedRef.current = true;
