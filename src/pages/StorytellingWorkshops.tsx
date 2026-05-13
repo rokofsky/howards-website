@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useT } from "@/hooks/useT";
+import { trackCTA, trackClick } from "@/lib/analytics";
 import {
   Dialog,
   DialogContent,
