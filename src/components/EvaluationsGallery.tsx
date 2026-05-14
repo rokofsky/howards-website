@@ -708,3 +708,5 @@ const IsolatedView = ({
     </div>
   );
 };
+
+export default EvaluationsGallery;
