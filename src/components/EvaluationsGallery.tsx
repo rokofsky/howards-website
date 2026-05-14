@@ -589,6 +589,7 @@ const IsolatedView = ({
     dragFree: false,
     containScroll: false,
   });
+  const [scale, setScale] = useState(1);
 
   // Jump to clicked index without animation on first mount
   useEffect(() => {
@@ -597,15 +598,32 @@ const IsolatedView = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emblaApi]);
 
-  // Track active slide for counter + parent sync
+  // Track active slide for counter + parent sync; reset zoom on slide change
   useEffect(() => {
     if (!emblaApi) return;
-    const onSelect = () => onIndexChange(emblaApi.selectedScrollSnap());
+    const onSelect = () => {
+      onIndexChange(emblaApi.selectedScrollSnap());
+      setScale(1);
+    };
     emblaApi.on("select", onSelect);
     return () => {
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi, onIndexChange]);
+
+  // Ctrl+wheel zoom on the embla viewport
+  useEffect(() => {
+    if (!emblaApi) return;
+    const node = emblaApi.rootNode();
+    if (!node) return;
+    const onWheel = (e: WheelEvent) => {
+      if (!e.ctrlKey) return;
+      e.preventDefault();
+      setScale((s) => Math.min(4, Math.max(1, s - e.deltaY * 0.01)));
+    };
+    node.addEventListener("wheel", onWheel, { passive: false });
+    return () => node.removeEventListener("wheel", onWheel);
+  }, [emblaApi]);
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
@@ -637,12 +655,7 @@ const IsolatedView = ({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-background/95"
-      onPointerDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <div className="fixed inset-0 z-50 bg-background/95">
       <div
         className="w-full h-full overflow-hidden"
         ref={emblaRef}
@@ -653,13 +666,21 @@ const IsolatedView = ({
             <div
               key={it.key}
               className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
+              onPointerDown={(e) => {
+                if (e.target === e.currentTarget) onClose();
+              }}
             >
               <img
                 src={`${it.src}?v=${ASSET_VERSION}`}
                 alt={`${alt} #${it.num}`}
                 draggable={false}
-                style={{ touchAction: "pinch-zoom" }}
-                className="max-w-full max-h-full object-contain select-none pointer-events-none"
+                style={{
+                  touchAction: "pinch-zoom",
+                  transform: `scale(${scale})`,
+                  transformOrigin: "center",
+                  transition: "transform 0.1s ease",
+                }}
+                className="max-w-full max-h-full object-contain select-none"
               />
             </div>
           ))}
