@@ -8,10 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useT } from "@/hooks/useT";
 import { Search, X, ChevronLeft, ChevronRight } from "lucide-react";
-import ZoomableImage from "./ZoomableImage";
+import useEmblaCarousel from "embla-carousel-react";
 
 type Item = { src: string; key: string; num: string };
 type SortOrder = "asc" | "desc";
@@ -547,79 +546,167 @@ const EvaluationsGallery = () => {
         </div>
       )}
 
-      <Dialog open={lightboxIndex !== null} onOpenChange={(o) => !o && setLightboxIndex(null)}>
-        <DialogContent
-          className="max-w-[98vw] md:max-w-6xl p-2 sm:p-4 bg-background/95 border-none [&>button]:hidden"
-          onClick={(e) => {
-            // Close when tapping the padding/backdrop (not children)
-            if (e.target === e.currentTarget) setLightboxIndex(null);
-          }}
-        >
-          {lightboxItem && (
-            <div className="relative" onClick={(e) => e.stopPropagation()}>
-              {/* Preload neighbors for smooth navigation */}
-              {allSorted
-                .map((it, i) => ({ it, i }))
-                .filter(({ i }) => {
-                  const cur = lightboxIndex ?? 0;
-                  const len = allSorted.length;
-                  return (
-                    i === (cur - 1 + len) % len ||
-                    i === (cur + 1) % len
-                  );
-                })
-                .map(({ it }) => (
-                  <link key={it.key} rel="preload" as="image" href={`${it.src}?v=${ASSET_VERSION}`} />
-                ))}
-              <ZoomableImage
-                key={lightboxItem.key}
-                src={`${lightboxItem.src}?v=${ASSET_VERSION}`}
-                alt={t("Evaluation form scan", "Sken hodnotícího formuláře") + ` #${lightboxItem.num}`}
-                onSwipeNext={() => navLightbox(1)}
-                onSwipePrev={() => navLightbox(-1)}
+      {lightboxIndex !== null && (
+        <IsolatedView
+          items={allSorted}
+          startIndex={lightboxIndex}
+          onIndexChange={setLightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          alt={t("Evaluation form scan", "Sken hodnotícího formuláře")}
+          prevLabel={t("Previous", "Předchozí")}
+          nextLabel={t("Next", "Další")}
+          closeLabel={t("Close", "Zavřít")}
+        />
+      )}
+    </div>
+  );
+};
+
+type IsolatedViewProps = {
+  items: Item[];
+  startIndex: number;
+  onIndexChange: (i: number) => void;
+  onClose: () => void;
+  alt: string;
+  prevLabel: string;
+  nextLabel: string;
+  closeLabel: string;
+};
+
+const IsolatedView = ({
+  items,
+  startIndex,
+  onIndexChange,
+  onClose,
+  alt,
+  prevLabel,
+  nextLabel,
+  closeLabel,
+}: IsolatedViewProps) => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    startIndex,
+    dragFree: false,
+    containScroll: false,
+  });
+
+  // Jump to clicked index without animation on first mount
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.scrollTo(startIndex, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [emblaApi]);
+
+  // Track active slide for counter + parent sync
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSelect = () => onIndexChange(emblaApi.selectedScrollSnap());
+    emblaApi.on("select", onSelect);
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi, onIndexChange]);
+
+  // Keyboard nav + lock body scroll
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowRight") emblaApi?.scrollNext();
+      else if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
+    };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [emblaApi, onClose]);
+
+  const current = emblaApi?.selectedScrollSnap() ?? startIndex;
+
+  const arrowBase =
+    "absolute top-1/2 -translate-y-1/2 z-20 inline-flex items-center justify-center w-12 h-12 rounded-full text-white transition-colors portrait:scale-[1.3] landscape:scale-[1.7]";
+  const arrowStyle: React.CSSProperties = {
+    background: "rgba(10,25,47,0.7)",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
+    border: "2px solid rgba(255,255,255,0.4)",
+    WebkitTapHighlightColor: "transparent",
+    outline: "none",
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-background/95"
+      onPointerDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        className="w-full h-full overflow-hidden"
+        ref={emblaRef}
+        style={{ touchAction: "pan-y pinch-zoom" }}
+      >
+        <div className="flex h-full">
+          {items.map((it) => (
+            <div
+              key={it.key}
+              className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
+            >
+              <img
+                src={`${it.src}?v=${ASSET_VERSION}`}
+                alt={`${alt} #${it.num}`}
+                draggable={false}
+                style={{ touchAction: "pinch-zoom" }}
+                className="max-w-full max-h-full object-contain select-none pointer-events-none"
               />
-              <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground z-10">
-                #{lightboxItem.num}
-                <span className="ml-2 text-muted-foreground font-light">
-                  {(lightboxIndex ?? 0) + 1} / {allSorted.length}
-                </span>
-              </span>
-              {/* Custom close button — 44x44 thumb-friendly hit area */}
-              <button
-                type="button"
-                aria-label={t("Close", "Zavřít")}
-                onClick={() => setLightboxIndex(null)}
-                className="absolute top-2 right-2 z-20 inline-flex items-center justify-center w-11 h-11 rounded-full bg-[#0A192F]/70 backdrop-blur-[12px] border-2 border-white/40 text-white shadow-[0_0_24px_rgba(10,25,47,0.55)] hover:bg-[#0A192F]/85 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-              >
-                <X className="h-5 w-5" />
-              </button>
-              {allSorted.length > 1 && (
-                <>
-                  <button
-                    type="button"
-                    aria-label={t("Previous", "Předchozí")}
-                    onClick={() => navLightbox(-1)}
-                    className="absolute left-1 sm:left-3 lg:left-6 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#0A192F]/70 backdrop-blur-[12px] border-2 border-white/40 text-white portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(10,25,47,0.55)] hover:bg-[#0A192F]/85 transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </button>
-                  <button
-                    type="button"
-                    aria-label={t("Next", "Další")}
-                    onClick={() => navLightbox(1)}
-                    className="absolute right-1 sm:right-3 lg:right-6 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#0A192F]/70 backdrop-blur-[12px] border-2 border-white/40 text-white portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(10,25,47,0.55)] hover:bg-[#0A192F]/85 transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
-                </>
-              )}
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+          ))}
+        </div>
+      </div>
+
+      <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground z-30 pointer-events-none">
+        #{items[current]?.num}
+        <span className="ml-2 text-muted-foreground font-light">
+          {current + 1} / {items.length}
+        </span>
+      </span>
+
+      <button
+        type="button"
+        aria-label={closeLabel}
+        onClick={onClose}
+        className="absolute top-2 right-2 z-30 inline-flex items-center justify-center w-11 h-11 rounded-full text-white"
+        style={arrowStyle}
+      >
+        <X className="h-5 w-5" />
+      </button>
+
+      {items.length > 1 && (
+        <>
+          <button
+            type="button"
+            aria-label={prevLabel}
+            onClick={() => emblaApi?.scrollPrev()}
+            className={`${arrowBase} left-2 sm:left-4`}
+            style={arrowStyle}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            aria-label={nextLabel}
+            onClick={() => emblaApi?.scrollNext()}
+            className={`${arrowBase} right-2 sm:right-4`}
+            style={arrowStyle}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </>
+      )}
     </div>
   );
 };
 
 export default EvaluationsGallery;
-
