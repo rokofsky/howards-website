@@ -546,76 +546,18 @@ const EvaluationsGallery = () => {
         </div>
       )}
 
-      <Dialog open={lightboxIndex !== null} onOpenChange={(o) => !o && setLightboxIndex(null)}>
-        <DialogContent
-          className="max-w-[98vw] md:max-w-6xl p-2 sm:p-4 bg-background/95 border-none [&>button]:hidden"
-          onClick={(e) => {
-            // Close when tapping the padding/backdrop (not children)
-            if (e.target === e.currentTarget) setLightboxIndex(null);
-          }}
-        >
-          {lightboxItem && (
-            <div className="relative" onClick={(e) => e.stopPropagation()}>
-              {/* Preload neighbors for smooth navigation */}
-              {allSorted
-                .map((it, i) => ({ it, i }))
-                .filter(({ i }) => {
-                  const cur = lightboxIndex ?? 0;
-                  const len = allSorted.length;
-                  return (
-                    i === (cur - 1 + len) % len ||
-                    i === (cur + 1) % len
-                  );
-                })
-                .map(({ it }) => (
-                  <link key={it.key} rel="preload" as="image" href={`${it.src}?v=${ASSET_VERSION}`} />
-                ))}
-              <ZoomableImage
-                key={lightboxItem.key}
-                src={`${lightboxItem.src}?v=${ASSET_VERSION}`}
-                alt={t("Evaluation form scan", "Sken hodnotícího formuláře") + ` #${lightboxItem.num}`}
-                onSwipeNext={() => navLightbox(1)}
-                onSwipePrev={() => navLightbox(-1)}
-              />
-              <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground z-10">
-                #{lightboxItem.num}
-                <span className="ml-2 text-muted-foreground font-light">
-                  {(lightboxIndex ?? 0) + 1} / {allSorted.length}
-                </span>
-              </span>
-              {/* Custom close button — 44x44 thumb-friendly hit area */}
-              <button
-                type="button"
-                aria-label={t("Close", "Zavřít")}
-                onClick={() => setLightboxIndex(null)}
-                className="absolute top-2 right-2 z-20 inline-flex items-center justify-center w-11 h-11 rounded-full bg-[#0A192F]/70 backdrop-blur-[12px] border-2 border-white/40 text-white shadow-[0_0_24px_rgba(10,25,47,0.55)] hover:bg-[#0A192F]/85 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-              >
-                <X className="h-5 w-5" />
-              </button>
-              {allSorted.length > 1 && (
-                <>
-                  <button
-                    type="button"
-                    aria-label={t("Previous", "Předchozí")}
-                    onClick={() => navLightbox(-1)}
-                    className="absolute left-1 sm:left-3 lg:left-6 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#0A192F]/70 backdrop-blur-[12px] border-2 border-white/40 text-white portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(10,25,47,0.55)] hover:bg-[#0A192F]/85 transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </button>
-                  <button
-                    type="button"
-                    aria-label={t("Next", "Další")}
-                    onClick={() => navLightbox(1)}
-                    className="absolute right-1 sm:right-3 lg:right-6 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#0A192F]/70 backdrop-blur-[12px] border-2 border-white/40 text-white portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(10,25,47,0.55)] hover:bg-[#0A192F]/85 transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
-                </>
-              )}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      {lightboxIndex !== null && (
+        <IsolatedView
+          items={allSorted}
+          startIndex={lightboxIndex}
+          onIndexChange={setLightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          alt={t("Evaluation form scan", "Sken hodnotícího formuláře")}
+          prevLabel={t("Previous", "Předchozí")}
+          nextLabel={t("Next", "Další")}
+          closeLabel={t("Close", "Zavřít")}
+        />
+      )}
     </div>
   );
 };
