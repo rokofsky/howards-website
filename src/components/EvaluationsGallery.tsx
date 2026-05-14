@@ -655,12 +655,7 @@ const IsolatedView = ({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-background/95"
-      onPointerDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <div className="fixed inset-0 z-50 bg-background/95">
       <div
         className="w-full h-full overflow-hidden"
         ref={emblaRef}
@@ -671,13 +666,21 @@ const IsolatedView = ({
             <div
               key={it.key}
               className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
+              onPointerDown={(e) => {
+                if (e.target === e.currentTarget) onClose();
+              }}
             >
               <img
                 src={`${it.src}?v=${ASSET_VERSION}`}
                 alt={`${alt} #${it.num}`}
                 draggable={false}
-                style={{ touchAction: "pinch-zoom" }}
-                className="max-w-full max-h-full object-contain select-none pointer-events-none"
+                style={{
+                  touchAction: "pinch-zoom",
+                  transform: `scale(${scale})`,
+                  transformOrigin: "center",
+                  transition: "transform 0.1s ease",
+                }}
+                className="max-w-full max-h-full object-contain select-none"
               />
             </div>
           ))}
