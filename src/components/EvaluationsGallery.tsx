@@ -589,7 +589,7 @@ const EvaluationsGallery = () => {
                 type="button"
                 aria-label={t("Close", "Zavřít")}
                 onClick={() => setLightboxIndex(null)}
-                className="absolute top-2 right-2 z-20 inline-flex items-center justify-center w-11 h-11 rounded-full bg-sky-400/15 backdrop-blur-md border border-sky-200/40 text-white shadow-[0_0_24px_rgba(125,200,255,0.35)] hover:bg-sky-400/25 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/60"
+                className="absolute top-2 right-2 z-20 inline-flex items-center justify-center w-11 h-11 rounded-full bg-[#0A192F]/70 backdrop-blur-[12px] border-2 border-white/40 text-white shadow-[0_0_24px_rgba(10,25,47,0.55)] hover:bg-[#0A192F]/85 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -599,7 +599,7 @@ const EvaluationsGallery = () => {
                     type="button"
                     aria-label={t("Previous", "Předchozí")}
                     onClick={() => navLightbox(-1)}
-                    className="absolute left-1 sm:left-3 lg:left-6 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-12 h-12 rounded-full bg-sky-400/15 backdrop-blur-md border border-sky-200/40 text-white portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(125,200,255,0.45)] hover:bg-sky-400/25 transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/60"
+                    className="absolute left-1 sm:left-3 lg:left-6 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#0A192F]/70 backdrop-blur-[12px] border-2 border-white/40 text-white portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(10,25,47,0.55)] hover:bg-[#0A192F]/85 transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
@@ -607,7 +607,7 @@ const EvaluationsGallery = () => {
                     type="button"
                     aria-label={t("Next", "Další")}
                     onClick={() => navLightbox(1)}
-                    className="absolute right-1 sm:right-3 lg:right-6 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-12 h-12 rounded-full bg-sky-400/15 backdrop-blur-md border border-sky-200/40 text-white portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(125,200,255,0.45)] hover:bg-sky-400/25 transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/60"
+                    className="absolute right-1 sm:right-3 lg:right-6 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#0A192F]/70 backdrop-blur-[12px] border-2 border-white/40 text-white portrait:scale-[1.3] landscape:scale-[1.7] shadow-[0_0_30px_rgba(10,25,47,0.55)] hover:bg-[#0A192F]/85 transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </button>

@@ -94,6 +94,7 @@ const ZoomableImage = ({ src, alt, onSwipeNext, onSwipePrev }: Props) => {
             src={src}
             alt={alt}
             draggable={false}
+            style={{ touchAction: "pan-y pinch-zoom" }}
             className="max-w-full max-h-[88vh] object-contain select-none"
           />
         </TransformComponent>
