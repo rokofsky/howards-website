@@ -694,11 +694,35 @@ const IsolatedView = ({
                 src={`${it.src}?v=${ASSET_VERSION}`}
                 alt={`${alt} #${it.num}`}
                 draggable={false}
+                onPointerDown={(e) => {
+                  if (scale <= 1) return;
+                  e.stopPropagation();
+                  e.currentTarget.setPointerCapture(e.pointerId);
+                  panStartX.current = e.clientX;
+                  panStartY.current = e.clientY;
+                  isPanning.current = true;
+                }}
+                onPointerMove={(e) => {
+                  if (!isPanning.current) return;
+                  const dx = e.clientX - panStartX.current;
+                  const dy = e.clientY - panStartY.current;
+                  panStartX.current = e.clientX;
+                  panStartY.current = e.clientY;
+                  setOffset((o) => ({ x: o.x + dx, y: o.y + dy }));
+                }}
+                onPointerUp={(e) => {
+                  isPanning.current = false;
+                  try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
+                }}
+                onPointerCancel={(e) => {
+                  isPanning.current = false;
+                  try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
+                }}
                 style={{
-                  touchAction: "pinch-zoom",
-                  transform: `scale(${scale})`,
+                  touchAction: scale > 1 ? "none" : "pinch-zoom",
+                  transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
                   transformOrigin: "center",
-                  transition: "transform 0.1s ease",
+                  transition: isPanning.current ? "none" : "transform 0.1s ease",
                 }}
                 className="max-w-full max-h-full object-contain select-none"
               />
