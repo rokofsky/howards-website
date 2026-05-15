@@ -615,6 +615,7 @@ const IsolatedView = ({
     const onSelect = () => {
       onIndexChange(emblaApi.selectedScrollSnap());
       setScale(1);
+      setOffset({ x: 0, y: 0 });
     };
     emblaApi.on("select", onSelect);
     return () => {
