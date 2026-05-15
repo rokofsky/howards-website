@@ -593,6 +593,7 @@ const IsolatedView = ({
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
+  const pointerDownPos = useRef({ x: 0, y: 0 });
   const isPanning = useRef(false);
   const panStartX = useRef(0);
   const panStartY = useRef(0);
@@ -692,6 +693,18 @@ const IsolatedView = ({
               key={it.key}
               className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
               style={{ overflow: "visible" }}
+              onPointerDown={(e) => {
+                if (e.target === e.currentTarget) {
+                  pointerDownPos.current = { x: e.clientX, y: e.clientY };
+                }
+              }}
+              onPointerUp={(e) => {
+                if (e.target === e.currentTarget) {
+                  const dx = Math.abs(e.clientX - pointerDownPos.current.x);
+                  const dy = Math.abs(e.clientY - pointerDownPos.current.y);
+                  if (dx < 10 && dy < 10) onClose();
+                }
+              }}
             >
               <img
                 src={`${it.src}?v=${ASSET_VERSION}`}
