@@ -596,6 +596,8 @@ const IsolatedView = ({
   const isPanning = useRef(false);
   const panStartX = useRef(0);
   const panStartY = useRef(0);
+  const imageBounds = useRef({ width: 0, height: 0 });
+  const containerBounds = useRef({ width: 0, height: 0 });
 
   // Reset offset when scale returns to 1
   useEffect(() => {
