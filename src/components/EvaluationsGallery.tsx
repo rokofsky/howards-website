@@ -593,6 +593,7 @@ const IsolatedView = ({
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
+  const pointerDownPos = useRef({ x: 0, y: 0 });
   const isPanning = useRef(false);
   const panStartX = useRef(0);
   const panStartY = useRef(0);
