@@ -590,6 +590,8 @@ const IsolatedView = ({
     containScroll: false,
   });
   const [scale, setScale] = useState(1);
+  const pointerStartX = useRef<number>(0);
+  const pointerStartY = useRef<number>(0);
 
   // Jump to clicked index without animation on first mount
   useEffect(() => {
@@ -655,7 +657,18 @@ const IsolatedView = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-background/95">
+    <div
+      className="fixed inset-0 z-50 bg-background/95"
+      onPointerDown={(e) => {
+        pointerStartX.current = e.clientX;
+        pointerStartY.current = e.clientY;
+      }}
+      onPointerUp={(e) => {
+        const dx = Math.abs(e.clientX - pointerStartX.current);
+        const dy = Math.abs(e.clientY - pointerStartY.current);
+        if (e.target === e.currentTarget && dx < 10 && dy < 10) onClose();
+      }}
+    >
       <div
         className="w-full h-full overflow-hidden"
         ref={emblaRef}
@@ -666,9 +679,6 @@ const IsolatedView = ({
             <div
               key={it.key}
               className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
-              onPointerDown={(e) => {
-                if (e.target === e.currentTarget) onClose();
-              }}
             >
               <img
                 src={`${it.src}?v=${ASSET_VERSION}`}
