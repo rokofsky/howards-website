@@ -590,8 +590,17 @@ const IsolatedView = ({
     containScroll: false,
   });
   const [scale, setScale] = useState(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
+  const isPanning = useRef(false);
+  const panStartX = useRef(0);
+  const panStartY = useRef(0);
+
+  // Reset offset when scale returns to 1
+  useEffect(() => {
+    if (scale === 1) setOffset({ x: 0, y: 0 });
+  }, [scale]);
 
   // Jump to clicked index without animation on first mount
   useEffect(() => {
