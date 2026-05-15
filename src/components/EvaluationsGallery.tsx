@@ -682,15 +682,16 @@ const IsolatedView = ({
       }}
     >
       <div
-        className="w-full h-full overflow-hidden"
+        className="w-full h-full"
         ref={emblaRef}
-        style={{ touchAction: "pan-y pinch-zoom" }}
+        style={{ touchAction: "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
       >
         <div className="flex h-full">
           {items.map((it) => (
             <div
               key={it.key}
               className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
+              style={{ overflow: "visible" }}
             >
               <img
                 src={`${it.src}?v=${ASSET_VERSION}`}
@@ -702,6 +703,15 @@ const IsolatedView = ({
                   e.currentTarget.setPointerCapture(e.pointerId);
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
+                  const imgRect = e.currentTarget.getBoundingClientRect();
+                  const parent = e.currentTarget.parentElement;
+                  const contRect = parent?.getBoundingClientRect();
+                  // imgRect already reflects the scaled size
+                  imageBounds.current = { width: imgRect.width, height: imgRect.height };
+                  containerBounds.current = {
+                    width: contRect?.width ?? imgRect.width,
+                    height: contRect?.height ?? imgRect.height,
+                  };
                   isPanning.current = true;
                 }}
                 onPointerMove={(e) => {
@@ -710,7 +720,14 @@ const IsolatedView = ({
                   const dy = e.clientY - panStartY.current;
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
-                  setOffset((o) => ({ x: o.x + dx, y: o.y + dy }));
+                  setOffset((o) => {
+                    const maxX = Math.max(0, (imageBounds.current.width - containerBounds.current.width) / 2);
+                    const maxY = Math.max(0, (imageBounds.current.height - containerBounds.current.height) / 2);
+                    return {
+                      x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
+                      y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+                    };
+                  });
                 }}
                 onPointerUp={(e) => {
                   isPanning.current = false;
