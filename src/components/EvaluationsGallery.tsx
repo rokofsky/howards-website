@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useT } from "@/hooks/useT";
 import { Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
@@ -14,6 +20,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
     (window as any).gtag("event", "click", { event_category: "engagement", event_label: label, ...params });
   }
 };
+
 
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
 export const ASSET_VERSION = "202605121549";
@@ -203,8 +210,11 @@ const EvaluationsGallery = () => {
   }, [queryInput]);
 
   const allSorted = useMemo(
-    () => [...candidates].sort((a, b) => (sort === "asc" ? a.num.localeCompare(b.num) : b.num.localeCompare(a.num))),
-    [candidates, sort],
+    () =>
+      [...candidates].sort((a, b) =>
+        sort === "asc" ? a.num.localeCompare(b.num) : b.num.localeCompare(a.num)
+      ),
+    [candidates, sort]
   );
 
   const filtered = useMemo(() => {
@@ -275,7 +285,7 @@ const EvaluationsGallery = () => {
         return next;
       });
     },
-    [allSorted],
+    [allSorted]
   );
 
   // When lightbox index changes, scroll the underlying strip to that item
@@ -458,7 +468,7 @@ const EvaluationsGallery = () => {
           ? t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")
           : t(
               `Showing ${filtered.length} of ${candidates.length} evaluations`,
-              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`,
+              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`
             )}
       </p>
 
@@ -629,54 +639,6 @@ const IsolatedView = ({
     node.addEventListener("wheel", onWheel, { passive: false });
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
-  // Native pointer handlers for panning (React synthetic events blocked by Embla)
-  useEffect(() => {
-    const img = document.querySelector("img.lightbox-img") as HTMLElement;
-    if (!img) return;
-    const onDown = (e: PointerEvent) => {
-      if (scale <= 1) return;
-      e.stopPropagation();
-      img.setPointerCapture(e.pointerId);
-      panStartX.current = e.clientX;
-      panStartY.current = e.clientY;
-      const imgRect = img.getBoundingClientRect();
-      const contRect = img.parentElement?.getBoundingClientRect();
-      imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
-      containerBounds.current = { width: contRect?.width ?? imgRect.width, height: contRect?.height ?? imgRect.height };
-      isPanning.current = true;
-    };
-    const onMove = (e: PointerEvent) => {
-      if (!isPanning.current) return;
-      const dx = e.clientX - panStartX.current;
-      const dy = e.clientY - panStartY.current;
-      panStartX.current = e.clientX;
-      panStartY.current = e.clientY;
-      setOffset((o) => {
-        const maxX = Math.max(0, (imageBounds.current.width - containerBounds.current.width) / 2);
-        const maxY = Math.max(0, (imageBounds.current.height - containerBounds.current.height) / 2);
-        return {
-          x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-          y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
-        };
-      });
-    };
-    const onUp = (e: PointerEvent) => {
-      isPanning.current = false;
-      try {
-        img.releasePointerCapture(e.pointerId);
-      } catch {}
-    };
-    img.addEventListener("pointerdown", onDown);
-    img.addEventListener("pointermove", onMove);
-    img.addEventListener("pointerup", onUp);
-    img.addEventListener("pointercancel", onUp);
-    return () => {
-      img.removeEventListener("pointerdown", onDown);
-      img.removeEventListener("pointermove", onMove);
-      img.removeEventListener("pointerup", onUp);
-      img.removeEventListener("pointercancel", onUp);
-    };
-  }, [scale]);
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
@@ -687,22 +649,18 @@ const IsolatedView = ({
     };
     window.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
-    document.body.style.overflowX = "clip";
+    document.body.style.overflow = "clip";
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [emblaApi, onClose]);
+   }, [emblaApi, onClose]);
 
   useEffect(() => {
     if (!emblaApi) return;
     const node = emblaApi.rootNode() as HTMLElement;
     if (!node) return;
-    // Imperatively override Embla's own overflow: hidden injection
     node.style.overflow = scale > 1 ? "visible" : "hidden";
-    // Also ensure the inner container doesn't clip
-    const container = emblaApi.containerNode() as HTMLElement;
-    if (container) container.style.overflow = "visible";
   }, [scale, emblaApi]);
 
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
@@ -765,11 +723,11 @@ const IsolatedView = ({
                   e.currentTarget.setPointerCapture(e.pointerId);
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
-                  // Divide by scale to get the natural (unscaled) image dimensions
                   const imgRect = e.currentTarget.getBoundingClientRect();
                   const parent = e.currentTarget.parentElement;
                   const contRect = parent?.getBoundingClientRect();
-                  imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
+                  // imgRect already reflects the scaled size
+                  imageBounds.current = { width: imgRect.width, height: imgRect.height };
                   containerBounds.current = {
                     width: contRect?.width ?? imgRect.width,
                     height: contRect?.height ?? imgRect.height,
@@ -793,31 +751,22 @@ const IsolatedView = ({
                 }}
                 onPointerUp={(e) => {
                   isPanning.current = false;
-                  try {
-                    e.currentTarget.releasePointerCapture(e.pointerId);
-                  } catch {}
+                  try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
                 }}
                 onPointerCancel={(e) => {
                   isPanning.current = false;
-                  try {
-                    e.currentTarget.releasePointerCapture(e.pointerId);
-                  } catch {}
+                  try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
                 }}
                 style={{
-                  // Use auto sizing with max constraints so the image has a natural
-                  // layout size. scale() then enlarges it beyond the container without
-                  // being clipped by a 100%/100% layout boundary.
-                  width: "auto",
-                  height: "auto",
-                  maxWidth: "100%",
-                  maxHeight: "100%",
+                  width: "100%",
+                  height: "100%",
                   objectFit: "contain",
                   touchAction: scale > 1 ? "none" : "pinch-zoom",
                   transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
                   transformOrigin: "center",
                   transition: isPanning.current ? "none" : "transform 0.1s ease",
                 }}
-                className="select-none lightbox-img"
+                className="select-none"
               />
             </div>
           ))}
