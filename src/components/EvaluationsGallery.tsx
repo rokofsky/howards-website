@@ -638,8 +638,11 @@ const IsolatedView = ({
       else if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
     };
     window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "clip";
     return () => {
       window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
     };
   }, [emblaApi, onClose]);
 
