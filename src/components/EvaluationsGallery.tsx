@@ -631,7 +631,7 @@ const IsolatedView = ({
   }, [emblaApi]);
   // Native pointer handlers for panning (React synthetic events blocked by Embla)
   useEffect(() => {
-    const img = imgRef.current;
+    const img = document.querySelector("img.select-none") as HTMLElement;
     if (!img) return;
     const onDown = (e: PointerEvent) => {
       if (scale <= 1) return;
