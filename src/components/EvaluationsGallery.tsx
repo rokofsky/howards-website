@@ -629,6 +629,54 @@ const IsolatedView = ({
     node.addEventListener("wheel", onWheel, { passive: false });
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
+  // Native pointer handlers for panning (React synthetic events blocked by Embla)
+  useEffect(() => {
+    const img = document.querySelector("img.select-none") as HTMLElement;
+    if (!img) return;
+    const onDown = (e: PointerEvent) => {
+      if (scale <= 1) return;
+      e.stopPropagation();
+      img.setPointerCapture(e.pointerId);
+      panStartX.current = e.clientX;
+      panStartY.current = e.clientY;
+      const imgRect = img.getBoundingClientRect();
+      const contRect = img.parentElement?.getBoundingClientRect();
+      imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
+      containerBounds.current = { width: contRect?.width ?? imgRect.width, height: contRect?.height ?? imgRect.height };
+      isPanning.current = true;
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!isPanning.current) return;
+      const dx = e.clientX - panStartX.current;
+      const dy = e.clientY - panStartY.current;
+      panStartX.current = e.clientX;
+      panStartY.current = e.clientY;
+      setOffset((o) => {
+        const maxX = Math.max(0, (imageBounds.current.width - containerBounds.current.width) / 2);
+        const maxY = Math.max(0, (imageBounds.current.height - containerBounds.current.height) / 2);
+        return {
+          x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
+          y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+        };
+      });
+    };
+    const onUp = (e: PointerEvent) => {
+      isPanning.current = false;
+      try {
+        img.releasePointerCapture(e.pointerId);
+      } catch {}
+    };
+    img.addEventListener("pointerdown", onDown);
+    img.addEventListener("pointermove", onMove);
+    img.addEventListener("pointerup", onUp);
+    img.addEventListener("pointercancel", onUp);
+    return () => {
+      img.removeEventListener("pointerdown", onDown);
+      img.removeEventListener("pointermove", onMove);
+      img.removeEventListener("pointerup", onUp);
+      img.removeEventListener("pointercancel", onUp);
+    };
+  }, [scale]);
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
