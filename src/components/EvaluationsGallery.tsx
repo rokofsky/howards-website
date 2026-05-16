@@ -1,13 +1,7 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useT } from "@/hooks/useT";
 import { Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
@@ -20,7 +14,6 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
     (window as any).gtag("event", "click", { event_category: "engagement", event_label: label, ...params });
   }
 };
-
 
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
 export const ASSET_VERSION = "202605121549";
@@ -210,11 +203,8 @@ const EvaluationsGallery = () => {
   }, [queryInput]);
 
   const allSorted = useMemo(
-    () =>
-      [...candidates].sort((a, b) =>
-        sort === "asc" ? a.num.localeCompare(b.num) : b.num.localeCompare(a.num)
-      ),
-    [candidates, sort]
+    () => [...candidates].sort((a, b) => (sort === "asc" ? a.num.localeCompare(b.num) : b.num.localeCompare(a.num))),
+    [candidates, sort],
   );
 
   const filtered = useMemo(() => {
@@ -285,7 +275,7 @@ const EvaluationsGallery = () => {
         return next;
       });
     },
-    [allSorted]
+    [allSorted],
   );
 
   // When lightbox index changes, scroll the underlying strip to that item
@@ -468,7 +458,7 @@ const EvaluationsGallery = () => {
           ? t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")
           : t(
               `Showing ${filtered.length} of ${candidates.length} evaluations`,
-              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`
+              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`,
             )}
       </p>
 
@@ -648,13 +638,10 @@ const IsolatedView = ({
       else if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
     };
     window.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "clip";
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
     };
-   }, [emblaApi, onClose]);
+  }, [emblaApi, onClose]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -755,11 +742,15 @@ const IsolatedView = ({
                 }}
                 onPointerUp={(e) => {
                   isPanning.current = false;
-                  try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
+                  try {
+                    e.currentTarget.releasePointerCapture(e.pointerId);
+                  } catch {}
                 }}
                 onPointerCancel={(e) => {
                   isPanning.current = false;
-                  try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
+                  try {
+                    e.currentTarget.releasePointerCapture(e.pointerId);
+                  } catch {}
                 }}
                 style={{
                   // Use auto sizing with max constraints so the image has a natural
