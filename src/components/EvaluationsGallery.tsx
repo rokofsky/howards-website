@@ -639,7 +639,7 @@ const IsolatedView = ({
     };
     window.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
-    document.body.style.overflow = "clip";
+    document.body.style.overflowX = "clip";
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
