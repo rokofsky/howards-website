@@ -631,7 +631,7 @@ const IsolatedView = ({
   }, [emblaApi]);
   // Native pointer handlers for panning (React synthetic events blocked by Embla)
   useEffect(() => {
-    const img = document.querySelector("img.select-none") as HTMLElement;
+    const img = document.querySelector("img.lightbox-img") as HTMLElement;
     if (!img) return;
     const onDown = (e: PointerEvent) => {
       if (scale <= 1) return;
@@ -817,7 +817,7 @@ const IsolatedView = ({
                   transformOrigin: "center",
                   transition: isPanning.current ? "none" : "transform 0.1s ease",
                 }}
-                className="select-none"
+                className="select-none lightbox-img"
               />
             </div>
           ))}
