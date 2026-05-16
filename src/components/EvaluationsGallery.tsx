@@ -656,7 +656,14 @@ const IsolatedView = ({
       document.body.style.position = prevPosition;
       document.body.style.width = "";
     };
-  }, [emblaApi, onClose]);
+   }, [emblaApi, onClose]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const node = emblaApi.rootNode() as HTMLElement;
+    if (!node) return;
+    node.style.overflow = scale > 1 ? "visible" : "hidden";
+  }, [scale, emblaApi]);
 
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
 
