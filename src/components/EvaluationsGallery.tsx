@@ -660,7 +660,11 @@ const IsolatedView = ({
     if (!emblaApi) return;
     const node = emblaApi.rootNode() as HTMLElement;
     if (!node) return;
+    // Imperatively override Embla's own overflow: hidden injection
     node.style.overflow = scale > 1 ? "visible" : "hidden";
+    // Also ensure the inner container doesn't clip
+    const container = emblaApi.containerNode() as HTMLElement;
+    if (container) container.style.overflow = "visible";
   }, [scale, emblaApi]);
 
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
@@ -723,11 +727,11 @@ const IsolatedView = ({
                   e.currentTarget.setPointerCapture(e.pointerId);
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
+                  // Divide by scale to get the natural (unscaled) image dimensions
                   const imgRect = e.currentTarget.getBoundingClientRect();
                   const parent = e.currentTarget.parentElement;
                   const contRect = parent?.getBoundingClientRect();
-                  // imgRect already reflects the scaled size
-                  imageBounds.current = { width: imgRect.width, height: imgRect.height };
+                  imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
                   containerBounds.current = {
                     width: contRect?.width ?? imgRect.width,
                     height: contRect?.height ?? imgRect.height,
@@ -758,8 +762,13 @@ const IsolatedView = ({
                   try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
                 }}
                 style={{
-                  width: "100%",
-                  height: "100%",
+                  // Use auto sizing with max constraints so the image has a natural
+                  // layout size. scale() then enlarges it beyond the container without
+                  // being clipped by a 100%/100% layout boundary.
+                  width: "auto",
+                  height: "auto",
+                  maxWidth: "100%",
+                  maxHeight: "100%",
                   objectFit: "contain",
                   touchAction: scale > 1 ? "none" : "pinch-zoom",
                   transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
