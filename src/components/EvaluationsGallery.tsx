@@ -718,6 +718,7 @@ const IsolatedView = ({
       aria-modal="true"
       aria-label={closeLabel}
       tabIndex={-1}
+      onKeyDown={handleKeyDown}
       className="fixed inset-0 z-50 bg-background/95 outline-none"
       onPointerDown={(e) => {
         pointerStartX.current = e.clientX;
