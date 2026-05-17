@@ -826,6 +826,7 @@ const IsolatedView = ({
       </span>
 
       <button
+        ref={closeButtonRef}
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
