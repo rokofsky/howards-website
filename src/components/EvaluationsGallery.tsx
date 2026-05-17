@@ -21,6 +21,10 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
+  // Focus the close button on mount
+  useEffect(() => {
+    closeButtonRef.current?.focus();
+  }, []);
 
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
 export const ASSET_VERSION = "202605121549";
