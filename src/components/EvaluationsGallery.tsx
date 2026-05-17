@@ -20,8 +20,6 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
     (window as any).gtag("event", "click", { event_category: "engagement", event_label: label, ...params });
   }
 };
-
-
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
 export const ASSET_VERSION = "202605121549";
 
@@ -589,6 +587,7 @@ const IsolatedView = ({
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
@@ -638,6 +637,11 @@ const IsolatedView = ({
     node.addEventListener("wheel", onWheel, { passive: false });
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
+
+  // Focus the close button on mount
+  useEffect(() => {
+    closeButtonRef.current?.focus();
+  }, []);
 
   // Keyboard nav (Escape/Arrows) + lock body scroll + restore focus on close
   useEffect(() => {
@@ -822,6 +826,7 @@ const IsolatedView = ({
       </span>
 
       <button
+        ref={closeButtonRef}
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
