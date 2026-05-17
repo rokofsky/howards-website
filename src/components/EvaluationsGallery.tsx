@@ -638,7 +638,12 @@ const IsolatedView = ({
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
 
-  // Keyboard nav (Escape/Arrows) + lock body scroll + restore focus on close
+  // Focus the close button on mount
+  useEffect(() => {
+    closeButtonRef.current?.focus();
+  }, []);
+
+
   useEffect(() => {
     previouslyFocused.current = document.activeElement as HTMLElement | null;
     // Initial focus on the container so keys work immediately
