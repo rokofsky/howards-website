@@ -466,10 +466,7 @@ const EvaluationsGallery = () => {
       <p className="text-sm text-muted-foreground font-light mb-6">
         {filtered.length === 0
           ? t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")
-          : t(
-              `Showing ${filtered.length} of ${candidates.length} evaluations`,
-              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`
-            )}
+          : "\n"}
       </p>
 
       {filtered.length > 0 && (
