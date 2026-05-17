@@ -639,18 +639,9 @@ const IsolatedView = ({
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
 
-  // Keyboard nav + focus trap + lock body scroll
+  // Keyboard nav (Escape/Arrows) + lock body scroll + restore focus on close
   useEffect(() => {
     previouslyFocused.current = document.activeElement as HTMLElement | null;
-    const getFocusable = (): HTMLElement[] => {
-      const root = containerRef.current;
-      if (!root) return [];
-      return Array.from(
-        root.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        )
-      ).filter((el) => !el.hasAttribute("aria-hidden") && el.offsetParent !== null);
-    };
     // Initial focus on the container so keys work immediately
     containerRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
@@ -666,30 +657,6 @@ const IsolatedView = ({
         emblaApi?.scrollPrev();
         return;
       }
-      if (e.key === "Tab") {
-        const focusable = getFocusable();
-        if (focusable.length === 0) {
-          e.preventDefault();
-          containerRef.current?.focus();
-          return;
-        }
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-        const insideModal = containerRef.current?.contains(active ?? null);
-        if (!insideModal) {
-          e.preventDefault();
-          first.focus();
-          return;
-        }
-        if (e.shiftKey && active === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && active === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
     };
     window.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -700,6 +667,29 @@ const IsolatedView = ({
       previouslyFocused.current?.focus?.();
     };
    }, [emblaApi, onClose]);
+
+  // Focus trap: keep Tab navigation contained within the modal
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key !== 'Tab') return;
+
+    const focusableElements = containerRef.current?.querySelectorAll('button') || [];
+    if (focusableElements.length === 0) return;
+
+    const firstElement = focusableElements[0] as HTMLElement;
+    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+    if (e.shiftKey) {
+      if (document.activeElement === firstElement) {
+        lastElement.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        firstElement.focus();
+        e.preventDefault();
+      }
+    }
+  };
 
   useEffect(() => {
     if (!emblaApi) return;
