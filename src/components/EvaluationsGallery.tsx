@@ -643,7 +643,7 @@ const IsolatedView = ({
     closeButtonRef.current?.focus();
   }, []);
 
-
+  // Keyboard nav (Escape/Arrows) + lock body scroll + restore focus on close
   useEffect(() => {
     previouslyFocused.current = document.activeElement as HTMLElement | null;
     // Initial focus on the container so keys work immediately
