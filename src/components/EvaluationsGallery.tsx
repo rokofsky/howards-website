@@ -639,12 +639,57 @@ const IsolatedView = ({
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
 
-  // Keyboard nav + lock body scroll
+  // Keyboard nav + focus trap + lock body scroll
   useEffect(() => {
+    previouslyFocused.current = document.activeElement as HTMLElement | null;
+    const getFocusable = (): HTMLElement[] => {
+      const root = containerRef.current;
+      if (!root) return [];
+      return Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => !el.hasAttribute("aria-hidden") && el.offsetParent !== null);
+    };
+    // Initial focus on the container so keys work immediately
+    containerRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      else if (e.key === "ArrowRight") emblaApi?.scrollNext();
-      else if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key === "ArrowRight") {
+        emblaApi?.scrollNext();
+        return;
+      }
+      if (e.key === "ArrowLeft") {
+        emblaApi?.scrollPrev();
+        return;
+      }
+      if (e.key === "Tab") {
+        const focusable = getFocusable();
+        if (focusable.length === 0) {
+          e.preventDefault();
+          containerRef.current?.focus();
+          return;
+        }
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const active = document.activeElement as HTMLElement | null;
+        const insideModal = containerRef.current?.contains(active ?? null);
+        if (!insideModal) {
+          e.preventDefault();
+          first.focus();
+          return;
+        }
+        if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -652,6 +697,7 @@ const IsolatedView = ({
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
+      previouslyFocused.current?.focus?.();
     };
    }, [emblaApi, onClose]);
 
