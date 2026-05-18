@@ -823,72 +823,52 @@ const IsolatedView = ({
         </div>
       </div>
 
-      {/* 1. PINNED COUNTER BAR */}
-      <span
-        className="fixed top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white"
-        style={{
-          position: "fixed",
-          zIndex: 99999,
-          transform: "translate3d(0, 0, 0)",
-          WebkitTransform: "translate3d(0, 0, 0)",
-        }}
-      >
-        <span className="ml-2 font-light">
-          {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
-        </span>
-      </span>
+      {/* Bug 2 Fix: Portal all controls to document.body to escape the image stacking context */}
+      {typeof document !== "undefined" && createPortal(
+        <div className="fixed inset-0 z-[99999] pointer-events-none">
+          {/* 1. COUNTER HUD */}
+          <span className="absolute top-14 left-4 text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white pointer-events-auto">
+            <span className="font-light">
+              {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
+            </span>
+          </span>
 
-      {/* 2. PINNED CLOSE BUTTON */}
-      <button
-        type="button"
-        aria-label={closeLabel}
-        onClick={onClose}
-        className="fixed top-14 right-4 inline-flex items-center justify-center w-11 h-11 rounded-full text-white bg-black/40 backdrop-blur-sm active:bg-black/60"
-        style={{
-          ...arrowStyle,
-          position: "fixed",
-          zIndex: 99999,
-          transform: "translate3d(0, 0, 0)",
-          WebkitTransform: "translate3d(0, 0, 0)",
-        }}
-      >
-        <X className="h-5 w-5" />
-      </button>
-
-      {/* 3. PINNED NAVIGATION ARROWS */}
-      {items.length > 1 && (
-        <>
+          {/* 2. PINNED CLOSE BUTTON */}
           <button
             type="button"
-            aria-label={prevLabel}
-            onClick={() => emblaApi?.scrollPrev()}
-            className={`${arrowBase} fixed left-2 sm:left-4`}
-            style={{
-              ...arrowStyle,
-              position: "fixed",
-              zIndex: 99999,
-              transform: "translate3d(0, 0, 0)",
-              WebkitTransform: "translate3d(0, 0, 0)",
-            }}
+            aria-label={closeLabel}
+            onClick={onClose}
+            className="absolute top-14 right-4 inline-flex items-center justify-center w-11 h-11 rounded-full text-white bg-black/40 backdrop-blur-sm active:bg-black/60 pointer-events-auto"
+            style={{ ...arrowStyle }}
           >
-            <ChevronLeft className="h-5 w-5" />
+            <X className="h-5 w-5" />
           </button>
-          <button
-            type="button"
-            aria-label={nextLabel}
-            onClick={() => emblaApi?.scrollNext()}
-            className={`${arrowBase} fixed right-2 sm:right-4`}
-            style={{
-              ...arrowStyle,
-              position: "fixed",
-              zIndex: 99999,
-              transform: "translate3d(0, 0, 0)",
-              WebkitTransform: "translate3d(0, 0, 0)",
-            }}
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
-        </>
+
+          {/* 3. DIRECTIONAL NAVIGATION */}
+          {items.length > 1 && (
+            <>
+              <button
+                type="button"
+                aria-label={prevLabel}
+                onClick={() => emblaApi?.scrollPrev()}
+                className={`${arrowBase} absolute top-1/2 left-4 -translate-y-1/2 pointer-events-auto`}
+                style={{ ...arrowStyle }}
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                aria-label={nextLabel}
+                onClick={() => emblaApi?.scrollNext()}
+                className={`${arrowBase} absolute top-1/2 right-4 -translate-y-1/2 pointer-events-auto`}
+                style={{ ...arrowStyle }}
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </>
+          )}
+        </div>,
+        document.body
       )}
     </div>
   );
