@@ -667,18 +667,17 @@ const IsolatedView = ({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-background/95"
-      onPointerDown={(e) => {
-        pointerStartX.current = e.clientX;
-        pointerStartY.current = e.clientY;
-      }}
-      onPointerUp={(e) => {
-        const dx = Math.abs(e.clientX - pointerStartX.current);
-        const dy = Math.abs(e.clientY - pointerStartY.current);
-        if (e.target === e.currentTarget && dx < 10 && dy < 10) onClose();
-      }}
-    >
+    <div className="fixed inset-0 z-50 bg-background/95">
+      {/* Backdrop — catches taps on orange padding */}
+      <div
+        className="absolute inset-0"
+        onPointerDown={(e) => { pointerDownPos.current = { x: e.clientX, y: e.clientY }; }}
+        onPointerUp={(e) => {
+          const dx = Math.abs(e.clientX - pointerDownPos.current.x);
+          const dy = Math.abs(e.clientY - pointerDownPos.current.y);
+          if (dx < 10 && dy < 10) onClose();
+        }}
+      />
       <div
         className="w-full h-full"
         ref={emblaRef}
