@@ -654,35 +654,27 @@ const IsolatedView = ({
     return base;
   };
 
-  const arrowVerticalStyle = (left?: number, right?: number): React.CSSProperties => ({
-    position: "fixed",
-    top: `${vvOffset.y + window.innerHeight / 2}px`,
-    transform: "translateY(-50%)",
-    zIndex: 99999,
-    background: "rgba(10,25,47,0.7)",
-    backdropFilter: "blur(12px)",
-    WebkitBackdropFilter: "blur(12px)",
-    border: "2px solid rgba(255,255,255,0.4)",
-    WebkitTapHighlightColor: "transparent",
-    outline: "none",
-    ...(left !== undefined ? { left: `${vvOffset.x + left}px` } : {}),
-    ...(right !== undefined ? { right: `${vvOffset.x + right}px` } : {}),
-  });
+  const arrowVerticalStyle = (side: "left" | "right"): React.CSSProperties => {
+    const vv = typeof window !== "undefined" ? window.visualViewport : null;
+    const vvHeight = vv ? vv.height : window.innerHeight;
+    const vvWidth = vv ? vv.width : window.innerWidth;
+    return {
+      position: "fixed",
+      top: `${vvOffset.y + vvHeight / 2}px`,
+      transform: "translateY(-50%)",
+      zIndex: 99999,
+      background: "rgba(10,25,47,0.7)",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      border: "2px solid rgba(255,255,255,0.4)",
+      WebkitTapHighlightColor: "transparent",
+      outline: "none",
+      ...(side === "left" ? { left: `${vvOffset.x + 8}px` } : { left: `${vvOffset.x + vvWidth - 56}px` }),
+    };
+  };
 
   return (
     <div className="fixed inset-0 z-30 bg-background/95">
-      {/* Keep navbar visible while lightbox is open */}
-      <style>{`
-        header.fixed {
-          height: 44px !important;
-          z-index: 99999 !important;
-          transition: height 0.2s ease-in-out;
-        }
-        header.fixed .container {
-          height: 44px !important;
-        }
-      `}</style>
-
       {/* BACKDROP: catches taps on orange padding to close */}
       <div
         className="absolute inset-0 z-0"
@@ -699,7 +691,7 @@ const IsolatedView = ({
 
       {/* EMBLA CAROUSEL */}
       <div
-        className="absolute inset-0 z-10 pt-11"
+        className="absolute inset-0 z-10"
         ref={emblaRef}
         style={{ touchAction: "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
       >
@@ -806,7 +798,7 @@ const IsolatedView = ({
             type="button"
             aria-label={prevLabel}
             onClick={() => emblaApi?.scrollPrev()}
-            style={arrowVerticalStyle(8, undefined)}
+            style={arrowVerticalStyle("left")}
             className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -815,7 +807,7 @@ const IsolatedView = ({
             type="button"
             aria-label={nextLabel}
             onClick={() => emblaApi?.scrollNext()}
-            style={arrowVerticalStyle(undefined, 8)}
+            style={arrowVerticalStyle("right")}
             className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronRight className="h-5 w-5" />
