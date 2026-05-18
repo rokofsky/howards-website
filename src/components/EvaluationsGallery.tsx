@@ -579,33 +579,6 @@ const IsolatedView = ({
     dragFree: false,
     containScroll: false,
   });
-  // Track mobile visual viewport zoom scale and shifting offsets
-  const [viewportScale, setViewportScale] = useState(1);
-  const [viewportOffset, setViewportOffset] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.visualViewport) return;
-
-    const handleResize = () => {
-      const vv = window.visualViewport;
-      if (!vv) return;
-      setViewportScale(vv.scale);
-      setViewportOffset({
-        x: vv.offsetLeft,
-        y: vv.offsetTop,
-      });
-    };
-
-    window.visualViewport.addEventListener("resize", handleResize);
-    window.visualViewport.addEventListener("scroll", handleResize);
-    // Run an initial calculation to map current bounds
-    handleResize();
-
-    return () => {
-      window.visualViewport?.removeEventListener("resize", handleResize);
-      window.visualViewport?.removeEventListener("scroll", handleResize);
-    };
-  }, []);
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const pointerStartX = useRef<number>(0);
@@ -673,6 +646,7 @@ const IsolatedView = ({
     };
   }, [emblaApi, onClose]);
 
+  // Override Embla's overflow when zoomed
   useEffect(() => {
     if (!emblaApi) return;
     const node = emblaApi.rootNode() as HTMLElement;
@@ -682,8 +656,6 @@ const IsolatedView = ({
 
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
 
-  const arrowBase =
-    "absolute top-1/2 -translate-y-1/2 z-20 inline-flex items-center justify-center w-12 h-12 rounded-full text-white transition-colors portrait:scale-[1.3] landscape:scale-[1.7]";
   const arrowStyle: React.CSSProperties = {
     background: "rgba(10,25,47,0.7)",
     backdropFilter: "blur(12px)",
@@ -691,11 +663,28 @@ const IsolatedView = ({
     border: "2px solid rgba(255,255,255,0.4)",
     WebkitTapHighlightColor: "transparent",
     outline: "none",
+    // Force GPU layer so controls always render above scaled image
+    transform: "translate3d(0,0,0)",
+    WebkitTransform: "translate3d(0,0,0)",
+    position: "fixed",
+    zIndex: 99999,
   };
 
   return (
     <div className="fixed inset-0 z-30 bg-background/95">
-      {/* 1. BACKDROP LAYER: Catches padding clicks seamlessly behind everything */}
+      {/* Keep navbar visible and compact while lightbox is open */}
+      <style>{`
+        header.fixed {
+          height: 44px !important;
+          z-index: 99999 !important;
+          transition: height 0.2s ease-in-out;
+        }
+        header.fixed .container {
+          height: 44px !important;
+        }
+      `}</style>
+
+      {/* BACKDROP: catches taps on orange padding to close */}
       <div
         className="absolute inset-0 z-0"
         onPointerDown={(e) => {
@@ -705,41 +694,13 @@ const IsolatedView = ({
         onPointerUp={(e) => {
           const dx = Math.abs(e.clientX - pointerStartX.current);
           const dy = Math.abs(e.clientY - pointerStartY.current);
-
-          // If it's a quick tap and NOT a swipe drag
-          if (dx < 10 && dy < 10) {
-            const target = e.target as HTMLElement;
-            // Close if clicking the main container or empty embla structural frames
-            if (
-              target.classList.contains("embla-viewport") ||
-              target.className.includes("flex h-full") ||
-              target.className.includes("flex-[0_0_100%]")
-            ) {
-              onClose();
-            }
-          }
+          if (dx < 10 && dy < 10) onClose();
         }}
       />
 
-      {/* 2. PINNED MOBILE CONTROLS: Placed outside Embla so mobile zoom can't hide them */}
-      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gradient-to-b from-black/40 to-transparent pointer-events-none">
-        <div className="text-sm font-medium text-white drop-shadow pointer-events-auto">
-          {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
-        </div>
-        <button
-          onClick={onClose}
-          className="p-3 rounded-full bg-black/50 backdrop-blur-md hover:bg-black/80 transition-colors text-white pointer-events-auto"
-          aria-label={closeLabel}
-        >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-
-      {/* 3. EMBLA VIEWPORT FRAME */}
+      {/* EMBLA CAROUSEL */}
       <div
-        className="w-full h-full relative z-10 embla-viewport pt-14 sm:pt-0"
+        className="absolute inset-0 z-10 pt-11"
         ref={emblaRef}
         style={{ touchAction: "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
       >
@@ -748,24 +709,23 @@ const IsolatedView = ({
             <div
               key={it.key}
               className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
-              style={{ overflow: "visible" }}
-              onPointerDown={(e) => {
-                if (e.target === e.currentTarget) {
-                  pointerDownPos.current = { x: e.clientX, y: e.clientY };
-                }
-              }}
-              onPointerUp={(e) => {
-                if (e.target === e.currentTarget) {
-                  const dx = Math.abs(e.clientX - pointerDownPos.current.x);
-                  const dy = Math.abs(e.clientY - pointerDownPos.current.y);
-                  if (dx < 10 && dy < 10) onClose();
-                }
-              }}
+              style={{ overflow: "visible", pointerEvents: "none" }}
             >
               <img
                 src={`${it.src}?v=${ASSET_VERSION}`}
                 alt={`${alt} #${it.num}`}
                 draggable={false}
+                style={{
+                  pointerEvents: "auto",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  touchAction: scale > 1 ? "none" : "pinch-zoom",
+                  transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
+                  transformOrigin: "center",
+                  transition: isPanning.current ? "none" : "transform 0.1s ease",
+                }}
+                className="select-none"
                 onPointerDown={(e) => {
                   if (scale <= 1) return;
                   e.stopPropagation();
@@ -773,9 +733,7 @@ const IsolatedView = ({
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   const imgRect = e.currentTarget.getBoundingClientRect();
-                  const parent = e.currentTarget.parentElement;
-                  const contRect = parent?.getBoundingClientRect();
-                  // imgRect already reflects the scaled size
+                  const contRect = e.currentTarget.parentElement?.getBoundingClientRect();
                   imageBounds.current = { width: imgRect.width, height: imgRect.height };
                   containerBounds.current = {
                     width: contRect?.width ?? imgRect.width,
@@ -810,69 +768,75 @@ const IsolatedView = ({
                     e.currentTarget.releasePointerCapture(e.pointerId);
                   } catch {}
                 }}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  touchAction: scale > 1 ? "none" : "pinch-zoom",
-                  transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
-                  transformOrigin: "center",
-                  transition: isPanning.current ? "none" : "transform 0.1s ease",
-                }}
-                className="select-none"
               />
             </div>
           ))}
         </div>
       </div>
 
-      {/* 1. PINNED COUNTER BAR */}
+      {/* CONTROLS — fixed position with GPU layer, always above scaled image */}
+
+      {/* Counter */}
       <span
-        className="fixed top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white"
         style={{
           position: "fixed",
+          top: "12px",
+          left: "12px",
           zIndex: 99999,
-          transform: "translate3d(0, 0, 0)",
-          WebkitTransform: "translate3d(0, 0, 0)",
+          transform: "translate3d(0,0,0)",
+          WebkitTransform: "translate3d(0,0,0)",
         }}
+        className="text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white pointer-events-none"
       >
-        <span className="ml-2 font-light">
-          {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
-        </span>
+        {current + 1} / {items.length}
       </span>
 
-      {/* 2. PINNED CLOSE BUTTON */}
+      {/* Close button */}
       <button
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
-        className="fixed top-2 right-2 inline-flex items-center justify-center w-11 h-11 rounded-full text-white bg-black/40 backdrop-blur-sm active:bg-black/60"
         style={{
-          ...arrowStyle,
           position: "fixed",
+          top: "52px",
+          right: "8px",
           zIndex: 99999,
-          transform: "translate3d(0, 0, 0)",
-          WebkitTransform: "translate3d(0, 0, 0)",
+          transform: "translate3d(0,0,0)",
+          WebkitTransform: "translate3d(0,0,0)",
+          background: "rgba(10,25,47,0.7)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          border: "2px solid rgba(255,255,255,0.4)",
+          WebkitTapHighlightColor: "transparent",
+          outline: "none",
         }}
+        className="inline-flex items-center justify-center w-11 h-11 rounded-full text-white"
       >
         <X className="h-5 w-5" />
       </button>
 
-      {/* 3. PINNED NAVIGATION ARROWS */}
+      {/* Prev / Next arrows */}
       {items.length > 1 && (
         <>
           <button
             type="button"
             aria-label={prevLabel}
             onClick={() => emblaApi?.scrollPrev()}
-            className={`${arrowBase} fixed left-2 sm:left-4`}
             style={{
-              ...arrowStyle,
               position: "fixed",
+              top: "50%",
+              left: "8px",
+              transform: "translate3d(0,-50%,0)",
+              WebkitTransform: "translate3d(0,-50%,0)",
               zIndex: 99999,
-              transform: "translate3d(0, 0, 0)",
-              WebkitTransform: "translate3d(0, 0, 0)",
+              background: "rgba(10,25,47,0.7)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              border: "2px solid rgba(255,255,255,0.4)",
+              WebkitTapHighlightColor: "transparent",
+              outline: "none",
             }}
+            className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -880,14 +844,21 @@ const IsolatedView = ({
             type="button"
             aria-label={nextLabel}
             onClick={() => emblaApi?.scrollNext()}
-            className={`${arrowBase} fixed right-2 sm:right-4`}
             style={{
-              ...arrowStyle,
               position: "fixed",
+              top: "50%",
+              right: "8px",
+              transform: "translate3d(0,-50%,0)",
+              WebkitTransform: "translate3d(0,-50%,0)",
               zIndex: 99999,
-              transform: "translate3d(0, 0, 0)",
-              WebkitTransform: "translate3d(0, 0, 0)",
+              background: "rgba(10,25,47,0.7)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              border: "2px solid rgba(255,255,255,0.4)",
+              WebkitTapHighlightColor: "transparent",
+              outline: "none",
             }}
+            className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
