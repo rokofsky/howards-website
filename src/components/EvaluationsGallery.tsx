@@ -683,7 +683,7 @@ const IsolatedView = ({
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
 
   const arrowBase =
-    "absolute top-1/2 -translate-y-1/2 z-20 inline-flex items-center justify-center w-12 h-12 rounded-full text-white transition-colors portrait:scale-[1.3] landscape:scale-[1.7]";
+    "absolute top-1/2 -translate-y-1/2 z-[99999] inline-flex items-center justify-center w-12 h-12 rounded-full text-white transition-colors portrait:scale-[1.3] landscape:scale-[1.7]";
   const arrowStyle: React.CSSProperties = {
     background: "rgba(10,25,47,0.7)",
     backdropFilter: "blur(12px)",
@@ -694,7 +694,7 @@ const IsolatedView = ({
   };
 
   return (
-    <div className="fixed inset-0 z-30 bg-background/95 isolate">
+    <div className="fixed inset-0 z-30 bg-background/95">
       {/* Dynamic injection to make global navbar thin and sleek while gallery is open */}
       <style>{`
         header.fixed { 
@@ -733,7 +733,7 @@ const IsolatedView = ({
       />
 
       {/* 2. PINNED MOBILE CONTROLS: Placed outside Embla so mobile zoom can't hide them */}
-      <div className="fixed top-0 left-0 right-0 z-[9999] flex items-center justify-between p-4 bg-gradient-to-b from-black/40 to-transparent pointer-events-none">
+      <div className="fixed top-0 left-0 right-0 z-[99999] flex items-center justify-between p-4 bg-gradient-to-b from-black/40 to-transparent pointer-events-none">
         <div className="text-sm font-medium text-white drop-shadow pointer-events-auto">
           {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
         </div>
@@ -750,7 +750,7 @@ const IsolatedView = ({
 
       {/* 3. EMBLA VIEWPORT FRAME */}
       <div
-        className="w-full h-full relative z-10 embla-viewport pt-14 sm:pt-0"
+        className="w-full h-full relative z-20 embla-viewport pt-14 sm:pt-0"
         ref={emblaRef}
         style={{ touchAction: "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
       >
