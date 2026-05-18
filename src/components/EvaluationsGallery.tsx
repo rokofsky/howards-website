@@ -739,7 +739,7 @@ const IsolatedView = ({
 
       {/* 3. EMBLA VIEWPORT FRAME */}
       <div
-        className="w-full h-full relative z-10 embla-viewport"
+        className="w-full h-full relative z-10 embla-viewport pt-14 sm:pt-0"
         ref={emblaRef}
         style={{ touchAction: "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
       >
