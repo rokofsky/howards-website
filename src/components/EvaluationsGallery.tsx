@@ -15,7 +15,6 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-// Hard-coded allowlist generated from the files currently present in /public/evaluations/.
 export const ASSET_VERSION = "202605121549";
 
 const VALID_EVAL_FILES = [
@@ -175,11 +174,7 @@ const VALID_EVAL_FILES = [
 const buildCandidates = (): Item[] =>
   VALID_EVAL_FILES.map((filename) => {
     const num = filename.match(/eval-(\d{3})\.jpg/i)?.[1] ?? "";
-    return {
-      src: `/evaluations/${filename}`,
-      key: filename,
-      num,
-    };
+    return { src: `/evaluations/${filename}`, key: filename, num };
   });
 
 const EvaluationsGallery = () => {
@@ -190,13 +185,10 @@ const EvaluationsGallery = () => {
   const [sort, setSort] = useState<SortOrder>("asc");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [activeKey, setActiveKey] = useState<string | null>(null);
-
   const stripRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  // Per-item depth: 1 = centered, 0 = far edge
   const [depths, setDepths] = useState<Record<string, number>>({});
 
-  // Debounce search
   useEffect(() => {
     const id = setTimeout(() => setQuery(queryInput), 200);
     return () => clearTimeout(id);
@@ -213,14 +205,12 @@ const EvaluationsGallery = () => {
     return allSorted.filter((c) => c.num.includes(q) || c.key.toLowerCase().includes(q));
   }, [allSorted, query]);
 
-  // Compute per-item depth (1 at center, 0 at edge) → V-shape recede
   useEffect(() => {
     const strip = stripRef.current;
     if (!strip) return;
     const update = () => {
       const stripRect = strip.getBoundingClientRect();
       const center = stripRect.left + stripRect.width / 2;
-      // Falloff distance: half viewport width works well across breakpoints
       const falloff = stripRect.width * 0.45;
       let bestKey: string | null = null;
       let bestDist = Infinity;
@@ -232,7 +222,6 @@ const EvaluationsGallery = () => {
         const c = r.left + r.width / 2;
         const d = Math.abs(c - center);
         const ratio = Math.max(0, 1 - d / falloff);
-        // ease for smoother V curve
         next[item.key] = ratio * ratio * (3 - 2 * ratio);
         if (d < bestDist) {
           bestDist = d;
@@ -251,15 +240,12 @@ const EvaluationsGallery = () => {
     };
   }, [filtered]);
 
-  // On search change, scroll first matching result to center
   useEffect(() => {
     if (!filtered.length) return;
     const first = filtered[0];
     const el = itemRefs.current[first.key];
     if (el) el.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
   }, [query, sort, filtered]);
-
-  const lightboxItem = lightboxIndex !== null ? allSorted[lightboxIndex] : null;
 
   const openLightbox = (item: Item) => {
     const idx = allSorted.indexOf(item);
@@ -271,14 +257,12 @@ const EvaluationsGallery = () => {
     (dir: 1 | -1) => {
       setLightboxIndex((idx) => {
         if (idx === null || allSorted.length === 0) return idx;
-        const next = (idx + dir + allSorted.length) % allSorted.length;
-        return next;
+        return (idx + dir + allSorted.length) % allSorted.length;
       });
     },
     [allSorted],
   );
 
-  // When lightbox index changes, scroll the underlying strip to that item
   useEffect(() => {
     if (lightboxIndex === null) return;
     const item = allSorted[lightboxIndex];
@@ -302,31 +286,28 @@ const EvaluationsGallery = () => {
     strip.scrollBy({ left: dir * strip.clientWidth * 0.6, behavior: "smooth" });
   };
 
-  // Drag-to-scroll with inertia/momentum (mouse). Touch uses native momentum.
   useEffect(() => {
     const strip = stripRef.current;
     if (!strip) return;
-    let isDown = false;
-    let startX = 0;
-    let startScroll = 0;
-    let lastX = 0;
-    let lastT = 0;
-    let velocity = 0; // px per ms
-    let moved = false;
-    let rafId: number | null = null;
-
+    let isDown = false,
+      startX = 0,
+      startScroll = 0,
+      lastX = 0,
+      lastT = 0;
+    let velocity = 0,
+      moved = false,
+      rafId: number | null = null;
     const cancelMomentum = () => {
       if (rafId !== null) {
         cancelAnimationFrame(rafId);
         rafId = null;
       }
     };
-
     const snapToNearest = () => {
       const stripRect = strip.getBoundingClientRect();
       const center = stripRect.left + stripRect.width / 2;
-      let bestEl: HTMLElement | null = null;
-      let bestDist = Infinity;
+      let bestEl: HTMLElement | null = null,
+        bestDist = Infinity;
       for (const key in itemRefs.current) {
         const el = itemRefs.current[key];
         if (!el) continue;
@@ -339,12 +320,11 @@ const EvaluationsGallery = () => {
       }
       if (bestEl) bestEl.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     };
-
     const momentum = () => {
       const friction = 0.94;
       const step = () => {
         velocity *= friction;
-        strip.scrollLeft -= velocity * 16; // approx per frame
+        strip.scrollLeft -= velocity * 16;
         if (Math.abs(velocity) > 0.05) {
           rafId = requestAnimationFrame(step);
         } else {
@@ -354,7 +334,6 @@ const EvaluationsGallery = () => {
       };
       rafId = requestAnimationFrame(step);
     };
-
     const onDown = (e: MouseEvent) => {
       if (e.button !== 0) return;
       cancelMomentum();
@@ -372,13 +351,9 @@ const EvaluationsGallery = () => {
       const dx = e.pageX - startX;
       if (Math.abs(dx) > 4) moved = true;
       strip.scrollLeft = startScroll - dx;
-      const now = performance.now();
-      const dt = now - lastT;
-      if (dt > 0) {
-        // smooth velocity (px/ms)
-        const v = (e.pageX - lastX) / dt;
-        velocity = velocity * 0.6 + v * 0.4;
-      }
+      const now = performance.now(),
+        dt = now - lastT;
+      if (dt > 0) velocity = velocity * 0.6 + ((e.pageX - lastX) / dt) * 0.4;
       lastX = e.pageX;
       lastT = now;
     };
@@ -386,11 +361,8 @@ const EvaluationsGallery = () => {
       if (!isDown) return;
       isDown = false;
       strip.classList.remove("cursor-grabbing");
-      if (Math.abs(velocity) > 0.05) {
-        momentum();
-      } else if (moved) {
-        snapToNearest();
-      }
+      if (Math.abs(velocity) > 0.05) momentum();
+      else if (moved) snapToNearest();
     };
     const onClickCapture = (e: MouseEvent) => {
       if (moved) {
@@ -399,7 +371,6 @@ const EvaluationsGallery = () => {
         moved = false;
       }
     };
-
     strip.addEventListener("mousedown", onDown);
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseup", endDrag);
@@ -419,7 +390,6 @@ const EvaluationsGallery = () => {
 
   return (
     <div className="mb-12">
-      {/* Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -464,11 +434,8 @@ const EvaluationsGallery = () => {
 
       {filtered.length > 0 && (
         <div className="relative">
-          {/* Edge fades */}
           <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10" />
           <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10" />
-
-          {/* Glassmorphic strip nav arrows — adaptive scaling */}
           <button
             type="button"
             aria-label={t("Scroll left", "Posunout vlevo")}
@@ -485,7 +452,6 @@ const EvaluationsGallery = () => {
           >
             <ChevronRight className="h-5 w-5" />
           </button>
-
           <div
             ref={stripRef}
             className="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto snap-x snap-proximity py-12 px-[40%] sm:px-[35%] lg:px-[30%] no-scrollbar cursor-grab select-none"
@@ -493,10 +459,10 @@ const EvaluationsGallery = () => {
           >
             {filtered.map((item, i) => {
               const isActive = activeKey === item.key;
-              const depth = depths[item.key] ?? 0; // 1 center → 0 edge
-              const scale = 0.75 + depth * 0.35; // 0.75 → 1.10
-              const opacity = 0.5 + depth * 0.5; // 0.5 → 1.0
-              const translateY = (1 - depth) * 18; // recede slightly downward
+              const depth = depths[item.key] ?? 0;
+              const scale = 0.75 + depth * 0.35;
+              const opacity = 0.5 + depth * 0.5;
+              const translateY = (1 - depth) * 18;
               return (
                 <motion.button
                   key={item.key}
@@ -573,14 +539,14 @@ const IsolatedView = ({
   nextLabel,
   closeLabel,
 }: IsolatedViewProps) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    startIndex,
-    dragFree: false,
-    containScroll: false,
-  });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, startIndex, dragFree: false, containScroll: false });
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+
+  // Visual Viewport state — tracks mobile pinch-zoom position
+  const [vvOffset, setVvOffset] = useState({ x: 0, y: 0 });
+  const [vvScale, setVvScale] = useState(1);
+
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
   const pointerDownPos = useRef({ x: 0, y: 0 });
@@ -590,19 +556,34 @@ const IsolatedView = ({
   const imageBounds = useRef({ width: 0, height: 0 });
   const containerBounds = useRef({ width: 0, height: 0 });
 
+  // Track Visual Viewport changes (mobile pinch-zoom)
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.visualViewport) return;
+    const vv = window.visualViewport;
+    const update = () => {
+      setVvOffset({ x: vv.offsetLeft, y: vv.offsetTop });
+      setVvScale(vv.scale);
+    };
+    update();
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    return () => {
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
+    };
+  }, []);
+
   // Reset offset when scale returns to 1
   useEffect(() => {
     if (scale === 1) setOffset({ x: 0, y: 0 });
   }, [scale]);
 
-  // Jump to clicked index without animation on first mount
   useEffect(() => {
     if (!emblaApi) return;
     emblaApi.scrollTo(startIndex, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emblaApi]);
 
-  // Track active slide for counter + parent sync; reset zoom on slide change
   useEffect(() => {
     if (!emblaApi) return;
     const onSelect = () => {
@@ -616,7 +597,6 @@ const IsolatedView = ({
     };
   }, [emblaApi, onIndexChange]);
 
-  // Ctrl+wheel zoom on the embla viewport
   useEffect(() => {
     if (!emblaApi) return;
     const node = emblaApi.rootNode();
@@ -630,7 +610,6 @@ const IsolatedView = ({
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
 
-  // Keyboard nav + lock body scroll
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -646,7 +625,6 @@ const IsolatedView = ({
     };
   }, [emblaApi, onClose]);
 
-  // Override Embla's overflow when zoomed
   useEffect(() => {
     if (!emblaApi) return;
     const node = emblaApi.rootNode() as HTMLElement;
@@ -656,23 +634,44 @@ const IsolatedView = ({
 
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
 
-  const arrowStyle: React.CSSProperties = {
+  // Compute control positions compensating for visual viewport offset
+  // This keeps controls visible when user pinch-zooms on mobile
+  const controlStyle = (extraTop: number, extraRight?: number, extraLeft?: number): React.CSSProperties => {
+    const top = vvOffset.y + extraTop;
+    const base: React.CSSProperties = {
+      position: "fixed",
+      top: `${top}px`,
+      zIndex: 99999,
+      background: "rgba(10,25,47,0.7)",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      border: "2px solid rgba(255,255,255,0.4)",
+      WebkitTapHighlightColor: "transparent",
+      outline: "none",
+    };
+    if (extraRight !== undefined) base.right = `${vvOffset.x + extraRight}px`;
+    if (extraLeft !== undefined) base.left = `${vvOffset.x + extraLeft}px`;
+    return base;
+  };
+
+  const arrowVerticalStyle = (left?: number, right?: number): React.CSSProperties => ({
+    position: "fixed",
+    top: `${vvOffset.y + window.innerHeight / 2}px`,
+    transform: "translateY(-50%)",
+    zIndex: 99999,
     background: "rgba(10,25,47,0.7)",
     backdropFilter: "blur(12px)",
     WebkitBackdropFilter: "blur(12px)",
     border: "2px solid rgba(255,255,255,0.4)",
     WebkitTapHighlightColor: "transparent",
     outline: "none",
-    // Force GPU layer so controls always render above scaled image
-    transform: "translate3d(0,0,0)",
-    WebkitTransform: "translate3d(0,0,0)",
-    position: "fixed",
-    zIndex: 99999,
-  };
+    ...(left !== undefined ? { left: `${vvOffset.x + left}px` } : {}),
+    ...(right !== undefined ? { right: `${vvOffset.x + right}px` } : {}),
+  });
 
   return (
     <div className="fixed inset-0 z-30 bg-background/95">
-      {/* Keep navbar visible and compact while lightbox is open */}
+      {/* Keep navbar visible while lightbox is open */}
       <style>{`
         header.fixed {
           height: 44px !important;
@@ -774,17 +773,15 @@ const IsolatedView = ({
         </div>
       </div>
 
-      {/* CONTROLS — fixed position with GPU layer, always above scaled image */}
+      {/* CONTROLS — repositioned via Visual Viewport API to stay visible during pinch-zoom */}
 
       {/* Counter */}
       <span
         style={{
           position: "fixed",
-          top: "12px",
-          left: "12px",
+          top: `${vvOffset.y + 12}px`,
+          left: `${vvOffset.x + 12}px`,
           zIndex: 99999,
-          transform: "translate3d(0,0,0)",
-          WebkitTransform: "translate3d(0,0,0)",
         }}
         className="text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white pointer-events-none"
       >
@@ -796,20 +793,7 @@ const IsolatedView = ({
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
-        style={{
-          position: "fixed",
-          top: "52px",
-          right: "8px",
-          zIndex: 99999,
-          transform: "translate3d(0,0,0)",
-          WebkitTransform: "translate3d(0,0,0)",
-          background: "rgba(10,25,47,0.7)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          border: "2px solid rgba(255,255,255,0.4)",
-          WebkitTapHighlightColor: "transparent",
-          outline: "none",
-        }}
+        style={controlStyle(52, 8)}
         className="inline-flex items-center justify-center w-11 h-11 rounded-full text-white"
       >
         <X className="h-5 w-5" />
@@ -822,20 +806,7 @@ const IsolatedView = ({
             type="button"
             aria-label={prevLabel}
             onClick={() => emblaApi?.scrollPrev()}
-            style={{
-              position: "fixed",
-              top: "50%",
-              left: "8px",
-              transform: "translate3d(0,-50%,0)",
-              WebkitTransform: "translate3d(0,-50%,0)",
-              zIndex: 99999,
-              background: "rgba(10,25,47,0.7)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              border: "2px solid rgba(255,255,255,0.4)",
-              WebkitTapHighlightColor: "transparent",
-              outline: "none",
-            }}
+            style={arrowVerticalStyle(8, undefined)}
             className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -844,20 +815,7 @@ const IsolatedView = ({
             type="button"
             aria-label={nextLabel}
             onClick={() => emblaApi?.scrollNext()}
-            style={{
-              position: "fixed",
-              top: "50%",
-              right: "8px",
-              transform: "translate3d(0,-50%,0)",
-              WebkitTransform: "translate3d(0,-50%,0)",
-              zIndex: 99999,
-              background: "rgba(10,25,47,0.7)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              border: "2px solid rgba(255,255,255,0.4)",
-              WebkitTapHighlightColor: "transparent",
-              outline: "none",
-            }}
+            style={arrowVerticalStyle(undefined, 8)}
             className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronRight className="h-5 w-5" />
