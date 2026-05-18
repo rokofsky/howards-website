@@ -724,8 +724,6 @@ const IsolatedView = ({
       tabIndex={-1}
       onKeyDown={handleKeyDown}
       className="fixed inset-0 z-50 bg-background/95 outline-none"
-        tabIndex={-1}
-  ref={containerRef}
       onPointerDown={(e) => {
         pointerStartX.current = e.clientX;
         pointerStartY.current = e.clientY;
