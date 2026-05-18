@@ -831,6 +831,7 @@ const IsolatedView = ({
         ref={closeButtonRef}
         type="button"
         aria-label={closeLabel}
+        ref={closeButtonRef}
         onClick={onClose}
         className="absolute top-2 right-2 z-30 inline-flex items-center justify-center w-11 h-11 rounded-full text-white"
         style={arrowStyle}
