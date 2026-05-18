@@ -711,7 +711,7 @@ const IsolatedView = ({
                   width: "100%",
                   height: "100%",
                   objectFit: "contain",
-                  touchAction: scale > 1 ? "none" : "pinch-zoom",
+                  touchAction: scale > 1 ? "pan-y" : "pinch-zoom",
                   transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
                   transformOrigin: "center",
                   transition: isPanning.current ? "none" : "transform 0.1s ease",
