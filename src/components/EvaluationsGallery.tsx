@@ -743,7 +743,7 @@ const IsolatedView = ({
         ref={emblaRef}
         style={{ touchAction: "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
       >
-        <div className="flex h-full" style={{ overflow: "visible" }}>
+        <div className="flex h-full -mt-14 sm:mt-0" style={{ overflow: "visible" }}>
           {items.map((it) => (
             <div
               key={it.key}
