@@ -695,6 +695,17 @@ const IsolatedView = ({
 
   return (
     <div className="fixed inset-0 z-30 bg-background/95">
+      {/* Dynamic injection to make global navbar thin and sleek while gallery is open */}
+      <style>{`
+        header.fixed { 
+          height: 44px !important; 
+          transition: all 0.2s ease-in-out;
+        }
+        header.fixed .container { 
+          height: 44px !important; 
+        }
+      `}</style>
+
       {/* 1. BACKDROP LAYER: Catches padding clicks seamlessly behind everything */}
       <div
         className="absolute inset-0 z-0"
@@ -846,7 +857,7 @@ const IsolatedView = ({
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
-        className="fixed top-2 right-2 inline-flex items-center justify-center w-11 h-11 rounded-full text-white bg-black/40 backdrop-blur-sm active:bg-black/60"
+        className="fixed top-14 right-4 inline-flex items-center justify-center w-11 h-11 rounded-full text-white bg-black/40 backdrop-blur-sm active:bg-black/60"
         style={{
           ...arrowStyle,
           position: "fixed",
