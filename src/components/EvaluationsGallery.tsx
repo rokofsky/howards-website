@@ -1,13 +1,7 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useT } from "@/hooks/useT";
 import { Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
@@ -20,7 +14,6 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
     (window as any).gtag("event", "click", { event_category: "engagement", event_label: label, ...params });
   }
 };
-
 
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
 export const ASSET_VERSION = "202605121549";
@@ -210,11 +203,8 @@ const EvaluationsGallery = () => {
   }, [queryInput]);
 
   const allSorted = useMemo(
-    () =>
-      [...candidates].sort((a, b) =>
-        sort === "asc" ? a.num.localeCompare(b.num) : b.num.localeCompare(a.num)
-      ),
-    [candidates, sort]
+    () => [...candidates].sort((a, b) => (sort === "asc" ? a.num.localeCompare(b.num) : b.num.localeCompare(a.num))),
+    [candidates, sort],
   );
 
   const filtered = useMemo(() => {
@@ -285,7 +275,7 @@ const EvaluationsGallery = () => {
         return next;
       });
     },
-    [allSorted]
+    [allSorted],
   );
 
   // When lightbox index changes, scroll the underlying strip to that item
@@ -468,7 +458,7 @@ const EvaluationsGallery = () => {
           ? t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")
           : t(
               `Showing ${filtered.length} of ${candidates.length} evaluations`,
-              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`
+              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`,
             )}
       </p>
 
@@ -589,6 +579,33 @@ const IsolatedView = ({
     dragFree: false,
     containScroll: false,
   });
+  // Track mobile visual viewport zoom scale and shifting offsets
+  const [viewportScale, setViewportScale] = useState(1);
+  const [viewportOffset, setViewportOffset] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.visualViewport) return;
+
+    const handleResize = () => {
+      const vv = window.visualViewport;
+      if (!vv) return;
+      setViewportScale(vv.scale);
+      setViewportOffset({
+        x: vv.offsetLeft,
+        y: vv.offsetTop,
+      });
+    };
+
+    window.visualViewport.addEventListener("resize", handleResize);
+    window.visualViewport.addEventListener("scroll", handleResize);
+    // Run an initial calculation to map current bounds
+    handleResize();
+
+    return () => {
+      window.visualViewport?.removeEventListener("resize", handleResize);
+      window.visualViewport?.removeEventListener("scroll", handleResize);
+    };
+  }, []);
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const pointerStartX = useRef<number>(0);
@@ -654,7 +671,7 @@ const IsolatedView = ({
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-   }, [emblaApi, onClose]);
+  }, [emblaApi, onClose]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -677,20 +694,52 @@ const IsolatedView = ({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-background/95"
-      onPointerDown={(e) => {
-        pointerStartX.current = e.clientX;
-        pointerStartY.current = e.clientY;
-      }}
-      onPointerUp={(e) => {
-        const dx = Math.abs(e.clientX - pointerStartX.current);
-        const dy = Math.abs(e.clientY - pointerStartY.current);
-        if (e.target === e.currentTarget && dx < 10 && dy < 10) onClose();
-      }}
-    >
+    <div className="fixed inset-0 z-30 bg-background/95">
+      {/* 1. BACKDROP LAYER: Catches padding clicks seamlessly behind everything */}
       <div
-        className="w-full h-full"
+        className="absolute inset-0 z-0"
+        onPointerDown={(e) => {
+          pointerStartX.current = e.clientX;
+          pointerStartY.current = e.clientY;
+        }}
+        onPointerUp={(e) => {
+          const dx = Math.abs(e.clientX - pointerStartX.current);
+          const dy = Math.abs(e.clientY - pointerStartY.current);
+
+          // If it's a quick tap and NOT a swipe drag
+          if (dx < 10 && dy < 10) {
+            const target = e.target as HTMLElement;
+            // Close if clicking the main container or empty embla structural frames
+            if (
+              target.classList.contains("embla-viewport") ||
+              target.className.includes("flex h-full") ||
+              target.className.includes("flex-[0_0_100%]")
+            ) {
+              onClose();
+            }
+          }
+        }}
+      />
+
+      {/* 2. PINNED MOBILE CONTROLS: Placed outside Embla so mobile zoom can't hide them */}
+      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gradient-to-b from-black/40 to-transparent pointer-events-none">
+        <div className="text-sm font-medium text-white drop-shadow pointer-events-auto">
+          {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
+        </div>
+        <button
+          onClick={onClose}
+          className="p-3 rounded-full bg-black/50 backdrop-blur-md hover:bg-black/80 transition-colors text-white pointer-events-auto"
+          aria-label={closeLabel}
+        >
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      {/* 3. EMBLA VIEWPORT FRAME */}
+      <div
+        className="w-full h-full relative z-10 embla-viewport"
         ref={emblaRef}
         style={{ touchAction: "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
       >
@@ -751,11 +800,15 @@ const IsolatedView = ({
                 }}
                 onPointerUp={(e) => {
                   isPanning.current = false;
-                  try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
+                  try {
+                    e.currentTarget.releasePointerCapture(e.pointerId);
+                  } catch {}
                 }}
                 onPointerCancel={(e) => {
                   isPanning.current = false;
-                  try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
+                  try {
+                    e.currentTarget.releasePointerCapture(e.pointerId);
+                  } catch {}
                 }}
                 style={{
                   width: "100%",
@@ -773,31 +826,53 @@ const IsolatedView = ({
         </div>
       </div>
 
-      <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground z-30 pointer-events-none">
-        #{items[current]?.num}
-        <span className="ml-2 text-muted-foreground font-light">
-          {current + 1} / {items.length}
+      {/* 1. PINNED COUNTER BAR */}
+      <span
+        className="fixed top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white"
+        style={{
+          position: "fixed",
+          zIndex: 99999,
+          transform: "translate3d(0, 0, 0)",
+          WebkitTransform: "translate3d(0, 0, 0)",
+        }}
+      >
+        <span className="ml-2 font-light">
+          {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
         </span>
       </span>
 
+      {/* 2. PINNED CLOSE BUTTON */}
       <button
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
-        className="absolute top-2 right-2 z-30 inline-flex items-center justify-center w-11 h-11 rounded-full text-white"
-        style={arrowStyle}
+        className="fixed top-2 right-2 inline-flex items-center justify-center w-11 h-11 rounded-full text-white bg-black/40 backdrop-blur-sm active:bg-black/60"
+        style={{
+          ...arrowStyle,
+          position: "fixed",
+          zIndex: 99999,
+          transform: "translate3d(0, 0, 0)",
+          WebkitTransform: "translate3d(0, 0, 0)",
+        }}
       >
         <X className="h-5 w-5" />
       </button>
 
+      {/* 3. PINNED NAVIGATION ARROWS */}
       {items.length > 1 && (
         <>
           <button
             type="button"
             aria-label={prevLabel}
             onClick={() => emblaApi?.scrollPrev()}
-            className={`${arrowBase} left-2 sm:left-4`}
-            style={arrowStyle}
+            className={`${arrowBase} fixed left-2 sm:left-4`}
+            style={{
+              ...arrowStyle,
+              position: "fixed",
+              zIndex: 99999,
+              transform: "translate3d(0, 0, 0)",
+              WebkitTransform: "translate3d(0, 0, 0)",
+            }}
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -805,8 +880,14 @@ const IsolatedView = ({
             type="button"
             aria-label={nextLabel}
             onClick={() => emblaApi?.scrollNext()}
-            className={`${arrowBase} right-2 sm:right-4`}
-            style={arrowStyle}
+            className={`${arrowBase} fixed right-2 sm:right-4`}
+            style={{
+              ...arrowStyle,
+              position: "fixed",
+              zIndex: 99999,
+              transform: "translate3d(0, 0, 0)",
+              WebkitTransform: "translate3d(0, 0, 0)",
+            }}
           >
             <ChevronRight className="h-5 w-5" />
           </button>
