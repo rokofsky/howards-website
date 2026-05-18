@@ -678,7 +678,19 @@ const IsolatedView = ({
         onPointerUp={(e) => {
           const dx = Math.abs(e.clientX - pointerStartX.current);
           const dy = Math.abs(e.clientY - pointerStartY.current);
-          if (dx < 10 && dy < 10) onClose();
+
+          // If it's a quick tap and NOT a swipe drag
+          if (dx < 10 && dy < 10) {
+            const target = e.target as HTMLElement;
+            // Close if clicking the main container or empty embla structural frames
+            if (
+              target.classList.contains("embla-viewport") ||
+              target.className.includes("flex h-full") ||
+              target.className.includes("flex-[0_0_100%]")
+            ) {
+              onClose();
+            }
+          }
         }}
       />
 
@@ -700,7 +712,7 @@ const IsolatedView = ({
 
       {/* 3. EMBLA VIEWPORT FRAME */}
       <div
-        className="w-full h-full relative z-10 pointer-events-none"
+        className="w-full h-full relative z-10 embla-viewport"
         ref={emblaRef}
         style={{ touchAction: "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
       >
