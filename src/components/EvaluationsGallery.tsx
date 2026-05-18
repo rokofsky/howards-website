@@ -456,7 +456,10 @@ const EvaluationsGallery = () => {
       <p className="text-sm text-muted-foreground font-light mb-6">
         {filtered.length === 0
           ? t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")
-          : "\n"}
+          : t(
+              `Showing ${filtered.length} of ${candidates.length} evaluations`,
+              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`,
+            )}
       </p>
 
       {filtered.length > 0 && (
@@ -664,20 +667,40 @@ const IsolatedView = ({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-background/95"
-      onPointerDown={(e) => {
-        pointerStartX.current = e.clientX;
-        pointerStartY.current = e.clientY;
-      }}
-      onPointerUp={(e) => {
-        const dx = Math.abs(e.clientX - pointerStartX.current);
-        const dy = Math.abs(e.clientY - pointerStartY.current);
-        if (e.target === e.currentTarget && dx < 10 && dy < 10) onClose();
-      }}
-    >
+    <div className="fixed inset-0 z-50 bg-background/95">
+      {/* 1. BACKDROP LAYER: Catches padding clicks seamlessly behind everything */}
       <div
-        className="w-full h-full"
+        className="absolute inset-0 z-0"
+        onPointerDown={(e) => {
+          pointerStartX.current = e.clientX;
+          pointerStartY.current = e.clientY;
+        }}
+        onPointerUp={(e) => {
+          const dx = Math.abs(e.clientX - pointerStartX.current);
+          const dy = Math.abs(e.clientY - pointerStartY.current);
+          if (dx < 10 && dy < 10) onClose();
+        }}
+      />
+
+      {/* 2. PINNED MOBILE CONTROLS: Placed outside Embla so mobile zoom can't hide them */}
+      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gradient-to-b from-black/40 to-transparent pointer-events-none">
+        <div className="text-sm font-medium text-white drop-shadow pointer-events-auto">
+          {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
+        </div>
+        <button
+          onClick={onClose}
+          className="p-3 rounded-full bg-black/50 backdrop-blur-md hover:bg-black/80 transition-colors text-white pointer-events-auto"
+          aria-label={closeLabel}
+        >
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      {/* 3. EMBLA VIEWPORT FRAME */}
+      <div
+        className="w-full h-full relative z-10 pointer-events-none"
         ref={emblaRef}
         style={{ touchAction: "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
       >
