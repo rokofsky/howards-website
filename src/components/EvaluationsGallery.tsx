@@ -694,7 +694,7 @@ const IsolatedView = ({
   };
 
   return (
-    <div className="fixed inset-0 z-30 bg-background/95">
+    <div className="fixed inset-0 z-30 bg-background/95 isolate">
       {/* Dynamic injection to make global navbar thin and sleek while gallery is open */}
       <style>{`
         header.fixed { 
@@ -733,7 +733,7 @@ const IsolatedView = ({
       />
 
       {/* 2. PINNED MOBILE CONTROLS: Placed outside Embla so mobile zoom can't hide them */}
-      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gradient-to-b from-black/40 to-transparent pointer-events-none">
+      <div className="fixed top-0 left-0 right-0 z-[9999] flex items-center justify-between p-4 bg-gradient-to-b from-black/40 to-transparent pointer-events-none">
         <div className="text-sm font-medium text-white drop-shadow pointer-events-auto">
           {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
         </div>
