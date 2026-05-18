@@ -579,6 +579,33 @@ const IsolatedView = ({
     dragFree: false,
     containScroll: false,
   });
+  // Track mobile visual viewport zoom scale and shifting offsets
+  const [viewportScale, setViewportScale] = useState(1);
+  const [viewportOffset, setViewportOffset] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.visualViewport) return;
+
+    const handleResize = () => {
+      const vv = window.visualViewport;
+      if (!vv) return;
+      setViewportScale(vv.scale);
+      setViewportOffset({
+        x: vv.offsetLeft,
+        y: vv.offsetTop,
+      });
+    };
+
+    window.visualViewport.addEventListener("resize", handleResize);
+    window.visualViewport.addEventListener("scroll", handleResize);
+    // Run an initial calculation to map current bounds
+    handleResize();
+
+    return () => {
+      window.visualViewport?.removeEventListener("resize", handleResize);
+      window.visualViewport?.removeEventListener("scroll", handleResize);
+    };
+  }, []);
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const pointerStartX = useRef<number>(0);
@@ -801,8 +828,13 @@ const IsolatedView = ({
 
       {/* 1. PINNED COUNTER BAR */}
       <span
-        className="fixed top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white z-[100]"
-        style={{ position: "fixed", transform: "translateZ(0)" }}
+        className="fixed top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white"
+        style={{
+          position: "fixed",
+          zIndex: 99999,
+          transform: "translate3d(0, 0, 0)",
+          WebkitTransform: "translate3d(0, 0, 0)",
+        }}
       >
         <span className="ml-2 font-light">
           {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
@@ -814,8 +846,14 @@ const IsolatedView = ({
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
-        className="fixed top-2 right-2 z-[100] inline-flex items-center justify-center w-11 h-11 rounded-full text-white bg-black/40 backdrop-blur-sm active:bg-black/60"
-        style={{ ...arrowStyle, position: "fixed", transform: "translateZ(0)" }}
+        className="fixed top-2 right-2 inline-flex items-center justify-center w-11 h-11 rounded-full text-white bg-black/40 backdrop-blur-sm active:bg-black/60"
+        style={{
+          ...arrowStyle,
+          position: "fixed",
+          zIndex: 99999,
+          transform: "translate3d(0, 0, 0)",
+          WebkitTransform: "translate3d(0, 0, 0)",
+        }}
       >
         <X className="h-5 w-5" />
       </button>
@@ -827,8 +865,14 @@ const IsolatedView = ({
             type="button"
             aria-label={prevLabel}
             onClick={() => emblaApi?.scrollPrev()}
-            className={`${arrowBase} fixed left-2 sm:left-4 z-[100]`}
-            style={{ ...arrowStyle, position: "fixed", transform: "translateZ(0)" }}
+            className={`${arrowBase} fixed left-2 sm:left-4`}
+            style={{
+              ...arrowStyle,
+              position: "fixed",
+              zIndex: 99999,
+              transform: "translate3d(0, 0, 0)",
+              WebkitTransform: "translate3d(0, 0, 0)",
+            }}
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -836,8 +880,14 @@ const IsolatedView = ({
             type="button"
             aria-label={nextLabel}
             onClick={() => emblaApi?.scrollNext()}
-            className={`${arrowBase} fixed right-2 sm:right-4 z-[100]`}
-            style={{ ...arrowStyle, position: "fixed", transform: "translateZ(0)" }}
+            className={`${arrowBase} fixed right-2 sm:right-4`}
+            style={{
+              ...arrowStyle,
+              position: "fixed",
+              zIndex: 99999,
+              transform: "translate3d(0, 0, 0)",
+              WebkitTransform: "translate3d(0, 0, 0)",
+            }}
           >
             <ChevronRight className="h-5 w-5" />
           </button>
