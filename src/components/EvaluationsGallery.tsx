@@ -696,10 +696,11 @@ const IsolatedView = ({
 
   return (
     <div className="fixed inset-0 z-30 bg-background/95">
-      {/* Dynamic injection to make global navbar thin and sleek while gallery is open */}
+      {/* Bug 1 Fix: Force the global navbar to stay on top of everything during zoom */}
       <style>{`
         header.fixed { 
           height: 44px !important; 
+          z-index: 99999 !important;
           transition: all 0.2s ease-in-out;
         }
         header.fixed .container { 
@@ -732,22 +733,6 @@ const IsolatedView = ({
           }
         }}
       />
-
-      {/* 2. PINNED MOBILE CONTROLS: Placed outside Embla so mobile zoom can't hide them */}
-      <div className="fixed top-0 left-0 right-0 z-[99999] flex items-center justify-between p-4 bg-gradient-to-b from-black/40 to-transparent pointer-events-none">
-        <div className="text-sm font-medium text-white drop-shadow pointer-events-auto">
-          {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
-        </div>
-        <button
-          onClick={onClose}
-          className="p-3 rounded-full bg-black/50 backdrop-blur-md hover:bg-black/80 transition-colors text-white pointer-events-auto"
-          aria-label={closeLabel}
-        >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
 
       {/* 3. EMBLA VIEWPORT FRAME */}
       <div
