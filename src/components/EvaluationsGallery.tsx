@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
-import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -684,7 +683,7 @@ const IsolatedView = ({
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
 
   const arrowBase =
-    "absolute top-1/2 -translate-y-1/2 z-[99999] inline-flex items-center justify-center w-12 h-12 rounded-full text-white transition-colors portrait:scale-[1.3] landscape:scale-[1.7]";
+    "absolute top-1/2 -translate-y-1/2 z-20 inline-flex items-center justify-center w-12 h-12 rounded-full text-white transition-colors portrait:scale-[1.3] landscape:scale-[1.7]";
   const arrowStyle: React.CSSProperties = {
     background: "rgba(10,25,47,0.7)",
     backdropFilter: "blur(12px)",
@@ -696,18 +695,6 @@ const IsolatedView = ({
 
   return (
     <div className="fixed inset-0 z-30 bg-background/95">
-      {/* Bug 1 Fix: Force the global navbar to stay on top of everything during zoom */}
-      <style>{`
-        header.fixed { 
-          height: 44px !important; 
-          z-index: 99999 !important;
-          transition: all 0.2s ease-in-out;
-        }
-        header.fixed .container { 
-          height: 44px !important; 
-        }
-      `}</style>
-
       {/* 1. BACKDROP LAYER: Catches padding clicks seamlessly behind everything */}
       <div
         className="absolute inset-0 z-0"
@@ -734,13 +721,29 @@ const IsolatedView = ({
         }}
       />
 
+      {/* 2. PINNED MOBILE CONTROLS: Placed outside Embla so mobile zoom can't hide them */}
+      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gradient-to-b from-black/40 to-transparent pointer-events-none">
+        <div className="text-sm font-medium text-white drop-shadow pointer-events-auto">
+          {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
+        </div>
+        <button
+          onClick={onClose}
+          className="p-3 rounded-full bg-black/50 backdrop-blur-md hover:bg-black/80 transition-colors text-white pointer-events-auto"
+          aria-label={closeLabel}
+        >
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
       {/* 3. EMBLA VIEWPORT FRAME */}
       <div
-        className="w-full h-full relative z-20 embla-viewport pt-14 sm:pt-0"
+        className="w-full h-full relative z-10 embla-viewport pt-14 sm:pt-0"
         ref={emblaRef}
         style={{ touchAction: "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
       >
-        <div className="flex h-full -mt-14 sm:mt-0" style={{ overflow: "visible" }}>
+        <div className="flex h-full" style={{ overflow: "visible" }}>
           {items.map((it) => (
             <div
               key={it.key}
@@ -823,52 +826,72 @@ const IsolatedView = ({
         </div>
       </div>
 
-      {/* Bug 2 Fix: Portal all controls to document.body to escape the image stacking context */}
-      {typeof document !== "undefined" && createPortal(
-        <div className="fixed inset-0 z-[99999] pointer-events-none">
-          {/* 1. COUNTER HUD */}
-          <span className="absolute top-14 left-4 text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white pointer-events-auto">
-            <span className="font-light">
-              {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
-            </span>
-          </span>
+      {/* 1. PINNED COUNTER BAR */}
+      <span
+        className="fixed top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white"
+        style={{
+          position: "fixed",
+          zIndex: 99999,
+          transform: "translate3d(0, 0, 0)",
+          WebkitTransform: "translate3d(0, 0, 0)",
+        }}
+      >
+        <span className="ml-2 font-light">
+          {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
+        </span>
+      </span>
 
-          {/* 2. PINNED CLOSE BUTTON */}
+      {/* 2. PINNED CLOSE BUTTON */}
+      <button
+        type="button"
+        aria-label={closeLabel}
+        onClick={onClose}
+        className="fixed top-2 right-2 inline-flex items-center justify-center w-11 h-11 rounded-full text-white bg-black/40 backdrop-blur-sm active:bg-black/60"
+        style={{
+          ...arrowStyle,
+          position: "fixed",
+          zIndex: 99999,
+          transform: "translate3d(0, 0, 0)",
+          WebkitTransform: "translate3d(0, 0, 0)",
+        }}
+      >
+        <X className="h-5 w-5" />
+      </button>
+
+      {/* 3. PINNED NAVIGATION ARROWS */}
+      {items.length > 1 && (
+        <>
           <button
             type="button"
-            aria-label={closeLabel}
-            onClick={onClose}
-            className="absolute top-14 right-4 inline-flex items-center justify-center w-11 h-11 rounded-full text-white bg-black/40 backdrop-blur-sm active:bg-black/60 pointer-events-auto"
-            style={{ ...arrowStyle }}
+            aria-label={prevLabel}
+            onClick={() => emblaApi?.scrollPrev()}
+            className={`${arrowBase} fixed left-2 sm:left-4`}
+            style={{
+              ...arrowStyle,
+              position: "fixed",
+              zIndex: 99999,
+              transform: "translate3d(0, 0, 0)",
+              WebkitTransform: "translate3d(0, 0, 0)",
+            }}
           >
-            <X className="h-5 w-5" />
+            <ChevronLeft className="h-5 w-5" />
           </button>
-
-          {/* 3. DIRECTIONAL NAVIGATION */}
-          {items.length > 1 && (
-            <>
-              <button
-                type="button"
-                aria-label={prevLabel}
-                onClick={() => emblaApi?.scrollPrev()}
-                className={`${arrowBase} absolute top-1/2 left-4 -translate-y-1/2 pointer-events-auto`}
-                style={{ ...arrowStyle }}
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-              <button
-                type="button"
-                aria-label={nextLabel}
-                onClick={() => emblaApi?.scrollNext()}
-                className={`${arrowBase} absolute top-1/2 right-4 -translate-y-1/2 pointer-events-auto`}
-                style={{ ...arrowStyle }}
-              >
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </>
-          )}
-        </div>,
-        document.body
+          <button
+            type="button"
+            aria-label={nextLabel}
+            onClick={() => emblaApi?.scrollNext()}
+            className={`${arrowBase} fixed right-2 sm:right-4`}
+            style={{
+              ...arrowStyle,
+              position: "fixed",
+              zIndex: 99999,
+              transform: "translate3d(0, 0, 0)",
+              WebkitTransform: "translate3d(0, 0, 0)",
+            }}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </>
       )}
     </div>
   );

@@ -20,7 +20,10 @@ const Header = () => {
   const isCz = useIsCzech();
 
   // Determine if we're on the language root
-  const isRoot = location.pathname === "/" || location.pathname === "/cz" || location.pathname === "/cz/";
+  const isRoot =
+    location.pathname === "/" ||
+    location.pathname === "/cz" ||
+    location.pathname === "/cz/";
   const homeHref = isCz ? "/cz" : "/";
 
   // Plain links (no scroll/hash logic) - mirrors how Blog/References work
@@ -117,20 +120,14 @@ const Header = () => {
   const desktopLinkClass =
     "text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-primary after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out [@media(hover:none)]:hover:after:scale-x-0";
 
-  const mobileLinkClass = "text-base font-light text-foreground/70 hover:text-foreground py-2";
+  const mobileLinkClass =
+    "text-base font-light text-foreground/70 hover:text-foreground py-2";
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 transition-all duration-300 ${scrolled ? "glass" : "bg-transparent"}`}
-      style={{
-        zIndex: 999999,
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        transform: "translate3d(0, 0, 0)",
-        WebkitTransform: "translate3d(0, 0, 0)",
-      }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? "glass" : "bg-transparent"
+      }`}
     >
       <div className="container mx-auto flex h-16 md:h-[72px] max-lg:landscape:h-11 items-center justify-between px-6 max-lg:landscape:px-4">
         {/* Logo — manual navigation so root routes always reset */}
@@ -197,7 +194,12 @@ const Header = () => {
               );
             }
             return (
-              <Link key={link.label} to={link.href} onClick={() => setMobileOpen(false)} className={desktopLinkClass}>
+              <Link
+                key={link.label}
+                to={link.href}
+                onClick={() => setMobileOpen(false)}
+                className={desktopLinkClass}
+              >
                 {link.label}
               </Link>
             );
@@ -216,7 +218,11 @@ const Header = () => {
         {/* Mobile toggle */}
         <div className="flex md:hidden items-center gap-3">
           <LanguageToggle />
-          <button className="p-2 text-foreground" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
+          <button
+            className="p-2 text-foreground"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -292,7 +298,10 @@ const Header = () => {
                 );
               })}
               <Button variant="cta" size="lg" asChild className="mt-2">
-                <Link to={lp("/storytelling-workshops")} onClick={() => setMobileOpen(false)}>
+                <Link
+                  to={lp("/storytelling-workshops")}
+                  onClick={() => setMobileOpen(false)}
+                >
                   {t("Free Storytelling Sessions!", "Bezplatná sezení Storytellingu!")}
                 </Link>
               </Button>
