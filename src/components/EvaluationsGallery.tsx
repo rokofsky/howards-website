@@ -650,11 +650,7 @@ const IsolatedView = ({
     if (!emblaApi) return;
     const node = emblaApi.rootNode() as HTMLElement;
     if (!node) return;
-    // Imperatively override Embla's own overflow: hidden injection
     node.style.overflow = scale > 1 ? "visible" : "hidden";
-    // Also ensure the inner container doesn't clip
-    const container = emblaApi.containerNode() as HTMLElement;
-    if (container) container.style.overflow = "visible";
   }, [scale, emblaApi]);
 
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
@@ -670,82 +666,47 @@ const IsolatedView = ({
     outline: "none",
   };
 
-  // Refs for focus trap
-  const containerRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-  // Auto-focus close button when lightbox opens
-  useEffect(() => {
-    closeButtonRef.current?.focus();
-  }, []);
-
-  // Focus trap: keep Tab inside the lightbox
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key !== "Tab") return;
-    const focusable = Array.from(containerRef.current?.querySelectorAll<HTMLElement>("button") ?? []);
-    if (focusable.length === 0) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (e.shiftKey) {
-      if (document.activeElement === first) {
-        last.focus();
-        e.preventDefault();
-      }
-    } else {
-      if (document.activeElement === last) {
-        first.focus();
-        e.preventDefault();
-      }
-    }
-  };
-
   return (
     <div
-      ref={containerRef}
-      tabIndex={-1}
-      onKeyDown={handleKeyDown}
-      className="fixed inset-0 z-50 bg-background/95 outline-none"
+      className="fixed inset-0 z-50 bg-background/95"
+      onPointerDown={(e) => {
+        pointerStartX.current = e.clientX;
+        pointerStartY.current = e.clientY;
+      }}
+      onPointerUp={(e) => {
+        const dx = Math.abs(e.clientX - pointerStartX.current);
+        const dy = Math.abs(e.clientY - pointerStartY.current);
+        if (e.target === e.currentTarget && dx < 10 && dy < 10) onClose();
+      }}
     >
-      {/* Orange backdrop — tap to close (drag detection) */}
       <div
-        className="absolute inset-0"
-        onPointerDown={(e) => {
-          pointerStartX.current = e.clientX;
-          pointerStartY.current = e.clientY;
-        }}
-        onPointerUp={(e) => {
-          const dx = Math.abs(e.clientX - pointerStartX.current);
-          const dy = Math.abs(e.clientY - pointerStartY.current);
-          if (dx < 10 && dy < 10) onClose();
-        }}
-      />
-
-      {/* Embla carousel — sits on top of backdrop */}
-      <div className="absolute inset-0" ref={emblaRef} style={{ touchAction: "pan-y pinch-zoom" }}>
-        <div className="flex h-full">
+        className="w-full h-full"
+        ref={emblaRef}
+        style={{ touchAction: "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
+      >
+        <div className="flex h-full" style={{ overflow: "visible" }}>
           {items.map((it) => (
             <div
               key={it.key}
               className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
-              style={{ pointerEvents: "none" }}
+              style={{ overflow: "visible" }}
+              onPointerDown={(e) => {
+                if (e.target === e.currentTarget) {
+                  pointerDownPos.current = { x: e.clientX, y: e.clientY };
+                }
+              }}
+              onPointerUp={(e) => {
+                if (e.target === e.currentTarget) {
+                  const dx = Math.abs(e.clientX - pointerDownPos.current.x);
+                  const dy = Math.abs(e.clientY - pointerDownPos.current.y);
+                  if (dx < 10 && dy < 10) onClose();
+                }
+              }}
             >
               <img
                 src={`${it.src}?v=${ASSET_VERSION}`}
                 alt={`${alt} #${it.num}`}
                 draggable={false}
-                style={{
-                  pointerEvents: "auto",
-                  width: "auto",
-                  height: "auto",
-                  maxWidth: "100%",
-                  maxHeight: "100%",
-                  objectFit: "contain",
-                  touchAction: scale > 1 ? "none" : "pinch-zoom",
-                  transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
-                  transformOrigin: "center",
-                  transition: isPanning.current ? "none" : "transform 0.1s ease",
-                }}
-                className="select-none"
                 onPointerDown={(e) => {
                   if (scale <= 1) return;
                   e.stopPropagation();
@@ -753,8 +714,10 @@ const IsolatedView = ({
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   const imgRect = e.currentTarget.getBoundingClientRect();
-                  const contRect = e.currentTarget.parentElement?.getBoundingClientRect();
-                  imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
+                  const parent = e.currentTarget.parentElement;
+                  const contRect = parent?.getBoundingClientRect();
+                  // imgRect already reflects the scaled size
+                  imageBounds.current = { width: imgRect.width, height: imgRect.height };
                   containerBounds.current = {
                     width: contRect?.width ?? imgRect.width,
                     height: contRect?.height ?? imgRect.height,
@@ -788,13 +751,22 @@ const IsolatedView = ({
                     e.currentTarget.releasePointerCapture(e.pointerId);
                   } catch {}
                 }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  touchAction: scale > 1 ? "none" : "pinch-zoom",
+                  transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
+                  transformOrigin: "center",
+                  transition: isPanning.current ? "none" : "transform 0.1s ease",
+                }}
+                className="select-none"
               />
             </div>
           ))}
         </div>
       </div>
 
-      {/* Counter */}
       <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground z-30 pointer-events-none">
         #{items[current]?.num}
         <span className="ml-2 text-muted-foreground font-light">
@@ -802,9 +774,7 @@ const IsolatedView = ({
         </span>
       </span>
 
-      {/* Close button */}
       <button
-        ref={closeButtonRef}
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
@@ -814,7 +784,6 @@ const IsolatedView = ({
         <X className="h-5 w-5" />
       </button>
 
-      {/* Prev / Next arrows */}
       {items.length > 1 && (
         <>
           <button
