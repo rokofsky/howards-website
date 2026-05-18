@@ -687,11 +687,20 @@ const IsolatedView = ({
         <div className="flex h-full" style={{ overflow: "visible" }}>
           {items.map((it) => (
             <div
-              className="pointer-events-auto relative max-w-full max-h-full flex items-center justify-center overflow-visible"
-              style={{
-                transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
-                transition: isPanning.current ? "none" : "transform 0.2s ease-out",
-                transformOrigin: "center center",
+              key={it.key}
+              className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
+              style={{ overflow: "visible" }}
+              onPointerDown={(e) => {
+                if (e.target === e.currentTarget) {
+                  pointerDownPos.current = { x: e.clientX, y: e.clientY };
+                }
+              }}
+              onPointerUp={(e) => {
+                if (e.target === e.currentTarget) {
+                  const dx = Math.abs(e.clientX - pointerDownPos.current.x);
+                  const dy = Math.abs(e.clientY - pointerDownPos.current.y);
+                  if (dx < 10 && dy < 10) onClose();
+                }
               }}
             >
               <img
