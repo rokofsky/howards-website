@@ -785,11 +785,8 @@ const IsolatedView = ({
                 }}
                 onPointerMove={(e) => {
                   if (!isPanning.current) return;
-
-                  // Divide by viewportScale to unfreeze gestures when native mobile zoom is active
-                  const dx = (e.clientX - panStartX.current) / viewportScale;
-                  const dy = (e.clientY - panStartY.current) / viewportScale;
-
+                  const dx = e.clientX - panStartX.current;
+                  const dy = e.clientY - panStartY.current;
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   setOffset((o) => {
