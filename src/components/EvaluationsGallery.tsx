@@ -799,31 +799,36 @@ const IsolatedView = ({
         </div>
       </div>
 
-      <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground z-30 pointer-events-none">
-        #{items[current]?.num}
-        <span className="ml-2 text-muted-foreground font-light">
-          {current + 1} / {items.length}
+      {/* 1. PINNED COUNTER BAR */}
+      <span
+        className="fixed top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white z-[100]"
+        style={{ position: "fixed", transform: "translateZ(0)" }}
+      >
+        <span className="ml-2 font-light">
+          {emblaApi ? emblaApi.selectedScrollSnap() + 1 : 1} / {items.length}
         </span>
       </span>
 
+      {/* 2. PINNED CLOSE BUTTON */}
       <button
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
-        className="absolute top-2 right-2 z-30 inline-flex items-center justify-center w-11 h-11 rounded-full text-white"
-        style={arrowStyle}
+        className="fixed top-2 right-2 z-[100] inline-flex items-center justify-center w-11 h-11 rounded-full text-white bg-black/40 backdrop-blur-sm active:bg-black/60"
+        style={{ ...arrowStyle, position: "fixed", transform: "translateZ(0)" }}
       >
         <X className="h-5 w-5" />
       </button>
 
+      {/* 3. PINNED NAVIGATION ARROWS */}
       {items.length > 1 && (
         <>
           <button
             type="button"
             aria-label={prevLabel}
             onClick={() => emblaApi?.scrollPrev()}
-            className={`${arrowBase} left-2 sm:left-4`}
-            style={arrowStyle}
+            className={`${arrowBase} fixed left-2 sm:left-4 z-[100]`}
+            style={{ ...arrowStyle, position: "fixed", transform: "translateZ(0)" }}
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -831,8 +836,8 @@ const IsolatedView = ({
             type="button"
             aria-label={nextLabel}
             onClick={() => emblaApi?.scrollNext()}
-            className={`${arrowBase} right-2 sm:right-4`}
-            style={arrowStyle}
+            className={`${arrowBase} fixed right-2 sm:right-4 z-[100]`}
+            style={{ ...arrowStyle, position: "fixed", transform: "translateZ(0)" }}
           >
             <ChevronRight className="h-5 w-5" />
           </button>
