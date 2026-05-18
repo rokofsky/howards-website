@@ -66,17 +66,22 @@ const Header = () => {
     setMobileOpen(false);
   }, [location.pathname, location.hash]);
 
-  // Visual Viewport API — keeps header visible during mobile pinch-zoom
+  // Visual Viewport API — keeps header visible and thin during mobile pinch-zoom
   useEffect(() => {
     if (typeof window === "undefined" || !window.visualViewport) return;
     const vv = window.visualViewport;
     const update = () => {
       const header = headerRef.current;
       if (!header) return;
-      // Reposition header to stay at top of visual viewport
+      // Reposition to stay at top of visual viewport
       header.style.top = `${vv.offsetTop}px`;
       header.style.left = `${vv.offsetLeft}px`;
       header.style.width = `${vv.width}px`;
+      // Counter-scale so navbar doesn't get fat when user pinch-zooms
+      header.style.transform = `scale(${1 / vv.scale})`;
+      header.style.transformOrigin = "top left";
+      // Adjust width to compensate for the counter-scale
+      header.style.width = `${vv.width * vv.scale}px`;
     };
     update();
     vv.addEventListener("resize", update);
@@ -84,12 +89,13 @@ const Header = () => {
     return () => {
       vv.removeEventListener("resize", update);
       vv.removeEventListener("scroll", update);
-      // Reset on unmount
       const header = headerRef.current;
       if (header) {
         header.style.top = "";
         header.style.left = "";
         header.style.width = "";
+        header.style.transform = "";
+        header.style.transformOrigin = "";
       }
     };
   }, []);
