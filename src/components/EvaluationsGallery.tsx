@@ -1,13 +1,7 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useT } from "@/hooks/useT";
 import { Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
@@ -20,6 +14,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
     (window as any).gtag("event", "click", { event_category: "engagement", event_label: label, ...params });
   }
 };
+
 // Hard-coded allowlist generated from the files currently present in /public/evaluations/.
 export const ASSET_VERSION = "202605121549";
 
@@ -208,11 +203,8 @@ const EvaluationsGallery = () => {
   }, [queryInput]);
 
   const allSorted = useMemo(
-    () =>
-      [...candidates].sort((a, b) =>
-        sort === "asc" ? a.num.localeCompare(b.num) : b.num.localeCompare(a.num)
-      ),
-    [candidates, sort]
+    () => [...candidates].sort((a, b) => (sort === "asc" ? a.num.localeCompare(b.num) : b.num.localeCompare(a.num))),
+    [candidates, sort],
   );
 
   const filtered = useMemo(() => {
@@ -283,7 +275,7 @@ const EvaluationsGallery = () => {
         return next;
       });
     },
-    [allSorted]
+    [allSorted],
   );
 
   // When lightbox index changes, scroll the underlying strip to that item
@@ -464,7 +456,10 @@ const EvaluationsGallery = () => {
       <p className="text-sm text-muted-foreground font-light mb-6">
         {filtered.length === 0
           ? t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")
-          : "\n"}
+          : t(
+              `Showing ${filtered.length} of ${candidates.length} evaluations`,
+              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`,
+            )}
       </p>
 
       {filtered.length > 0 && (
@@ -586,9 +581,6 @@ const IsolatedView = ({
   });
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const previouslyFocused = useRef<HTMLElement | null>(null);
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
   const pointerDownPos = useRef({ x: 0, y: 0 });
@@ -638,29 +630,12 @@ const IsolatedView = ({
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
 
-  // Focus the close button on mount
+  // Keyboard nav + lock body scroll
   useEffect(() => {
-    closeButtonRef.current?.focus();
-  }, []);
-
-  // Keyboard nav (Escape/Arrows) + lock body scroll + restore focus on close
-  useEffect(() => {
-    previouslyFocused.current = document.activeElement as HTMLElement | null;
-    // Initial focus on the container so keys work immediately
-    containerRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-        return;
-      }
-      if (e.key === "ArrowRight") {
-        emblaApi?.scrollNext();
-        return;
-      }
-      if (e.key === "ArrowLeft") {
-        emblaApi?.scrollPrev();
-        return;
-      }
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowRight") emblaApi?.scrollNext();
+      else if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
     };
     window.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -668,38 +643,18 @@ const IsolatedView = ({
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
-      previouslyFocused.current?.focus?.();
     };
-   }, [emblaApi, onClose]);
-
-  // Focus trap: keep Tab navigation contained within the modal
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key !== 'Tab') return;
-
-    const focusableElements = containerRef.current?.querySelectorAll('button') || [];
-    if (focusableElements.length === 0) return;
-
-    const firstElement = focusableElements[0] as HTMLElement;
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-
-    if (e.shiftKey) {
-      if (document.activeElement === firstElement) {
-        lastElement.focus();
-        e.preventDefault();
-      }
-    } else {
-      if (document.activeElement === lastElement) {
-        firstElement.focus();
-        e.preventDefault();
-      }
-    }
-  };
+  }, [emblaApi, onClose]);
 
   useEffect(() => {
     if (!emblaApi) return;
     const node = emblaApi.rootNode() as HTMLElement;
     if (!node) return;
+    // Imperatively override Embla's own overflow: hidden injection
     node.style.overflow = scale > 1 ? "visible" : "hidden";
+    // Also ensure the inner container doesn't clip
+    const container = emblaApi.containerNode() as HTMLElement;
+    if (container) container.style.overflow = "visible";
   }, [scale, emblaApi]);
 
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
@@ -715,53 +670,82 @@ const IsolatedView = ({
     outline: "none",
   };
 
+  // Refs for focus trap
+  const containerRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Auto-focus close button when lightbox opens
+  useEffect(() => {
+    closeButtonRef.current?.focus();
+  }, []);
+
+  // Focus trap: keep Tab inside the lightbox
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Tab") return;
+    const focusable = Array.from(containerRef.current?.querySelectorAll<HTMLElement>("button") ?? []);
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) {
+        last.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === last) {
+        first.focus();
+        e.preventDefault();
+      }
+    }
+  };
+
   return (
     <div
       ref={containerRef}
-      role="dialog"
-      aria-modal="true"
-      aria-label={closeLabel}
       tabIndex={-1}
       onKeyDown={handleKeyDown}
       className="fixed inset-0 z-50 bg-background/95 outline-none"
-      onPointerDown={(e) => {
-        pointerStartX.current = e.clientX;
-        pointerStartY.current = e.clientY;
-      }}
-      onPointerUp={(e) => {
-        const dx = Math.abs(e.clientX - pointerStartX.current);
-        const dy = Math.abs(e.clientY - pointerStartY.current);
-        if (e.target === e.currentTarget && dx < 10 && dy < 10) onClose();
-      }}
     >
+      {/* Orange backdrop — tap to close (drag detection) */}
       <div
-        className="w-full h-full"
-        ref={emblaRef}
-        style={{ touchAction: "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
-      >
-        <div className="flex h-full" style={{ overflow: "visible" }}>
+        className="absolute inset-0"
+        onPointerDown={(e) => {
+          pointerStartX.current = e.clientX;
+          pointerStartY.current = e.clientY;
+        }}
+        onPointerUp={(e) => {
+          const dx = Math.abs(e.clientX - pointerStartX.current);
+          const dy = Math.abs(e.clientY - pointerStartY.current);
+          if (dx < 10 && dy < 10) onClose();
+        }}
+      />
+
+      {/* Embla carousel — sits on top of backdrop */}
+      <div className="absolute inset-0" ref={emblaRef} style={{ touchAction: "pan-y pinch-zoom" }}>
+        <div className="flex h-full">
           {items.map((it) => (
             <div
               key={it.key}
               className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
-              style={{ overflow: "visible" }}
-              onPointerDown={(e) => {
-                if (e.target === e.currentTarget) {
-                  pointerDownPos.current = { x: e.clientX, y: e.clientY };
-                }
-              }}
-              onPointerUp={(e) => {
-                if (e.target === e.currentTarget) {
-                  const dx = Math.abs(e.clientX - pointerDownPos.current.x);
-                  const dy = Math.abs(e.clientY - pointerDownPos.current.y);
-                  if (dx < 10 && dy < 10) onClose();
-                }
-              }}
+              style={{ pointerEvents: "none" }}
             >
               <img
                 src={`${it.src}?v=${ASSET_VERSION}`}
                 alt={`${alt} #${it.num}`}
                 draggable={false}
+                style={{
+                  pointerEvents: "auto",
+                  width: "auto",
+                  height: "auto",
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  objectFit: "contain",
+                  touchAction: scale > 1 ? "none" : "pinch-zoom",
+                  transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
+                  transformOrigin: "center",
+                  transition: isPanning.current ? "none" : "transform 0.1s ease",
+                }}
+                className="select-none"
                 onPointerDown={(e) => {
                   if (scale <= 1) return;
                   e.stopPropagation();
@@ -769,10 +753,8 @@ const IsolatedView = ({
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   const imgRect = e.currentTarget.getBoundingClientRect();
-                  const parent = e.currentTarget.parentElement;
-                  const contRect = parent?.getBoundingClientRect();
-                  // imgRect already reflects the scaled size
-                  imageBounds.current = { width: imgRect.width, height: imgRect.height };
+                  const contRect = e.currentTarget.parentElement?.getBoundingClientRect();
+                  imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
                   containerBounds.current = {
                     width: contRect?.width ?? imgRect.width,
                     height: contRect?.height ?? imgRect.height,
@@ -796,28 +778,23 @@ const IsolatedView = ({
                 }}
                 onPointerUp={(e) => {
                   isPanning.current = false;
-                  try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
+                  try {
+                    e.currentTarget.releasePointerCapture(e.pointerId);
+                  } catch {}
                 }}
                 onPointerCancel={(e) => {
                   isPanning.current = false;
-                  try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
+                  try {
+                    e.currentTarget.releasePointerCapture(e.pointerId);
+                  } catch {}
                 }}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  touchAction: scale > 1 ? "none" : "pinch-zoom",
-                  transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
-                  transformOrigin: "center",
-                  transition: isPanning.current ? "none" : "transform 0.1s ease",
-                }}
-                className="select-none"
               />
             </div>
           ))}
         </div>
       </div>
 
+      {/* Counter */}
       <span className="absolute top-3 left-3 text-sm font-medium px-3 py-1 rounded bg-background/80 backdrop-blur-sm text-foreground z-30 pointer-events-none">
         #{items[current]?.num}
         <span className="ml-2 text-muted-foreground font-light">
@@ -825,11 +802,11 @@ const IsolatedView = ({
         </span>
       </span>
 
+      {/* Close button */}
       <button
         ref={closeButtonRef}
         type="button"
         aria-label={closeLabel}
-        ref={closeButtonRef}
         onClick={onClose}
         className="absolute top-2 right-2 z-30 inline-flex items-center justify-center w-11 h-11 rounded-full text-white"
         style={arrowStyle}
@@ -837,6 +814,7 @@ const IsolatedView = ({
         <X className="h-5 w-5" />
       </button>
 
+      {/* Prev / Next arrows */}
       {items.length > 1 && (
         <>
           <button
