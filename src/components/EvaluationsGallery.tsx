@@ -543,6 +543,10 @@ const IsolatedView = ({
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
+  // Visual Viewport state — tracks mobile pinch-zoom position
+  const [vvOffset, setVvOffset] = useState({ x: 0, y: 0 });
+  const [vvScale, setVvScale] = useState(1);
+
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
   const pointerDownPos = useRef({ x: 0, y: 0 });
@@ -551,29 +555,28 @@ const IsolatedView = ({
   const panStartY = useRef(0);
   const imageBounds = useRef({ width: 0, height: 0 });
   const containerBounds = useRef({ width: 0, height: 0 });
-  const activeImgRef = useRef<HTMLImageElement | null>(null);
 
-  // When lightbox opens, disable browser native zoom and handle pinch ourselves
+  // Track Visual Viewport changes (mobile pinch-zoom)
   useEffect(() => {
-    const viewportMeta = document.querySelector<HTMLMetaElement>('meta[name="viewport"]');
-    const originalContent = viewportMeta?.content ?? "";
-    if (viewportMeta) {
-      viewportMeta.content = "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no";
-    }
+    if (typeof window === "undefined" || !window.visualViewport) return;
+    const vv = window.visualViewport;
+    const update = () => {
+      setVvOffset({ x: vv.offsetLeft, y: vv.offsetTop });
+      setVvScale(vv.scale);
+    };
+    update();
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
     return () => {
-      if (viewportMeta) viewportMeta.content = originalContent;
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
     };
   }, []);
 
-  // Handle pinch-to-zoom via touch events on the Embla container
-  const pinchStartDist = useRef<number | null>(null);
-  const pinchStartScale = useRef(1);
-
-  const getPinchDist = (touches: TouchList) => {
-    const dx = touches[0].clientX - touches[1].clientX;
-    const dy = touches[0].clientY - touches[1].clientY;
-    return Math.sqrt(dx * dx + dy * dy);
-  };
+  // Reset offset when scale returns to 1
+  useEffect(() => {
+    if (scale === 1) setOffset({ x: 0, y: 0 });
+  }, [scale]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -606,73 +609,7 @@ const IsolatedView = ({
     node.addEventListener("wheel", onWheel, { passive: false });
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
-  // Disable Embla drag when zoomed so pointer handlers control panning
-  useEffect(() => {
-    if (!emblaApi) return;
-    if (scale > 1) {
-      emblaApi.reInit({ watchDrag: false });
-    } else {
-      emblaApi.reInit({ watchDrag: true });
-    }
-  }, [scale, emblaApi]);
 
-  // Native touch listeners for mobile panning — React synthetic touch events
-  // are blocked by Embla, so we attach directly to the DOM after render
-  useEffect(() => {
-    if (scale <= 1) return;
-    const img = activeImgRef.current;
-    if (!img) return;
-
-    const onTouchStart = (e: TouchEvent) => {
-      e.stopPropagation();
-      const touch = e.touches[0];
-      panStartX.current = touch.clientX;
-      panStartY.current = touch.clientY;
-      const imgRect = img.getBoundingClientRect();
-      const contRect = img.parentElement?.getBoundingClientRect();
-      imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
-      containerBounds.current = {
-        width: contRect?.width ?? imgRect.width,
-        height: contRect?.height ?? imgRect.height,
-      };
-      isPanning.current = true;
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
-      if (!isPanning.current) return;
-      e.stopPropagation();
-      e.preventDefault();
-      const touch = e.touches[0];
-      const dx = touch.clientX - panStartX.current;
-      const dy = touch.clientY - panStartY.current;
-      panStartX.current = touch.clientX;
-      panStartY.current = touch.clientY;
-      setOffset((o) => {
-        const vv = window.visualViewport;
-        const vw = vv ? vv.width : window.innerWidth;
-        const vh = vv ? vv.height : window.innerHeight;
-        const maxX = (vw * (scale - 1)) / 2;
-        const maxY = (vh * (scale - 1)) / 2;
-        return {
-          x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-          y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
-        };
-      });
-    };
-
-    const onTouchEnd = () => {
-      isPanning.current = false;
-    };
-
-    img.addEventListener("touchstart", onTouchStart, { passive: false });
-    img.addEventListener("touchmove", onTouchMove, { passive: false });
-    img.addEventListener("touchend", onTouchEnd);
-    return () => {
-      img.removeEventListener("touchstart", onTouchStart);
-      img.removeEventListener("touchmove", onTouchMove);
-      img.removeEventListener("touchend", onTouchEnd);
-    };
-  }, [scale]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -697,15 +634,43 @@ const IsolatedView = ({
 
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
 
-  const btnStyle: React.CSSProperties = {
-    position: "fixed",
-    zIndex: 99999,
-    background: "rgba(10,25,47,0.7)",
-    backdropFilter: "blur(12px)",
-    WebkitBackdropFilter: "blur(12px)",
-    border: "2px solid rgba(255,255,255,0.4)",
-    WebkitTapHighlightColor: "transparent",
-    outline: "none",
+  // Compute control positions compensating for visual viewport offset
+  // This keeps controls visible when user pinch-zooms on mobile
+  const controlStyle = (extraTop: number, extraRight?: number, extraLeft?: number): React.CSSProperties => {
+    const top = vvOffset.y + extraTop;
+    const base: React.CSSProperties = {
+      position: "fixed",
+      top: `${top}px`,
+      zIndex: 99999,
+      background: "rgba(10,25,47,0.7)",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      border: "2px solid rgba(255,255,255,0.4)",
+      WebkitTapHighlightColor: "transparent",
+      outline: "none",
+    };
+    if (extraRight !== undefined) base.right = `${vvOffset.x + extraRight}px`;
+    if (extraLeft !== undefined) base.left = `${vvOffset.x + extraLeft}px`;
+    return base;
+  };
+
+  const arrowVerticalStyle = (side: "left" | "right"): React.CSSProperties => {
+    const vv = typeof window !== "undefined" ? window.visualViewport : null;
+    const vvHeight = vv ? vv.height : window.innerHeight;
+    const vvWidth = vv ? vv.width : window.innerWidth;
+    return {
+      position: "fixed",
+      top: `${vvOffset.y + vvHeight / 2}px`,
+      transform: "translateY(-50%)",
+      zIndex: 99999,
+      background: "rgba(10,25,47,0.7)",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      border: "2px solid rgba(255,255,255,0.4)",
+      WebkitTapHighlightColor: "transparent",
+      outline: "none",
+      ...(side === "left" ? { left: `${vvOffset.x + 8}px` } : { left: `${vvOffset.x + vvWidth - 56}px` }),
+    };
   };
 
   return (
@@ -729,22 +694,6 @@ const IsolatedView = ({
         className="absolute inset-0 z-10"
         ref={emblaRef}
         style={{ touchAction: scale > 1 ? "none" : "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
-        onTouchStart={(e) => {
-          if (e.touches.length === 2) {
-            pinchStartDist.current = getPinchDist(e.touches);
-            pinchStartScale.current = scale;
-          }
-        }}
-        onTouchMove={(e) => {
-          if (e.touches.length === 2 && pinchStartDist.current !== null) {
-            const dist = getPinchDist(e.touches);
-            const ratio = dist / pinchStartDist.current;
-            setScale(Math.min(4, Math.max(1, pinchStartScale.current * ratio)));
-          }
-        }}
-        onTouchEnd={() => {
-          pinchStartDist.current = null;
-        }}
       >
         <div className="flex h-full" style={{ overflow: "visible" }}>
           {items.map((it) => (
@@ -757,11 +706,6 @@ const IsolatedView = ({
                 src={`${it.src}?v=${ASSET_VERSION}`}
                 alt={`${alt} #${it.num}`}
                 draggable={false}
-                ref={(el) => {
-                  if (it.key === items[current]?.key) {
-                    activeImgRef.current = el;
-                  }
-                }}
                 style={{
                   pointerEvents: "auto",
                   width: "100%",
@@ -781,7 +725,7 @@ const IsolatedView = ({
                   panStartY.current = e.clientY;
                   const imgRect = e.currentTarget.getBoundingClientRect();
                   const contRect = e.currentTarget.parentElement?.getBoundingClientRect();
-                  imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
+                  imageBounds.current = { width: imgRect.width, height: imgRect.height };
                   containerBounds.current = {
                     width: contRect?.width ?? imgRect.width,
                     height: contRect?.height ?? imgRect.height,
@@ -790,18 +734,13 @@ const IsolatedView = ({
                 }}
                 onPointerMove={(e) => {
                   if (!isPanning.current) return;
-                  e.stopPropagation();
                   const dx = e.clientX - panStartX.current;
                   const dy = e.clientY - panStartY.current;
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   setOffset((o) => {
-                    // Allow panning proportional to zoom level
-                    const vv = window.visualViewport;
-                    const vw = vv ? vv.width : window.innerWidth;
-                    const vh = vv ? vv.height : window.innerHeight;
-                    const maxX = (vw * (scale - 1)) / 2;
-                    const maxY = (vh * (scale - 1)) / 2;
+                    const maxX = Math.max(0, (imageBounds.current.width - containerBounds.current.width) / 2);
+                    const maxY = Math.max(0, (imageBounds.current.height - containerBounds.current.height) / 2);
                     return {
                       x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
                       y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
@@ -820,34 +759,36 @@ const IsolatedView = ({
                     e.currentTarget.releasePointerCapture(e.pointerId);
                   } catch {}
                 }}
-                onTouchStart={undefined}
-                onTouchMove={undefined}
-                onTouchEnd={undefined}
               />
             </div>
           ))}
         </div>
       </div>
 
-      {/* CONTROLS — fixed position, always visible (browser zoom disabled) */}
+      {/* CONTROLS — repositioned via Visual Viewport API to stay visible during pinch-zoom */}
 
       {/* Counter */}
       <span
-        style={{ position: "fixed", top: "8px", left: "12px", zIndex: 99999 }}
+        style={{
+          position: "fixed",
+          top: `${vvOffset.y + 12}px`,
+          left: `${vvOffset.x + 12}px`,
+          zIndex: 99999,
+        }}
         className="text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white pointer-events-none"
       >
         {current + 1} / {items.length}
       </span>
 
-      {/* Close button — top right, below navbar */}
+      {/* Close button */}
       <button
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
-        style={{ ...btnStyle, top: "52px", right: "8px" }}
-        className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white"
+        style={controlStyle(52, 8)}
+        className="inline-flex items-center justify-center w-11 h-11 rounded-full text-white"
       >
-        <X className="h-6 w-6" />
+        <X className="h-5 w-5" />
       </button>
 
       {/* Prev / Next arrows */}
@@ -857,19 +798,19 @@ const IsolatedView = ({
             type="button"
             aria-label={prevLabel}
             onClick={() => emblaApi?.scrollPrev()}
-            style={{ ...btnStyle, top: "50%", left: "8px", transform: "translateY(-50%)" }}
-            className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
+            style={arrowVerticalStyle("left")}
+            className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
-            <ChevronLeft className="h-7 w-7" />
+            <ChevronLeft className="h-5 w-5" />
           </button>
           <button
             type="button"
             aria-label={nextLabel}
             onClick={() => emblaApi?.scrollNext()}
-            style={{ ...btnStyle, top: "50%", right: "8px", transform: "translateY(-50%)" }}
-            className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
+            style={arrowVerticalStyle("right")}
+            className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
-            <ChevronRight className="h-7 w-7" />
+            <ChevronRight className="h-5 w-5" />
           </button>
         </>
       )}
