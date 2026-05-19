@@ -555,6 +555,7 @@ const IsolatedView = ({
   const panStartY = useRef(0);
   const imageBounds = useRef({ width: 0, height: 0 });
   const containerBounds = useRef({ width: 0, height: 0 });
+  const activeImgRef = useRef<HTMLImageElement | null>(null);
 
   // Track Visual Viewport changes (mobile pinch-zoom)
   useEffect(() => {
@@ -618,6 +619,61 @@ const IsolatedView = ({
       emblaApi.reInit({ watchDrag: true });
     }
   }, [scale, emblaApi]);
+
+  // Native touch listeners for mobile panning — React synthetic touch events
+  // are blocked by Embla, so we attach directly to the DOM after render
+  useEffect(() => {
+    if (scale <= 1) return;
+    const img = activeImgRef.current;
+    if (!img) return;
+
+    const onTouchStart = (e: TouchEvent) => {
+      e.stopPropagation();
+      const touch = e.touches[0];
+      panStartX.current = touch.clientX;
+      panStartY.current = touch.clientY;
+      const imgRect = img.getBoundingClientRect();
+      const contRect = img.parentElement?.getBoundingClientRect();
+      imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
+      containerBounds.current = {
+        width: contRect?.width ?? imgRect.width,
+        height: contRect?.height ?? imgRect.height,
+      };
+      isPanning.current = true;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isPanning.current) return;
+      e.stopPropagation();
+      e.preventDefault();
+      const touch = e.touches[0];
+      const dx = touch.clientX - panStartX.current;
+      const dy = touch.clientY - panStartY.current;
+      panStartX.current = touch.clientX;
+      panStartY.current = touch.clientY;
+      setOffset((o) => {
+        const maxX = Math.max(0, (imageBounds.current.width - containerBounds.current.width) / 2);
+        const maxY = Math.max(0, (imageBounds.current.height - containerBounds.current.height) / 2);
+        return {
+          x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
+          y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+        };
+      });
+    };
+
+    const onTouchEnd = () => {
+      isPanning.current = false;
+    };
+
+    img.addEventListener("touchstart", onTouchStart, { passive: false });
+    img.addEventListener("touchmove", onTouchMove, { passive: false });
+    img.addEventListener("touchend", onTouchEnd);
+    return () => {
+      img.removeEventListener("touchstart", onTouchStart);
+      img.removeEventListener("touchmove", onTouchMove);
+      img.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [scale]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -656,6 +712,9 @@ const IsolatedView = ({
       border: "2px solid rgba(255,255,255,0.4)",
       WebkitTapHighlightColor: "transparent",
       outline: "none",
+      // Counter-scale so controls stay same size during pinch-zoom
+      transform: `scale(${1 / vvScale})`,
+      transformOrigin: extraRight !== undefined ? "top right" : "top left",
     };
     if (extraRight !== undefined) base.right = `${vvOffset.x + extraRight}px`;
     if (extraLeft !== undefined) base.left = `${vvOffset.x + extraLeft}px`;
@@ -669,7 +728,8 @@ const IsolatedView = ({
     return {
       position: "fixed",
       top: `${vvOffset.y + vvHeight / 2}px`,
-      transform: "translateY(-50%)",
+      transform: `translateY(-50%) scale(${1 / vvScale})`,
+      transformOrigin: side === "left" ? "center left" : "center right",
       zIndex: 99999,
       background: "rgba(10,25,47,0.7)",
       backdropFilter: "blur(12px)",
@@ -714,6 +774,7 @@ const IsolatedView = ({
                 src={`${it.src}?v=${ASSET_VERSION}`}
                 alt={`${alt} #${it.num}`}
                 draggable={false}
+                ref={it.key === items[current]?.key ? activeImgRef : undefined}
                 style={{
                   pointerEvents: "auto",
                   width: "100%",
@@ -733,7 +794,7 @@ const IsolatedView = ({
                   panStartY.current = e.clientY;
                   const imgRect = e.currentTarget.getBoundingClientRect();
                   const contRect = e.currentTarget.parentElement?.getBoundingClientRect();
-                  imageBounds.current = { width: imgRect.width, height: imgRect.height };
+                  imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
                   containerBounds.current = {
                     width: contRect?.width ?? imgRect.width,
                     height: contRect?.height ?? imgRect.height,
@@ -768,34 +829,9 @@ const IsolatedView = ({
                     e.currentTarget.releasePointerCapture(e.pointerId);
                   } catch {}
                 }}
-                onTouchStart={(e) => {
-                  if (scale <= 1) return;
-                  e.stopPropagation();
-                  const touch = e.touches[0];
-                  panStartX.current = touch.clientX;
-                  panStartY.current = touch.clientY;
-                  isPanning.current = true;
-                }}
-                onTouchMove={(e) => {
-                  if (!isPanning.current) return;
-                  e.stopPropagation();
-                  const touch = e.touches[0];
-                  const dx = touch.clientX - panStartX.current;
-                  const dy = touch.clientY - panStartY.current;
-                  panStartX.current = touch.clientX;
-                  panStartY.current = touch.clientY;
-                  setOffset((o) => {
-                    const maxX = Math.max(0, (imageBounds.current.width - containerBounds.current.width) / 2);
-                    const maxY = Math.max(0, (imageBounds.current.height - containerBounds.current.height) / 2);
-                    return {
-                      x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-                      y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
-                    };
-                  });
-                }}
-                onTouchEnd={() => {
-                  isPanning.current = false;
-                }}
+                onTouchStart={undefined}
+                onTouchMove={undefined}
+                onTouchEnd={undefined}
               />
             </div>
           ))}
@@ -811,6 +847,8 @@ const IsolatedView = ({
           top: `${vvOffset.y + 12}px`,
           left: `${vvOffset.x + 12}px`,
           zIndex: 99999,
+          transform: `scale(${1 / vvScale})`,
+          transformOrigin: "top left",
         }}
         className="text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white pointer-events-none"
       >
