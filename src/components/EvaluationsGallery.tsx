@@ -423,11 +423,14 @@ const EvaluationsGallery = () => {
         </Select>
       </div>
 
-      {filtered.length === 0 && (
-        <p className="text-sm text-muted-foreground font-light mb-6">
-          {t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")}
-        </p>
-      )}
+      <p className="text-sm text-muted-foreground font-light mb-6">
+        {filtered.length === 0
+          ? t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")
+          : t(
+              `Showing ${filtered.length} of ${candidates.length} evaluations`,
+              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`,
+            )}
+      </p>
 
       {filtered.length > 0 && (
         <div className="relative">
@@ -566,7 +569,7 @@ const IsolatedView = ({
   const pinchStartDist = useRef<number | null>(null);
   const pinchStartScale = useRef(1);
 
-  const getPinchDist = (touches: React.TouchList) => {
+  const getPinchDist = (touches: TouchList) => {
     const dx = touches[0].clientX - touches[1].clientX;
     const dy = touches[0].clientY - touches[1].clientY;
     return Math.sqrt(dx * dx + dy * dy);
@@ -625,6 +628,7 @@ const IsolatedView = ({
       const touch = e.touches[0];
       panStartX.current = touch.clientX;
       panStartY.current = touch.clientY;
+      // Capture bounds at touch start — divide by scale to get natural size
       const imgRect = img.getBoundingClientRect();
       const contRect = img.parentElement?.getBoundingClientRect();
       imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
@@ -645,11 +649,8 @@ const IsolatedView = ({
       panStartX.current = touch.clientX;
       panStartY.current = touch.clientY;
       setOffset((o) => {
-        const vv = window.visualViewport;
-        const vw = vv ? vv.width : window.innerWidth;
-        const vh = vv ? vv.height : window.innerHeight;
-        const maxX = (vw * (scale - 1)) / 2;
-        const maxY = (vh * (scale - 1)) / 2;
+        const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
+        const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
         return {
           x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
           y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
@@ -764,7 +765,7 @@ const IsolatedView = ({
                   width: "100%",
                   height: "100%",
                   objectFit: "contain",
-                  touchAction: scale > 1 ? "none" : "pinch-zoom",
+                  touchAction: scale > 1 ? "pan-y" : "pinch-zoom",
                   transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
                   transformOrigin: "center",
                   transition: isPanning.current ? "none" : "transform 0.1s ease",
@@ -793,12 +794,10 @@ const IsolatedView = ({
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   setOffset((o) => {
-                    // Allow panning proportional to zoom level
-                    const vv = window.visualViewport;
-                    const vw = vv ? vv.width : window.innerWidth;
-                    const vh = vv ? vv.height : window.innerHeight;
-                    const maxX = (vw * (scale - 1)) / 2;
-                    const maxY = (vh * (scale - 1)) / 2;
+                    // Use actual rendered image size (pre-scale) vs container size
+                    // imageBounds captured on pointerdown, already divided by scale
+                    const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
+                    const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
                     return {
                       x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
                       y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
