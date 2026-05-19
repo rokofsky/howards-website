@@ -1,23 +1,5 @@
-I’m sorry — the current fix is still too clever and that is likely why it keeps failing on real mobile taps.
+Remove the "Showing X of Y evaluations" / "Zobrazeno X z Y hodnocení" counter line from `src/components/EvaluationsGallery.tsx` (lines 426–433).
 
-Plan:
-1. Replace the mobile menu’s Home item with a plain React Router `<Link>` that mirrors Blog/References exactly:
-   - English: `to="/"`
-   - Czech: `to="/cz"`
-   - `onClick={() => setMobileOpen(false)}` only
-2. Do the same simplification for the logo:
-   - `to={homeHref}`
-   - close the menu if open
-   - do not call `preventDefault()` for normal cross-page Home navigation
-3. Keep the special scroll/hash logic only for section links like Services, FAQ, Pricing, Contact.
-4. Add a small mobile-menu-specific helper so Home cannot be accidentally handled as a hash/scroll link again.
-5. After implementation, verify the rendered code paths for:
-   - `/blog` → Home routes to `/`
-   - `/references` → Home routes to `/`
-   - `/cz/blog` → Domů routes to `/cz`
-   - `/cz/reference` → Domů routes to `/cz`
-   - hamburger closes immediately on click
+Keep the empty-state message ("No evaluations match your search." / "Žádné formuláře neodpovídají vyhledávání.") so users still get feedback when a search returns nothing — render it as the same `<p>` only when `filtered.length === 0`.
 
-Technical fix target:
-- File: `src/components/Header.tsx`
-- Root cause: the Home link currently calls `e.preventDefault()` and uses programmatic `navigate(...)`, while Blog/References use normal `<Link to="...">` behavior. I will remove that difference for Home in the mobile drawer and logo.
+No other changes.
