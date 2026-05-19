@@ -652,8 +652,11 @@ const IsolatedView = ({
       panStartX.current = touch.clientX;
       panStartY.current = touch.clientY;
       setOffset((o) => {
-        const maxX = Math.max(0, (imageBounds.current.width - containerBounds.current.width) / 2);
-        const maxY = Math.max(0, (imageBounds.current.height - containerBounds.current.height) / 2);
+        const vv = window.visualViewport;
+        const vw = vv ? vv.width : window.innerWidth;
+        const vh = vv ? vv.height : window.innerHeight;
+        const maxX = (vw * (scale - 1)) / 2;
+        const maxY = (vh * (scale - 1)) / 2;
         return {
           x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
           y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
@@ -728,7 +731,7 @@ const IsolatedView = ({
     return {
       position: "fixed",
       top: `${vvOffset.y + vvHeight / 2}px`,
-      transform: `translateY(-50%) scale(${1 / vvScale})`,
+      transform: `translateY(-50%) scale(${Math.max(0.7, 1 / vvScale)})`,
       transformOrigin: side === "left" ? "center left" : "center right",
       zIndex: 99999,
       background: "rgba(10,25,47,0.7)",
@@ -774,7 +777,11 @@ const IsolatedView = ({
                 src={`${it.src}?v=${ASSET_VERSION}`}
                 alt={`${alt} #${it.num}`}
                 draggable={false}
-                ref={it.key === items[current]?.key ? activeImgRef : undefined}
+                ref={(el) => {
+                  if (it.key === items[current]?.key) {
+                    activeImgRef.current = el;
+                  }
+                }}
                 style={{
                   pointerEvents: "auto",
                   width: "100%",
@@ -803,14 +810,18 @@ const IsolatedView = ({
                 }}
                 onPointerMove={(e) => {
                   if (!isPanning.current) return;
-                  e.stopPropagation(); // add this line
+                  e.stopPropagation();
                   const dx = e.clientX - panStartX.current;
                   const dy = e.clientY - panStartY.current;
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   setOffset((o) => {
-                    const maxX = Math.max(0, (imageBounds.current.width - containerBounds.current.width) / 2);
-                    const maxY = Math.max(0, (imageBounds.current.height - containerBounds.current.height) / 2);
+                    // Allow panning proportional to zoom level
+                    const vv = window.visualViewport;
+                    const vw = vv ? vv.width : window.innerWidth;
+                    const vh = vv ? vv.height : window.innerHeight;
+                    const maxX = (vw * (scale - 1)) / 2;
+                    const maxY = (vh * (scale - 1)) / 2;
                     return {
                       x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
                       y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
@@ -855,15 +866,28 @@ const IsolatedView = ({
         {current + 1} / {items.length}
       </span>
 
-      {/* Close button */}
+      {/* Close button — always top-right, counter-scaled */}
       <button
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
-        style={controlStyle(52, 8)}
-        className="inline-flex items-center justify-center w-11 h-11 rounded-full text-white"
+        style={{
+          position: "fixed",
+          top: `${vvOffset.y + 8}px`,
+          right: `${8}px`,
+          zIndex: 99999,
+          background: "rgba(10,25,47,0.7)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          border: "2px solid rgba(255,255,255,0.4)",
+          WebkitTapHighlightColor: "transparent",
+          outline: "none",
+          transform: `scale(${Math.max(0.7, 1 / vvScale)})`,
+          transformOrigin: "top right",
+        }}
+        className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white"
       >
-        <X className="h-5 w-5" />
+        <X className="h-6 w-6" />
       </button>
 
       {/* Prev / Next arrows */}
@@ -874,18 +898,18 @@ const IsolatedView = ({
             aria-label={prevLabel}
             onClick={() => emblaApi?.scrollPrev()}
             style={arrowVerticalStyle("left")}
-            className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
+            className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-7 w-7" />
           </button>
           <button
             type="button"
             aria-label={nextLabel}
             onClick={() => emblaApi?.scrollNext()}
             style={arrowVerticalStyle("right")}
-            className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
+            className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-7 w-7" />
           </button>
         </>
       )}
