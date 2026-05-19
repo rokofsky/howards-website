@@ -609,7 +609,15 @@ const IsolatedView = ({
     node.addEventListener("wheel", onWheel, { passive: false });
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
-
+  // Disable Embla drag when zoomed so pointer handlers control panning
+  useEffect(() => {
+    if (!emblaApi) return;
+    if (scale > 1) {
+      emblaApi.reInit({ watchDrag: false });
+    } else {
+      emblaApi.reInit({ watchDrag: true });
+    }
+  }, [scale, emblaApi]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
