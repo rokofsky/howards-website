@@ -609,15 +609,7 @@ const IsolatedView = ({
     node.addEventListener("wheel", onWheel, { passive: false });
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
-  // Disable Embla drag when zoomed so pointer handlers control panning
-  useEffect(() => {
-    if (!emblaApi) return;
-    if (scale > 1) {
-      emblaApi.reInit({ watchDrag: false });
-    } else {
-      emblaApi.reInit({ watchDrag: true });
-    }
-  }, [scale, emblaApi]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -742,7 +734,6 @@ const IsolatedView = ({
                 }}
                 onPointerMove={(e) => {
                   if (!isPanning.current) return;
-                  e.stopPropagation(); // add this line
                   const dx = e.clientX - panStartX.current;
                   const dy = e.clientY - panStartY.current;
                   panStartX.current = e.clientX;
@@ -767,34 +758,6 @@ const IsolatedView = ({
                   try {
                     e.currentTarget.releasePointerCapture(e.pointerId);
                   } catch {}
-                }}
-                onTouchStart={(e) => {
-                  if (scale <= 1) return;
-                  e.stopPropagation();
-                  const touch = e.touches[0];
-                  panStartX.current = touch.clientX;
-                  panStartY.current = touch.clientY;
-                  isPanning.current = true;
-                }}
-                onTouchMove={(e) => {
-                  if (!isPanning.current) return;
-                  e.stopPropagation();
-                  const touch = e.touches[0];
-                  const dx = touch.clientX - panStartX.current;
-                  const dy = touch.clientY - panStartY.current;
-                  panStartX.current = touch.clientX;
-                  panStartY.current = touch.clientY;
-                  setOffset((o) => {
-                    const maxX = Math.max(0, (imageBounds.current.width - containerBounds.current.width) / 2);
-                    const maxY = Math.max(0, (imageBounds.current.height - containerBounds.current.height) / 2);
-                    return {
-                      x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-                      y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
-                    };
-                  });
-                }}
-                onTouchEnd={() => {
-                  isPanning.current = false;
                 }}
               />
             </div>
