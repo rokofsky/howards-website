@@ -734,6 +734,7 @@ const IsolatedView = ({
                 }}
                 onPointerMove={(e) => {
                   if (!isPanning.current) return;
+                  e.stopPropagation(); // add this line
                   const dx = e.clientX - panStartX.current;
                   const dy = e.clientY - panStartY.current;
                   panStartX.current = e.clientX;
