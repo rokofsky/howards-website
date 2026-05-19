@@ -423,14 +423,11 @@ const EvaluationsGallery = () => {
         </Select>
       </div>
 
-      <p className="text-sm text-muted-foreground font-light mb-6">
-        {filtered.length === 0
-          ? t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")
-          : t(
-              `Showing ${filtered.length} of ${candidates.length} evaluations`,
-              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`,
-            )}
-      </p>
+      {filtered.length === 0 && (
+        <p className="text-sm text-muted-foreground font-light mb-6">
+          {t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")}
+        </p>
+      )}
 
       {filtered.length > 0 && (
         <div className="relative">
@@ -628,7 +625,6 @@ const IsolatedView = ({
       const touch = e.touches[0];
       panStartX.current = touch.clientX;
       panStartY.current = touch.clientY;
-      // Capture bounds at touch start — divide by scale to get natural size
       const imgRect = img.getBoundingClientRect();
       const contRect = img.parentElement?.getBoundingClientRect();
       imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
@@ -649,8 +645,11 @@ const IsolatedView = ({
       panStartX.current = touch.clientX;
       panStartY.current = touch.clientY;
       setOffset((o) => {
-        const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
-        const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
+        const vv = window.visualViewport;
+        const vw = vv ? vv.width : window.innerWidth;
+        const vh = vv ? vv.height : window.innerHeight;
+        const maxX = (vw * (scale - 1)) / 2;
+        const maxY = (vh * (scale - 1)) / 2;
         return {
           x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
           y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
@@ -794,10 +793,12 @@ const IsolatedView = ({
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   setOffset((o) => {
-                    // Use actual rendered image size (pre-scale) vs container size
-                    // imageBounds captured on pointerdown, already divided by scale
-                    const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
-                    const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
+                    // Allow panning proportional to zoom level
+                    const vv = window.visualViewport;
+                    const vw = vv ? vv.width : window.innerWidth;
+                    const vh = vv ? vv.height : window.innerHeight;
+                    const maxX = (vw * (scale - 1)) / 2;
+                    const maxY = (vh * (scale - 1)) / 2;
                     return {
                       x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
                       y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
