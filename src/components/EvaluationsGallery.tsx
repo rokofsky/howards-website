@@ -566,7 +566,7 @@ const IsolatedView = ({
   const pinchStartDist = useRef<number | null>(null);
   const pinchStartScale = useRef(1);
 
-  const getPinchDist = (touches: TouchList) => {
+  const getPinchDist = (touches: React.TouchList) => {
     const dx = touches[0].clientX - touches[1].clientX;
     const dy = touches[0].clientY - touches[1].clientY;
     return Math.sqrt(dx * dx + dy * dy);
