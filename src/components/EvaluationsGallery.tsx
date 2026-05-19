@@ -543,10 +543,6 @@ const IsolatedView = ({
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
-  // Visual Viewport state — tracks mobile pinch-zoom position
-  const [vvOffset, setVvOffset] = useState({ x: 0, y: 0 });
-  const [vvScale, setVvScale] = useState(1);
-
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
   const pointerDownPos = useRef({ x: 0, y: 0 });
@@ -557,27 +553,27 @@ const IsolatedView = ({
   const containerBounds = useRef({ width: 0, height: 0 });
   const activeImgRef = useRef<HTMLImageElement | null>(null);
 
-  // Track Visual Viewport changes (mobile pinch-zoom)
+  // When lightbox opens, disable browser native zoom and handle pinch ourselves
   useEffect(() => {
-    if (typeof window === "undefined" || !window.visualViewport) return;
-    const vv = window.visualViewport;
-    const update = () => {
-      setVvOffset({ x: vv.offsetLeft, y: vv.offsetTop });
-      setVvScale(vv.scale);
-    };
-    update();
-    vv.addEventListener("resize", update);
-    vv.addEventListener("scroll", update);
+    const viewportMeta = document.querySelector<HTMLMetaElement>('meta[name="viewport"]');
+    const originalContent = viewportMeta?.content ?? "";
+    if (viewportMeta) {
+      viewportMeta.content = "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no";
+    }
     return () => {
-      vv.removeEventListener("resize", update);
-      vv.removeEventListener("scroll", update);
+      if (viewportMeta) viewportMeta.content = originalContent;
     };
   }, []);
 
-  // Reset offset when scale returns to 1
-  useEffect(() => {
-    if (scale === 1) setOffset({ x: 0, y: 0 });
-  }, [scale]);
+  // Handle pinch-to-zoom via touch events on the Embla container
+  const pinchStartDist = useRef<number | null>(null);
+  const pinchStartScale = useRef(1);
+
+  const getPinchDist = (touches: TouchList) => {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -701,47 +697,15 @@ const IsolatedView = ({
 
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
 
-  // Compute control positions compensating for visual viewport offset
-  // This keeps controls visible when user pinch-zooms on mobile
-  const controlStyle = (extraTop: number, extraRight?: number, extraLeft?: number): React.CSSProperties => {
-    const top = vvOffset.y + extraTop;
-    const base: React.CSSProperties = {
-      position: "fixed",
-      top: `${top}px`,
-      zIndex: 99999,
-      background: "rgba(10,25,47,0.7)",
-      backdropFilter: "blur(12px)",
-      WebkitBackdropFilter: "blur(12px)",
-      border: "2px solid rgba(255,255,255,0.4)",
-      WebkitTapHighlightColor: "transparent",
-      outline: "none",
-      // Counter-scale so controls stay same size during pinch-zoom
-      transform: `scale(${1 / vvScale})`,
-      transformOrigin: extraRight !== undefined ? "top right" : "top left",
-    };
-    if (extraRight !== undefined) base.right = `${vvOffset.x + extraRight}px`;
-    if (extraLeft !== undefined) base.left = `${vvOffset.x + extraLeft}px`;
-    return base;
-  };
-
-  const arrowVerticalStyle = (side: "left" | "right"): React.CSSProperties => {
-    const vv = typeof window !== "undefined" ? window.visualViewport : null;
-    const vvHeight = vv ? vv.height : window.innerHeight;
-    const vvWidth = vv ? vv.width : window.innerWidth;
-    return {
-      position: "fixed",
-      top: `${vvOffset.y + vvHeight / 2}px`,
-      transform: `translateY(-50%) scale(${Math.max(0.7, 1 / vvScale)})`,
-      transformOrigin: side === "left" ? "center left" : "center right",
-      zIndex: 99999,
-      background: "rgba(10,25,47,0.7)",
-      backdropFilter: "blur(12px)",
-      WebkitBackdropFilter: "blur(12px)",
-      border: "2px solid rgba(255,255,255,0.4)",
-      WebkitTapHighlightColor: "transparent",
-      outline: "none",
-      ...(side === "left" ? { left: `${vvOffset.x + 8}px` } : { left: `${vvOffset.x + vvWidth - 56}px` }),
-    };
+  const btnStyle: React.CSSProperties = {
+    position: "fixed",
+    zIndex: 99999,
+    background: "rgba(10,25,47,0.7)",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
+    border: "2px solid rgba(255,255,255,0.4)",
+    WebkitTapHighlightColor: "transparent",
+    outline: "none",
   };
 
   return (
@@ -765,6 +729,22 @@ const IsolatedView = ({
         className="absolute inset-0 z-10"
         ref={emblaRef}
         style={{ touchAction: scale > 1 ? "none" : "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
+        onTouchStart={(e) => {
+          if (e.touches.length === 2) {
+            pinchStartDist.current = getPinchDist(e.touches);
+            pinchStartScale.current = scale;
+          }
+        }}
+        onTouchMove={(e) => {
+          if (e.touches.length === 2 && pinchStartDist.current !== null) {
+            const dist = getPinchDist(e.touches);
+            const ratio = dist / pinchStartDist.current;
+            setScale(Math.min(4, Math.max(1, pinchStartScale.current * ratio)));
+          }
+        }}
+        onTouchEnd={() => {
+          pinchStartDist.current = null;
+        }}
       >
         <div className="flex h-full" style={{ overflow: "visible" }}>
           {items.map((it) => (
@@ -849,42 +829,22 @@ const IsolatedView = ({
         </div>
       </div>
 
-      {/* CONTROLS — repositioned via Visual Viewport API to stay visible during pinch-zoom */}
+      {/* CONTROLS — fixed position, always visible (browser zoom disabled) */}
 
       {/* Counter */}
       <span
-        style={{
-          position: "fixed",
-          top: `${vvOffset.y + 12}px`,
-          left: `${vvOffset.x + 12}px`,
-          zIndex: 99999,
-          transform: `scale(${1 / vvScale})`,
-          transformOrigin: "top left",
-        }}
+        style={{ position: "fixed", top: "8px", left: "12px", zIndex: 99999 }}
         className="text-sm font-medium px-3 py-1 rounded bg-black/60 backdrop-blur-sm text-white pointer-events-none"
       >
         {current + 1} / {items.length}
       </span>
 
-      {/* Close button — always top-right, counter-scaled */}
+      {/* Close button — top right, below navbar */}
       <button
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
-        style={{
-          position: "fixed",
-          top: `${vvOffset.y + 8}px`,
-          right: `${8}px`,
-          zIndex: 99999,
-          background: "rgba(10,25,47,0.7)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          border: "2px solid rgba(255,255,255,0.4)",
-          WebkitTapHighlightColor: "transparent",
-          outline: "none",
-          transform: `scale(${Math.max(0.7, 1 / vvScale)})`,
-          transformOrigin: "top right",
-        }}
+        style={{ ...btnStyle, top: "52px", right: "8px" }}
         className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white"
       >
         <X className="h-6 w-6" />
@@ -897,8 +857,8 @@ const IsolatedView = ({
             type="button"
             aria-label={prevLabel}
             onClick={() => emblaApi?.scrollPrev()}
-            style={arrowVerticalStyle("left")}
-            className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white"
+            style={{ ...btnStyle, top: "50%", left: "8px", transform: "translateY(-50%)" }}
+            className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronLeft className="h-7 w-7" />
           </button>
@@ -906,8 +866,8 @@ const IsolatedView = ({
             type="button"
             aria-label={nextLabel}
             onClick={() => emblaApi?.scrollNext()}
-            style={arrowVerticalStyle("right")}
-            className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white"
+            style={{ ...btnStyle, top: "50%", right: "8px", transform: "translateY(-50%)" }}
+            className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronRight className="h-7 w-7" />
           </button>
