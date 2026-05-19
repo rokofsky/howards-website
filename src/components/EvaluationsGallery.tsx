@@ -795,13 +795,45 @@ const IsolatedView = ({
                   const dy = e.clientY - panStartY.current;
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
+
                   setOffset((o) => {
-                    // Allow panning proportional to zoom level
+                    // 1. Attempt to grab the physical image and container dimensions
+                    const img = (imageBounds?.current?.target ||
+                      imageBounds?.current ||
+                      (window as any).imageRef?.current) as HTMLImageElement | null;
+                    const containerWidth = containerBounds?.current?.width || window.innerWidth;
+                    const containerHeight = containerBounds?.current?.height || window.innerHeight;
+
+                    // 2. If the image reference is active, compute pixel-perfect bounds
+                    if (img && img.naturalWidth && img.naturalHeight) {
+                      const imageRatio = img.naturalWidth / img.naturalHeight;
+                      const containerRatio = containerWidth / containerHeight;
+
+                      let renderedWidth = containerWidth;
+                      let renderedHeight = containerHeight;
+
+                      if (imageRatio > containerRatio) {
+                        renderedHeight = containerWidth / imageRatio;
+                      } else {
+                        renderedWidth = containerHeight * imageRatio;
+                      }
+
+                      const maxX = Math.max(0, (renderedWidth * scale - containerWidth) / 2);
+                      const maxY = Math.max(0, (renderedHeight * scale - containerHeight) / 2);
+
+                      return {
+                        x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
+                        y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+                      };
+                    }
+
+                    // 3. Fallback: Use viewport dimensions if refs aren't ready yet
                     const vv = window.visualViewport;
                     const vw = vv ? vv.width : window.innerWidth;
                     const vh = vv ? vv.height : window.innerHeight;
                     const maxX = (vw * (scale - 1)) / 2;
                     const maxY = (vh * (scale - 1)) / 2;
+
                     return {
                       x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
                       y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
