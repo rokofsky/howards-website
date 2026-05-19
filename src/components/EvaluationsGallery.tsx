@@ -423,11 +423,14 @@ const EvaluationsGallery = () => {
         </Select>
       </div>
 
-      {filtered.length === 0 && (
-        <p className="text-sm text-muted-foreground font-light mb-6">
-          {t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")}
-        </p>
-      )}
+      <p className="text-sm text-muted-foreground font-light mb-6">
+        {filtered.length === 0
+          ? t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")
+          : t(
+              `Showing ${filtered.length} of ${candidates.length} evaluations`,
+              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`,
+            )}
+      </p>
 
       {filtered.length > 0 && (
         <div className="relative">
