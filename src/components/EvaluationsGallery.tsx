@@ -636,13 +636,13 @@ const IsolatedView = ({
     };
   }, [emblaApi, onClose]);
 
-  // Override Embla's overflow when zoomed
+  // Disable Embla's drag/swipe when zoomed in so pan gestures don't get hijacked.
   useEffect(() => {
     if (!emblaApi) return;
-    const node = emblaApi.rootNode() as HTMLElement;
-    if (!node) return;
-    node.style.overflow = scale > 1 ? "visible" : "hidden";
+    emblaApi.reInit({ watchDrag: scale <= 1 });
   }, [scale, emblaApi]);
+
+
 
   // Native touch listeners — handles pan, swipe-to-navigate, and pinch
   useEffect(() => {
