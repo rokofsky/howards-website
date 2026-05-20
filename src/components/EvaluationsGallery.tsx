@@ -832,13 +832,13 @@ const IsolatedView = ({
                   e.currentTarget.setPointerCapture(e.pointerId);
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
-                  const imgRect = e.currentTarget.getBoundingClientRect();
                   const contRect = e.currentTarget.parentElement?.getBoundingClientRect();
-                  imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
+                  const imgRect = e.currentTarget.getBoundingClientRect();
                   containerBounds.current = {
                     width: contRect?.width ?? imgRect.width,
                     height: contRect?.height ?? imgRect.height,
                   };
+                  imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
                   isPanning.current = true;
                 }}
                 onPointerMove={(e) => {
