@@ -423,11 +423,14 @@ const EvaluationsGallery = () => {
         </Select>
       </div>
 
-      {filtered.length === 0 && (
-        <p className="text-sm text-muted-foreground font-light mb-6">
-          {t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")}
-        </p>
-      )}
+      <p className="text-sm text-muted-foreground font-light mb-6">
+        {filtered.length === 0
+          ? t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")
+          : t(
+              `Showing ${filtered.length} of ${candidates.length} evaluations`,
+              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`,
+            )}
+      </p>
 
       {filtered.length > 0 && (
         <div className="relative">
@@ -536,7 +539,13 @@ const IsolatedView = ({
   nextLabel,
   closeLabel,
 }: IsolatedViewProps) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, startIndex, dragFree: false, containScroll: false });
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    startIndex,
+    dragFree: false,
+    containScroll: false,
+  });
+
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
@@ -550,27 +559,20 @@ const IsolatedView = ({
   const containerBounds = useRef({ width: 0, height: 0 });
   const activeImgRef = useRef<HTMLImageElement | null>(null);
 
-  // When lightbox opens, disable browser native zoom and handle pinch ourselves
-  useEffect(() => {
-    const viewportMeta = document.querySelector<HTMLMetaElement>('meta[name="viewport"]');
-    const originalContent = viewportMeta?.content ?? "";
-    if (viewportMeta) {
-      viewportMeta.content = "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no";
-    }
-    return () => {
-      if (viewportMeta) viewportMeta.content = originalContent;
-    };
-  }, []);
-
-  // Handle pinch-to-zoom via touch events on the Embla container
+  // Pinch gesture refs
   const pinchStartDist = useRef<number | null>(null);
   const pinchStartScale = useRef(1);
 
-  const getPinchDist = (touches: React.TouchList) => {
+  const getPinchDist = (touches: TouchList) => {
     const dx = touches[0].clientX - touches[1].clientX;
     const dy = touches[0].clientY - touches[1].clientY;
     return Math.sqrt(dx * dx + dy * dy);
   };
+
+  // Reset offset when scale returns to 1
+  useEffect(() => {
+    if (scale === 1) setOffset({ x: 0, y: 0 });
+  }, [scale]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -591,6 +593,7 @@ const IsolatedView = ({
     };
   }, [emblaApi, onIndexChange]);
 
+  // Ctrl+wheel zoom on desktop
   useEffect(() => {
     if (!emblaApi) return;
     const node = emblaApi.rootNode();
@@ -603,73 +606,8 @@ const IsolatedView = ({
     node.addEventListener("wheel", onWheel, { passive: false });
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
-  // Disable Embla drag when zoomed so pointer handlers control panning
-  useEffect(() => {
-    if (!emblaApi) return;
-    if (scale > 1) {
-      emblaApi.reInit({ watchDrag: false });
-    } else {
-      emblaApi.reInit({ watchDrag: true });
-    }
-  }, [scale, emblaApi]);
 
-  // Native touch listeners for mobile panning — React synthetic touch events
-  // are blocked by Embla, so we attach directly to the DOM after render
-  useEffect(() => {
-    if (scale <= 1) return;
-    const img = activeImgRef.current;
-    if (!img) return;
-
-    const onTouchStart = (e: TouchEvent) => {
-      e.stopPropagation();
-      const touch = e.touches[0];
-      panStartX.current = touch.clientX;
-      panStartY.current = touch.clientY;
-      const imgRect = img.getBoundingClientRect();
-      const contRect = img.parentElement?.getBoundingClientRect();
-      imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
-      containerBounds.current = {
-        width: contRect?.width ?? imgRect.width,
-        height: contRect?.height ?? imgRect.height,
-      };
-      isPanning.current = true;
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
-      if (!isPanning.current) return;
-      e.stopPropagation();
-      e.preventDefault();
-      const touch = e.touches[0];
-      const dx = touch.clientX - panStartX.current;
-      const dy = touch.clientY - panStartY.current;
-      panStartX.current = touch.clientX;
-      panStartY.current = touch.clientY;
-      setOffset((o) => {
-        const vv = window.visualViewport;
-        const vw = vv ? vv.width : window.innerWidth;
-        const vh = vv ? vv.height : window.innerHeight;
-        const maxX = (vw * (scale - 1)) / 2;
-        const maxY = (vh * (scale - 1)) / 2;
-        return {
-          x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-          y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
-        };
-      });
-    };
-
-    const onTouchEnd = () => {
-      isPanning.current = false;
-    };
-
-    img.addEventListener("touchstart", onTouchStart, { passive: false });
-    img.addEventListener("touchmove", onTouchMove, { passive: false });
-    img.addEventListener("touchend", onTouchEnd);
-    return () => {
-      img.removeEventListener("touchstart", onTouchStart);
-      img.removeEventListener("touchmove", onTouchMove);
-      img.removeEventListener("touchend", onTouchEnd);
-    };
-  }, [scale]);
+  // Keyboard nav + lock body scroll
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -685,11 +623,128 @@ const IsolatedView = ({
     };
   }, [emblaApi, onClose]);
 
+  // Override Embla's overflow when zoomed
   useEffect(() => {
     if (!emblaApi) return;
     const node = emblaApi.rootNode() as HTMLElement;
     if (!node) return;
     node.style.overflow = scale > 1 ? "visible" : "hidden";
+  }, [scale, emblaApi]);
+
+  // Native touch listeners — handles pan, swipe-to-navigate, and pinch
+  useEffect(() => {
+    const img = activeImgRef.current;
+    const emblaNode = emblaApi?.rootNode() as HTMLElement | null;
+    if (!img || !emblaNode) return;
+
+    // Swipe tracking
+    const swipeStartX = { val: 0 };
+    const swipeStartY = { val: 0 };
+    const swipeStartTime = { val: 0 };
+
+    const onTouchStart = (e: TouchEvent) => {
+      // Two-finger pinch
+      if (e.touches.length === 2) {
+        pinchStartDist.current = getPinchDist(e.touches);
+        pinchStartScale.current = scale;
+        isPanning.current = false;
+        return;
+      }
+      if (e.touches.length !== 1) return;
+
+      const touch = e.touches[0];
+      swipeStartX.val = touch.clientX;
+      swipeStartY.val = touch.clientY;
+      swipeStartTime.val = performance.now();
+      panStartX.current = touch.clientX;
+      panStartY.current = touch.clientY;
+
+      if (scale > 1) {
+        e.stopPropagation();
+        // Capture bounds for pan clamping
+        const imgRect = img.getBoundingClientRect();
+        const contRect = img.parentElement?.getBoundingClientRect();
+        imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
+        containerBounds.current = {
+          width: contRect?.width ?? imgRect.width,
+          height: contRect?.height ?? imgRect.height,
+        };
+        isPanning.current = true;
+      }
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      // Two-finger pinch
+      if (e.touches.length === 2 && pinchStartDist.current !== null) {
+        e.preventDefault();
+        const dist = getPinchDist(e.touches);
+        const ratio = dist / pinchStartDist.current;
+        setScale(Math.min(4, Math.max(1, pinchStartScale.current * ratio)));
+        return;
+      }
+
+      if (!isPanning.current || e.touches.length !== 1) return;
+      e.stopPropagation();
+      e.preventDefault();
+
+      const touch = e.touches[0];
+      const dx = touch.clientX - panStartX.current;
+      const dy = touch.clientY - panStartY.current;
+      panStartX.current = touch.clientX;
+      panStartY.current = touch.clientY;
+
+      setOffset((o) => {
+        const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
+        const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
+        return {
+          x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
+          y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+        };
+      });
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      pinchStartDist.current = null;
+
+      if (!isPanning.current) return;
+      isPanning.current = false;
+
+      // Detect fast horizontal swipe → navigate to next/prev and reset zoom
+      const dt = performance.now() - swipeStartTime.val;
+      const changedTouch = e.changedTouches[0];
+      if (!changedTouch) return;
+      const dx = changedTouch.clientX - swipeStartX.val;
+      const dy = Math.abs(changedTouch.clientY - swipeStartY.val);
+      const velocityX = Math.abs(dx) / dt; // px/ms
+
+      const isFastSwipe = velocityX > 0.3 && Math.abs(dx) > 40 && Math.abs(dx) > dy;
+      if (isFastSwipe) {
+        setScale(1);
+        setOffset({ x: 0, y: 0 });
+        if (dx < 0) {
+          emblaApi?.scrollNext();
+        } else {
+          emblaApi?.scrollPrev();
+        }
+      }
+    };
+
+    // Attach to both img (for pan) and emblaNode (for pinch on empty area)
+    img.addEventListener("touchstart", onTouchStart, { passive: false });
+    img.addEventListener("touchmove", onTouchMove, { passive: false });
+    img.addEventListener("touchend", onTouchEnd);
+    emblaNode.addEventListener("touchstart", onTouchStart, { passive: false });
+    emblaNode.addEventListener("touchmove", onTouchMove, { passive: false });
+    emblaNode.addEventListener("touchend", onTouchEnd);
+
+    return () => {
+      img.removeEventListener("touchstart", onTouchStart);
+      img.removeEventListener("touchmove", onTouchMove);
+      img.removeEventListener("touchend", onTouchEnd);
+      emblaNode.removeEventListener("touchstart", onTouchStart);
+      emblaNode.removeEventListener("touchmove", onTouchMove);
+      emblaNode.removeEventListener("touchend", onTouchEnd);
+    };
   }, [scale, emblaApi]);
 
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
@@ -725,22 +780,9 @@ const IsolatedView = ({
       <div
         className="absolute inset-0 z-10"
         ref={emblaRef}
-        style={{ touchAction: scale > 1 ? "none" : "pan-y pinch-zoom", overflow: scale > 1 ? "visible" : "hidden" }}
-        onTouchStart={(e) => {
-          if (e.touches.length === 2) {
-            pinchStartDist.current = getPinchDist(e.touches);
-            pinchStartScale.current = scale;
-          }
-        }}
-        onTouchMove={(e) => {
-          if (e.touches.length === 2 && pinchStartDist.current !== null) {
-            const dist = getPinchDist(e.touches);
-            const ratio = dist / pinchStartDist.current;
-            setScale(Math.min(4, Math.max(1, pinchStartScale.current * ratio)));
-          }
-        }}
-        onTouchEnd={() => {
-          pinchStartDist.current = null;
+        style={{
+          touchAction: "none",
+          overflow: scale > 1 ? "visible" : "hidden",
         }}
       >
         <div className="flex h-full" style={{ overflow: "visible" }}>
@@ -764,7 +806,7 @@ const IsolatedView = ({
                   width: "100%",
                   height: "100%",
                   objectFit: "contain",
-                  touchAction: scale > 1 ? "pan-y" : "pinch-zoom",
+                  touchAction: "none",
                   transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
                   transformOrigin: "center",
                   transition: isPanning.current ? "none" : "transform 0.1s ease",
@@ -793,12 +835,8 @@ const IsolatedView = ({
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   setOffset((o) => {
-                    // Allow panning proportional to zoom level
-                    const vv = window.visualViewport;
-                    const vw = vv ? vv.width : window.innerWidth;
-                    const vh = vv ? vv.height : window.innerHeight;
-                    const maxX = (vw * (scale - 1)) / 2;
-                    const maxY = (vh * (scale - 1)) / 2;
+                    const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
+                    const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
                     return {
                       x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
                       y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
@@ -817,16 +855,13 @@ const IsolatedView = ({
                     e.currentTarget.releasePointerCapture(e.pointerId);
                   } catch {}
                 }}
-                onTouchStart={undefined}
-                onTouchMove={undefined}
-                onTouchEnd={undefined}
               />
             </div>
           ))}
         </div>
       </div>
 
-      {/* CONTROLS — fixed position, always visible (browser zoom disabled) */}
+      {/* CONTROLS */}
 
       {/* Counter */}
       <span
@@ -836,7 +871,7 @@ const IsolatedView = ({
         {current + 1} / {items.length}
       </span>
 
-      {/* Close button — top right, below navbar */}
+      {/* Close button */}
       <button
         type="button"
         aria-label={closeLabel}
