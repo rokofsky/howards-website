@@ -946,6 +946,28 @@ const IsolatedView = ({
           </button>
         </>
       )}
+
+      <div style={{
+        position: 'fixed',
+        top: '80px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        color: '#00ff00',
+        padding: '15px',
+        borderRadius: '8px',
+        zIndex: 99999,
+        fontFamily: 'monospace',
+        fontSize: '14px',
+        pointerEvents: 'none',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+        lineHeight: '1.5'
+      }}>
+        <div>Scale: {scale}</div>
+        <div>OffsetX: {offset.x} | OffsetY: {offset.y}</div>
+        <div>Container: {containerBounds?.current?.width || 'null'}x{containerBounds?.current?.height || 'null'}</div>
+        <div>Img Natural: {imageRef?.current?.naturalWidth || 'null'}x{imageRef?.current?.naturalHeight || 'null'}</div>
+      </div>
     </div>
   );
 };
