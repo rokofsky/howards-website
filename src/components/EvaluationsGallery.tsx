@@ -694,11 +694,13 @@ const IsolatedView = ({
       panStartY.current = touch.clientY;
 
       setOffset((o) => {
-        const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
-        const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
+        const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
+        const maxY = Math.max(0, (imageBounds.current.height * scale - window.innerHeight) / 2);
+        const clampX = maxX * scale;
+        const clampY = maxY * scale;
         return {
-          x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-          y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+          x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
+          y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
         };
       });
     };
@@ -839,11 +841,15 @@ const IsolatedView = ({
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   setOffset((o) => {
-                    const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
-                    const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
+                    const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
+                    const maxY = Math.max(0, (imageBounds.current.height * scale - window.innerHeight) / 2);
+                    // offset is stored as raw pixels but applied as translate(offset/scale)
+                    // so clamp must account for scale factor
+                    const clampX = maxX * scale;
+                    const clampY = maxY * scale;
                     return {
-                      x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-                      y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+                      x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
+                      y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
                     };
                   });
                 }}
