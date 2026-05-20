@@ -663,11 +663,11 @@ const IsolatedView = ({
         e.stopPropagation();
         // Capture bounds for pan clamping
         const imgRect = img.getBoundingClientRect();
+        const contRect = img.parentElement?.getBoundingClientRect();
         imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
-        // Use window dimensions as container — reliable regardless of overflow settings
         containerBounds.current = {
-          width: window.innerWidth,
-          height: window.innerHeight,
+          width: contRect?.width ?? imgRect.width,
+          height: contRect?.height ?? imgRect.height,
         };
         isPanning.current = true;
       }
@@ -694,13 +694,11 @@ const IsolatedView = ({
       panStartY.current = touch.clientY;
 
       setOffset((o) => {
-        const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
-        const maxY = Math.max(0, (imageBounds.current.height * scale - window.innerHeight) / 2);
-        const clampX = maxX * scale;
-        const clampY = maxY * scale;
+        const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
+        const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
         return {
-          x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
-          y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
+          x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
+          y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
         };
       });
     };
@@ -792,21 +790,7 @@ const IsolatedView = ({
             <div
               key={it.key}
               className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
-              style={{
-                overflow: "visible",
-                pointerEvents: "none",
-                // When this is the active zoomed slide, use fixed positioning
-                // so transformOrigin: center scales from viewport center, not Embla track position
-                ...(it.key === items[current]?.key && scale > 1
-                  ? {
-                      position: "fixed",
-                      inset: 0,
-                      width: "100vw",
-                      height: "100vh",
-                      zIndex: 11,
-                    }
-                  : {}),
-              }}
+              style={{ overflow: "visible", pointerEvents: "none" }}
             >
               <img
                 src={`${it.src}?v=${ASSET_VERSION}`}
@@ -834,16 +818,12 @@ const IsolatedView = ({
                   e.currentTarget.setPointerCapture(e.pointerId);
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
-                  // Get natural image size by dividing scaled rect by scale
                   const imgRect = e.currentTarget.getBoundingClientRect();
-                  imageBounds.current = {
-                    width: imgRect.width / scale,
-                    height: imgRect.height / scale,
-                  };
-                  // Use window dimensions as container — reliable regardless of overflow settings
+                  const contRect = e.currentTarget.parentElement?.getBoundingClientRect();
+                  imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
                   containerBounds.current = {
-                    width: window.innerWidth,
-                    height: window.innerHeight,
+                    width: contRect?.width ?? imgRect.width,
+                    height: contRect?.height ?? imgRect.height,
                   };
                   isPanning.current = true;
                 }}
@@ -855,15 +835,11 @@ const IsolatedView = ({
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   setOffset((o) => {
-                    const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
-                    const maxY = Math.max(0, (imageBounds.current.height * scale - window.innerHeight) / 2);
-                    // offset is stored as raw pixels but applied as translate(offset/scale)
-                    // so clamp must account for scale factor
-                    const clampX = maxX * scale;
-                    const clampY = maxY * scale;
+                    const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
+                    const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
                     return {
-                      x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
-                      y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
+                      x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
+                      y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
                     };
                   });
                 }}
