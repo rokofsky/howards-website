@@ -663,11 +663,11 @@ const IsolatedView = ({
         e.stopPropagation();
         // Capture bounds for pan clamping
         const imgRect = img.getBoundingClientRect();
-        const contRect = img.parentElement?.getBoundingClientRect();
         imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
+        // Use window dimensions as container — reliable regardless of overflow settings
         containerBounds.current = {
-          width: contRect?.width ?? imgRect.width,
-          height: contRect?.height ?? imgRect.height,
+          width: window.innerWidth,
+          height: window.innerHeight,
         };
         isPanning.current = true;
       }
@@ -818,12 +818,16 @@ const IsolatedView = ({
                   e.currentTarget.setPointerCapture(e.pointerId);
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
+                  // Get natural image size by dividing scaled rect by scale
                   const imgRect = e.currentTarget.getBoundingClientRect();
-                  const contRect = e.currentTarget.parentElement?.getBoundingClientRect();
-                  imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
+                  imageBounds.current = {
+                    width: imgRect.width / scale,
+                    height: imgRect.height / scale,
+                  };
+                  // Use window dimensions as container — reliable regardless of overflow settings
                   containerBounds.current = {
-                    width: contRect?.width ?? imgRect.width,
-                    height: contRect?.height ?? imgRect.height,
+                    width: window.innerWidth,
+                    height: window.innerHeight,
                   };
                   isPanning.current = true;
                 }}
