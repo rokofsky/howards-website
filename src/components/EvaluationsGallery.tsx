@@ -885,6 +885,33 @@ const IsolatedView = ({
         {current + 1} / {items.length}
       </span>
 
+      {/* DEBUG OVERLAY — pan/zoom math */}
+      {(() => {
+        const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
+        const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
+        return (
+          <div
+            style={{
+              position: "fixed",
+              top: "8px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 99999,
+              fontFamily: "monospace",
+              fontSize: "11px",
+              padding: "4px 8px",
+              background: "rgba(0,0,0,0.75)",
+              color: "#0f0",
+              borderRadius: "4px",
+              pointerEvents: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            scale={scale.toFixed(2)} ofs=({offset.x.toFixed(0)},{offset.y.toFixed(0)}) max=(±{maxX.toFixed(0)},±{maxY.toFixed(0)}) img={imageBounds.current.width.toFixed(0)}×{imageBounds.current.height.toFixed(0)} cont={containerBounds.current.width.toFixed(0)}×{containerBounds.current.height.toFixed(0)}
+          </div>
+        );
+      })()}
+
       {/* Close button */}
       <button
         type="button"
