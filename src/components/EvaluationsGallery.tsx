@@ -566,6 +566,22 @@ const IsolatedView = ({
     return Math.sqrt(dx * dx + dy * dy);
   };
 
+  // Compute the actual rendered size of an object-fit: contain image inside its container,
+  // derived from naturalWidth/naturalHeight. The <img> element itself fills the container,
+  // but the visible image content is letterboxed/pillarboxed.
+  const getRenderedImageSize = (
+    img: HTMLImageElement | null,
+    container: { width: number; height: number }
+  ) => {
+    if (!img || !img.naturalWidth || !img.naturalHeight) return container;
+    const imgRatio = img.naturalWidth / img.naturalHeight;
+    const contRatio = container.width / container.height;
+    if (imgRatio > contRatio) {
+      return { width: container.width, height: container.width / imgRatio };
+    }
+    return { width: container.height * imgRatio, height: container.height };
+  };
+
   // Reset offset when scale returns to 1
   useEffect(() => {
     if (scale === 1) setOffset({ x: 0, y: 0 });
