@@ -566,6 +566,22 @@ const IsolatedView = ({
     return Math.sqrt(dx * dx + dy * dy);
   };
 
+  // Compute the actual rendered size of an object-fit: contain image inside its container,
+  // derived from naturalWidth/naturalHeight. The <img> element itself fills the container,
+  // but the visible image content is letterboxed/pillarboxed.
+  const getRenderedImageSize = (
+    img: HTMLImageElement | null,
+    container: { width: number; height: number }
+  ) => {
+    if (!img || !img.naturalWidth || !img.naturalHeight) return container;
+    const imgRatio = img.naturalWidth / img.naturalHeight;
+    const contRatio = container.width / container.height;
+    if (imgRatio > contRatio) {
+      return { width: container.width, height: container.width / imgRatio };
+    }
+    return { width: container.height * imgRatio, height: container.height };
+  };
+
   // Reset offset when scale returns to 1
   useEffect(() => {
     if (scale === 1) setOffset({ x: 0, y: 0 });
@@ -620,13 +636,13 @@ const IsolatedView = ({
     };
   }, [emblaApi, onClose]);
 
-  // Override Embla's overflow when zoomed
+  // Disable Embla's drag/swipe when zoomed in so pan gestures don't get hijacked.
   useEffect(() => {
     if (!emblaApi) return;
-    const node = emblaApi.rootNode() as HTMLElement;
-    if (!node) return;
-    node.style.overflow = scale > 1 ? "visible" : "hidden";
+    emblaApi.reInit({ watchDrag: scale <= 1 });
   }, [scale, emblaApi]);
+
+
 
   // Native touch listeners — handles pan, swipe-to-navigate, and pinch
   useEffect(() => {
@@ -658,14 +674,15 @@ const IsolatedView = ({
 
       if (scale > 1) {
         e.stopPropagation();
-        // Capture bounds for pan clamping
-        const imgRect = img.getBoundingClientRect();
+        // Capture bounds for pan clamping using the image's TRUE rendered size
+        // (object-fit: contain) derived from naturalWidth/naturalHeight, not the
+        // <img> element's bounding rect which always fills the container.
         const contRect = img.parentElement?.getBoundingClientRect();
-        imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
         containerBounds.current = {
-          width: contRect?.width ?? imgRect.width,
-          height: contRect?.height ?? imgRect.height,
+          width: contRect?.width ?? img.getBoundingClientRect().width,
+          height: contRect?.height ?? img.getBoundingClientRect().height,
         };
+        imageBounds.current = getRenderedImageSize(img, containerBounds.current);
         isPanning.current = true;
       }
     };
@@ -815,13 +832,13 @@ const IsolatedView = ({
                   e.currentTarget.setPointerCapture(e.pointerId);
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
-                  const imgRect = e.currentTarget.getBoundingClientRect();
                   const contRect = e.currentTarget.parentElement?.getBoundingClientRect();
-                  imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
+                  const imgRect = e.currentTarget.getBoundingClientRect();
                   containerBounds.current = {
                     width: contRect?.width ?? imgRect.width,
                     height: contRect?.height ?? imgRect.height,
                   };
+                  imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
                   isPanning.current = true;
                 }}
                 onPointerMove={(e) => {
