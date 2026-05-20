@@ -966,7 +966,7 @@ const IsolatedView = ({
         <div>Scale: {scale}</div>
         <div>OffsetX: {offset.x} | OffsetY: {offset.y}</div>
         <div>Container: {containerBounds?.current?.width || 'null'}x{containerBounds?.current?.height || 'null'}</div>
-        <div>Img Natural: {imageRef?.current?.naturalWidth || 'null'}x{imageRef?.current?.naturalHeight || 'null'}</div>
+        <div>Img Bounds: {imageBounds.current.width.toFixed(0)}x{imageBounds.current.height.toFixed(0)}</div>
       </div>
     </div>
   );
