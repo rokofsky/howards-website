@@ -674,14 +674,15 @@ const IsolatedView = ({
 
       if (scale > 1) {
         e.stopPropagation();
-        // Capture bounds for pan clamping
-        const imgRect = img.getBoundingClientRect();
+        // Capture bounds for pan clamping using the image's TRUE rendered size
+        // (object-fit: contain) derived from naturalWidth/naturalHeight, not the
+        // <img> element's bounding rect which always fills the container.
         const contRect = img.parentElement?.getBoundingClientRect();
-        imageBounds.current = { width: imgRect.width / scale, height: imgRect.height / scale };
         containerBounds.current = {
-          width: contRect?.width ?? imgRect.width,
-          height: contRect?.height ?? imgRect.height,
+          width: contRect?.width ?? img.getBoundingClientRect().width,
+          height: contRect?.height ?? img.getBoundingClientRect().height,
         };
+        imageBounds.current = getRenderedImageSize(img, containerBounds.current);
         isPanning.current = true;
       }
     };
