@@ -792,7 +792,21 @@ const IsolatedView = ({
             <div
               key={it.key}
               className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
-              style={{ overflow: "visible", pointerEvents: "none" }}
+              style={{
+                overflow: "visible",
+                pointerEvents: "none",
+                // When this is the active zoomed slide, use fixed positioning
+                // so transformOrigin: center scales from viewport center, not Embla track position
+                ...(it.key === items[current]?.key && scale > 1
+                  ? {
+                      position: "fixed",
+                      inset: 0,
+                      width: "100vw",
+                      height: "100vh",
+                      zIndex: 11,
+                    }
+                  : {}),
+              }}
             >
               <img
                 src={`${it.src}?v=${ASSET_VERSION}`}
