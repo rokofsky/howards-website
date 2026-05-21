@@ -947,6 +947,43 @@ const IsolatedView = ({
         </>
       )}
 
+      {scale !== 1 || offset.x !== 0 || offset.y !== 0 ? (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '16px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            gap: '8px',
+            zIndex: 50,
+          }}
+        >
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setScale(1);
+              setOffset({ x: 0, y: 0 });
+            }}
+            className="px-3 py-1.5 rounded-md bg-black/70 text-white text-xs font-medium hover:bg-black/85 backdrop-blur-sm"
+          >
+            Fit to image
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setScale(1);
+              setOffset({ x: 0, y: 0 });
+            }}
+            className="px-3 py-1.5 rounded-md bg-black/70 text-white text-xs font-medium hover:bg-black/85 backdrop-blur-sm"
+          >
+            Reset zoom
+          </button>
+        </div>
+      ) : null}
+
       <div style={{
         position: 'fixed',
         top: '80px',
