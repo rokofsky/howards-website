@@ -569,7 +569,10 @@ const IsolatedView = ({
   // Compute the actual rendered size of an object-fit: contain image inside its container,
   // derived from naturalWidth/naturalHeight. The <img> element itself fills the container,
   // but the visible image content is letterboxed/pillarboxed.
-  const getRenderedImageSize = (img: HTMLImageElement | null, container: { width: number; height: number }) => {
+  const getRenderedImageSize = (
+    img: HTMLImageElement | null,
+    container: { width: number; height: number }
+  ) => {
     if (!img || !img.naturalWidth || !img.naturalHeight) return container;
     const imgRatio = img.naturalWidth / img.naturalHeight;
     const contRatio = container.width / container.height;
@@ -638,6 +641,8 @@ const IsolatedView = ({
     if (!emblaApi) return;
     emblaApi.reInit({ watchDrag: scale <= 1 });
   }, [scale, emblaApi]);
+
+
 
   // Native touch listeners — handles pan, swipe-to-navigate, and pinch
   useEffect(() => {
@@ -844,13 +849,8 @@ const IsolatedView = ({
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   setOffset((o) => {
-                    const imgW = imageBounds.current.width;
-                    const containerW = containerBounds.current.width;
-                    const emptySpaceOffset = Math.max(0, (containerW - imgW) / 2);
-
-                    const maxX = Math.max(0, (imgW * scale - containerW) / 2 + emptySpaceOffset * scale);
+                    const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
                     const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
-
                     return {
                       x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
                       y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
@@ -907,9 +907,7 @@ const IsolatedView = ({
               whiteSpace: "nowrap",
             }}
           >
-            scale={scale.toFixed(2)} ofs=({offset.x.toFixed(0)},{offset.y.toFixed(0)}) max=(±{maxX.toFixed(0)},±
-            {maxY.toFixed(0)}) img={imageBounds.current.width.toFixed(0)}×{imageBounds.current.height.toFixed(0)} cont=
-            {containerBounds.current.width.toFixed(0)}×{containerBounds.current.height.toFixed(0)}
+            scale={scale.toFixed(2)} ofs=({offset.x.toFixed(0)},{offset.y.toFixed(0)}) max=(±{maxX.toFixed(0)},±{maxY.toFixed(0)}) img={imageBounds.current.width.toFixed(0)}×{imageBounds.current.height.toFixed(0)} cont={containerBounds.current.width.toFixed(0)}×{containerBounds.current.height.toFixed(0)}
           </div>
         );
       })()}
@@ -952,12 +950,12 @@ const IsolatedView = ({
       {scale !== 1 || offset.x !== 0 || offset.y !== 0 ? (
         <div
           style={{
-            position: "absolute",
-            bottom: "16px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            display: "flex",
-            gap: "8px",
+            position: 'absolute',
+            bottom: '16px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            gap: '8px',
             zIndex: 50,
           }}
         >
@@ -986,34 +984,26 @@ const IsolatedView = ({
         </div>
       ) : null}
 
-      <div
-        style={{
-          position: "fixed",
-          top: "80px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          backgroundColor: "rgba(0, 0, 0, 0.9)",
-          color: "#00ff00",
-          padding: "15px",
-          borderRadius: "8px",
-          zIndex: 99999,
-          fontFamily: "monospace",
-          fontSize: "14px",
-          pointerEvents: "none",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
-          lineHeight: "1.5",
-        }}
-      >
+      <div style={{
+        position: 'fixed',
+        top: '80px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        color: '#00ff00',
+        padding: '15px',
+        borderRadius: '8px',
+        zIndex: 99999,
+        fontFamily: 'monospace',
+        fontSize: '14px',
+        pointerEvents: 'none',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+        lineHeight: '1.5'
+      }}>
         <div>Scale: {scale}</div>
-        <div>
-          OffsetX: {offset.x} | OffsetY: {offset.y}
-        </div>
-        <div>
-          Container: {containerBounds?.current?.width || "null"}x{containerBounds?.current?.height || "null"}
-        </div>
-        <div>
-          Img Bounds: {imageBounds.current.width.toFixed(0)}x{imageBounds.current.height.toFixed(0)}
-        </div>
+        <div>OffsetX: {offset.x} | OffsetY: {offset.y}</div>
+        <div>Container: {containerBounds?.current?.width || 'null'}x{containerBounds?.current?.height || 'null'}</div>
+        <div>Img Bounds: {imageBounds.current.width.toFixed(0)}x{imageBounds.current.height.toFixed(0)}</div>
       </div>
     </div>
   );
