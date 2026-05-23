@@ -555,8 +555,6 @@ const IsolatedView = ({
   const imageBounds = useRef({ width: 0, height: 0 });
   const containerBounds = useRef({ width: 0, height: 0 });
   const activeImgRef = useRef<HTMLImageElement | null>(null);
-  const isAnimating = useRef(false);
-
 
   // Pinch gesture refs
   const pinchStartDist = useRef<number | null>(null);
@@ -765,35 +763,6 @@ const IsolatedView = ({
 
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
 
-  const animateTo = useCallback(
-    (targetScale: number, targetOffset: { x: number; y: number }, duration = 400) => {
-      const startScale = scale;
-      const startOffsetX = offset.x;
-      const startOffsetY = offset.y;
-      const startTime = performance.now();
-      isAnimating.current = true;
-
-      const step = (now: number) => {
-        const elapsed = now - startTime;
-        const t = Math.min(elapsed / duration, 1);
-        // easeOutCubic
-        const ease = 1 - Math.pow(1 - t, 3);
-        setScale(startScale + (targetScale - startScale) * ease);
-        setOffset({
-          x: startOffsetX + (targetOffset.x - startOffsetX) * ease,
-          y: startOffsetY + (targetOffset.y - startOffsetY) * ease,
-        });
-        if (t < 1) {
-          requestAnimationFrame(step);
-        } else {
-          isAnimating.current = false;
-        }
-      };
-      requestAnimationFrame(step);
-    },
-    [scale, offset]
-  );
-
   const btnStyle: React.CSSProperties = {
     position: "fixed",
     zIndex: 99999,
@@ -854,7 +823,7 @@ const IsolatedView = ({
                   touchAction: "none",
                   transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
                   transformOrigin: "center",
-                  transition: isPanning.current || isAnimating.current ? "none" : "transform 0.1s ease",
+                  transition: isPanning.current ? "none" : "transform 0.1s ease",
                 }}
                 className="select-none"
                 onPointerDown={(e) => {
@@ -994,7 +963,8 @@ const IsolatedView = ({
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              animateTo(1, { x: 0, y: 0 });
+              setScale(1);
+              setOffset({ x: 0, y: 0 });
             }}
             className="px-3 py-1.5 rounded-md bg-black/70 text-white text-xs font-medium hover:bg-black/85 backdrop-blur-sm"
           >
@@ -1004,7 +974,8 @@ const IsolatedView = ({
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              animateTo(1, { x: 0, y: 0 });
+              setScale(1);
+              setOffset({ x: 0, y: 0 });
             }}
             className="px-3 py-1.5 rounded-md bg-black/70 text-white text-xs font-medium hover:bg-black/85 backdrop-blur-sm"
           >
