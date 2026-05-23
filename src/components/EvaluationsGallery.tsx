@@ -607,12 +607,17 @@ const IsolatedView = ({
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
 
-  // Keyboard nav + lock body scroll
+  // Keyboard nav + lock body scroll + zoom shortcuts
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       else if (e.key === "ArrowRight") emblaApi?.scrollNext();
       else if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
+      else if (e.key === "r" || e.key === "R" || e.key === "f" || e.key === "F") {
+        e.preventDefault();
+        setScale(1);
+        setOffset({ x: 0, y: 0 });
+      }
     };
     window.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
