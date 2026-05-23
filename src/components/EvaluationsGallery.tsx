@@ -708,11 +708,10 @@ const IsolatedView = ({
       panStartY.current = touch.clientY;
 
       setOffset((o) => {
-        const imgW = imageBounds.current?.width || 567;
         const containerW = containerBounds.current?.width || window.innerWidth;
-        const emptySpaceOffset = Math.max(0, (containerW - imgW) / 2);
-        const maxX = Math.max(0, ((imgW * scale - containerW) / 2) + (emptySpaceOffset * scale));
-        const maxY = Math.max(0, ((imageBounds.current?.height || 803) * scale - (containerBounds.current?.height || window.innerHeight)) / 2);
+        const containerH = containerBounds.current?.height || window.innerHeight;
+        const maxX = Math.max(0, (containerW * scale - containerW) / 2);
+        const maxY = Math.max(0, (containerH * scale - containerH) / 2);
         return {
           x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
           y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
@@ -866,11 +865,10 @@ const IsolatedView = ({
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   setOffset((o) => {
-                    const imgW = imageBounds.current?.width || 567;
                     const containerW = containerBounds.current?.width || window.innerWidth;
-                    const emptySpaceOffset = Math.max(0, (containerW - imgW) / 2);
-                    const maxX = Math.max(0, ((imgW * scale - containerW) / 2) + (emptySpaceOffset * scale));
-                    const maxY = Math.max(0, ((imageBounds.current?.height || 803) * scale - (containerBounds.current?.height || window.innerHeight)) / 2);
+                    const containerH = containerBounds.current?.height || window.innerHeight;
+                    const maxX = Math.max(0, (containerW * scale - containerW) / 2);
+                    const maxY = Math.max(0, (containerH * scale - containerH) / 2);
                     return {
                       x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
                       y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
