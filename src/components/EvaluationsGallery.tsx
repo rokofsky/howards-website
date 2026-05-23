@@ -866,15 +866,14 @@ const IsolatedView = ({
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   setOffset((o) => {
-                    const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
-                    const maxY = Math.max(0, (imageBounds.current.height * scale - window.innerHeight) / 2);
-                    // offset is stored as raw pixels but applied as translate(offset/scale)
-                    // so clamp must account for scale factor
-                    const clampX = maxX * scale;
-                    const clampY = maxY * scale;
+                    const imgW = imageBounds.current?.width || 567;
+                    const containerW = containerBounds.current?.width || window.innerWidth;
+                    const emptySpaceOffset = Math.max(0, (containerW - imgW) / 2);
+                    const maxX = Math.max(0, ((imgW * scale - containerW) / 2) + (emptySpaceOffset * scale));
+                    const maxY = Math.max(0, ((imageBounds.current?.height || 803) * scale - (containerBounds.current?.height || window.innerHeight)) / 2);
                     return {
-                      x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
-                      y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
+                      x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
+                      y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
                     };
                   });
                 }}
