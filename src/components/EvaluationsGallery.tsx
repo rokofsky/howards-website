@@ -765,6 +765,35 @@ const IsolatedView = ({
 
   const current = emblaApi?.selectedScrollSnap() ?? startIndex;
 
+  const animateTo = useCallback(
+    (targetScale: number, targetOffset: { x: number; y: number }, duration = 400) => {
+      const startScale = scale;
+      const startOffsetX = offset.x;
+      const startOffsetY = offset.y;
+      const startTime = performance.now();
+      isAnimating.current = true;
+
+      const step = (now: number) => {
+        const elapsed = now - startTime;
+        const t = Math.min(elapsed / duration, 1);
+        // easeOutCubic
+        const ease = 1 - Math.pow(1 - t, 3);
+        setScale(startScale + (targetScale - startScale) * ease);
+        setOffset({
+          x: startOffsetX + (targetOffset.x - startOffsetX) * ease,
+          y: startOffsetY + (targetOffset.y - startOffsetY) * ease,
+        });
+        if (t < 1) {
+          requestAnimationFrame(step);
+        } else {
+          isAnimating.current = false;
+        }
+      };
+      requestAnimationFrame(step);
+    },
+    [scale, offset]
+  );
+
   const btnStyle: React.CSSProperties = {
     position: "fixed",
     zIndex: 99999,
