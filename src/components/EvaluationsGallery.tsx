@@ -607,17 +607,12 @@ const IsolatedView = ({
     return () => node.removeEventListener("wheel", onWheel);
   }, [emblaApi]);
 
-  // Keyboard nav + lock body scroll + zoom shortcuts
+  // Keyboard nav + lock body scroll
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       else if (e.key === "ArrowRight") emblaApi?.scrollNext();
       else if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
-      else if (e.key === "r" || e.key === "R" || e.key === "f" || e.key === "F") {
-        e.preventDefault();
-        setScale(1);
-        setOffset({ x: 0, y: 0 });
-      }
     };
     window.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -708,13 +703,13 @@ const IsolatedView = ({
       panStartY.current = touch.clientY;
 
       setOffset((o) => {
-        const containerW = containerBounds.current?.width || window.innerWidth;
-        const containerH = containerBounds.current?.height || window.innerHeight;
-        const maxX = Math.max(0, (containerW * scale - containerW) / 2);
-        const maxY = Math.max(0, (containerH * scale - containerH) / 2);
+        const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
+        const maxY = Math.max(0, (imageBounds.current.height * scale - window.innerHeight) / 2);
+        const clampX = maxX * scale;
+        const clampY = maxY * scale;
         return {
-          x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-          y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+          x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
+          y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
         };
       });
     };
@@ -865,13 +860,15 @@ const IsolatedView = ({
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   setOffset((o) => {
-                    const containerW = containerBounds.current?.width || window.innerWidth;
-                    const containerH = containerBounds.current?.height || window.innerHeight;
-                    const maxX = Math.max(0, (containerW * scale - containerW) / 2);
-                    const maxY = Math.max(0, (containerH * scale - containerH) / 2);
+                    const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
+                    const maxY = Math.max(0, (imageBounds.current.height * scale - window.innerHeight) / 2);
+                    // offset is stored as raw pixels but applied as translate(offset/scale)
+                    // so clamp must account for scale factor
+                    const clampX = maxX * scale;
+                    const clampY = maxY * scale;
                     return {
-                      x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-                      y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+                      x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
+                      y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
                     };
                   });
                 }}
