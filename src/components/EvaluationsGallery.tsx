@@ -854,7 +854,7 @@ const IsolatedView = ({
                   touchAction: "none",
                   transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
                   transformOrigin: "center",
-                  transition: isPanning.current ? "none" : "transform 0.1s ease",
+                  transition: isPanning.current || isAnimating.current ? "none" : "transform 0.1s ease",
                 }}
                 className="select-none"
                 onPointerDown={(e) => {
@@ -994,8 +994,7 @@ const IsolatedView = ({
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              setScale(1);
-              setOffset({ x: 0, y: 0 });
+              animateTo(1, { x: 0, y: 0 });
             }}
             className="px-3 py-1.5 rounded-md bg-black/70 text-white text-xs font-medium hover:bg-black/85 backdrop-blur-sm"
           >
@@ -1005,8 +1004,7 @@ const IsolatedView = ({
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              setScale(1);
-              setOffset({ x: 0, y: 0 });
+              animateTo(1, { x: 0, y: 0 });
             }}
             className="px-3 py-1.5 rounded-md bg-black/70 text-white text-xs font-medium hover:bg-black/85 backdrop-blur-sm"
           >
