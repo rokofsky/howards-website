@@ -426,7 +426,10 @@ const EvaluationsGallery = () => {
       <p className="text-sm text-muted-foreground font-light mb-6">
         {filtered.length === 0
           ? t("No evaluations match your search.", "Žádné formuláře neodpovídají vyhledávání.")
-          : "\n"}
+          : t(
+              `Showing ${filtered.length} of ${candidates.length} evaluations`,
+              `Zobrazeno ${filtered.length} z ${candidates.length} hodnocení`,
+            )}
       </p>
 
       {filtered.length > 0 && (
@@ -569,10 +572,7 @@ const IsolatedView = ({
   // Compute the actual rendered size of an object-fit: contain image inside its container,
   // derived from naturalWidth/naturalHeight. The <img> element itself fills the container,
   // but the visible image content is letterboxed/pillarboxed.
-  const getRenderedImageSize = (
-    img: HTMLImageElement | null,
-    container: { width: number; height: number }
-  ) => {
+  const getRenderedImageSize = (img: HTMLImageElement | null, container: { width: number; height: number }) => {
     if (!img || !img.naturalWidth || !img.naturalHeight) return container;
     const imgRatio = img.naturalWidth / img.naturalHeight;
     const contRatio = container.width / container.height;
@@ -642,8 +642,6 @@ const IsolatedView = ({
     emblaApi.reInit({ watchDrag: scale <= 1 });
   }, [scale, emblaApi]);
 
-
-
   // Native touch listeners — handles pan, swipe-to-navigate, and pinch
   useEffect(() => {
     const img = activeImgRef.current;
@@ -674,13 +672,11 @@ const IsolatedView = ({
 
       if (scale > 1) {
         e.stopPropagation();
-        // Capture bounds for pan clamping using the image's TRUE rendered size
-        // (object-fit: contain) derived from naturalWidth/naturalHeight, not the
-        // <img> element's bounding rect which always fills the container.
-        const contRect = img.parentElement?.getBoundingClientRect();
+        // Use window dimensions as container — img.parentElement rect is unreliable
+        // because the slide is positioned off-screen in Embla's flex track
         containerBounds.current = {
-          width: contRect?.width ?? img.getBoundingClientRect().width,
-          height: contRect?.height ?? img.getBoundingClientRect().height,
+          width: window.innerWidth,
+          height: window.innerHeight,
         };
         imageBounds.current = getRenderedImageSize(img, containerBounds.current);
         isPanning.current = true;
@@ -710,9 +706,13 @@ const IsolatedView = ({
       setOffset((o) => {
         const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
         const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
+        // Multiply by scale because offset is applied as translate(offset/scale)
+        // so raw offset must be scale times larger than visual pixel distance
+        const clampX = maxX * scale;
+        const clampY = maxY * scale;
         return {
-          x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-          y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+          x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
+          y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
         };
       });
     };
@@ -832,11 +832,11 @@ const IsolatedView = ({
                   e.currentTarget.setPointerCapture(e.pointerId);
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
-                  const contRect = e.currentTarget.parentElement?.getBoundingClientRect();
-                  const imgRect = e.currentTarget.getBoundingClientRect();
+                  // Use window dimensions as container — parentElement rect is unreliable
+                  // because the slide is positioned off-screen in Embla's flex track
                   containerBounds.current = {
-                    width: contRect?.width ?? imgRect.width,
-                    height: contRect?.height ?? imgRect.height,
+                    width: window.innerWidth,
+                    height: window.innerHeight,
                   };
                   imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
                   isPanning.current = true;
@@ -851,9 +851,12 @@ const IsolatedView = ({
                   setOffset((o) => {
                     const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
                     const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
+                    // Multiply by scale because offset is applied as translate(offset/scale)
+                    const clampX = maxX * scale;
+                    const clampY = maxY * scale;
                     return {
-                      x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-                      y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+                      x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
+                      y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
                     };
                   });
                 }}
@@ -884,33 +887,6 @@ const IsolatedView = ({
       >
         {current + 1} / {items.length}
       </span>
-
-      {/* DEBUG OVERLAY — pan/zoom math */}
-      {(() => {
-        const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
-        const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
-        return (
-          <div
-            style={{
-              position: "fixed",
-              top: "8px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              zIndex: 99999,
-              fontFamily: "monospace",
-              fontSize: "11px",
-              padding: "4px 8px",
-              background: "rgba(0,0,0,0.75)",
-              color: "#0f0",
-              borderRadius: "4px",
-              pointerEvents: "none",
-              whiteSpace: "nowrap",
-            }}
-          >
-            scale={scale.toFixed(2)} ofs=({offset.x.toFixed(0)},{offset.y.toFixed(0)}) max=(±{maxX.toFixed(0)},±{maxY.toFixed(0)}) img={imageBounds.current.width.toFixed(0)}×{imageBounds.current.height.toFixed(0)} cont={containerBounds.current.width.toFixed(0)}×{containerBounds.current.height.toFixed(0)}
-          </div>
-        );
-      })()}
 
       {/* Close button */}
       <button
@@ -946,65 +922,6 @@ const IsolatedView = ({
           </button>
         </>
       )}
-
-      {scale !== 1 || offset.x !== 0 || offset.y !== 0 ? (
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '16px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            gap: '8px',
-            zIndex: 50,
-          }}
-        >
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setScale(1);
-              setOffset({ x: 0, y: 0 });
-            }}
-            className="px-3 py-1.5 rounded-md bg-black/70 text-white text-xs font-medium hover:bg-black/85 backdrop-blur-sm"
-          >
-            Fit to image
-          </button>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setScale(1);
-              setOffset({ x: 0, y: 0 });
-            }}
-            className="px-3 py-1.5 rounded-md bg-black/70 text-white text-xs font-medium hover:bg-black/85 backdrop-blur-sm"
-          >
-            Reset zoom
-          </button>
-        </div>
-      ) : null}
-
-      <div style={{
-        position: 'fixed',
-        top: '80px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        backgroundColor: 'rgba(0, 0, 0, 0.9)',
-        color: '#00ff00',
-        padding: '15px',
-        borderRadius: '8px',
-        zIndex: 99999,
-        fontFamily: 'monospace',
-        fontSize: '14px',
-        pointerEvents: 'none',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-        lineHeight: '1.5'
-      }}>
-        <div>Scale: {scale}</div>
-        <div>OffsetX: {offset.x} | OffsetY: {offset.y}</div>
-        <div>Container: {containerBounds?.current?.width || 'null'}x{containerBounds?.current?.height || 'null'}</div>
-        <div>Img Bounds: {imageBounds.current.width.toFixed(0)}x{imageBounds.current.height.toFixed(0)}</div>
-      </div>
     </div>
   );
 };
