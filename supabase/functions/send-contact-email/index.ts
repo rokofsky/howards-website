@@ -43,26 +43,46 @@ function notificationHtml(data: Record<string, string>) {
 </div></body></html>`;
 }
 
-function copyHtml(data: Record<string, string>) {
+function copyHtml(data: Record<string, string>, locale: string, formKind: string) {
   const esc = (key: string) => escapeHtml(data[key] || "");
+  const isCz = locale === "cs";
+  const name = esc("name") || (isCz ? "tam" : "there");
+  const service = esc("service");
+
+  const headerText = isCz
+    ? (formKind === "webinar" && service
+        ? `Vaše zpráva pro Howarda Rokofského o ${service}`
+        : "Vaše zpráva pro Howarda Rokofského")
+    : "Your message to Howard Rokofsky";
+
+  const intro = isCz
+    ? `Zdravím ${name}, děkuji za Váš dotaz. Zde je kopie toho, co jste poslal/a:`
+    : `Hi ${name}, thanks for reaching out. Here's a copy of what you sent:`;
+
+  const reLine = isCz
+    ? (service ? `<strong>Předmět: ${service}</strong>` : "")
+    : (service ? `<strong>Re: ${service}</strong>` : "");
+
+  const footer = isCz
+    ? "Howard se vám brzy ozve. Na tento e-mail nemusíte odpovídat."
+    : "Howard will be in touch soon. No need to reply to this email.";
+
   return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
 <body style="margin:0;padding:0;background:#ffffff;font-family:Inter,Arial,sans-serif">
 <div style="max-width:600px;margin:0 auto;padding:40px 24px">
   <div style="background:#336b7a;padding:24px 28px;border-radius:8px 8px 0 0">
-    <h1 style="margin:0;color:#ffffff;font-size:20px;font-weight:600">Your message to Howard Rokofsky</h1>
+    <h1 style="margin:0;color:#ffffff;font-size:20px;font-weight:600">${headerText}</h1>
   </div>
   <div style="background:#f7f0ea;padding:28px;border-radius:0 0 8px 8px">
     <p style="font-size:14px;color:#3d2c1e;line-height:1.6;margin:0 0 16px">
-      Hi ${esc("name") || "there"}, thanks for reaching out. Here's a copy of what you sent:
+      ${intro}
     </p>
-    <p style="font-size:14px;color:#3d2c1e;line-height:1.6;margin:0 0 16px">
-      <strong>Re: ${esc("service")}</strong>
-    </p>
+    ${reLine ? `<p style="font-size:14px;color:#3d2c1e;line-height:1.6;margin:0 0 16px">${reLine}</p>` : ""}
     <div style="background:#efe4d9;padding:16px 20px;border-radius:6px;font-size:14px;color:#3d2c1e;white-space:pre-wrap;line-height:1.6">
 ${esc("message")}
     </div>
     <p style="font-size:13px;color:#7a6a5e;margin:24px 0 0;line-height:1.5">
-      Howard will be in touch soon. No need to reply to this email.
+      ${footer}
     </p>
   </div>
 </div></body></html>`;
