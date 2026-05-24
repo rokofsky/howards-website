@@ -219,6 +219,18 @@ export default function AdminSessions() {
               <p className="text-xs text-muted-foreground mt-1">Digits only — used for API registration</p>
             </div>
           </div>
+          <div>
+            <Label htmlFor="status">Status</Label>
+            <select
+              id="status"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              value={status}
+              onChange={(e) => setStatus(e.target.value as "draft" | "published")}
+            >
+              <option value="draft">Draft (hidden from public)</option>
+              <option value="published">Published (visible on /storytelling-workshops)</option>
+            </select>
+          </div>
           <div className="flex gap-2">
             <Button onClick={handleCreateOrUpdate} disabled={loading}>
               {loading ? (editingId ? "Updating..." : "Creating...") : (editingId ? "Update Session" : "Create Session")}
