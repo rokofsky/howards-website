@@ -151,6 +151,8 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
         copyToMe: form.copyToMe,
         website, // honeypot (empty)
         elapsedMs: elapsed,
+        locale: isCz ? "cs" : "en",
+        formKind: resolvedFormKind,
       };
 
       const { error: notifError } = await supabase.functions.invoke("send-contact-email", {
