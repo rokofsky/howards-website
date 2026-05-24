@@ -68,7 +68,7 @@ const WebinarDetail = () => {
             <p className="text-muted-foreground text-center mb-8 font-normal">
               Fill in some stuff below (mostly optional) and I'll get back to you next day.
             </p>
-            <ContactForm serviceName={webinar.title} showServiceFields />
+            <ContactForm serviceName={webinar.title} showServiceFields formKind="webinar" />
             <div className="text-center mt-8">
               <Button variant="glassPetrol" size="lg" onClick={openCalendly}>
                 Skip the email, book a call now

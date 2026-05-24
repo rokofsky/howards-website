@@ -195,6 +195,7 @@ const ServiceDetail = () => {
                       <ContactForm
                         serviceName={webinars.find((w) => w.id === expandedWebinar)?.title ?? ""}
                         showServiceFields
+                        formKind="webinar"
                       />
                     </DialogContent>
                   </Dialog>

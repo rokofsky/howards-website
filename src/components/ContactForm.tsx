@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useT } from "@/hooks/useT";
+import { useIsCzech } from "@/hooks/useLanguageRouting";
 import { trackCTA } from "@/lib/analytics";
 
 interface SelectOption {
@@ -14,6 +15,7 @@ interface SelectOption {
 interface ContactFormProps {
   serviceName?: string;
   showServiceFields?: boolean;
+  formKind?: "general" | "service" | "webinar";
 }
 
 const projectTypeOptions: SelectOption[] = [
@@ -88,8 +90,11 @@ const FormSelectField = ({
   );
 };
 
-const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProps) => {
+const ContactForm = ({ serviceName, showServiceFields = false, formKind }: ContactFormProps) => {
   const t = useT();
+  const isCz = useIsCzech();
+  const resolvedFormKind: "general" | "service" | "webinar" =
+    formKind ?? (showServiceFields ? "service" : "general");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -146,6 +151,8 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
         copyToMe: form.copyToMe,
         website, // honeypot (empty)
         elapsedMs: elapsed,
+        locale: isCz ? "cs" : "en",
+        formKind: resolvedFormKind,
       };
 
       const { error: notifError } = await supabase.functions.invoke("send-contact-email", {
