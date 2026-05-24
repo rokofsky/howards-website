@@ -77,6 +77,7 @@ export default function AdminSessions() {
     setSessionDate("");
     setZoomLink("");
     setZoomMeetingId("");
+    setStatus("draft");
     setEditingId(null);
   };
 
@@ -90,6 +91,7 @@ export default function AdminSessions() {
     setSessionDate(`${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`);
     setZoomLink(s.zoom_link || "");
     setZoomMeetingId(s.zoom_meeting_id || "");
+    setStatus((s.status as "draft" | "published") || "draft");
   };
 
   const handleCreateOrUpdate = async () => {
