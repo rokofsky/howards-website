@@ -32,6 +32,7 @@ export default function AdminSessions() {
   const [sessionDate, setSessionDate] = useState("");
   const [zoomLink, setZoomLink] = useState("");
   const [zoomMeetingId, setZoomMeetingId] = useState("");
+  const [status, setStatus] = useState<"draft" | "published">("draft");
 
   // Edit mode
   const [editingId, setEditingId] = useState<string | null>(null);
