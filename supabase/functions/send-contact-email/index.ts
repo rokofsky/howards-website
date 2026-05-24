@@ -137,6 +137,12 @@ Deno.serve(async (req) => {
     const projectType = clean(body.projectType, 100);
     const timeline = clean(body.timeline, 100);
     const copyToMe = body.copyToMe === true;
+    const locale = body.locale === "cs" ? "cs" : "en";
+    const formKindRaw = String(body.formKind || "");
+    const formKind: "general" | "service" | "webinar" =
+      formKindRaw === "webinar" || formKindRaw === "service" || formKindRaw === "general"
+        ? formKindRaw
+        : "general";
 
     if (!name || !email || !message) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
