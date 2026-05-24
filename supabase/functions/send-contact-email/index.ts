@@ -220,11 +220,23 @@ Deno.serve(async (req) => {
 
     // If requested, send copy ONLY to the submitter's own email (never an arbitrary address)
     if (copyToMe) {
+      let copySubject: string;
+      if (locale === "cs") {
+        if (formKind === "service") {
+          copySubject = `Zdravím ${name}, děkuji za Váš dotaz. Zde je kopie toho, co jste mi poslal/a:`;
+        } else if (formKind === "webinar") {
+          copySubject = `Kopie Vaší zprávy pro Howarda${data.service ? ` o ${data.service}` : ""}`;
+        } else {
+          copySubject = "Kopie Vaší zprávy pro Howarda";
+        }
+      } else {
+        copySubject = `Copy of your message to Howard${data.service ? ` about ${data.service}` : ""}`;
+      }
       await sendEmail({
         from: `Howard Rokofsky <${FROM_EMAIL}>`,
         to: [email],
-        subject: `Copy of your message to Howard${data.service ? ` about ${data.service}` : ""}`,
-        html: copyHtml(data),
+        subject: copySubject,
+        html: copyHtml(data, locale, formKind),
       });
     }
 
