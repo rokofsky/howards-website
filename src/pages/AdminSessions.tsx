@@ -15,6 +15,7 @@ interface Session {
   session_date: string;
   zoom_link: string | null;
   zoom_meeting_id: string | null;
+  status: string;
   created_at: string;
 }
 
