@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === "create") {
-      const { title, description, session_date, zoom_link, zoom_meeting_id } = body;
+      const { title, description, session_date, zoom_link, zoom_meeting_id, status } = body;
       if (!session_date) {
         return new Response(JSON.stringify({ error: "session_date is required" }), {
           status: 200,
@@ -65,6 +65,7 @@ Deno.serve(async (req) => {
           session_date,
           zoom_link,
           zoom_meeting_id: cleanMeetingId,
+          status: status === "published" ? "published" : "draft",
         })
         .select()
         .single();
