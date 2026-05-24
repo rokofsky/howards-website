@@ -112,6 +112,7 @@ export default function AdminSessions() {
           session_date: new Date(sessionDate).toISOString(),
           zoom_link: zoomLink || null,
           zoom_meeting_id: zoomMeetingId || null,
+          status,
         },
       });
       setLoading(false);
