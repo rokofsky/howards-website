@@ -187,7 +187,7 @@ const ContactForm = ({ serviceName, showServiceFields = false }: ContactFormProp
           <p className="text-muted-foreground font-normal">
             {t(
               'Howard will be in touch faster than you can say "synergy". Check your email tomorrow.',
-              'Howard se ozve dřív, než stačíš říct „synergie“. Zítra se podívejte na e-mail.'
+              'Howard se ozve dřív, než stačíte říct „synergie“. Zítra se podívejte na e-mail.'
             )}
           </p>
         </div>
