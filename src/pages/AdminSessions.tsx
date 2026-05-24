@@ -255,6 +255,7 @@ export default function AdminSessions() {
                 <TableRow>
                   <TableHead>Title</TableHead>
                   <TableHead>Date</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Zoom</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
@@ -264,6 +265,11 @@ export default function AdminSessions() {
                   <TableRow key={s.id}>
                     <TableCell>{s.title || "Untitled"}</TableCell>
                     <TableCell>{new Date(s.session_date).toLocaleString()}</TableCell>
+                    <TableCell>
+                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${s.status === "published" ? "bg-green-500/20 text-green-700 dark:text-green-300" : "bg-muted text-muted-foreground"}`}>
+                        {s.status || "draft"}
+                      </span>
+                    </TableCell>
                     <TableCell>{s.zoom_meeting_id || "—"}</TableCell>
                     <TableCell className="flex gap-1">
                       <Button variant="ghost" size="icon" onClick={() => handleEdit(s)}>
