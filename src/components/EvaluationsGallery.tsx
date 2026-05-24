@@ -720,13 +720,12 @@ const IsolatedView = ({
     const onTouchEnd = (e: TouchEvent) => {
       pinchStartDist.current = null;
 
-      if (!isPanning.current) return;
       isPanning.current = false;
 
       // Detect fast horizontal swipe → navigate to next/prev and reset zoom
       const dt = performance.now() - swipeStartTime.val;
       const changedTouch = e.changedTouches[0];
-      if (!changedTouch) return;
+      if (!changedTouch || dt <= 0) return;
       const dx = changedTouch.clientX - swipeStartX.val;
       const dy = Math.abs(changedTouch.clientY - swipeStartY.val);
       const velocityX = Math.abs(dx) / dt; // px/ms
