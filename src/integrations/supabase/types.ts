@@ -216,21 +216,18 @@ export type Database = {
     Views: {
       storytelling_sessions_public: {
         Row: {
-          created_at: string | null
           description: string | null
           id: string | null
           session_date: string | null
           title: string | null
         }
         Insert: {
-          created_at?: string | null
           description?: string | null
           id?: string | null
           session_date?: string | null
           title?: string | null
         }
         Update: {
-          created_at?: string | null
           description?: string | null
           id?: string | null
           session_date?: string | null
