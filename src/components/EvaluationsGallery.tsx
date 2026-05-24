@@ -569,10 +569,7 @@ const IsolatedView = ({
   // Compute the actual rendered size of an object-fit: contain image inside its container,
   // derived from naturalWidth/naturalHeight. The <img> element itself fills the container,
   // but the visible image content is letterboxed/pillarboxed.
-  const getRenderedImageSize = (
-    img: HTMLImageElement | null,
-    container: { width: number; height: number }
-  ) => {
+  const getRenderedImageSize = (img: HTMLImageElement | null, container: { width: number; height: number }) => {
     if (!img || !img.naturalWidth || !img.naturalHeight) return container;
     const imgRatio = img.naturalWidth / img.naturalHeight;
     const contRatio = container.width / container.height;
@@ -641,8 +638,6 @@ const IsolatedView = ({
     if (!emblaApi) return;
     emblaApi.reInit({ watchDrag: scale <= 1 });
   }, [scale, emblaApi]);
-
-
 
   // Native touch listeners — handles pan, swipe-to-navigate, and pinch
   useEffect(() => {
@@ -907,7 +902,9 @@ const IsolatedView = ({
               whiteSpace: "nowrap",
             }}
           >
-            scale={scale.toFixed(2)} ofs=({offset.x.toFixed(0)},{offset.y.toFixed(0)}) max=(±{maxX.toFixed(0)},±{maxY.toFixed(0)}) img={imageBounds.current.width.toFixed(0)}×{imageBounds.current.height.toFixed(0)} cont={containerBounds.current.width.toFixed(0)}×{containerBounds.current.height.toFixed(0)}
+            scale={scale.toFixed(2)} ofs=({offset.x.toFixed(0)},{offset.y.toFixed(0)}) max=(±{maxX.toFixed(0)},±
+            {maxY.toFixed(0)}) img={imageBounds.current.width.toFixed(0)}×{imageBounds.current.height.toFixed(0)} cont=
+            {containerBounds.current.width.toFixed(0)}×{containerBounds.current.height.toFixed(0)}
           </div>
         );
       })()}
@@ -950,12 +947,12 @@ const IsolatedView = ({
       {scale !== 1 || offset.x !== 0 || offset.y !== 0 ? (
         <div
           style={{
-            position: 'absolute',
-            bottom: '16px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            gap: '8px',
+            position: "absolute",
+            bottom: "16px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            gap: "8px",
             zIndex: 50,
           }}
         >
@@ -984,26 +981,34 @@ const IsolatedView = ({
         </div>
       ) : null}
 
-      <div style={{
-        position: 'fixed',
-        top: '80px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        backgroundColor: 'rgba(0, 0, 0, 0.9)',
-        color: '#00ff00',
-        padding: '15px',
-        borderRadius: '8px',
-        zIndex: 99999,
-        fontFamily: 'monospace',
-        fontSize: '14px',
-        pointerEvents: 'none',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-        lineHeight: '1.5'
-      }}>
+      <div
+        style={{
+          position: "fixed",
+          top: "80px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          backgroundColor: "rgba(0, 0, 0, 0.9)",
+          color: "#00ff00",
+          padding: "15px",
+          borderRadius: "8px",
+          zIndex: 99999,
+          fontFamily: "monospace",
+          fontSize: "14px",
+          pointerEvents: "none",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+          lineHeight: "1.5",
+        }}
+      >
         <div>Scale: {scale}</div>
-        <div>OffsetX: {offset.x} | OffsetY: {offset.y}</div>
-        <div>Container: {containerBounds?.current?.width || 'null'}x{containerBounds?.current?.height || 'null'}</div>
-        <div>Img Bounds: {imageBounds.current.width.toFixed(0)}x{imageBounds.current.height.toFixed(0)}</div>
+        <div>
+          OffsetX: {offset.x} | OffsetY: {offset.y}
+        </div>
+        <div>
+          Container: {containerBounds?.current?.width || "null"}x{containerBounds?.current?.height || "null"}
+        </div>
+        <div>
+          Img Bounds: {imageBounds.current.width.toFixed(0)}x{imageBounds.current.height.toFixed(0)}
+        </div>
       </div>
     </div>
   );
