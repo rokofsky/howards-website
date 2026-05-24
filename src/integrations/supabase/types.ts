@@ -146,13 +146,6 @@ export type Database = {
             referencedRelation: "storytelling_sessions"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "session_signups_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "storytelling_sessions_public"
-            referencedColumns: ["id"]
-          },
         ]
       }
       storytelling_sessions: {
@@ -214,33 +207,18 @@ export type Database = {
       }
     }
     Views: {
-      storytelling_sessions_public: {
-        Row: {
-          created_at: string | null
-          description: string | null
-          id: string | null
-          session_date: string | null
-          title: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          description?: string | null
-          id?: string | null
-          session_date?: string | null
-          title?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          description?: string | null
-          id?: string | null
-          session_date?: string | null
-          title?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_public_storytelling_sessions: {
+        Args: never
+        Returns: {
+          description: string
+          id: string
+          session_date: string
+          title: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
