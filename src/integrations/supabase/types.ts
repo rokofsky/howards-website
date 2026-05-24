@@ -161,6 +161,7 @@ export type Database = {
           description: string | null
           id: string
           session_date: string
+          status: string
           title: string | null
           zoom_link: string | null
           zoom_meeting_id: string | null
@@ -170,6 +171,7 @@ export type Database = {
           description?: string | null
           id?: string
           session_date: string
+          status?: string
           title?: string | null
           zoom_link?: string | null
           zoom_meeting_id?: string | null
@@ -179,6 +181,7 @@ export type Database = {
           description?: string | null
           id?: string
           session_date?: string
+          status?: string
           title?: string | null
           zoom_link?: string | null
           zoom_meeting_id?: string | null
@@ -219,18 +222,21 @@ export type Database = {
           description: string | null
           id: string | null
           session_date: string | null
+          status: string | null
           title: string | null
         }
         Insert: {
           description?: string | null
           id?: string | null
           session_date?: string | null
+          status?: string | null
           title?: string | null
         }
         Update: {
           description?: string | null
           id?: string | null
           session_date?: string | null
+          status?: string | null
           title?: string | null
         }
         Relationships: []

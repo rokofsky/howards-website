@@ -15,6 +15,7 @@ interface Session {
   session_date: string;
   zoom_link: string | null;
   zoom_meeting_id: string | null;
+  status: string;
   created_at: string;
 }
 
@@ -31,6 +32,7 @@ export default function AdminSessions() {
   const [sessionDate, setSessionDate] = useState("");
   const [zoomLink, setZoomLink] = useState("");
   const [zoomMeetingId, setZoomMeetingId] = useState("");
+  const [status, setStatus] = useState<"draft" | "published">("draft");
 
   // Edit mode
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -75,6 +77,7 @@ export default function AdminSessions() {
     setSessionDate("");
     setZoomLink("");
     setZoomMeetingId("");
+    setStatus("draft");
     setEditingId(null);
   };
 
@@ -88,6 +91,7 @@ export default function AdminSessions() {
     setSessionDate(`${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`);
     setZoomLink(s.zoom_link || "");
     setZoomMeetingId(s.zoom_meeting_id || "");
+    setStatus((s.status as "draft" | "published") || "draft");
   };
 
   const handleCreateOrUpdate = async () => {
@@ -108,6 +112,7 @@ export default function AdminSessions() {
           session_date: new Date(sessionDate).toISOString(),
           zoom_link: zoomLink || null,
           zoom_meeting_id: zoomMeetingId || null,
+          status,
         },
       });
       setLoading(false);
@@ -126,6 +131,7 @@ export default function AdminSessions() {
           session_date: new Date(sessionDate).toISOString(),
           zoom_link: zoomLink || null,
           zoom_meeting_id: zoomMeetingId || null,
+          status,
         },
       });
       setLoading(false);
@@ -213,6 +219,18 @@ export default function AdminSessions() {
               <p className="text-xs text-muted-foreground mt-1">Digits only — used for API registration</p>
             </div>
           </div>
+          <div>
+            <Label htmlFor="status">Status</Label>
+            <select
+              id="status"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              value={status}
+              onChange={(e) => setStatus(e.target.value as "draft" | "published")}
+            >
+              <option value="draft">Draft (hidden from public)</option>
+              <option value="published">Published (visible on /storytelling-workshops)</option>
+            </select>
+          </div>
           <div className="flex gap-2">
             <Button onClick={handleCreateOrUpdate} disabled={loading}>
               {loading ? (editingId ? "Updating..." : "Creating...") : (editingId ? "Update Session" : "Create Session")}
@@ -237,6 +255,7 @@ export default function AdminSessions() {
                 <TableRow>
                   <TableHead>Title</TableHead>
                   <TableHead>Date</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Zoom</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
@@ -246,6 +265,11 @@ export default function AdminSessions() {
                   <TableRow key={s.id}>
                     <TableCell>{s.title || "Untitled"}</TableCell>
                     <TableCell>{new Date(s.session_date).toLocaleString()}</TableCell>
+                    <TableCell>
+                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${s.status === "published" ? "bg-green-500/20 text-green-700 dark:text-green-300" : "bg-muted text-muted-foreground"}`}>
+                        {s.status || "draft"}
+                      </span>
+                    </TableCell>
                     <TableCell>{s.zoom_meeting_id || "—"}</TableCell>
                     <TableCell className="flex gap-1">
                       <Button variant="ghost" size="icon" onClick={() => handleEdit(s)}>

@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === "create") {
-      const { title, description, session_date, zoom_link, zoom_meeting_id } = body;
+      const { title, description, session_date, zoom_link, zoom_meeting_id, status } = body;
       if (!session_date) {
         return new Response(JSON.stringify({ error: "session_date is required" }), {
           status: 200,
@@ -65,6 +65,7 @@ Deno.serve(async (req) => {
           session_date,
           zoom_link,
           zoom_meeting_id: cleanMeetingId,
+          status: status === "published" ? "published" : "draft",
         })
         .select()
         .single();
@@ -76,7 +77,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === "update") {
-      const { id, title, description, session_date, zoom_link, zoom_meeting_id } = body;
+      const { id, title, description, session_date, zoom_link, zoom_meeting_id, status } = body;
       if (!id) {
         return new Response(JSON.stringify({ error: "id is required" }), {
           status: 200,
@@ -89,6 +90,7 @@ Deno.serve(async (req) => {
       if (session_date !== undefined) updates.session_date = session_date;
       if (zoom_link !== undefined) updates.zoom_link = zoom_link;
       if (zoom_meeting_id !== undefined) updates.zoom_meeting_id = zoom_meeting_id ? zoom_meeting_id.replace(/\D/g, "") : null;
+      if (status !== undefined) updates.status = status === "published" ? "published" : "draft";
 
       const { data, error } = await supabase
         .from("storytelling_sessions")
