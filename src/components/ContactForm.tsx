@@ -217,7 +217,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
               });
             }}
           >
-            {t("Say something more", "Říci něco dalšího")}
+            {t("Say something more", "Říct něco dalšího")}
           </Button>
         </div>
       </motion.div>
