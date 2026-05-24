@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useT } from "@/hooks/useT";
+import { useIsCzech } from "@/hooks/useLanguageRouting";
 import { trackCTA } from "@/lib/analytics";
 
 interface SelectOption {
@@ -14,6 +15,7 @@ interface SelectOption {
 interface ContactFormProps {
   serviceName?: string;
   showServiceFields?: boolean;
+  formKind?: "general" | "service" | "webinar";
 }
 
 const projectTypeOptions: SelectOption[] = [
