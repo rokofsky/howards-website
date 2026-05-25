@@ -175,28 +175,35 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Step 3: Zoom registration succeeded — now save locally
-    const { error: insertError } = await supabase
-      .from("registrations")
-      .insert({
-        first_name: firstName,
-        email,
-        session_title: session.title || "Storytelling Session",
-        session_date: session.session_date,
-        zoom_meeting_id: meetingId,
-      });
+    // Step 3: Save locally with safe fallbacks
+    const workshopTitle = session.title || "Storytelling Workshop";
+    const sessionDate = session.session_date ?? new Date().toISOString();
+    const safeZoomLink = zoomJoinUrl ?? session.zoom_link ?? "";
 
-    if (insertError) {
-      console.error("Local registration insert failed:", insertError);
-      // Don't fail the user — Zoom registration already succeeded
+    try {
+      const { error: insertError } = await supabase
+        .from("registrations")
+        .insert({
+          first_name: firstName,
+          email,
+          session_title: workshopTitle,
+          session_date: sessionDate,
+          zoom_meeting_id: meetingId,
+        });
+
+      if (insertError) {
+        console.error("Local registration insert failed:", insertError);
+      }
+    } catch (e) {
+      console.error("Local registration insert threw:", e);
     }
 
     return new Response(
       JSON.stringify({
         success: true,
-        session_title: session.title || "Storytelling Session",
-        session_date: session.session_date,
-        join_url: zoomJoinUrl,
+        session_title: workshopTitle,
+        session_date: sessionDate,
+        join_url: safeZoomLink,
         registration_disabled: registrationDisabled,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
