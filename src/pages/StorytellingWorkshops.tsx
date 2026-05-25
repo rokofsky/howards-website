@@ -43,15 +43,6 @@ const StorytellingWorkshops = () => {
     fetchSessions();
   }, []);
 
-  useEffect(() => {
-    const fetchUnfilteredSessions = async () => {
-      const { data, error } = await supabase.from("storytelling_sessions").select("*");
-      console.log("Unfiltered storytelling_sessions query result", { data, error });
-      setUnfilteredSessions((data as unknown[]) || []);
-    };
-
-    fetchUnfilteredSessions();
-  }, []);
 
   const fetchSessions = async () => {
     // Public view only exposes safe marketing columns and only published sessions.
