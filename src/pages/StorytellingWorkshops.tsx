@@ -25,8 +25,12 @@ interface Session {
 
 const StorytellingWorkshops = () => {
   const t = useT();
+  const tableName = "storytelling_sessions_public";
+  const statusFilter = "published";
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
+  const [queryError, setQueryError] = useState<unknown>(null);
+  const [unfilteredSessions, setUnfilteredSessions] = useState<unknown[] | null>(null);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState("");
@@ -39,14 +43,26 @@ const StorytellingWorkshops = () => {
     fetchSessions();
   }, []);
 
+  useEffect(() => {
+    const fetchUnfilteredSessions = async () => {
+      const { data, error } = await supabase.from("storytelling_sessions").select("*");
+      console.log("Unfiltered storytelling_sessions query result", { data, error });
+      setUnfilteredSessions((data as unknown[]) || []);
+    };
+
+    fetchUnfilteredSessions();
+  }, []);
+
   const fetchSessions = async () => {
     // Public view only exposes safe marketing columns and only published sessions.
     const { data, error } = await supabase
-      .from("storytelling_sessions_public" as any)
+      .from(tableName as any)
       .select("id, session_date, title, description")
-      .eq("status", "published")
+      .eq("status", statusFilter)
       .gte("session_date", new Date().toISOString())
       .order("session_date", { ascending: true });
+
+    setQueryError(error || null);
 
     if (!error && data) {
       setSessions(data as unknown as Session[]);
