@@ -204,7 +204,7 @@ Deno.serve(async (req) => {
       ? `New inquiry: ${data.service} — ${name}`
       : `New inquiry from ${name}`;
     const notifyOk = await sendEmail({
-      from: `Howard Rokofsky <${FROM_EMAIL}>`,
+      from: FROM_EMAIL,
       to: [TO_EMAIL],
       subject: notifySubject,
       html: notificationHtml(data),
