@@ -145,7 +145,7 @@ Deno.serve(async (req) => {
           isAlreadyRegistered = true;
         }
         if (parsed.code === 3001) {
-          zoomError = "Zoom meeting not found. The meeting ID may be incorrect.";
+          registrationDisabled = true;
         }
         // Registration not enabled on the meeting — fall back to plain join link
         if (
