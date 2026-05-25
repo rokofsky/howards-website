@@ -15,10 +15,12 @@ Deno.serve(async (req) => {
     const email = (body.email ?? "").trim().slice(0, 255);
     const sessionId = (body.session_id ?? "").trim();
 
+    console.log('Received email:', email);
+
     if (!sessionId || !email || !fullName) {
       return new Response(
         JSON.stringify({ error: "name, email, and session_id are required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -26,7 +28,7 @@ Deno.serve(async (req) => {
     if (!UUID_RE.test(sessionId)) {
       return new Response(
         JSON.stringify({ error: "Invalid session_id" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -34,12 +36,15 @@ Deno.serve(async (req) => {
     const firstName = nameParts[0];
     const lastName = nameParts.slice(1).join(" ") || firstName;
 
+    // Permissive email check — accepts all standard public domains (yahoo, gmail, etc.)
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return new Response(
         JSON.stringify({ error: "Invalid email address" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    console.log('Validation passed, calling Zoom/Resend for:', email);
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -136,7 +141,7 @@ Deno.serve(async (req) => {
     let registrationDisabled = false;
 
     if (!registrantRes.ok) {
-      let zoomError = "Zoom registration failed.";
+      let zoomError = `Zoom registration failed (HTTP ${registrantRes.status}): ${registrantBody}`;
       let isAlreadyRegistered = false;
       try {
         const parsed = JSON.parse(registrantBody);
@@ -147,7 +152,6 @@ Deno.serve(async (req) => {
         if (parsed.code === 3001) {
           registrationDisabled = true;
         }
-        // Registration not enabled on the meeting — fall back to plain join link
         if (
           parsed.code === 3027 ||
           parsed.code === 404 ||
@@ -160,9 +164,10 @@ Deno.serve(async (req) => {
       }
 
       if (!registrationDisabled && !isAlreadyRegistered) {
+        // Pass the literal Zoom/Resend error back so the frontend can display it
         return new Response(
           JSON.stringify({ error: zoomError }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       zoomJoinUrl = session.zoom_link || null;
