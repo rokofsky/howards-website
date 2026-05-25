@@ -196,6 +196,8 @@ Deno.serve(async (req) => {
         success: true,
         session_title: session.title || "Storytelling Session",
         session_date: session.session_date,
+        join_url: zoomJoinUrl,
+        registration_disabled: registrationDisabled,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
