@@ -6,7 +6,7 @@ const corsHeaders = {
 };
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const FROM_EMAIL = "info@rokofsky.com";
+const FROM_EMAIL = "Storytelling Workshops <info@rokofsky.com>";
 const TO_EMAIL = "info@rokofsky.com";
 
 function escapeHtml(str: string): string {
