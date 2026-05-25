@@ -233,10 +233,11 @@ Deno.serve(async (req) => {
         copySubject = `Copy of your message to Howard${data.service ? ` about ${data.service}` : ""}`;
       }
       await sendEmail({
-        from: `Howard Rokofsky <${FROM_EMAIL}>`,
+        from: FROM_EMAIL,
         to: [email],
         subject: copySubject,
         html: copyHtml(data, locale, formKind),
+        reply_to: TO_EMAIL,
       });
     }
 
