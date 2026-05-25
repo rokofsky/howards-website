@@ -30,7 +30,7 @@ const StorytellingWorkshops = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [queryError, setQueryError] = useState<unknown>(null);
-  const [unfilteredSessions, setUnfilteredSessions] = useState<unknown[] | null>(null);
+  
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState("");
