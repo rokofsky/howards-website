@@ -132,32 +132,47 @@ Deno.serve(async (req) => {
     const registrantBody = await registrantRes.text();
     console.log("Zoom registrant response:", registrantRes.status, registrantBody);
 
+    let zoomJoinUrl: string | null = null;
+    let registrationDisabled = false;
+
     if (!registrantRes.ok) {
-      // Parse Zoom error for a user-friendly message
       let zoomError = "Zoom registration failed.";
+      let isAlreadyRegistered = false;
       try {
         const parsed = JSON.parse(registrantBody);
-        if (parsed.message) {
-          zoomError = parsed.message;
-        }
-        // Zoom code 3001 = meeting not found, 200 = already registered, etc.
+        if (parsed.message) zoomError = parsed.message;
         if (parsed.code === 200 || (parsed.message && parsed.message.toLowerCase().includes("already"))) {
-          zoomError = "This email is already registered for this session.";
+          isAlreadyRegistered = true;
         }
         if (parsed.code === 3001) {
           zoomError = "Zoom meeting not found. The meeting ID may be incorrect.";
         }
-        if (parsed.code === 3027) {
-          zoomError = "Registration is not enabled for this Zoom meeting.";
+        // Registration not enabled on the meeting — fall back to plain join link
+        if (
+          parsed.code === 3027 ||
+          parsed.code === 404 ||
+          (parsed.message && parsed.message.toLowerCase().includes("registration has not been enabled"))
+        ) {
+          registrationDisabled = true;
         }
       } catch {
         // keep generic message
       }
 
-      return new Response(
-        JSON.stringify({ error: zoomError }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      if (!registrationDisabled && !isAlreadyRegistered) {
+        return new Response(
+          JSON.stringify({ error: zoomError }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      zoomJoinUrl = session.zoom_link || null;
+    } else {
+      try {
+        const parsedOk = JSON.parse(registrantBody);
+        zoomJoinUrl = parsedOk.join_url || session.zoom_link || null;
+      } catch {
+        zoomJoinUrl = session.zoom_link || null;
+      }
     }
 
     // Step 3: Zoom registration succeeded — now save locally
@@ -181,6 +196,8 @@ Deno.serve(async (req) => {
         success: true,
         session_title: session.title || "Storytelling Session",
         session_date: session.session_date,
+        join_url: zoomJoinUrl,
+        registration_disabled: registrationDisabled,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
