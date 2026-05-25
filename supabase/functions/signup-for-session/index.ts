@@ -15,10 +15,12 @@ Deno.serve(async (req) => {
     const email = (body.email ?? "").trim().slice(0, 255);
     const sessionId = (body.session_id ?? "").trim();
 
+    console.log('Received email:', email);
+
     if (!sessionId || !email || !fullName) {
       return new Response(
         JSON.stringify({ error: "name, email, and session_id are required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -26,7 +28,7 @@ Deno.serve(async (req) => {
     if (!UUID_RE.test(sessionId)) {
       return new Response(
         JSON.stringify({ error: "Invalid session_id" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -34,12 +36,15 @@ Deno.serve(async (req) => {
     const firstName = nameParts[0];
     const lastName = nameParts.slice(1).join(" ") || firstName;
 
+    // Permissive email check — accepts all standard public domains (yahoo, gmail, etc.)
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return new Response(
         JSON.stringify({ error: "Invalid email address" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    console.log('Validation passed, calling Zoom/Resend for:', email);
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
