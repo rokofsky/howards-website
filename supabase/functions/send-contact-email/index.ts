@@ -6,7 +6,7 @@ const corsHeaders = {
 };
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const FROM_EMAIL = "info@rokofsky.com";
+const FROM_EMAIL = "Storytelling Workshops <info@rokofsky.com>";
 const TO_EMAIL = "info@rokofsky.com";
 
 function escapeHtml(str: string): string {
@@ -204,7 +204,7 @@ Deno.serve(async (req) => {
       ? `New inquiry: ${data.service} — ${name}`
       : `New inquiry from ${name}`;
     const notifyOk = await sendEmail({
-      from: `Howard Rokofsky <${FROM_EMAIL}>`,
+      from: FROM_EMAIL,
       to: [TO_EMAIL],
       subject: notifySubject,
       html: notificationHtml(data),
@@ -233,10 +233,11 @@ Deno.serve(async (req) => {
         copySubject = `Copy of your message to Howard${data.service ? ` about ${data.service}` : ""}`;
       }
       await sendEmail({
-        from: `Howard Rokofsky <${FROM_EMAIL}>`,
+        from: FROM_EMAIL,
         to: [email],
         subject: copySubject,
         html: copyHtml(data, locale, formKind),
+        reply_to: TO_EMAIL,
       });
     }
 
