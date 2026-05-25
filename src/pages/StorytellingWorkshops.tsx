@@ -30,7 +30,7 @@ const StorytellingWorkshops = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [queryError, setQueryError] = useState<unknown>(null);
-  const [unfilteredSessions, setUnfilteredSessions] = useState<unknown[] | null>(null);
+  
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState("");
@@ -43,15 +43,6 @@ const StorytellingWorkshops = () => {
     fetchSessions();
   }, []);
 
-  useEffect(() => {
-    const fetchUnfilteredSessions = async () => {
-      const { data, error } = await supabase.from("storytelling_sessions").select("*");
-      console.log("Unfiltered storytelling_sessions query result", { data, error });
-      setUnfilteredSessions((data as unknown[]) || []);
-    };
-
-    fetchUnfilteredSessions();
-  }, []);
 
   const fetchSessions = async () => {
     // Public view only exposes safe marketing columns and only published sessions.
@@ -253,7 +244,7 @@ const StorytellingWorkshops = () => {
         <p>Total Raw Rows Received: {sessions?.length || 0}</p>
         <p>Database Table: {tableName}</p>
         <p>Status Filter: {statusFilter}</p>
-        <p>Unfiltered Raw Count: {unfilteredSessions?.length || 0}</p>
+        
         <pre className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap rounded bg-background p-3 text-foreground">
           {JSON.stringify(sessions, null, 2)}
         </pre>
