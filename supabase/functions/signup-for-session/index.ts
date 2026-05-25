@@ -5,6 +5,7 @@ const corsHeaders = {
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 Deno.serve(async (req) => {
+  console.log('Zoom account prefix:', Deno.env.get('ZOOM_ACCOUNT_ID')?.slice(0, 6));
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
