@@ -141,7 +141,7 @@ Deno.serve(async (req) => {
     let registrationDisabled = false;
 
     if (!registrantRes.ok) {
-      let zoomError = "Zoom registration failed.";
+      let zoomError = `Zoom registration failed (HTTP ${registrantRes.status}): ${registrantBody}`;
       let isAlreadyRegistered = false;
       try {
         const parsed = JSON.parse(registrantBody);
@@ -152,7 +152,6 @@ Deno.serve(async (req) => {
         if (parsed.code === 3001) {
           registrationDisabled = true;
         }
-        // Registration not enabled on the meeting — fall back to plain join link
         if (
           parsed.code === 3027 ||
           parsed.code === 404 ||
@@ -165,9 +164,10 @@ Deno.serve(async (req) => {
       }
 
       if (!registrationDisabled && !isAlreadyRegistered) {
+        // Pass the literal Zoom/Resend error back so the frontend can display it
         return new Response(
           JSON.stringify({ error: zoomError }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       zoomJoinUrl = session.zoom_link || null;
