@@ -25,8 +25,12 @@ interface Session {
 
 const StorytellingWorkshops = () => {
   const t = useT();
+  const tableName = "storytelling_sessions_public";
+  const statusFilter = "published";
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
+  const [queryError, setQueryError] = useState<unknown>(null);
+  const [unfilteredSessions, setUnfilteredSessions] = useState<unknown[] | null>(null);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState("");
@@ -39,14 +43,26 @@ const StorytellingWorkshops = () => {
     fetchSessions();
   }, []);
 
+  useEffect(() => {
+    const fetchUnfilteredSessions = async () => {
+      const { data, error } = await supabase.from("storytelling_sessions").select("*");
+      console.log("Unfiltered storytelling_sessions query result", { data, error });
+      setUnfilteredSessions((data as unknown[]) || []);
+    };
+
+    fetchUnfilteredSessions();
+  }, []);
+
   const fetchSessions = async () => {
     // Public view only exposes safe marketing columns and only published sessions.
     const { data, error } = await supabase
-      .from("storytelling_sessions_public" as any)
+      .from(tableName as any)
       .select("id, session_date, title, description")
-      .eq("status", "published")
+      .eq("status", statusFilter)
       .gte("session_date", new Date().toISOString())
       .order("session_date", { ascending: true });
+
+    setQueryError(error || null);
 
     if (!error && data) {
       setSessions(data as unknown as Session[]);
@@ -225,6 +241,18 @@ const StorytellingWorkshops = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      <div className="mx-auto mb-8 mt-8 max-w-5xl rounded-lg border border-border bg-muted p-4 text-left text-xs text-muted-foreground">
+        <p>Database Loading Status: {loading ? "Loading..." : "Finished"}</p>
+        <p>Database Query Error: {JSON.stringify(queryError)}</p>
+        <p>Total Raw Rows Received: {sessions?.length || 0}</p>
+        <p>Database Table: {tableName}</p>
+        <p>Status Filter: {statusFilter}</p>
+        <p>Unfiltered Raw Count: {unfilteredSessions?.length || 0}</p>
+        <pre className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap rounded bg-background p-3 text-foreground">
+          {JSON.stringify(sessions, null, 2)}
+        </pre>
+      </div>
     </Layout>
   );
 };
