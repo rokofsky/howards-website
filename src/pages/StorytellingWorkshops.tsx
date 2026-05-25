@@ -244,7 +244,7 @@ const StorytellingWorkshops = () => {
         <p>Total Raw Rows Received: {sessions?.length || 0}</p>
         <p>Database Table: {tableName}</p>
         <p>Status Filter: {statusFilter}</p>
-        <p>Unfiltered Raw Count: {unfilteredSessions?.length || 0}</p>
+        
         <pre className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap rounded bg-background p-3 text-foreground">
           {JSON.stringify(sessions, null, 2)}
         </pre>
