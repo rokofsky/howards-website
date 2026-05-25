@@ -211,7 +211,7 @@ export default function AdminSessions() {
             <div>
               <Label htmlFor="zoom">Zoom Join Link</Label>
               <Input id="zoom" value={zoomLink} onChange={(e) => setZoomLink(e.target.value)} placeholder="https://zoom.us/j/..." />
-              <p className="text-xs text-muted-foreground mt-1">The link attendees use to join (not the registration URL)</p>
+              <p className="text-xs text-muted-foreground mt-1">Paste the Zoom Registration link here</p>
             </div>
             <div>
               <Label htmlFor="mid">Zoom Meeting ID (numeric)</Label>
