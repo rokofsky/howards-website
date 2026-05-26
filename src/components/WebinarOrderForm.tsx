@@ -70,6 +70,11 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       toast.error(t("Please select a date or choose Undecided.", "Vyberte prosím datum nebo zvolte Nerozhodnuto."));
       return;
     }
+
+    // Lenient email fix for common mobile typos
+    const fixedEmail = fixCommonEmailTypos(email.trim());
+    if (fixedEmail !== email) setEmail(fixedEmail);
+
     setLoading(true);
 
     const chosen_dates = undecided
@@ -87,12 +92,14 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     const { error } = await supabase.from("webinar_orders").insert([
       {
         customer_name: name,
-        customer_email: email,
+        customer_email: fixedEmail,
         session_ids: session_ids.length > 0 ? session_ids : null,
         chosen_dates,
         // legacy fields kept for compatibility
         session_id: session_ids[0] ?? null,
-        chosen_date: chosen_dates.join(", "),
+        chosen_date: [chosen_dates.join(", "), preferredTime ? `Time: ${preferredTime}` : ""]
+          .filter(Boolean)
+          .join(" | "),
       },
     ]);
 
