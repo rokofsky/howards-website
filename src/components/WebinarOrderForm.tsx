@@ -82,7 +82,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
         chosen_dates,
         // legacy fields kept for compatibility
         session_id: session_ids[0] ?? null,
-        chosen_date: chosen_dates.join(", "),
+        chosen_date: chosen_dates.join(", ") + (preferredTime ? ` | Preferred time: ${preferredTime}` : ""),
       },
     ]);
 
@@ -94,6 +94,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     onOpenChange(false);
     setName("");
     setEmail("");
+    setPreferredTime("");
     setSelectedDates([]);
     setUndecided(false);
     toast.success(t("Howard will send you an email within 24 hours.", "Howard vám pošle e-mail do 24 hodin."));
