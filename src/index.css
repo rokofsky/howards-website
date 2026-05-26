@@ -158,3 +158,23 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Calendly popup: lock dimensions so month navigation doesn't reset scroll.
+   Without this, the iframe re-renders at a different height when switching
+   months and the popup container snaps back to the top. */
+.calendly-overlay .calendly-popup {
+  height: 90vh !important;
+  max-height: 90vh !important;
+  min-height: 680px;
+}
+
+.calendly-overlay .calendly-popup .calendly-popup-content {
+  height: 100% !important;
+  min-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.calendly-overlay .calendly-popup .calendly-popup-content iframe {
+  height: 100% !important;
+  min-height: 100% !important;
+}
