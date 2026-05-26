@@ -25,6 +25,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   const t = useT();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [preferredTime, setPreferredTime] = useState("");
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(
     initialWebinarSlug ? [initialWebinarSlug] : []
   );
