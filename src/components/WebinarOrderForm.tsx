@@ -234,6 +234,21 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             )}
           </div>
 
+          <div>
+            <Label htmlFor="preferred-time" className="mb-2 block">
+              {t("Preferred time", "Preferovaný čas")}
+            </Label>
+            <Input
+              id="preferred-time"
+              type="text"
+              placeholder={t("e.g. mornings, 14:00, after 18:00", "např. dopoledne, 14:00, po 18:00")}
+              value={preferredTime}
+              onChange={(e) => setPreferredTime(e.target.value)}
+              className="border-gold/50"
+            />
+          </div>
+
+
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("Cancel", "Zrušit")}
