@@ -22,6 +22,7 @@ const WebinarDetail = () => {
   const { slug } = useParams();
   const [webinar, setWebinar] = useState<DbWebinar | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showOrderForm, setShowOrderForm] = useState(false);
 
   useEffect(() => {
     supabase.from("webinars").select("*").eq("slug", slug).maybeSingle().then(({ data }) => {
