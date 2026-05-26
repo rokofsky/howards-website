@@ -31,6 +31,16 @@ const WebinarDetail = () => {
     });
   }, [slug]);
 
+  const handleInquireClick = () => {
+    toast("Interested in this webinar?", {
+      description: "You can place a non-binding order right away.",
+      action: {
+        label: "Order Now",
+        onClick: () => setShowOrderForm(true),
+      },
+    });
+  };
+
   if (loading) {
     return <Layout><div className="section-padding pt-24 text-center text-muted-foreground">Loading...</div></Layout>;
   }
