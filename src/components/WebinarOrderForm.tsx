@@ -130,7 +130,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} noValidate className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="order-name">{t("Name", "Jméno")} *</Label>
@@ -139,6 +139,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className={fieldBorder}
               />
             </div>
             <div>
@@ -147,8 +148,10 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                 id="order-email"
                 type="email"
                 required
+                placeholder="your@bestemail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className={fieldBorder}
               />
             </div>
           </div>
