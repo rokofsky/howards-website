@@ -7,6 +7,8 @@ import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { WebinarOrderForm } from "@/components/WebinarOrderForm";
 
 interface DbWebinar {
   id: string;
