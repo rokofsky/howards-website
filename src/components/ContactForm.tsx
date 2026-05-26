@@ -29,6 +29,7 @@ const projectTypeOptions: SelectOption[] = [
 const preferredDatesOptions: SelectOption[] = [
   { value: "asap", label: "ASAP" },
   { value: "next-week", label: "Next week" },
+  { value: "next-month", label: "Next month" },
   { value: "near-future", label: "Near future" },
 ];
 
@@ -39,20 +40,7 @@ const timelineOptions: SelectOption[] = [
   { value: "future", label: "In the future" },
 ];
 
-const inputClasses = "w-full h-12 md:h-11 px-4 rounded-md bg-background border border-gold/50 text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow";
-
-// Fix common typos before the TLD: "user@domainlxyz" or "user@domain,xyz" -> "user@domain.xyz"
-const sanitizeEmail = (raw: string): string => {
-  const trimmed = raw.trim();
-  const at = trimmed.lastIndexOf("@");
-  if (at < 0) return trimmed;
-  const local = trimmed.slice(0, at);
-  let domain = trimmed.slice(at + 1);
-  if (!domain.includes(".")) {
-    domain = domain.replace(/([,l])([a-z]{2,24})$/i, ".$2");
-  }
-  return `${local}@${domain}`;
-};
+const inputClasses = "w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow";
 
 const FormSelectField = ({
   id,
@@ -133,12 +121,6 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Auto-fix common typos before TLD (e.g. "user@domainlxyz" -> "user@domain.xyz")
-    const cleanedEmail = sanitizeEmail(form.email);
-    if (cleanedEmail !== form.email) {
-      setForm((prev) => ({ ...prev, email: cleanedEmail }));
-    }
-
     // Bot defense 1: honeypot — if filled, silently "succeed" without sending
     if (website.trim() !== "") {
       setSubmitted(true);
@@ -158,7 +140,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
     try {
       const emailPayload = {
         name: form.name,
-        email: cleanedEmail,
+        email: form.email,
         message: form.message,
         service: serviceName || "",
         companyName: form.companyName,
@@ -278,7 +260,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             name="name"
             type="text"
             required
-            placeholder={t("The name people call you", "Jméno, kterým vás lidé oslovují")}
+            placeholder={t("The name people actually call you", "Jméno, kterým vás lidé skutečně oslovují")}
             value={form.name}
             onChange={handleChange}
             className={inputClasses}
@@ -293,13 +275,9 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             name="email"
             type="email"
             required
-            placeholder="your@bestemail.com"
+            placeholder="your@bestemailever.com"
             value={form.email}
             onChange={handleChange}
-            onBlur={(e) => {
-              const fixed = sanitizeEmail(e.target.value);
-              if (fixed !== e.target.value) setForm((prev) => ({ ...prev, email: fixed }));
-            }}
             className={inputClasses}
           />
         </div>
@@ -315,7 +293,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
               id="companyName"
               name="companyName"
               type="text"
-              placeholder="Apple"
+              placeholder="Acme Inc."
               value={form.companyName}
               onChange={handleChange}
               className={inputClasses}
@@ -341,7 +319,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             name="preferredDates"
             onChange={handleChange}
             options={preferredDatesOptions}
-            placeholder={t("When you need this", "Kdy potřebujete")}
+            placeholder={t("When do you need this", "Kdy to potřebujete")}
             value={form.preferredDates}
           />
         </div>
@@ -382,7 +360,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
           placeholder={t("Tell me where it hurts.", "Řekněte mi, kde vás tlačí bota.")}
           value={form.message}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded-md bg-background border border-gold/50 text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow resize-none min-h-[100px]"
+          className="w-full px-4 py-3 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow resize-none min-h-[100px]"
         />
       </div>
 

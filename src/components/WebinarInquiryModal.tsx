@@ -29,7 +29,7 @@ export const WebinarInquiryModal = ({ open, onOpenChange, webinarTitle, onOrderN
         <div className="mb-4 flex justify-center">
           <Button
             type="button"
-            variant="glass"
+            variant="glassPetrol"
             size="lg"
             onClick={onOrderNow}
             className="w-full sm:w-auto"
