@@ -7,6 +7,8 @@ import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { WebinarOrderForm } from "@/components/WebinarOrderForm";
 
 interface DbWebinar {
   id: string;
@@ -20,6 +22,7 @@ const WebinarDetail = () => {
   const { slug } = useParams();
   const [webinar, setWebinar] = useState<DbWebinar | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showOrderForm, setShowOrderForm] = useState(false);
 
   useEffect(() => {
     supabase.from("webinars").select("*").eq("slug", slug).maybeSingle().then(({ data }) => {
@@ -27,6 +30,16 @@ const WebinarDetail = () => {
       setLoading(false);
     });
   }, [slug]);
+
+  const handleInquireClick = () => {
+    toast("Interested in this webinar?", {
+      description: "You can place a non-binding order right away.",
+      action: {
+        label: "Order Now",
+        onClick: () => setShowOrderForm(true),
+      },
+    });
+  };
 
   if (loading) {
     return <Layout><div className="section-padding pt-24 text-center text-muted-foreground">Loading...</div></Layout>;
@@ -70,13 +83,24 @@ const WebinarDetail = () => {
             </p>
             <ContactForm serviceName={webinar.title} showServiceFields formKind="webinar" />
             <div className="text-center mt-8">
-              <Button variant="glassPetrol" size="lg" onClick={openCalendly}>
+              <Button variant="glassPetrol" size="lg" onClick={handleInquireClick}>
                 Skip the email, book a call now
               </Button>
             </div>
           </div>
         </div>
       </section>
+      {showOrderForm && webinar && (
+        <WebinarOrderForm
+          sessionId={webinar.id}
+          availableDates={[]}
+          onClose={() => setShowOrderForm(false)}
+          onSuccess={() => {
+            setShowOrderForm(false);
+            toast.success("Order submitted successfully!");
+          }}
+        />
+      )}
     </Layout>
   );
 };

@@ -188,6 +188,33 @@ export type Database = {
         }
         Relationships: []
       }
+      webinar_orders: {
+        Row: {
+          chosen_date: string
+          created_at: string | null
+          customer_email: string
+          customer_name: string
+          id: string
+          session_id: string | null
+        }
+        Insert: {
+          chosen_date: string
+          created_at?: string | null
+          customer_email: string
+          customer_name: string
+          id?: string
+          session_id?: string | null
+        }
+        Update: {
+          chosen_date?: string
+          created_at?: string | null
+          customer_email?: string
+          customer_name?: string
+          id?: string
+          session_id?: string | null
+        }
+        Relationships: []
+      }
       webinars: {
         Row: {
           created_at: string
