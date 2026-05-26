@@ -375,7 +375,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
           placeholder={t("Tell me where it hurts.", "Řekněte mi, kde vás tlačí bota.")}
           value={form.message}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow resize-none min-h-[100px]"
+          className="w-full px-4 py-3 rounded-md bg-background border border-gold/40 text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow resize-none min-h-[100px]"
         />
       </div>
 
