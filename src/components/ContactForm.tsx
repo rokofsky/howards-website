@@ -241,6 +241,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
   return (
     <motion.form
       onSubmit={handleSubmit}
+      noValidate
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
