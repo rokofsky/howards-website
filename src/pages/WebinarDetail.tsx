@@ -1,14 +1,13 @@
 import { useParams, Link } from "react-router-dom";
 import { useLocalizedPath } from "@/hooks/useLanguageRouting";
-import { openCalendly } from "@/lib/calendly";
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
-import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
 import { WebinarOrderForm } from "@/components/WebinarOrderForm";
+import { WebinarInquiryModal } from "@/components/WebinarInquiryModal";
+import { useT } from "@/hooks/useT";
 
 interface DbWebinar {
   id: string;
@@ -19,9 +18,11 @@ interface DbWebinar {
 
 const WebinarDetail = () => {
   const lp = useLocalizedPath();
+  const t = useT();
   const { slug } = useParams();
   const [webinar, setWebinar] = useState<DbWebinar | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showInquiry, setShowInquiry] = useState(false);
   const [showOrderForm, setShowOrderForm] = useState(false);
 
   useEffect(() => {
@@ -31,16 +32,6 @@ const WebinarDetail = () => {
     });
   }, [slug]);
 
-  const handleInquireClick = () => {
-    toast("Interested in this webinar?", {
-      description: "You can place a non-binding order right away.",
-      action: {
-        label: "Order Now",
-        onClick: () => setShowOrderForm(true),
-      },
-    });
-  };
-
   if (loading) {
     return <Layout><div className="section-padding pt-24 text-center text-muted-foreground">Loading...</div></Layout>;
   }
@@ -49,9 +40,9 @@ const WebinarDetail = () => {
     return (
       <Layout>
         <div className="section-padding pt-24 text-center">
-          <h1 className="text-3xl font-bold">Webinar not found</h1>
+          <h1 className="text-3xl font-bold">{t("Webinar not found", "Webinář nenalezen")}</h1>
           <Link to={lp("/services/online-webinars")} className="text-gold hover:text-gold/80 underline mt-4 inline-block">
-            ← Back to Online Webinars
+            ← {t("Back to Online Webinars", "Zpět na online webináře")}
           </Link>
         </div>
       </Layout>
@@ -64,43 +55,41 @@ const WebinarDetail = () => {
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <Link to={lp("/services/online-webinars")} className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 inline-block">
-              ← Back to Online Webinars
+              ← {t("Back to Online Webinars", "Zpět na online webináře")}
             </Link>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">{webinar.title}</h1>
 
             <div className="rounded-lg p-8 mb-12 glass">
-              <h2 className="text-xl md:text-2xl font-semibold mb-4">About This Webinar</h2>
+              <h2 className="text-xl md:text-2xl font-semibold mb-4">{t("About This Webinar", "O tomto webináři")}</h2>
               <p className="text-foreground/80 leading-relaxed font-normal">
-                {webinar.description || "Details coming soon."}
+                {webinar.description || t("Details coming soon.", "Podrobnosti brzy.")}
               </p>
             </div>
           </motion.div>
 
-          <div>
-            <h2 className="text-2xl font-bold text-center mb-2">Inquire about {webinar.title}</h2>
-            <p className="text-muted-foreground text-center mb-8 font-normal">
-              Fill in some stuff below (mostly optional) and I'll get back to you next day.
-            </p>
-            <ContactForm serviceName={webinar.title} showServiceFields formKind="webinar" />
-            <div className="text-center mt-8">
-              <Button variant="glassPetrol" size="lg" onClick={handleInquireClick}>
-                Skip the email, book a call now
-              </Button>
-            </div>
+          <div className="text-center">
+            <Button variant="glassPetrol" size="lg" onClick={() => setShowInquiry(true)}>
+              {t("Inquire", "Poptat")}
+            </Button>
           </div>
         </div>
       </section>
-      {showOrderForm && webinar && (
-        <WebinarOrderForm
-          sessionId={webinar.id}
-          availableDates={[]}
-          onClose={() => setShowOrderForm(false)}
-          onSuccess={() => {
-            setShowOrderForm(false);
-            toast.success("Order submitted successfully!");
-          }}
-        />
-      )}
+
+      <WebinarInquiryModal
+        open={showInquiry}
+        onOpenChange={setShowInquiry}
+        webinarTitle={webinar.title}
+        onOrderNow={() => {
+          setShowInquiry(false);
+          setShowOrderForm(true);
+        }}
+      />
+
+      <WebinarOrderForm
+        open={showOrderForm}
+        onOpenChange={setShowOrderForm}
+        initialWebinarSlug={webinar.slug}
+      />
     </Layout>
   );
 };
