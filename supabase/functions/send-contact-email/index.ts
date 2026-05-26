@@ -1,12 +1,12 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const FROM_EMAIL = "Storytelling Workshops <info@rokofsky.com>";
+const FROM_EMAIL = "Howard Rokofsky <info@rokofsky.com>";
 const TO_EMAIL = "info@rokofsky.com";
 
 function escapeHtml(str: string): string {
@@ -50,9 +50,9 @@ function copyHtml(data: Record<string, string>, locale: string, formKind: string
   const service = esc("service");
 
   const headerText = isCz
-    ? (formKind === "webinar" && service
-        ? `Vaše zpráva pro Howarda Rokofského o ${service}`
-        : "Vaše zpráva pro Howarda Rokofského")
+    ? formKind === "webinar" && service
+      ? `Vaše zpráva pro Howarda Rokofského o ${service}`
+      : "Vaše zpráva pro Howarda Rokofského"
     : "Your message to Howard Rokofsky";
 
   const intro = isCz
@@ -60,8 +60,12 @@ function copyHtml(data: Record<string, string>, locale: string, formKind: string
     : `Hi ${name}, thanks for reaching out. Here's a copy of what you sent:`;
 
   const reLine = isCz
-    ? (service ? `<strong>Předmět: ${service}</strong>` : "")
-    : (service ? `<strong>Re: ${service}</strong>` : "");
+    ? service
+      ? `<strong>Předmět: ${service}</strong>`
+      : ""
+    : service
+      ? `<strong>Re: ${service}</strong>`
+      : "";
 
   const footer = isCz
     ? "Howard se vám brzy ozve. Na tento e-mail nemusíte odpovídat."
@@ -140,9 +144,7 @@ Deno.serve(async (req) => {
     const locale = body.locale === "cs" ? "cs" : "en";
     const formKindRaw = String(body.formKind || "");
     const formKind: "general" | "service" | "webinar" =
-      formKindRaw === "webinar" || formKindRaw === "service" || formKindRaw === "general"
-        ? formKindRaw
-        : "general";
+      formKindRaw === "webinar" || formKindRaw === "service" || formKindRaw === "general" ? formKindRaw : "general";
 
     if (!name || !email || !message) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
@@ -160,10 +162,7 @@ Deno.serve(async (req) => {
     }
 
     // Save to database (service role bypasses RLS)
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     const { error: dbError } = await supabase.from("contact_submissions").insert({
       name,
       email,
@@ -200,9 +199,7 @@ Deno.serve(async (req) => {
     }
 
     // Always send notification to the hardcoded inbox
-    const notifySubject = data.service
-      ? `New inquiry: ${data.service} — ${name}`
-      : `New inquiry from ${name}`;
+    const notifySubject = data.service ? `New inquiry: ${data.service} — ${name}` : `New inquiry from ${name}`;
     const notifyOk = await sendEmail({
       from: FROM_EMAIL,
       to: [TO_EMAIL],
