@@ -191,18 +191,22 @@ const ServiceDetail = () => {
                       </div>
                     ))}
                   </div>
-                  <Dialog open={!!expandedWebinar} onOpenChange={(open) => { if (!open) setExpandedWebinar(null); }}>
-                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>{webinars.find((w) => w.id === expandedWebinar)?.title ?? t("Inquire", "Poptat")}</DialogTitle>
-                      </DialogHeader>
-                      <ContactForm
-                        serviceName={webinars.find((w) => w.id === expandedWebinar)?.title ?? ""}
-                        showServiceFields
-                        formKind="webinar"
-                      />
-                    </DialogContent>
-                  </Dialog>
+                  <WebinarInquiryModal
+                    open={!!expandedWebinar}
+                    onOpenChange={(open) => { if (!open) setExpandedWebinar(null); }}
+                    webinarTitle={webinars.find((w) => w.id === expandedWebinar)?.title ?? ""}
+                    onOrderNow={() => {
+                      const w = webinars.find((x) => x.id === expandedWebinar);
+                      setOrderInitialSlug(w?.slug);
+                      setExpandedWebinar(null);
+                      setShowOrderForm(true);
+                    }}
+                  />
+                  <WebinarOrderForm
+                    open={showOrderForm}
+                    onOpenChange={setShowOrderForm}
+                    initialWebinarSlug={orderInitialSlug}
+                  />
                   <div className="mt-6">
                     {showPasswordPrompt ? (
                       <div className="flex gap-2 items-center max-w-sm">
