@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { serviceDetails, pickL } from "@/data/serviceDetails";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { WebinarInquiryModal } from "@/components/WebinarInquiryModal";
+import { WebinarOrderForm } from "@/components/WebinarOrderForm";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useT } from "@/hooks/useT";
