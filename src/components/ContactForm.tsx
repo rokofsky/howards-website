@@ -308,7 +308,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
               id="companyName"
               name="companyName"
               type="text"
-              placeholder="Acme Inc."
+              placeholder="Apple"
               value={form.companyName}
               onChange={handleChange}
               className={inputClasses}
