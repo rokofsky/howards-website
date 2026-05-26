@@ -20,8 +20,8 @@ export const WebinarInquiryModal = ({ open, onOpenChange, webinarTitle, onOrderN
           <DialogTitle>{t("Inquire about", "Poptat")} {webinarTitle}</DialogTitle>
           <DialogDescription>
             {t(
-              "Send a message, or place a non-binding order right away.",
-              "Pošlete zprávu, nebo rovnou odešlete nezávaznou objednávku."
+              "Send a message, or place a non-binding order. We'll email you back to discuss details.",
+              "Pošlete zprávu, nebo odešlete nezávaznou objednávku. Ozveme se vám k doladění detailů."
             )}
           </DialogDescription>
         </DialogHeader>
