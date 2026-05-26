@@ -37,6 +37,7 @@ const StorytellingWorkshops = () => {
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<{ title: string; date: string } | null>(null);
+  const [errorBanner, setErrorBanner] = useState<string | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
