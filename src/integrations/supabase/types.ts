@@ -190,28 +190,34 @@ export type Database = {
       }
       webinar_orders: {
         Row: {
-          chosen_date: string
+          chosen_date: string | null
+          chosen_dates: string[] | null
           created_at: string | null
           customer_email: string
           customer_name: string
           id: string
           session_id: string | null
+          session_ids: string[] | null
         }
         Insert: {
-          chosen_date: string
+          chosen_date?: string | null
+          chosen_dates?: string[] | null
           created_at?: string | null
           customer_email: string
           customer_name: string
           id?: string
           session_id?: string | null
+          session_ids?: string[] | null
         }
         Update: {
-          chosen_date?: string
+          chosen_date?: string | null
+          chosen_dates?: string[] | null
           created_at?: string | null
           customer_email?: string
           customer_name?: string
           id?: string
           session_id?: string | null
+          session_ids?: string[] | null
         }
         Relationships: []
       }
