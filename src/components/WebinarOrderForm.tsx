@@ -21,6 +21,16 @@ interface OrderFormProps {
   initialWebinarSlug?: string;
 }
 
+const fieldBorder = "border-gold/40";
+
+// Fix common mobile typos: comma or lowercase 'l' immediately before the TLD.
+const fixCommonEmailTypos = (email: string): string => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (re.test(email)) return email;
+  const fixed = email.replace(/[,l](?=[a-zA-Z]{2,24}$)/, ".");
+  return re.test(fixed) ? fixed : email;
+};
+
 export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: OrderFormProps) => {
   const t = useT();
   const [name, setName] = useState("");
@@ -29,6 +39,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     initialWebinarSlug ? [initialWebinarSlug] : []
   );
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+  const [preferredTime, setPreferredTime] = useState("");
   const [undecided, setUndecided] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -59,6 +70,11 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       toast.error(t("Please select a date or choose Undecided.", "Vyberte prosím datum nebo zvolte Nerozhodnuto."));
       return;
     }
+
+    // Lenient email fix for common mobile typos
+    const fixedEmail = fixCommonEmailTypos(email.trim());
+    if (fixedEmail !== email) setEmail(fixedEmail);
+
     setLoading(true);
 
     const chosen_dates = undecided
@@ -76,12 +92,14 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     const { error } = await supabase.from("webinar_orders").insert([
       {
         customer_name: name,
-        customer_email: email,
+        customer_email: fixedEmail,
         session_ids: session_ids.length > 0 ? session_ids : null,
         chosen_dates,
         // legacy fields kept for compatibility
         session_id: session_ids[0] ?? null,
-        chosen_date: chosen_dates.join(", "),
+        chosen_date: [chosen_dates.join(", "), preferredTime ? `Time: ${preferredTime}` : ""]
+          .filter(Boolean)
+          .join(" | "),
       },
     ]);
 
@@ -94,6 +112,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     setName("");
     setEmail("");
     setSelectedDates([]);
+    setPreferredTime("");
     setUndecided(false);
     toast.success(t("Howard will send you an email within 24 hours.", "Howard vám pošle e-mail do 24 hodin."));
   };
@@ -111,7 +130,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} noValidate className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="order-name">{t("Name", "Jméno")} *</Label>
@@ -120,6 +139,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className={fieldBorder}
               />
             </div>
             <div>
@@ -128,8 +148,10 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                 id="order-email"
                 type="email"
                 required
+                placeholder="your@bestemail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className={fieldBorder}
               />
             </div>
           </div>
@@ -138,7 +160,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             <Label className="mb-2 block">
               {t("Select webinars", "Vyberte webináře")} *
             </Label>
-            <div className="max-h-48 overflow-y-auto rounded-md border border-input p-3 space-y-2">
+            <div className="max-h-48 overflow-y-auto rounded-md border border-gold/40 p-3 space-y-2">
               {[...allWebinars]
                 .sort((a, b) => a.title.localeCompare(b.title))
                 .map((w) => (
@@ -178,7 +200,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                   type="button"
                   variant="outline"
                   disabled={undecided}
-                  className={cn("w-full justify-start text-left font-normal", undecided && "opacity-50")}
+                  className={cn("w-full justify-start text-left font-normal border-gold/40", undecided && "opacity-50")}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {selectedDates.length > 0
@@ -215,6 +237,20 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                 ))}
               </div>
             )}
+          </div>
+
+          <div>
+            <Label htmlFor="preferred-time" className="mb-2 block">
+              {t("Preferred time", "Preferovaný čas")}
+            </Label>
+            <Input
+              id="preferred-time"
+              type="text"
+              placeholder={t("e.g. 10:00 AM, mornings, after 5pm", "např. 10:00, dopoledne, po 17:00")}
+              value={preferredTime}
+              onChange={(e) => setPreferredTime(e.target.value)}
+              className={fieldBorder}
+            />
           </div>
 
           <div className="flex justify-end gap-2 pt-2">

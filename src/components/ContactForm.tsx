@@ -29,7 +29,6 @@ const projectTypeOptions: SelectOption[] = [
 const preferredDatesOptions: SelectOption[] = [
   { value: "asap", label: "ASAP" },
   { value: "next-week", label: "Next week" },
-  { value: "next-month", label: "Next month" },
   { value: "near-future", label: "Near future" },
 ];
 
@@ -40,7 +39,16 @@ const timelineOptions: SelectOption[] = [
   { value: "future", label: "In the future" },
 ];
 
-const inputClasses = "w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow";
+const inputClasses = "w-full h-12 md:h-11 px-4 rounded-md bg-background border border-gold/40 text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow";
+
+// Fix common mobile typos: comma or lowercase 'l' immediately before the TLD.
+// Returns a fixed email only if the original fails standard validation and the fix passes.
+export const fixCommonEmailTypos = (email: string): string => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (re.test(email)) return email;
+  const fixed = email.replace(/[,l](?=[a-zA-Z]{2,24}$)/, ".");
+  return re.test(fixed) ? fixed : email;
+};
 
 const FormSelectField = ({
   id,
@@ -126,6 +134,12 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
       setSubmitted(true);
       return;
     }
+    // Lenient email fix for common mobile typos
+    const fixedEmail = fixCommonEmailTypos(form.email.trim());
+    if (fixedEmail !== form.email) {
+      setForm((prev) => ({ ...prev, email: fixedEmail }));
+    }
+
     // Bot defense 2: time trap — must be open >3s
     const elapsed = Date.now() - formOpenedAt.current;
     if (elapsed < 3000) {
@@ -140,7 +154,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
     try {
       const emailPayload = {
         name: form.name,
-        email: form.email,
+        email: fixedEmail,
         message: form.message,
         service: serviceName || "",
         companyName: form.companyName,
@@ -227,6 +241,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
   return (
     <motion.form
       onSubmit={handleSubmit}
+      noValidate
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -260,7 +275,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             name="name"
             type="text"
             required
-            placeholder={t("The name people actually call you", "Jméno, kterým vás lidé skutečně oslovují")}
+            placeholder={t("The name people call you", "Jméno, kterým vás lidé oslovují")}
             value={form.name}
             onChange={handleChange}
             className={inputClasses}
@@ -275,7 +290,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             name="email"
             type="email"
             required
-            placeholder="your@bestemailever.com"
+            placeholder="your@bestemail.com"
             value={form.email}
             onChange={handleChange}
             className={inputClasses}
@@ -293,7 +308,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
               id="companyName"
               name="companyName"
               type="text"
-              placeholder="Acme Inc."
+              placeholder="Apple"
               value={form.companyName}
               onChange={handleChange}
               className={inputClasses}
@@ -319,7 +334,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             name="preferredDates"
             onChange={handleChange}
             options={preferredDatesOptions}
-            placeholder={t("When do you need this", "Kdy to potřebujete")}
+            placeholder={t("When you need this", "Kdy to potřebujete")}
             value={form.preferredDates}
           />
         </div>
@@ -360,7 +375,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
           placeholder={t("Tell me where it hurts.", "Řekněte mi, kde vás tlačí bota.")}
           value={form.message}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow resize-none min-h-[100px]"
+          className="w-full px-4 py-3 rounded-md bg-background border border-gold/40 text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow resize-none min-h-[100px]"
         />
       </div>
 
