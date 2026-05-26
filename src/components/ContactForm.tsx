@@ -29,7 +29,6 @@ const projectTypeOptions: SelectOption[] = [
 const preferredDatesOptions: SelectOption[] = [
   { value: "asap", label: "ASAP" },
   { value: "next-week", label: "Next week" },
-  { value: "next-month", label: "Next month" },
   { value: "near-future", label: "Near future" },
 ];
 
@@ -40,7 +39,20 @@ const timelineOptions: SelectOption[] = [
   { value: "future", label: "In the future" },
 ];
 
-const inputClasses = "w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow";
+const inputClasses = "w-full h-12 md:h-11 px-4 rounded-md bg-background border border-gold/50 text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow";
+
+// Fix common typos before the TLD: "user@domainlxyz" or "user@domain,xyz" -> "user@domain.xyz"
+const sanitizeEmail = (raw: string): string => {
+  const trimmed = raw.trim();
+  const at = trimmed.lastIndexOf("@");
+  if (at < 0) return trimmed;
+  const local = trimmed.slice(0, at);
+  let domain = trimmed.slice(at + 1);
+  if (!domain.includes(".")) {
+    domain = domain.replace(/([,l])([a-z]{2,24})$/i, ".$2");
+  }
+  return `${local}@${domain}`;
+};
 
 const FormSelectField = ({
   id,
