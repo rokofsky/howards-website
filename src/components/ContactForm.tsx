@@ -134,6 +134,12 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
       setSubmitted(true);
       return;
     }
+    // Lenient email fix for common mobile typos
+    const fixedEmail = fixCommonEmailTypos(form.email.trim());
+    if (fixedEmail !== form.email) {
+      setForm((prev) => ({ ...prev, email: fixedEmail }));
+    }
+
     // Bot defense 2: time trap — must be open >3s
     const elapsed = Date.now() - formOpenedAt.current;
     if (elapsed < 3000) {
