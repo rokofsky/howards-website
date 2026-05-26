@@ -83,7 +83,7 @@ const WebinarDetail = () => {
             </p>
             <ContactForm serviceName={webinar.title} showServiceFields formKind="webinar" />
             <div className="text-center mt-8">
-              <Button variant="glassPetrol" size="lg" onClick={openCalendly}>
+              <Button variant="glassPetrol" size="lg" onClick={handleInquireClick}>
                 Skip the email, book a call now
               </Button>
             </div>
