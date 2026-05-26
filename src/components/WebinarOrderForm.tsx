@@ -120,8 +120,10 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
               <Input
                 id="order-name"
                 required
+                placeholder={t("The name people call you", "Jméno, kterým vás lidé oslovují")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className="border-gold/50"
               />
             </div>
             <div>
@@ -130,8 +132,21 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                 id="order-email"
                 type="email"
                 required
+                placeholder="your@bestemail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onBlur={(e) => {
+                  const v = e.target.value.trim();
+                  const at = v.lastIndexOf("@");
+                  if (at < 0) return;
+                  const local = v.slice(0, at);
+                  let domain = v.slice(at + 1);
+                  if (!domain.includes(".")) {
+                    domain = domain.replace(/([,l])([a-z]{2,24})$/i, ".$2");
+                    setEmail(`${local}@${domain}`);
+                  }
+                }}
+                className="border-gold/50"
               />
             </div>
           </div>
