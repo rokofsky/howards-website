@@ -334,7 +334,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             name="preferredDates"
             onChange={handleChange}
             options={preferredDatesOptions}
-            placeholder={t("When do you need this", "Kdy to potřebujete")}
+            placeholder={t("When you need this", "Kdy to potřebujete")}
             value={form.preferredDates}
           />
         </div>
