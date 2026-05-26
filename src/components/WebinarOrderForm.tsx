@@ -200,7 +200,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                   type="button"
                   variant="outline"
                   disabled={undecided}
-                  className={cn("w-full justify-start text-left font-normal", undecided && "opacity-50")}
+                  className={cn("w-full justify-start text-left font-normal border-gold/40", undecided && "opacity-50")}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {selectedDates.length > 0
