@@ -76,6 +76,7 @@ const StorytellingWorkshops = () => {
     setName("");
     setEmail("");
     setSuccess(null);
+    setErrorBanner(null);
     setModalOpen(true);
     trackCTA("storytelling_reserve_open", { session_id: session.id, session_date: session.session_date });
   };
@@ -86,6 +87,7 @@ const StorytellingWorkshops = () => {
     trackCTA("storytelling_register_submit", { session_id: selectedSession.id });
 
     setSubmitting(true);
+    setErrorBanner(null);
     try {
       const { data, error } = await supabase.functions.invoke("signup-for-session", {
         body: {
@@ -96,7 +98,16 @@ const StorytellingWorkshops = () => {
       });
 
       if (error) throw error;
-      if (data?.error) throw new Error(data.error);
+      if (data?.success === false || data?.error || data?.registration_disabled) {
+        const msg =
+          data?.error ||
+          (data?.registration_disabled
+            ? "Zoom registration is not enabled for this session. Please contact the organizer."
+            : "Registration failed. Please try again.");
+        setErrorBanner(msg);
+        setSubmitting(false);
+        return;
+      }
 
       setSuccess({
         title: data.session_title,
@@ -104,6 +115,7 @@ const StorytellingWorkshops = () => {
       });
     } catch (err: any) {
       const message = err?.message || "Registration failed. Please try again.";
+      setErrorBanner(message);
       toast.error(message);
     }
     setSubmitting(false);
