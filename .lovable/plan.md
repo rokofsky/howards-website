@@ -1,5 +1,20 @@
-Remove the "Showing X of Y evaluations" / "Zobrazeno X z Y hodnocení" counter line from `src/components/EvaluationsGallery.tsx` (lines 426–433).
+## Plan: Set `security_invoker = true` on flagged views
 
-Keep the empty-state message ("No evaluations match your search." / "Žádné formuláře neodpovídají vyhledávání.") so users still get feedback when a search returns nothing — render it as the same `<p>` only when `filtered.length === 0`.
+### Scope
+Only the view `public.storytelling_sessions_public` exists in this project. The security scanner is still flagging it as SECURITY DEFINER, so re-apply the `security_invoker` setting explicitly.
 
-No other changes.
+### Change
+Run a migration that does:
+
+```sql
+ALTER VIEW public.storytelling_sessions_public SET (security_invoker = true);
+```
+
+### Not touched
+- No RLS policies modified
+- No table structures changed
+- No column changes to the view
+- No grants changed
+
+### Verification
+After the migration, re-run the security scan to confirm the SECURITY DEFINER warning clears.
