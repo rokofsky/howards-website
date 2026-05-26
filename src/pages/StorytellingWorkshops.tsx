@@ -37,6 +37,7 @@ const StorytellingWorkshops = () => {
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<{ title: string; date: string } | null>(null);
+  const [errorBanner, setErrorBanner] = useState<string | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -75,6 +76,7 @@ const StorytellingWorkshops = () => {
     setName("");
     setEmail("");
     setSuccess(null);
+    setErrorBanner(null);
     setModalOpen(true);
     trackCTA("storytelling_reserve_open", { session_id: session.id, session_date: session.session_date });
   };
@@ -85,6 +87,7 @@ const StorytellingWorkshops = () => {
     trackCTA("storytelling_register_submit", { session_id: selectedSession.id });
 
     setSubmitting(true);
+    setErrorBanner(null);
     try {
       const { data, error } = await supabase.functions.invoke("signup-for-session", {
         body: {
@@ -95,7 +98,16 @@ const StorytellingWorkshops = () => {
       });
 
       if (error) throw error;
-      if (data?.error) throw new Error(data.error);
+      if (data?.success === false || data?.error || data?.registration_disabled) {
+        const msg =
+          data?.error ||
+          (data?.registration_disabled
+            ? "Zoom registration is not enabled for this session. Please contact the organizer."
+            : "Registration failed. Please try again.");
+        setErrorBanner(msg);
+        setSubmitting(false);
+        return;
+      }
 
       setSuccess({
         title: data.session_title,
@@ -103,6 +115,7 @@ const StorytellingWorkshops = () => {
       });
     } catch (err: any) {
       const message = err?.message || "Registration failed. Please try again.";
+      setErrorBanner(message);
       toast.error(message);
     }
     setSubmitting(false);
@@ -210,6 +223,12 @@ const StorytellingWorkshops = () => {
                     format(new Date(selectedSession.session_date), "d MMMM, yyyy 'at' h:mm a 'CET'")}
                 </DialogDescription>
               </DialogHeader>
+              {errorBanner && (
+                <div className="mt-3 rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
+                  <p className="font-semibold mb-1">Registration failed</p>
+                  <p className="font-normal break-words">{errorBanner}</p>
+                </div>
+              )}
               <form onSubmit={handleSubmit} className="space-y-4 mt-2">
                 <div>
                   <label htmlFor="name" className="text-sm font-medium mb-1 block">

@@ -136,23 +136,25 @@ Deno.serve(async (req) => {
     });
 
     const registrantBody = await registrantRes.text();
-    console.log("Zoom registrant response:", registrantRes.status, registrantBody);
+    // Always log full raw Zoom response (status + body) BEFORE any error handling
+    console.error("RAW ZOOM REGISTRANT RESPONSE — status:", registrantRes.status, "body:", registrantBody);
 
     let zoomJoinUrl: string | null = null;
     let registrationDisabled = false;
+    let isAlreadyRegistered = false;
+    let zoomError = "";
+    let zoomErrorCode: number | null = null;
 
     if (!registrantRes.ok) {
-      let zoomError = `Zoom registration failed (HTTP ${registrantRes.status}): ${registrantBody}`;
-      let isAlreadyRegistered = false;
+      zoomError = `Zoom registration failed (HTTP ${registrantRes.status}): ${registrantBody}`;
       try {
         const parsed = JSON.parse(registrantBody);
         if (parsed.message) zoomError = parsed.message;
+        if (typeof parsed.code === "number") zoomErrorCode = parsed.code;
         if (parsed.code === 200 || (parsed.message && parsed.message.toLowerCase().includes("already"))) {
           isAlreadyRegistered = true;
         }
-        if (parsed.code === 3001) {
-          registrationDisabled = true;
-        }
+        if (parsed.code === 3001) registrationDisabled = true;
         if (
           parsed.code === 3027 ||
           parsed.code === 404 ||
@@ -164,14 +166,22 @@ Deno.serve(async (req) => {
         // keep generic message
       }
 
-      if (!registrationDisabled && !isAlreadyRegistered) {
-        // Pass the literal Zoom/Resend error back so the frontend can display it
+      if (isAlreadyRegistered) {
+        // Treat as success-ish: fall back to session link
+        zoomJoinUrl = session.zoom_link || null;
+      } else {
+        // Fail loudly — do NOT pretend success
         return new Response(
-          JSON.stringify({ error: zoomError }),
+          JSON.stringify({
+            success: false,
+            error: zoomError || "Zoom rejected the registration.",
+            zoom_status: registrantRes.status,
+            zoom_code: zoomErrorCode,
+            registration_disabled: registrationDisabled,
+          }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      zoomJoinUrl = session.zoom_link || null;
     } else {
       try {
         const parsedOk = JSON.parse(registrantBody);
