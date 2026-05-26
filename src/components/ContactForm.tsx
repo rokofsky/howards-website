@@ -154,7 +154,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
     try {
       const emailPayload = {
         name: form.name,
-        email: form.email,
+        email: fixedEmail,
         message: form.message,
         service: serviceName || "",
         companyName: form.companyName,
