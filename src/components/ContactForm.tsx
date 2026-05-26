@@ -129,14 +129,15 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
     const value = target instanceof HTMLInputElement && target.type === "checkbox" ? target.checked : target.value;
     setForm((prev) => ({ ...prev, [target.name]: value }));
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Auto-fix common typos before TLD (e.g. "user@domainlxyz" -> "user@domain.xyz")
     const cleanedEmail = sanitizeEmail(form.email);
     if (cleanedEmail !== form.email) {
       setForm((prev) => ({ ...prev, email: cleanedEmail }));
     }
-
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
 
     // Bot defense 1: honeypot — if filled, silently "succeed" without sending
     if (website.trim() !== "") {
@@ -157,7 +158,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
     try {
       const emailPayload = {
         name: form.name,
-        email: form.email,
+        email: cleanedEmail,
         message: form.message,
         service: serviceName || "",
         companyName: form.companyName,
