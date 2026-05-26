@@ -235,6 +235,8 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                     </button>
                   </Badge>
                 ))}
+              </div>
+            )}
           </div>
 
           <div>
@@ -249,8 +251,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
               onChange={(e) => setPreferredTime(e.target.value)}
               className={fieldBorder}
             />
-          </div>
-            )}
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
