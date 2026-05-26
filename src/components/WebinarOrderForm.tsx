@@ -112,6 +112,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     setName("");
     setEmail("");
     setSelectedDates([]);
+    setPreferredTime("");
     setUndecided(false);
     toast.success(t("Howard will send you an email within 24 hours.", "Howard vám pošle e-mail do 24 hodin."));
   };
