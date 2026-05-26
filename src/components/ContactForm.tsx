@@ -129,6 +129,11 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
     const value = target instanceof HTMLInputElement && target.type === "checkbox" ? target.checked : target.value;
     setForm((prev) => ({ ...prev, [target.name]: value }));
   };
+    const cleanedEmail = sanitizeEmail(form.email);
+    if (cleanedEmail !== form.email) {
+      setForm((prev) => ({ ...prev, email: cleanedEmail }));
+    }
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
