@@ -21,6 +21,16 @@ interface OrderFormProps {
   initialWebinarSlug?: string;
 }
 
+const fieldBorder = "border-gold/40";
+
+// Fix common mobile typos: comma or lowercase 'l' immediately before the TLD.
+const fixCommonEmailTypos = (email: string): string => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (re.test(email)) return email;
+  const fixed = email.replace(/[,l](?=[a-zA-Z]{2,24}$)/, ".");
+  return re.test(fixed) ? fixed : email;
+};
+
 export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: OrderFormProps) => {
   const t = useT();
   const [name, setName] = useState("");
@@ -29,6 +39,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     initialWebinarSlug ? [initialWebinarSlug] : []
   );
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+  const [preferredTime, setPreferredTime] = useState("");
   const [undecided, setUndecided] = useState(false);
   const [loading, setLoading] = useState(false);
 
