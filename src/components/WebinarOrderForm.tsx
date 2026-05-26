@@ -25,6 +25,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   const t = useT();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [preferredTime, setPreferredTime] = useState("");
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(
     initialWebinarSlug ? [initialWebinarSlug] : []
   );
@@ -81,7 +82,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
         chosen_dates,
         // legacy fields kept for compatibility
         session_id: session_ids[0] ?? null,
-        chosen_date: chosen_dates.join(", "),
+        chosen_date: chosen_dates.join(", ") + (preferredTime ? ` | Preferred time: ${preferredTime}` : ""),
       },
     ]);
 
@@ -93,6 +94,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     onOpenChange(false);
     setName("");
     setEmail("");
+    setPreferredTime("");
     setSelectedDates([]);
     setUndecided(false);
     toast.success(t("Howard will send you an email within 24 hours.", "Howard vám pošle e-mail do 24 hodin."));
@@ -118,8 +120,10 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
               <Input
                 id="order-name"
                 required
+                placeholder={t("The name people call you", "Jméno, kterým vás lidé oslovují")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className="border-gold/50"
               />
             </div>
             <div>
@@ -128,8 +132,21 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                 id="order-email"
                 type="email"
                 required
+                placeholder="your@bestemail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onBlur={(e) => {
+                  const v = e.target.value.trim();
+                  const at = v.lastIndexOf("@");
+                  if (at < 0) return;
+                  const local = v.slice(0, at);
+                  let domain = v.slice(at + 1);
+                  if (!domain.includes(".")) {
+                    domain = domain.replace(/([,l])([a-z]{2,24})$/i, ".$2");
+                    setEmail(`${local}@${domain}`);
+                  }
+                }}
+                className="border-gold/50"
               />
             </div>
           </div>
@@ -216,6 +233,21 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
               </div>
             )}
           </div>
+
+          <div>
+            <Label htmlFor="preferred-time" className="mb-2 block">
+              {t("Preferred time", "Preferovaný čas")}
+            </Label>
+            <Input
+              id="preferred-time"
+              type="text"
+              placeholder={t("e.g. mornings, 14:00, after 18:00", "např. dopoledne, 14:00, po 18:00")}
+              value={preferredTime}
+              onChange={(e) => setPreferredTime(e.target.value)}
+              className="border-gold/50"
+            />
+          </div>
+
 
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
