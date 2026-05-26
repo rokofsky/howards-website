@@ -235,7 +235,21 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                     </button>
                   </Badge>
                 ))}
-              </div>
+          </div>
+
+          <div>
+            <Label htmlFor="preferred-time" className="mb-2 block">
+              {t("Preferred time", "Preferovaný čas")}
+            </Label>
+            <Input
+              id="preferred-time"
+              type="text"
+              placeholder={t("e.g. 10:00 AM, mornings, after 5pm", "např. 10:00, dopoledne, po 17:00")}
+              value={preferredTime}
+              onChange={(e) => setPreferredTime(e.target.value)}
+              className={fieldBorder}
+            />
+          </div>
             )}
           </div>
 
