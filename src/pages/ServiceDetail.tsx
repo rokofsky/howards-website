@@ -51,6 +51,8 @@ const ServiceDetail = () => {
   const { toast } = useToast();
   const [webinars, setWebinars] = useState<DbWebinar[]>([]);
   const [expandedWebinar, setExpandedWebinar] = useState<string | null>(null);
+  const [showOrderForm, setShowOrderForm] = useState(false);
+  const [orderInitialSlug, setOrderInitialSlug] = useState<string | undefined>(undefined);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [adminPassword, setAdminPassword] = useState("");
   const [attempts, setAttempts] = useState(0);
