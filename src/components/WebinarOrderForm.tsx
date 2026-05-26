@@ -139,18 +139,20 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
               {t("Select webinars", "Vyberte webináře")} *
             </Label>
             <div className="max-h-48 overflow-y-auto rounded-md border border-input p-3 space-y-2">
-              {allWebinars.map((w) => (
-                <label
-                  key={w.slug}
-                  className="flex items-center gap-2 text-sm cursor-pointer hover:opacity-80"
-                >
-                  <Checkbox
-                    checked={selectedSlugs.includes(w.slug)}
-                    onCheckedChange={() => toggleSlug(w.slug)}
-                  />
-                  <span>{w.title}</span>
-                </label>
-              ))}
+              {[...allWebinars]
+                .sort((a, b) => a.title.localeCompare(b.title))
+                .map((w) => (
+                  <label
+                    key={w.slug}
+                    className="flex items-center gap-2 text-sm cursor-pointer hover:opacity-80"
+                  >
+                    <Checkbox
+                      checked={selectedSlugs.includes(w.slug)}
+                      onCheckedChange={() => toggleSlug(w.slug)}
+                    />
+                    <span>{w.title}</span>
+                  </label>
+                ))}
             </div>
           </div>
 
