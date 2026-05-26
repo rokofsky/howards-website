@@ -29,7 +29,6 @@ const projectTypeOptions: SelectOption[] = [
 const preferredDatesOptions: SelectOption[] = [
   { value: "asap", label: "ASAP" },
   { value: "next-week", label: "Next week" },
-  { value: "next-month", label: "Next month" },
   { value: "near-future", label: "Near future" },
 ];
 
@@ -40,7 +39,16 @@ const timelineOptions: SelectOption[] = [
   { value: "future", label: "In the future" },
 ];
 
-const inputClasses = "w-full h-12 md:h-11 px-4 rounded-md bg-background border border-input text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow";
+const inputClasses = "w-full h-12 md:h-11 px-4 rounded-md bg-background border border-gold/40 text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow";
+
+// Fix common mobile typos: comma or lowercase 'l' immediately before the TLD.
+// Returns a fixed email only if the original fails standard validation and the fix passes.
+export const fixCommonEmailTypos = (email: string): string => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (re.test(email)) return email;
+  const fixed = email.replace(/[,l](?=[a-zA-Z]{2,24}$)/, ".");
+  return re.test(fixed) ? fixed : email;
+};
 
 const FormSelectField = ({
   id,
