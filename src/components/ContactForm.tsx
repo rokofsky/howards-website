@@ -278,7 +278,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             name="name"
             type="text"
             required
-            placeholder={t("The name people actually call you", "Jméno, kterým vás lidé skutečně oslovují")}
+            placeholder={t("The name people call you", "Jméno, kterým vás lidé oslovují")}
             value={form.name}
             onChange={handleChange}
             className={inputClasses}
@@ -293,9 +293,13 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             name="email"
             type="email"
             required
-            placeholder="your@bestemailever.com"
+            placeholder="your@bestemail.com"
             value={form.email}
             onChange={handleChange}
+            onBlur={(e) => {
+              const fixed = sanitizeEmail(e.target.value);
+              if (fixed !== e.target.value) setForm((prev) => ({ ...prev, email: fixed }));
+            }}
             className={inputClasses}
           />
         </div>
