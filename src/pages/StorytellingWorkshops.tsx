@@ -223,6 +223,12 @@ const StorytellingWorkshops = () => {
                     format(new Date(selectedSession.session_date), "d MMMM, yyyy 'at' h:mm a 'CET'")}
                 </DialogDescription>
               </DialogHeader>
+              {errorBanner && (
+                <div className="mt-3 rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
+                  <p className="font-semibold mb-1">Registration failed</p>
+                  <p className="font-normal break-words">{errorBanner}</p>
+                </div>
+              )}
               <form onSubmit={handleSubmit} className="space-y-4 mt-2">
                 <div>
                   <label htmlFor="name" className="text-sm font-medium mb-1 block">
