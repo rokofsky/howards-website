@@ -90,6 +90,17 @@ const WebinarDetail = () => {
           </div>
         </div>
       </section>
+      {showOrderForm && webinar && (
+        <WebinarOrderForm
+          sessionId={webinar.id}
+          availableDates={[]}
+          onClose={() => setShowOrderForm(false)}
+          onSuccess={() => {
+            setShowOrderForm(false);
+            toast.success("Order submitted successfully!");
+          }}
+        />
+      )}
     </Layout>
   );
 };
