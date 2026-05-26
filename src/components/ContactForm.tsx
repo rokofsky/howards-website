@@ -290,7 +290,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             name="email"
             type="email"
             required
-            placeholder="your@bestemailever.com"
+            placeholder="your@bestemail.com"
             value={form.email}
             onChange={handleChange}
             className={inputClasses}
