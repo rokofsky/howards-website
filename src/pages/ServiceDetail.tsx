@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { serviceDetails, pickL } from "@/data/serviceDetails";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { WebinarInquiryModal } from "@/components/WebinarInquiryModal";
+import { WebinarOrderForm } from "@/components/WebinarOrderForm";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useT } from "@/hooks/useT";
@@ -49,6 +51,8 @@ const ServiceDetail = () => {
   const { toast } = useToast();
   const [webinars, setWebinars] = useState<DbWebinar[]>([]);
   const [expandedWebinar, setExpandedWebinar] = useState<string | null>(null);
+  const [showOrderForm, setShowOrderForm] = useState(false);
+  const [orderInitialSlug, setOrderInitialSlug] = useState<string | undefined>(undefined);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [adminPassword, setAdminPassword] = useState("");
   const [attempts, setAttempts] = useState(0);
@@ -187,18 +191,22 @@ const ServiceDetail = () => {
                       </div>
                     ))}
                   </div>
-                  <Dialog open={!!expandedWebinar} onOpenChange={(open) => { if (!open) setExpandedWebinar(null); }}>
-                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>{webinars.find((w) => w.id === expandedWebinar)?.title ?? t("Inquire", "Poptat")}</DialogTitle>
-                      </DialogHeader>
-                      <ContactForm
-                        serviceName={webinars.find((w) => w.id === expandedWebinar)?.title ?? ""}
-                        showServiceFields
-                        formKind="webinar"
-                      />
-                    </DialogContent>
-                  </Dialog>
+                  <WebinarInquiryModal
+                    open={!!expandedWebinar}
+                    onOpenChange={(open) => { if (!open) setExpandedWebinar(null); }}
+                    webinarTitle={webinars.find((w) => w.id === expandedWebinar)?.title ?? ""}
+                    onOrderNow={() => {
+                      const w = webinars.find((x) => x.id === expandedWebinar);
+                      setOrderInitialSlug(w?.slug);
+                      setExpandedWebinar(null);
+                      setShowOrderForm(true);
+                    }}
+                  />
+                  <WebinarOrderForm
+                    open={showOrderForm}
+                    onOpenChange={setShowOrderForm}
+                    initialWebinarSlug={orderInitialSlug}
+                  />
                   <div className="mt-6">
                     {showPasswordPrompt ? (
                       <div className="flex gap-2 items-center max-w-sm">

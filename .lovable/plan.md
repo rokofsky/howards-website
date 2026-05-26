@@ -1,20 +1,24 @@
-## Plan: Set `security_invoker = true` on flagged views
+## Problem
 
-### Scope
-Only the view `public.storytelling_sessions_public` exists in this project. The security scanner is still flagging it as SECURITY DEFINER, so re-apply the `security_invoker` setting explicitly.
+The new `WebinarInquiryModal` (with the "Order Now (No payment req)" button) and `WebinarOrderForm` were only wired into `src/pages/WebinarDetail.tsx` (the per-webinar detail route `/services/online-webinars/:slug`).
 
-### Change
-Run a migration that does:
+The page the user is actually on — `/services/online-webinars` — is rendered by `src/pages/ServiceDetail.tsx`. Its grid of "Inquire" buttons still opens the original plain `<Dialog>` containing just a `<ContactForm>` (lines 178–201). That's why clicking Inquire shows nothing new.
 
-```sql
-ALTER VIEW public.storytelling_sessions_public SET (security_invoker = true);
-```
+## Fix (single file: `src/pages/ServiceDetail.tsx`)
 
-### Not touched
-- No RLS policies modified
-- No table structures changed
-- No column changes to the view
-- No grants changed
+1. Import the two new components:
+   - `WebinarInquiryModal` from `@/components/WebinarInquiryModal`
+   - `WebinarOrderForm` from `@/components/WebinarOrderForm`
+2. Add a small piece of state: `showOrderForm` (boolean) and `orderInitialSlug` (string | undefined). Keep existing `expandedWebinar` to identify which webinar's inquiry modal is open.
+3. Replace the existing `<Dialog>...<ContactForm/></Dialog>` block (lines 190–201) with `<WebinarInquiryModal>`, passing:
+   - `open={!!expandedWebinar}`
+   - `onOpenChange` → clears `expandedWebinar` on close
+   - `webinarTitle` → current webinar's title
+   - `onOrderNow` → closes inquiry modal, sets `orderInitialSlug` to current webinar's slug (look it up from `webinars` data), opens `WebinarOrderForm`
+4. Render `<WebinarOrderForm open={showOrderForm} onOpenChange={setShowOrderForm} initialWebinarSlug={orderInitialSlug} />` once below.
 
-### Verification
-After the migration, re-run the security scan to confirm the SECURITY DEFINER warning clears.
+## Notes
+
+- `webinars` here comes from the DB (`webinar.id`, `webinar.title`, `webinar.slug`); confirm `slug` is present on the row (it is, based on `WebinarDetail.tsx` querying it). If not selected, include slug in the select.
+- No backend / RLS / migration changes needed — that infrastructure already exists from the previous turns.
+- Scope is strictly this one file; no styling or unrelated changes.
