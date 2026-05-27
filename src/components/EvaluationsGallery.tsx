@@ -846,8 +846,31 @@ const IsolatedView = ({
                 className="select-none"
                 onPointerDown={(e) => {
                   if (scale <= 1) return;
-                  e.stopPropagation();
+
+                  // 1. Calculate the strict horizontal pan boundaries
+                  const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
+                  const clampX = maxX * scale;
+
+                  // 2. Only isolate the gesture if the image isn't pulled hard against the side margin
+                  const isAtLeftEdge = offset.x >= clampX;
+                  const isAtRightEdge = offset.x <= -clampX;
+
+                  if (!isAtLeftEdge && !isAtRightEdge) {
+                    e.stopPropagation();
+                  }
+
                   e.currentTarget.setPointerCapture(e.pointerId);
+                  panStartX.current = e.clientX;
+                  panStartY.current = e.clientY;
+                  
+                  // Keep tracking structural layout scales for the canvas layer
+                  containerBounds.current = {
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                  };
+                  imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
+                  isPanning.current = true;
+                }}
                   panStartX.current = e.clientX;
                   panStartY.current = e.clientY;
                   // Use window dimensions as container — parentElement rect is unreliable
