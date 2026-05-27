@@ -809,6 +809,55 @@ const IsolatedView = ({
               style={{ overflow: "visible", pointerEvents: "none" }}
             >
               <img
+                <img
+        // ... your src and alt tags ...
+
+        ref={(el) => {
+          if (!el) return;
+          
+          // Remove any old listener before attaching a new one
+          el.removeEventListener('wheel', (el as any)._handleWheel);
+
+          const handleWheel = (e: WheelEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let zoomDirection = 0;
+            let maxZoom = 2.5;
+
+            if (e.ctrlKey || e.metaKey) {
+              zoomDirection = e.deltaY < 0 ? 0.3 : -0.3;
+              maxZoom = 8.0;
+            } else if (e.shiftKey) {
+              return;
+            } else {
+              zoomDirection = e.deltaY < 0 ? 0.15 : -0.15;
+            }
+
+            // Calculate the next scale immediately
+            const currentScale = scale; // Reads your current state scale
+            const nextScale = Math.min(Math.max(currentScale + zoomDirection, 1), maxZoom);
+
+            // 1. Force the DOM to scale instantly so it's smooth at 60fps
+            el.style.transform = `scale(${nextScale}) translate(${offset.x / nextScale}px, ${offset.y / nextScale}px)`;
+            el.style.willChange = 'transform';
+
+            // 2. Sync React state immediately so your pointer boundary math doesn't lag behind
+            setScale(nextScale);
+            if (nextScale === 1) {
+              setOffset({ x: 0, y: 0 });
+            }
+          };
+
+          // Save reference to handler so we can clean it up dynamically
+          (el as any)._handleWheel = handleWheel;
+          el.addEventListener('wheel', handleWheel, { passive: false });
+        }}
+
+        className="select-none"
+        onPointerDown={(e) => {
+          if (scale <= 1) return;
+          // ... your existing pointer events remain exactly as they are below
                 src={`${it.src}?v=${ASSET_VERSION}`}
                 alt={`${alt} #${it.num}`}
                 draggable={false}
