@@ -371,8 +371,8 @@ const ServiceDetail = () => {
             </h2>
             <p className="text-muted-foreground text-center mb-8 font-normal">
               {t(
-                "Fill in some stuff below (mostly optional) and I'll get back to you next day.",
-                "Vyplňte níže pár údajů (většinou nepovinných) a ozvu se Vám následující den."
+                "Fill in some stuff below (mostly optional) and I'll get back to you by tomorrow.",
+                "Vyplňte níže pár údajů (většinou nepovinných) a ozvu se Vám do zítřka."
               )}
             </p>
             <ContactForm serviceName={serviceTitle} showServiceFields />
