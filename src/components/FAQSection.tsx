@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useT } from "@/hooks/useT";
+import { useIsCzech } from "@/hooks/useLanguageRouting";
 
 const FAQSection = () => {
   const t = useT();
