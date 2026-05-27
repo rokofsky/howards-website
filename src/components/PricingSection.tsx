@@ -35,7 +35,7 @@ const PricingSection = () => {
     {
       name: t("Inhouse Workshops", "Firemní workshopy"),
       price: t("From CZK 25,000 (€1000)", "Od 25 000 Kč (1 000 €)"),
-      description: t("Training for teams.", "Školení pro týmy."),
+      description: t("Training teams to present and represent.", "Školení pro týmy."),
       features: [
         t("1-3 days", "1-3 dny"),
         t("Custom exercises & materials", "Cvičení a materiály na míru"),
