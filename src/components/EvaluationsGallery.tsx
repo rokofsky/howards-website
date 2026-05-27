@@ -772,7 +772,7 @@ const IsolatedView = ({
     };
   }, [scale, emblaApi]);
 
-  const current = emblaApi?.selectedScrollSnap() ?? startIndex;
+  const current = selectedIdx;
 
   const btnStyle: React.CSSProperties = {
     position: "fixed",
