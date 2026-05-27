@@ -35,9 +35,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   const t = useT();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [selectedSlugs, setSelectedSlugs] = useState<string[]>(
-    initialWebinarSlug ? [initialWebinarSlug] : []
-  );
+  const [selectedSlugs, setSelectedSlugs] = useState<string[]>(initialWebinarSlug ? [initialWebinarSlug] : []);
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [preferredTime, setPreferredTime] = useState("");
   const [undecided, setUndecided] = useState(false);
@@ -51,9 +49,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   }, [open, initialWebinarSlug]);
 
   const toggleSlug = (slug: string) => {
-    setSelectedSlugs((prev) =>
-      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
-    );
+    setSelectedSlugs((prev) => (prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]));
   };
 
   const removeDate = (d: Date) => {
@@ -77,15 +73,10 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
 
     setLoading(true);
 
-    const chosen_dates = undecided
-      ? ["Undecided"]
-      : selectedDates.map((d) => format(d, "yyyy-MM-dd"));
+    const chosen_dates = undecided ? ["Undecided"] : selectedDates.map((d) => format(d, "yyyy-MM-dd"));
 
     // Look up DB UUIDs for selected slugs (best effort; may be empty)
-    const { data: dbWebinars } = await supabase
-      .from("webinars")
-      .select("id, slug")
-      .in("slug", selectedSlugs);
+    const { data: dbWebinars } = await supabase.from("webinars").select("id, slug").in("slug", selectedSlugs);
 
     const session_ids = (dbWebinars || []).map((w: { id: string }) => w.id);
 
@@ -114,13 +105,13 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     setSelectedDates([]);
     setPreferredTime("");
     setUndecided(false);
-    toast.success(t("Howard will send you an email within 24 hours.", "Howard vám pošle e-mail do 24 hodin."));
+    toast.success(t("Success!", "Úspěch!"), {
+      description: t("Howard will send you an email within 24 hours.", "Howard vám pošle e-mail do 24 hodin."),
+      className: "sm:w-[450px] p-5 !rounded-xl !shadow-xl border border-gray-100",
+      descriptionClassName: "text-sm text-gray-600 font-normal mt-1 leading-relaxed",
+      duration: 6000,
+    });
   };
-  // Custom Tailwind overrides to beef up the standard tiny notification card size
-  className: "sm:w-[450px] p-5 !rounded-xl !shadow-xl border border-gray-100", 
-  descriptionClassName: "text-sm text-gray-600 font-normal mt-1 leading-relaxed",
-  duration: 6000, // Keeps it on screen slightly longer so they can read it comfortably
-});
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -130,7 +121,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           <DialogDescription>
             {t(
               "Select one or more webinars and date options. No payment required.",
-              "Vyberte jeden nebo více webinářů a termínů. Bez platby."
+              "Vyberte jeden nebo více webinářů a termínů. Bez platby.",
             )}
           </DialogDescription>
         </DialogHeader>
@@ -162,21 +153,13 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           </div>
 
           <div>
-            <Label className="mb-2 block">
-              {t("Select webinars", "Vyberte webináře")} *
-            </Label>
+            <Label className="mb-2 block">{t("Select webinars", "Vyberte webináře")} *</Label>
             <div className="max-h-48 overflow-y-auto rounded-md border border-gold/40 p-3 space-y-2">
               {[...allWebinars]
                 .sort((a, b) => a.title.localeCompare(b.title))
                 .map((w) => (
-                  <label
-                    key={w.slug}
-                    className="flex items-center gap-2 text-sm cursor-pointer hover:opacity-80"
-                  >
-                    <Checkbox
-                      checked={selectedSlugs.includes(w.slug)}
-                      onCheckedChange={() => toggleSlug(w.slug)}
-                    />
+                  <label key={w.slug} className="flex items-center gap-2 text-sm cursor-pointer hover:opacity-80">
+                    <Checkbox checked={selectedSlugs.includes(w.slug)} onCheckedChange={() => toggleSlug(w.slug)} />
                     <span>{w.title}</span>
                   </label>
                 ))}
@@ -194,9 +177,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                   if (v) setSelectedDates([]);
                 }}
               />
-              <span className="font-medium">
-                {t("Undecided (decide later)", "Nerozhodnuto (rozhodnu se později)")}
-              </span>
+              <span className="font-medium">{t("Undecided (decide later)", "Nerozhodnuto (rozhodnu se později)")}</span>
             </label>
 
             <Popover>
