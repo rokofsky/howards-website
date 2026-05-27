@@ -659,7 +659,6 @@ useEffect(() => {
     
     emblaApi.reInit({ watchDrag: scale <= 1 || atEdge });
   }, [scale, offset.x, emblaApi]);
-}, [scale, offset.x, emblaApi]);
   // Native touch listeners — handles pan, swipe-to-navigate, and pinch
   useEffect(() => {
     const img = activeImgRef.current;
