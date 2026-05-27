@@ -871,17 +871,6 @@ const IsolatedView = ({
                   imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
                   isPanning.current = true;
                 }}
-                  panStartX.current = e.clientX;
-                  panStartY.current = e.clientY;
-                  // Use window dimensions as container — parentElement rect is unreliable
-                  // because the slide is positioned off-screen in Embla's flex track
-                  containerBounds.current = {
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                  };
-                  imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
-                  isPanning.current = true;
-                }}
                 onPointerMove={(e) => {
                   if (!isPanning.current) return;
                   e.stopPropagation();
