@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271456";
+export const ASSET_VERSION = "202605271509";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -610,18 +610,33 @@ const IsolatedView = ({
   }, [emblaApi, onIndexChange]);
 
   // Wheel zoom on desktop — bound only to the active image inside the lightbox.
-  // Ctrl/Cmd+wheel is left to the browser (native page zoom).
+  // Mutates transform directly via DOM to avoid React re-render lag on every tick.
+  // Ctrl/Cmd/Shift+wheel is left to the browser (native page zoom / macros).
   useEffect(() => {
     const img = activeImgRef.current;
     if (!img) return;
+    let currentScale = scale;
+    let commitTimer: ReturnType<typeof setTimeout> | null = null;
     const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey || e.metaKey) return; // let browser handle native zoom
+      if (e.ctrlKey || e.metaKey || e.shiftKey) return;
       e.preventDefault();
-      setScale((s) => Math.min(2.5, Math.max(1, s - e.deltaY * 0.005)));
+      e.stopPropagation();
+      const delta = e.deltaY < 0 ? 0.08 : -0.08;
+      currentScale = Math.min(2.5, Math.max(1, currentScale + delta));
+      img.style.transform = `scale(${currentScale})`;
+      img.style.transition = "none";
+      if (commitTimer) clearTimeout(commitTimer);
+      commitTimer = setTimeout(() => {
+        setScale(currentScale);
+      }, 120);
     };
     img.addEventListener("wheel", onWheel, { passive: false });
-    return () => img.removeEventListener("wheel", onWheel);
+    return () => {
+      img.removeEventListener("wheel", onWheel);
+      if (commitTimer) clearTimeout(commitTimer);
+    };
   }, [emblaApi, currentIndex]);
+
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
