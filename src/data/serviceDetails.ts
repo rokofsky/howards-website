@@ -96,7 +96,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     intro: [],
     sections: [],
   },
-  "meetings-moderation": {
+  "six-hats": {
     pageTitle: { en: "Six Thinking Hats", cs: "Šest klobouků myšlení" },
     lead: { en: "Helping managers improve team communication by fixing how meetings work, enabling parallel thinking and reaching faster decisions for measurable productivity.", cs: "Pomáháme manažerům zlepšit komunikaci v týmu opravou způsobu, jakým fungují porady — umožňujeme paralelní myšlení a rychlejší rozhodování s měřitelnou produktivitou." },
     intro: [

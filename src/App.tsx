@@ -211,6 +211,7 @@ function PageRoutes() {
       <Route path="reference/scans/:slot" element={<ReferenceScanViewer />} />
       <Route path="storytelling-workshops" element={<StorytellingWorkshops />} />
       <Route path="services/online-webinars" element={<Navigate to="/services/live-webinars" replace />} />
+      <Route path="services/meetings-moderation" element={<Navigate to="/services/six-hats" replace />} />
       <Route path="services/:slug" element={<ServiceDetail />} />
       <Route path="keynote-topics" element={<KeynoteTopics />} />
       <Route path="blog" element={<Blog />} />

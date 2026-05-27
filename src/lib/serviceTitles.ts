@@ -2,7 +2,7 @@
 export const serviceShortTitles: Record<string, { en: string; cs: string }> = {
   "presentation-speaking-skills": { en: "Presentation Skills", cs: "Prezentační dovednosti" },
   "live-webinars": { en: "Webinars", cs: "Webináře" },
-  "meetings-moderation": { en: "Six Hats", cs: "Šest klobouků" },
+  "six-hats": { en: "Six Hats", cs: "Šest klobouků" },
   "conflict-resolution": { en: "Conflict Mediation", cs: "Mediace konfliktů" },
   "brainstorming-sessions": { en: "Brainstorming", cs: "Brainstorming" },
   "storytelling": { en: "Storytelling", cs: "Storytelling" },

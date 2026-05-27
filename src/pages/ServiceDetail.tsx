@@ -112,7 +112,7 @@ const ServiceDetail = () => {
   const serviceHook = pickL(service.hook, lang);
   const inquiryTitle = slug === "conflict-resolution"
     ? t("Conflict mediation/resolution", "Mediace / řešení konfliktů")
-    : slug === "meetings-moderation"
+    : slug === "six-hats"
     ? t("The Six Hats Method for Meetings", "Metoda Šesti klobouků pro porady")
     : slug === "live-webinars"
     ? t("Online webinars", "Online webináře")
@@ -257,7 +257,7 @@ const ServiceDetail = () => {
             {detail?.sections.map((section, sectionIndex) => {
               const sectionTitle = pickL(section.title, lang);
               return (
-                <div key={sectionIndex} className={`${slug === "meetings-moderation" && sectionIndex === detail.sections.length - 1 ? "mb-4" : "mb-10"}`}>
+                <div key={sectionIndex} className={`${slug === "six-hats" && sectionIndex === detail.sections.length - 1 ? "mb-4" : "mb-10"}`}>
                   {detail?.tone !== "executive" && sectionTitle.trim().length > 0 && (
                     <h3 className="text-2xl font-semibold mb-2 whitespace-pre-line">{sectionTitle}</h3>
                   )}
@@ -309,7 +309,7 @@ const ServiceDetail = () => {
                   )}
 
                   {section.bullets && (
-                    <ul className={`grid ${slug === "storytelling" ? "gap-0.5" : "gap-0.5"} text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line ${slug === "meetings-moderation" && (section.title.en || "").includes("People who are comfortable") ? "mt-1" : ""}`}>
+                    <ul className={`grid ${slug === "storytelling" ? "gap-0.5" : "gap-0.5"} text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line ${slug === "six-hats" && (section.title.en || "").includes("People who are comfortable") ? "mt-1" : ""}`}>
                       {section.bullets.map((item, i) => {
                         const text = pickL(item, lang);
                         if (!text.trim()) return null;
