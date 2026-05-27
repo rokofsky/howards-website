@@ -42,7 +42,7 @@ const FAQSection = () => {
         </>
       ) : (
         <>
-          Depending on the scope, group size, travel distance, we're talking a daily rate between 1000 and 2000 Euros, prorated. To all the overpriced consultants out there, there's no reason to be greedy. There are various success fee options for certain services, get in touch for a custom quote — I promise not to use the word 'synergy'. <a href="#pricing" className="text-primary underline">Pricing details</a>
+          Depending on the scope, group size, travel distance, we're talking a daily rate between 1000 and 2000 Euros, prorated. To all the overpriced consultants out there, there's no reason to be greedy. There are various success fee options for certain services, get in touch for a custom quote, and I promise not to use the word 'synergy'.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#pricing" className="text-primary underline">Pricing details</a>
         </>
       ),
     },
