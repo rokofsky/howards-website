@@ -105,7 +105,12 @@ const PricingSection = () => {
             className={`rounded-lg p-8 flex flex-col ${tier.highlighted ? "glass glow-gold border-gold/20" : "glass"}`}
           >
             <h3 className="text-xl font-semibold mb-1">{tier.name}</h3>
-            <p className="text-2xl font-bold text-gold mb-3">{tier.price}</p>
+            <p className="text-2xl font-bold text-gold mb-3">
+              {tier.price}
+              {tier.priceSuffix && (
+                <span className="block text-sm font-normal text-gold/80 mt-0.5">{tier.priceSuffix}</span>
+              )}
+            </p>
             <p className="text-sm text-muted-foreground mb-6 font-normal">{tier.description}</p>
             <ul className="space-y-2 mb-6">
               {tier.features.map((f, j) => (
