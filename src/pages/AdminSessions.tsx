@@ -99,6 +99,14 @@ export default function AdminSessions() {
       toast({ title: "Date is required", variant: "destructive" });
       return;
     }
+    if (zoomMeetingId && !/^\d+$/.test(zoomMeetingId.replace(/\s/g, ""))) {
+      toast({
+        title: "Invalid Zoom Meeting ID",
+        description: "Must contain digits only (e.g. 84146763709). Copy it from your Zoom meeting page.",
+        variant: "destructive",
+      });
+      return;
+    }
     setLoading(true);
 
     if (editingId) {
