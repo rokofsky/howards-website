@@ -268,6 +268,10 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             </span>
           </div>
 
+          <p className="text-right text-sm font-semibold text-gold">
+            {t("There is no payment now, we will be in touch", "Nyní se neplatí, ozveme se vám")}
+          </p>
+
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("Cancel", "Zrušit")}
