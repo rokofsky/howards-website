@@ -115,7 +115,7 @@ const ServiceDetail = () => {
     : slug === "meetings-moderation"
     ? t("The Six Hats Method for Meetings", "Metoda Šesti klobouků pro porady")
     : slug === "online-webinars"
-    ? t("Online webinars", "Online webináře")
+    ? t("Live Webinars", "Online webináře")
     : serviceTitle;
 
   const subtitle = pickL(service.subtitle, lang);
