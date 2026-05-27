@@ -238,7 +238,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     pageTitle: { en: "The Art of Storytelling", cs: "Umění vyprávění příběhů" },
     taglines: [
       { en: "Empower your team to connect with story.", cs: "Dejte svému týmu sílu spojit se prostřednictvím příběhu." },
-      { en: "Facts tell, stories sell.", cs: "Fakta informují, příběhy prodávají." },
+      { en: "facts tell, stories sell", cs: "Fakta informují, příběhy prodávají." },
     ],
     intro: [
       { en: "Stop delivering data and start driving action. This isn't just about telling better anecdotes; it's about mastering the biological triggers that command attention. This training will give you the specific tools to connect with your listeners and, if your goal is to motivate someone to take direct action, you'll be better equipped. Whether you're pitching a board or leading a team, these techniques will transform the way you speak in public forever.", cs: "Přestaňte podávat data a začněte vyvolávat akci. Nejde jen o lepší vyprávění historek — jde o ovládnutí biologických spouštěčů, které řídí pozornost. Tento trénink vám dá konkrétní nástroje, jak se spojit s posluchači, a pokud je vaším cílem někoho motivovat k přímé akci, budete mít lepší výbavu. Ať už prezentujete před představenstvem nebo vedete tým, tyto techniky navždy promění způsob, jakým mluvíte na veřejnosti." },
