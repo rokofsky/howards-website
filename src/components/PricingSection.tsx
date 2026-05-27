@@ -43,6 +43,7 @@ const PricingSection = () => {
         t("Follow-up resources", "Navazující materiály"),
         t("Follow-up personal contact", "Následný osobní kontakt"),
       ],
+      inquireInhouse: true,
     },
     {
       name: t("Keynote Speaking", "Hlavní přednáška"),
