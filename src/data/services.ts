@@ -10,7 +10,7 @@ export interface ServiceItem {
 
 export const services: ServiceItem[] = [
   { id: "1", title: { en: "Presentation/speaking Skills", cs: "Trénink prezentačních a řečnických dovedností" }, subtitle: { en: "speak like a pro and own the room", cs: "Mluvte jako profík a ovládněte sál" }, hook: { en: "\n", cs: "\n" }, slug: "presentation-speaking-skills" },
-  { id: "2", title: { en: "Live webinar sessions", cs: "Živé webináře" }, subtitle: { en: "choose from a wide range of useful topics", cs: "Z čeho si vybrat!" }, hook: { en: "", cs: "" }, slug: "online-webinars" },
+  { id: "2", title: { en: "Live webinar sessions", cs: "Živé webináře" }, subtitle: { en: "choose from a wide range of useful topics", cs: "Z čeho si vybrat!" }, hook: { en: "", cs: "" }, slug: "live-webinars" },
   { id: "3", title: { en: "The Six Hats Method for Meetings", cs: "Metoda Šesti klobouků pro porady" }, subtitle: { en: "no more wasting time during meetings", cs: "Přestaňte ztrácet čas. Proměňte každou poradu v rozhodnutí, která se dají realizovat." }, hook: { en: "\n", cs: "\n" }, slug: "meetings-moderation" },
   { id: "4", title: { en: "Conflict mediation /resolution", cs: "Mediace a řešení konfliktů" }, subtitle: { en: "turn battles into breakthroughs", cs: "Proměňte boje v průlomy" }, hook: { en: "\n", cs: "\n" }, slug: "conflict-resolution" },
   { id: "5", title: { en: "Brainstorming Sessions", cs: "Brainstormingové workshopy" }, subtitle: { en: "where ideas go to multiply", cs: "Místo, kde se nápady množí" }, hook: { en: "\n", cs: "\n" }, slug: "brainstorming-sessions" },
