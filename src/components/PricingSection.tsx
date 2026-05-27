@@ -70,7 +70,12 @@ const PricingSection = () => {
         "Satisfaction guaranteed or you do not pay",
         "Spokojenost zaručena, nebo neplatíte"
       ),
-      features: [] as string[],
+      features: [
+        t("Discretion guaranteed", "Diskrétnost zaručena"),
+        t("Years of hardcore experience", "Roky tvrdých zkušeností"),
+        t("Wide knowledge of many branches", "Široké znalosti mnoha oborů"),
+        t("Couples therapy", "Terapie pro páry"),
+      ] as string[],
       inquireIndividual: true,
     },
   ];
