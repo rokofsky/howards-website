@@ -157,9 +157,12 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           </div>
 
           <div>
-            <Label className="mb-2 block">
+            <Label className="mb-1 block">
               {t("Select webinars", "Vyberte webináře")} *
             </Label>
+            <p className="text-xs text-muted-foreground mb-2">
+              {t("Price: CZK 2,500 / €100 for a 90-minute session", "Cena: 2 500 Kč / 100 € za 90minutovou lekci")}
+            </p>
             <div className="max-h-48 overflow-y-auto rounded-md border border-gold/40 p-3 space-y-2">
               {[...allWebinars]
                 .sort((a, b) => a.title.localeCompare(b.title))
