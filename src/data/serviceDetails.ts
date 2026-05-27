@@ -346,7 +346,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
   },
   "keynote-speaking": {
     pageTitle: { en: "\n", cs: "\n" },
-    lead: { en: "Choose from various trainings to improve communication and effectiveness for your team.", cs: "Najměte Howarda jako řečníka na svou významnou akci a ještě rok poté se o ní bude mluvit." },
+    lead: { en: "when you deal with people from all over the world", cs: "Najměte Howarda jako řečníka na svou významnou akci a ještě rok poté se o ní bude mluvit." },
     intro: [
       { en: "\n", cs: "\n" },
       { en: "It has been universally affirmed that personal relationships are the most important factor in any business. Communication is the oil for the machine. With a few techniques you can make a good impression, be a good listener, maybe use some charisma, and motivate people. Understanding the nuances of communication will help you avoid misunderstandings, and fix them when they occur. Optional Leadership module. In this workshop, you will practice how to project yourself more effectively and persuasively by connecting with others, carefully following, guiding, and motivating them. Learn how to craft your message so as to evoke the response you desire. In practically any situation you may find yourself in.", cs: "Howarda si můžete najmout jako řečníka na svou akci — jeho zábavná, vzdělávací témata a artikulovaný, interaktivní řečnický styl si zaručeně získají pozornost každého publika a motivují ho k akci. A možná se cestou i něco naučí…" },
