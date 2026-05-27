@@ -40,10 +40,10 @@ const PricingSection = () => {
       description: t("Training teams to present and represent.", "Školení pro týmy."),
       features: [
         t("1-3 days", "1-3 dny"),
-        t("Custom exercises & materials", "Cvičení a materiály na míru"),
-        t("Modules can be combined", "Moduly lze kombinovat"),
+        t("Custom exercises ", "Cvičení na míru"),
+        t("Modules combineable", "Moduly jsou kombinovatelné"),
         t("Follow-up resources", "Navazující materiály"),
-        t("Follow-up personal contact", "Následný osobní kontakt"),
+        t("Follow-up  contact", "Následný kontakt"),
       ],
       inquireInhouse: true,
     },
