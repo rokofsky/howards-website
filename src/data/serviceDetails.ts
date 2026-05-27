@@ -97,8 +97,8 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     sections: [],
   },
   "meetings-moderation": {
-    pageTitle: { en: "Six Thinking Hats", cs: "Šest klobouků myšlení" },
-    lead: { en: "Helping managers improve team communication by fixing how meetings work, enabling parallel thinking and reaching faster decisions for measurable productivity.", cs: "Pomáháme manažerům zlepšit komunikaci v týmu opravou způsobu, jakým fungují porady — umožňujeme paralelní myšlení a rychlejší rozhodování s měřitelnou produktivitou." },
+    pageTitle: { en: "Six Hats for Meetings", cs: "Šest klobouků myšlení" },
+    lead: { en: "much faster meetings with actionable decisions", cs: "Pomáháme manažerům zlepšit komunikaci v týmu opravou způsobu, jakým fungují porady — umožňujeme paralelní myšlení a rychlejší rozhodování s měřitelnou produktivitou." },
     intro: [
       { en: "Howard will come to your meeting room and, together with your team, demonstrate this fun and innovative method (+/- 3 hours).", cs: "Howard přijde k vám do zasedací místnosti a společně s týmem vám tuto zábavnou a inovativní metodu předvede (cca 3 hodiny)." },
       { en: "{{COLUMNS}}Most meetings are:|too long|unclear|lead nowhere||The result?|wasted time|frustrated teams|slow decision-making{{/COLUMNS}}", cs: "{{COLUMNS}}Většina porad je:|příliš dlouhá|nejasná|nikam nevede||Výsledek?|ztracený čas|frustrované týmy|pomalé rozhodování{{/COLUMNS}}" },
