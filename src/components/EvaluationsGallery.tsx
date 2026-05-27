@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271851";
+export const ASSET_VERSION = "202605271852";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -811,11 +811,18 @@ const IsolatedView = ({
         }}
       >
         <div className="flex h-full" style={{ overflow: "visible" }}>
-          {items.map((it) => (
+          {items.map((it, idx) => {
+            const isCurrent = idx === current;
+            return (
             <div
               key={it.key}
               className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
-              style={{ overflow: "visible", pointerEvents: "none" }}
+              style={{
+                overflow: "visible",
+                pointerEvents: "none",
+                zIndex: isCurrent ? 2 : 1,
+                visibility: !isCurrent && scale > 1 ? "hidden" : "visible",
+              }}
             >
               <img
                 src={`${it.src}?v=${ASSET_VERSION}`}
