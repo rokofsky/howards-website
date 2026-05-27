@@ -892,7 +892,8 @@ const IsolatedView = ({
                 }}
               />
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
