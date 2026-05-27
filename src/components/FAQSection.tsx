@@ -17,7 +17,7 @@ const FAQSection = () => {
     {
       q: t("Do you work with remote teams?", "Pracujete s týmy na dálku?"),
       a: t(
-        "Absolutely. Howard has run over 200 virtual workshops and events since Covid. Telling a story works just as well through a screen — as long as you're not on mute.",
+        "Absolutely. Howard has run over 200 virtual workshops and events since the pandemic. Telling a story works just as well through a screen — as long as you're not on mute.",
         "Samozřejmě. Howard od pandemie Covid uspořádal více než 200 virtuálních workshopů a akcí. Vyprávění příběhu funguje skrze obrazovku stejně dobře — pokud nemáte vypnutý mikrofon."
       ),
     },
