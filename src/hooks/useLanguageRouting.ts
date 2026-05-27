@@ -7,7 +7,7 @@ const czSlugs: Record<string, string> = {
   references: "reference",
   bio: "bio",
   blog: "blog",
-  "storytelling-workshops": "storytelling-workshops",
+  "storytelling-sessions": "storytelling-sessions",
   "keynote-topics": "keynote-topics",
   "privacy-policy": "ochrana-soukromi",
   gdpr: "gdpr",
