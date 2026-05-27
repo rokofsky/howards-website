@@ -157,9 +157,12 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           </div>
 
           <div>
-            <Label className="mb-2 block">
+            <Label className="mb-1 block">
               {t("Select webinars", "Vyberte webináře")} *
             </Label>
+            <p className="text-xs text-muted-foreground mb-2">
+              {t("Price: CZK 2,500 / €100 for a 90-minute session", "Cena: 2 500 Kč / 100 € za 90minutovou lekci")}
+            </p>
             <div className="max-h-48 overflow-y-auto rounded-md border border-gold/40 p-3 space-y-2">
               {[...allWebinars]
                 .sort((a, b) => a.title.localeCompare(b.title))
@@ -251,6 +254,18 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
               onChange={(e) => setPreferredTime(e.target.value)}
               className={fieldBorder}
             />
+          </div>
+
+          <div className="rounded-md border border-gold/40 bg-gold/5 px-4 py-3 flex items-center justify-between">
+            <span className="text-sm text-muted-foreground font-medium">
+              {t("Subtotal", "Mezisoučet")}
+            </span>
+            <span className="text-lg font-semibold text-gold">
+              {t(
+                `CZK ${(selectedSlugs.length * 2500).toLocaleString("en-US")} / €${selectedSlugs.length * 100}`,
+                `${(selectedSlugs.length * 2500).toLocaleString("cs-CZ")} Kč / ${selectedSlugs.length * 100} €`
+              )}
+            </span>
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
