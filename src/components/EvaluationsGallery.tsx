@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605272001";
+export const ASSET_VERSION = "202605272020";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
