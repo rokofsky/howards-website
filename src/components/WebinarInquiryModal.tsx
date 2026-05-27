@@ -34,7 +34,7 @@ export const WebinarInquiryModal = ({ open, onOpenChange, webinarTitle, onOrderN
             onClick={onOrderNow}
             className="w-full sm:w-auto"
           >
-            {t("Order Now (No payment req)", "Objednat nyní (Bez platby)")}
+            {t("Non-binding Order (no payment)", "Nezávazná objednávka (bez platby)")}
           </Button>
         </div>
 
