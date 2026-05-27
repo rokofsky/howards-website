@@ -308,7 +308,7 @@ const Header = () => {
                 );
               })}
               <Button variant="cta" size="lg" asChild className="mt-2">
-                <Link to={lp("/storytelling-workshops")} onClick={() => setMobileOpen(false)}>
+                <Link to={lp("/storytelling-sessions")} onClick={() => setMobileOpen(false)}>
                   {t("Free Storytelling Sessions!", "Bezplatná sezení Storytellingu!")}
                 </Link>
               </Button>
