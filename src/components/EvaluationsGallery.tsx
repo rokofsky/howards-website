@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271845";
+export const ASSET_VERSION = "202605261808";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -558,7 +558,6 @@ const IsolatedView = ({
   const imageBounds = useRef({ width: 0, height: 0 });
   const containerBounds = useRef({ width: 0, height: 0 });
   const activeImgRef = useRef<HTMLImageElement | null>(null);
-  const wheelHandlerRef = useRef<{ el: HTMLElement; fn: (e: WheelEvent) => void } | null>(null);
 
   // Pinch gesture refs
   const pinchStartDist = useRef<number | null>(null);
@@ -810,80 +809,10 @@ const IsolatedView = ({
                 src={`${it.src}?v=${ASSET_VERSION}`}
                 alt={`${alt} #${it.num}`}
                 draggable={false}
-                ref={(el: HTMLImageElement | null) => {
-                  // Always sync the active image reference first
+                ref={(el) => {
                   if (it.key === items[current]?.key) {
                     activeImgRef.current = el;
                   }
-
-                  // Clear out old listener attachments to avoid memory leaks
-                  if (wheelHandlerRef.current) {
-                    wheelHandlerRef.current.el.removeEventListener("wheel", wheelHandlerRef.current.fn);
-                    wheelHandlerRef.current = null;
-                  }
-                  if (!el) return;
-
-                  const handleWheel = (e: WheelEvent) => {
-                    if (e.shiftKey) return;
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    let zoomDirection = e.deltaY < 0 ? 0.15 : -0.15;
-                    let maxZoom = 3.0;
-
-                    if (e.ctrlKey || e.metaKey) {
-                      zoomDirection = e.deltaY < 0 ? 0.3 : -0.3;
-                      maxZoom = 5.0;
-                    }
-
-                    const parentDiv = el.parentElement;
-                    const grandParentDiv = parentDiv?.parentElement;
-
-                    setScale((prevScale) => {
-                      let nextScale = prevScale + zoomDirection;
-                      if (nextScale <= 1.0) nextScale = 1.0;
-                      if (nextScale > maxZoom) nextScale = maxZoom;
-
-                      // Extract structural coordinates straight from the matrix to avoid closure drift
-                      let currentX = 0;
-                      let currentY = 0;
-                      if (el.style.transform) {
-                        const match = el.style.transform.match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\)/);
-                        if (match) {
-                          currentX = parseFloat(match[1]) * prevScale;
-                          currentY = parseFloat(match[2]) * prevScale;
-                        }
-                      }
-
-                      if (el) {
-                        el.style.transformOrigin = "center center";
-                        el.style.willChange = "transform";
-                        el.style.transform = `scale(${nextScale}) translate(${currentX / nextScale}px, ${currentY / nextScale}px)`;
-                      }
-
-                      // Open up immediate layout boundaries when zoomed in so margins don't truncate
-                      if (parentDiv && grandParentDiv) {
-                        if (nextScale > 1.0) {
-                          parentDiv.style.overflow = "visible";
-                          grandParentDiv.style.overflow = "visible";
-                        } else {
-                          parentDiv.style.overflow = "";
-                          grandParentDiv.style.overflow = "";
-                        }
-                      }
-
-                      if (nextScale === 1.0) {
-                        setOffset({ x: 0, y: 0 });
-                        if (el) el.style.transform = "scale(1) translate(0px, 0px)";
-                      }
-
-                      requestAnimationFrame(() => setScale(nextScale));
-                      return nextScale;
-                    });
-                  };
-
-                  wheelHandlerRef.current = { el, fn: handleWheel };
-                  el.addEventListener("wheel", handleWheel, { passive: false });
                 }}
                 style={{
                   pointerEvents: "auto",
