@@ -611,18 +611,7 @@ const IsolatedView = ({
 
   // Wheel zoom on desktop — bound only to the active image inside the lightbox.
   // Ctrl/Cmd+wheel is left to the browser (native page zoom).
-  useEffect(() => {
-    const img = activeImgRef.current;
-    if (!img) return;
-    const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey || e.metaKey) return; // let browser handle native zoom
-      e.preventDefault();
-      setScale((s) => Math.min(2.5, Math.max(1, s - e.deltaY * 0.005)));
-    };
-    img.addEventListener("wheel", onWheel, { passive: false });
-    return () => img.removeEventListener("wheel", onWheel);
-  }, [emblaApi, currentIndex]);
-
+  
   // Keyboard nav + lock body scroll
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -639,11 +628,18 @@ const IsolatedView = ({
     };
   }, [emblaApi, onClose]);
 
-  // Disable Embla's drag/swipe when zoomed in so pan gestures don't get hijacked.
+// Disable Embla's drag/swipe when zoomed in EXCEPT when sitting at the edge bounds
   useEffect(() => {
     if (!emblaApi) return;
-    emblaApi.reInit({ watchDrag: scale <= 1 });
-  }, [scale, emblaApi]);
+    
+    // Calculate if we are at the far left or right edge of the panned image
+    const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
+    const clampX = maxX * scale;
+    const atEdge = offset.x === -clampX || offset.x === clampX;
+
+    // Watch for dragging if completely zoomed out OR if sitting exactly at an edge boundary
+    emblaApi.reInit({ watchDrag: scale <= 1 || atEdge });
+  }, [scale, offset.x, emblaApi]);
 
   // Native touch listeners — handles pan, swipe-to-navigate, and pinch
   useEffect(() => {
