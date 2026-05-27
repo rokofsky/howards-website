@@ -5,44 +5,44 @@ const PricingSection = () => {
   const t = useT();
   const tiers = [
     {
-      name: t("Online Workshops", "Online workshopy"),
-      price: t("From CZK 4,000 (€165)", "Od 4 000 Kč (165 €)"),
+      name: t("Live Webinars", "Živé webináře"),
+      price: t("From CZK 2,500 (€100)", "Od 2 500 Kč (100 €)"),
       description: t(
         "From 2 hours to a full day of interactive team learning.",
         "Od 2 hodin po celý den interaktivního týmového vzdělávání."
       ),
       features: [
-        t("2–6 hour sessions", "Setkání v délce 2–6 hodin"),
-        t("Up to 100 participants", "Až 100 účastníků"),
-        t("Flexible timing options", "Flexibilní časové možnosti"),
-        t("Follow-up resources", "Navazující materiály"),
-        t("Post-workshop debrief", "Vyhodnocení po workshopu"),
+        t("\n2–6 hour sessions", "\nSetkání v délce 2–6 hodin"),
+        t("\nUp to 100 participants", "\nAž 100 účastníků"),
+        t("\nFlexible timing options", "\nFlexibilní časové možnosti"),
+        t("\n", "\n"),
+        t("\n\n\n", "\n\n\n"),
       ],
       highlighted: true,
     },
     {
       name: t("Inhouse Workshops", "Firemní workshopy"),
-      price: t("From CZK 24,500 (€1000)", "Od 24 500 Kč (1 000 €)"),
+      price: t("From CZK 25,000 (€1000)", "Od 25 000 Kč (1 000 €)"),
       description: t("Training for teams.", "Školení pro týmy."),
       features: [
-        t("Modules can be combined", "Moduly lze kombinovat"),
-        t("Custom exercises & materials", "Cvičení a materiály na míru"),
-        t("Team assessments", "Hodnocení týmu"),
-        t("Follow-up resources", "Navazující materiály"),
-        t("Post-workshop debrief", "Vyhodnocení po workshopu"),
+        t("\n1-3 days", "\n1-3 dny"),
+        t("\nCustom exercises & materials", "\nCvičení a materiály na míru"),
+        t("\nModules can be combined", "\nModuly lze kombinovat"),
+        t("\nFollow-up resources", "\nNavazující materiály"),
+        t("\nFollow-up personal contact", "\nNásledný osobní kontakt"),
       ],
     },
     {
       name: t("Keynote Speaking", "Hlavní přednáška"),
       price: t("From CZK 30,000 (€1,200)", "Od 30 000 Kč (1 200 €)"),
       description: t(
-        "A one-time speaking engage-ment that your audience will talk about for days.",
-        "Jednorázové vystoupení, o kterém bude Vaše publikum mluvit ještě dlouhé dny."
+        "A one-time speaking engage-ment that your audience will talk about.",
+        "Jednorázové vystoupení, o kterém bude Vaše publikum mluvit."
       ),
       features: [
         t("60–90 minute session", "Vystoupení v délce 60–90 minut"),
         t("Custom topic & storytelling", "Téma a vyprávění na míru"),
-        t("Q&A session included", "Včetně diskuse s publikem"),
+        t("\nQ&A session ", "\nDiskuse s publikem "),
         t("Recording rights available", "Možnost práv k záznamu"),
       ],
     },
@@ -77,12 +77,12 @@ const PricingSection = () => {
             transition={{ delay: i * 0.1 }}
             className={`rounded-lg p-8 ${tier.highlighted ? "glass glow-gold border-gold/20" : "glass"}`}
           >
-            <h3 className="text-xl font-semibold mb-1">{tier.name}</h3>
-            <p className="text-2xl font-bold text-gold mb-3">{tier.price}</p>
-            <p className="text-sm text-muted-foreground mb-6 font-normal">{tier.description}</p>
+            <h3 className="text-xl font-semibold mb-1 whitespace-pre-wrap">{tier.name}</h3>
+            <p className="text-2xl font-bold text-gold mb-3 whitespace-pre-wrap">{tier.price}</p>
+            <p className="text-sm text-muted-foreground mb-6 font-normal whitespace-pre-wrap">{tier.description}</p>
             <ul className="space-y-2">
               {tier.features.map((f, j) => (
-                <li key={j} className="text-sm text-foreground/80 flex items-start gap-2 font-normal">
+                <li key={j} className="text-sm text-foreground/80 flex items-start gap-2 font-normal whitespace-pre-wrap">
                   <span className="text-gold mt-0.5">✓</span>
                   {f}
                 </li>
