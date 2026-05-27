@@ -124,17 +124,19 @@ export default function AdminSessions() {
       }
       toast({ title: "Session updated!" });
     } else {
+      const payload = {
+        password: getPassword(),
+        action: "create",
+        title: title || null,
+        description: description || null,
+        session_date: new Date(sessionDate).toISOString(),
+        zoom_link: zoomLink || null,
+        zoom_meeting_id: zoomMeetingId || null,
+        status,
+      };
+      console.log("[DEBUG] Admin create payload:", { ...payload, password: "***" });
       const res = await supabase.functions.invoke("admin-sessions", {
-        body: {
-          password: getPassword(),
-          action: "create",
-          title: title || null,
-          description: description || null,
-          session_date: new Date(sessionDate).toISOString(),
-          zoom_link: zoomLink || null,
-          zoom_meeting_id: zoomMeetingId || null,
-          status,
-        },
+        body: payload,
       });
       setLoading(false);
       if (res.error || res.data?.error) {
