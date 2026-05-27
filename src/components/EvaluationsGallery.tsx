@@ -812,32 +812,38 @@ const IsolatedView = ({
               if (!el) return;
               el.removeEventListener('wheel', (el as any)._handleWheel);
 
-              const handleWheel = (e: WheelEvent) => {
-                e.preventDefault();
-                e.stopPropagation();
+const handleWheel = (e: WheelEvent) => {
+                    e.preventDefault();
+                    e.stopPropagation();
 
-                let zoomDirection = 0;
-                let maxZoom = 2.5;
+                    let zoomDirection = 0;
+                    let maxZoom = 2.51; // Changed from 2.5 to 2.51 to prevent rounding lockups
 
-                if (e.ctrlKey || e.metaKey) {
-                  zoomDirection = e.deltaY < 0 ? 0.4 : -0.4;
-                  maxZoom = 8.0;
-                } else if (e.shiftKey) {
-                  return;
-                } else {
-                  zoomDirection = e.deltaY < 0 ? 0.15 : -0.15;
-                }
+                    if (e.ctrlKey || e.metaKey) {
+                      zoomDirection = e.deltaY < 0 ? 0.4 : -0.4;
+                      maxZoom = 8.01; // Changed from 8.0 to 8.01 to prevent rounding lockups
+                    } else if (e.shiftKey) {
+                      return;
+                    } else {
+                      zoomDirection = e.deltaY < 0 ? 0.15 : -0.15;
+                    }
 
-                setScale((prevScale) => {
-                  const nextScale = Math.min(Math.max(prevScale + zoomDirection, 1.0), maxZoom);
-                  
-                  el.style.transform = `scale(${nextScale}) translate(${offset.x / nextScale}px, ${offset.y / nextScale}px)`;
-                  el.style.willChange = 'transform';
+                    setScale((prevScale) => {
+                      // Clamp strictly between 1.0 and the max target
+                      let nextScale = prevScale + zoomDirection;
+                      if (nextScale <= 1.0) nextScale = 1.0;
+                      if (nextScale >= maxZoom) nextScale = maxZoom - 0.01; // Clean lock at exactly 2.5 or 8.0
+                      
+                      // Hardware accelerated transforms execute instantly
+                      el.style.transform = `scale(${nextScale}) translate(${offset.x / nextScale}px, ${offset.y / nextScale}px)`;
+                      el.style.willChange = 'transform';
 
-                  if (nextScale === 1.0) {
-                    setOffset({ x: 0, y: 0 });
-                  }
-                  return nextScale;
+                      if (nextScale === 1.0) {
+                        setOffset({ x: 0, y: 0 });
+                      }
+                      return nextScale;
+                    });
+                  };
                 });
               };
 
