@@ -116,6 +116,11 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     setUndecided(false);
     toast.success(t("Howard will send you an email within 24 hours.", "Howard vám pošle e-mail do 24 hodin."));
   };
+  // Custom Tailwind overrides to beef up the standard tiny notification card size
+  className: "sm:w-[450px] p-5 !rounded-xl !shadow-xl border border-gray-100", 
+  descriptionClassName: "text-sm text-gray-600 font-normal mt-1 leading-relaxed",
+  duration: 6000, // Keeps it on screen slightly longer so they can read it comfortably
+});
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -157,12 +162,9 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           </div>
 
           <div>
-            <Label className="mb-1 block">
+            <Label className="mb-2 block">
               {t("Select webinars", "Vyberte webináře")} *
             </Label>
-            <p className="text-xs text-muted-foreground mb-2">
-              {t("Price: CZK 2,500 / €100 for a 90-minute session", "Cena: 2 500 Kč / 100 € za 90minutovou lekci")}
-            </p>
             <div className="max-h-48 overflow-y-auto rounded-md border border-gold/40 p-3 space-y-2">
               {[...allWebinars]
                 .sort((a, b) => a.title.localeCompare(b.title))
@@ -255,22 +257,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
               className={fieldBorder}
             />
           </div>
-
-          <div className="rounded-md border border-gold/40 bg-gold/5 px-4 py-3 flex items-center justify-between">
-            <span className="text-sm text-muted-foreground font-medium">
-              {t("Subtotal", "Mezisoučet")}
-            </span>
-            <span className="text-lg font-semibold text-gold">
-              {t(
-                `CZK ${(selectedSlugs.length * 2500).toLocaleString("en-US")} / €${selectedSlugs.length * 100}`,
-                `${(selectedSlugs.length * 2500).toLocaleString("cs-CZ")} Kč / ${selectedSlugs.length * 100} €`
-              )}
-            </span>
-          </div>
-
-          <p className="text-right text-sm font-semibold text-gold">
-            {t("There is no payment now, we will be in touch", "Nyní se neplatí, ozveme se vám")}
-          </p>
 
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
