@@ -228,7 +228,7 @@ export default function AdminSessions() {
               onChange={(e) => setStatus(e.target.value as "draft" | "published")}
             >
               <option value="draft">Draft (hidden from public)</option>
-              <option value="published">Published (visible on /storytelling-workshops)</option>
+              <option value="published">Published (visible on /storytelling-sessions)</option>
             </select>
           </div>
           <div className="flex gap-2">
