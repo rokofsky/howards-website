@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271858";
+export const ASSET_VERSION = "202605271903";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -651,8 +651,11 @@ const IsolatedView = ({
   // Disable Embla's drag/swipe when zoomed in so pan gestures don't get hijacked.
   useEffect(() => {
     if (!emblaApi) return;
-    emblaApi.reInit({ watchDrag: scale <= 1 });
-  }, [scale, emblaApi]);
+    const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
+    const clampX = maxX * scale;
+    const atEdge = offset.x <= -clampX || offset.x >= clampX;
+    emblaApi.reInit({ watchDrag: scale <= 1 || atEdge });
+  }, [scale, offset.x, emblaApi]);
 
   // Native touch listeners — handles pan, swipe-to-navigate, and pinch
   useEffect(() => {
