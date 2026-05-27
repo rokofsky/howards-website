@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271525";
+export const ASSET_VERSION = "202605271620";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -559,6 +559,7 @@ const IsolatedView = ({
   const imageBounds = useRef({ width: 0, height: 0 });
   const containerBounds = useRef({ width: 0, height: 0 });
   const activeImgRef = useRef<HTMLImageElement | null>(null);
+  const wheelHandlerRef = useRef<{ el: HTMLImageElement; fn: (e: WheelEvent) => void } | null>(null);
 
   // Pinch gesture refs
   const pinchStartDist = useRef<number | null>(null);
@@ -609,9 +610,9 @@ const IsolatedView = ({
     };
   }, [emblaApi, onIndexChange]);
 
-  // Wheel zoom on desktop — bound only to the active image inside the lightbox.
-  // Ctrl/Cmd+wheel is left to the browser (native page zoom).
-  
+  // Wheel zoom is attached via callback ref on the active <img/> below
+  // so it always reflects the latest `scale`/`offset` closure without flicker.
+
   // Keyboard nav + lock body scroll
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -628,18 +629,11 @@ const IsolatedView = ({
     };
   }, [emblaApi, onClose]);
 
-// Disable Embla's drag/swipe when zoomed in EXCEPT when sitting at the edge bounds
+  // Disable Embla's drag/swipe when zoomed in so pan gestures don't get hijacked.
   useEffect(() => {
     if (!emblaApi) return;
-    
-    // Calculate if we are at the far left or right edge of the panned image
-    const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
-    const clampX = maxX * scale;
-    const atEdge = offset.x === -clampX || offset.x === clampX;
-
-    // Watch for dragging if completely zoomed out OR if sitting exactly at an edge boundary
-    emblaApi.reInit({ watchDrag: scale <= 1 || atEdge });
-  }, [scale, offset.x, emblaApi]);
+    emblaApi.reInit({ watchDrag: scale <= 1 });
+  }, [scale, emblaApi]);
 
   // Native touch listeners — handles pan, swipe-to-navigate, and pinch
   useEffect(() => {
@@ -805,72 +799,69 @@ const IsolatedView = ({
               style={{ overflow: "visible", pointerEvents: "none" }}
             >
               <img
- style={{ overflow: "visible", pointerEvents: "none" }}
-        >
-          <img
-ref={(el: HTMLImageElement | null) => {
-              if (!el) return;
-              el.removeEventListener('wheel', (el as any)._handleWheel);
+                src={`${it.src}?v=${ASSET_VERSION}`}
+                alt={`${alt} #${it.num}`}
+                draggable={false}
+                ref={(el) => {
+                  if (it.key === items[current]?.key) {
+                    activeImgRef.current = el;
 
-              const handleWheel = (e: WheelEvent) => {
-                e.preventDefault();
-                e.stopPropagation();
+                    // Detach previous listener to avoid leaks across slide swaps / re-renders
+                    if (wheelHandlerRef.current) {
+                      wheelHandlerRef.current.el.removeEventListener(
+                        "wheel",
+                        wheelHandlerRef.current.fn,
+                      );
+                      wheelHandlerRef.current = null;
+                    }
+                    if (!el) return;
 
-                let zoomDirection = 0;
-                let maxZoom = 2.51;
+                    const handleWheel = (e: WheelEvent) => {
+                      e.preventDefault();
+                      e.stopPropagation();
 
-                if (e.ctrlKey || e.metaKey) {
-                  zoomDirection = e.deltaY < 0 ? 0.4 : -0.4;
-                  maxZoom = 8.01;
-                } else if (e.shiftKey) {
-                  return;
-                } else {
-                  zoomDirection = e.deltaY < 0 ? 0.15 : -0.15;
-                }
+                      let zoomDirection = 0;
+                      let maxZoom = 2.5;
 
-                setScale((prevScale) => {
-                  let nextScale = prevScale + zoomDirection;
-                  if (nextScale <= 1.0) nextScale = 1.0;
-                  if (nextScale >= maxZoom) nextScale = maxZoom - 0.01;
-                  
-                  // Reads the style transforms directly from the DOM to bypass state lag
-                  if (el) {
-                    el.style.transform = `scale(${nextScale})`;
-                    el.style.willChange = 'transform';
-                  }
-
-                  if (nextScale === 1.0) {
-                    setOffset({ x: 0, y: 0 });
-                  }
-                  return nextScale;
-                });
-              };
-
-              (el as any)._handleWheel = handleWheel;
-              el.addEventListener('wheel', handleWheel, { passive: false });
-            }}
-                      if (nextScale <= 1.0) nextScale = 1.0;
-                      if (nextScale >= maxZoom) nextScale = maxZoom - 0.01; // Clean lock at exactly 2.5 or 8.0
-                      
-                      // Hardware accelerated transforms execute instantly
-                      el.style.transform = `scale(${nextScale}) translate(${offset.x / nextScale}px, ${offset.y / nextScale}px)`;
-                      el.style.willChange = 'transform';
-
-                      if (nextScale === 1.0) {
-                        setOffset({ x: 0, y: 0 });
+                      if (e.ctrlKey || e.metaKey) {
+                        // Fast step and large ceiling for Ctrl+Wheel
+                        zoomDirection = e.deltaY < 0 ? 0.4 : -0.4;
+                        maxZoom = 8.0;
+                      } else if (e.shiftKey) {
+                        return;
+                      } else {
+                        // Normal step for standard wheel
+                        zoomDirection = e.deltaY < 0 ? 0.15 : -0.15;
                       }
-                      return nextScale;
-                    });
-                  };
-                });
-              };
 
-              (el as any)._handleWheel = handleWheel;
-              el.addEventListener('wheel', handleWheel, { passive: false });
-            }}
-            src={/* leave your existing src attribute exactly as it is */}
-            className="select-none"
-            onPointerDown={(e) => {
+                      setScale((prevScale) => {
+                        // Prevent locking by calculating boundaries directly from the true previous scale state
+                        const nextScale = Math.min(Math.max(prevScale + zoomDirection, 1.0), maxZoom);
+
+                        if (nextScale === 1.0) {
+                          setOffset({ x: 0, y: 0 });
+                        }
+
+                        return nextScale;
+                      });
+                    };
+
+                    el.addEventListener("wheel", handleWheel, { passive: false });
+                    wheelHandlerRef.current = { el, fn: handleWheel };
+                  }
+                }}
+                style={{
+                  pointerEvents: "auto",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  touchAction: "none",
+                  transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
+                  transformOrigin: "center",
+                  transition: isPanning.current ? "none" : "transform 0.1s ease",
+                }}
+                className="select-none"
+                onPointerDown={(e) => {
                   if (scale <= 1) return;
                   e.stopPropagation();
                   e.currentTarget.setPointerCapture(e.pointerId);
