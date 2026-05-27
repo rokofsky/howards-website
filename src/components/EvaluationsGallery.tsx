@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605261808";
+export const ASSET_VERSION = "202605271845";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -864,11 +864,11 @@ const IsolatedView = ({
                       // Open up immediate layout boundaries when zoomed in so margins don't truncate
                       if (parentDiv && grandParentDiv) {
                         if (nextScale > 1.0) {
-                          parentDiv.style.style.overflow = "visible";
-                          grandParentDiv.style.style.overflow = "visible";
+                          parentDiv.style.overflow = "visible";
+                          grandParentDiv.style.overflow = "visible";
                         } else {
-                          parentDiv.style.style.overflow = "";
-                          grandParentDiv.style.style.overflow = "";
+                          parentDiv.style.overflow = "";
+                          grandParentDiv.style.overflow = "";
                         }
                       }
 
