@@ -75,7 +75,7 @@ const PricingSection = () => {
         </h2>
         <p className="text-primary font-semibold">
           {t(
-            "No hidden fees. No surprise \"strategy sessions.\"",
+            "No hidden fees. No surprise \"strategy sessions\".",
             "Žádné skryté poplatky. Žádné překvapivé „strategické konzultace“."
           )}
         </p>
