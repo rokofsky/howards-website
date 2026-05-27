@@ -62,7 +62,7 @@ const ServiceDetail = () => {
   }, [slug]);
 
   useEffect(() => {
-    if (slug === "online-webinars") {
+    if (slug === "live-webinars") {
       supabase.from("webinars").select("*").order("sort_order", { ascending: true }).then(({ data }) => {
         if (data) setWebinars(data as DbWebinar[]);
       });
@@ -114,7 +114,7 @@ const ServiceDetail = () => {
     ? t("Conflict mediation/resolution", "Mediace / řešení konfliktů")
     : slug === "meetings-moderation"
     ? t("The Six Hats Method for Meetings", "Metoda Šesti klobouků pro porady")
-    : slug === "online-webinars"
+    : slug === "live-webinars"
     ? t("Online webinars", "Online webináře")
     : serviceTitle;
 
@@ -167,7 +167,7 @@ const ServiceDetail = () => {
                 {detail?.pageTitle ? pickL(detail.pageTitle, lang) : t("About This Service", "O této službě")}
               </h2>
 
-              {slug === "online-webinars" ? (
+              {slug === "live-webinars" ? (
                 <>
                   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                     {webinars.map((webinar) => (
