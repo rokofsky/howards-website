@@ -891,12 +891,10 @@ const IsolatedView = ({
                   setOffset((o) => {
                     const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
                     const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
-                    // Multiply by scale because offset is applied as translate(offset/scale)
-                    const clampX = maxX * scale;
-                    const clampY = maxY * scale;
+                    // Visual displacement equals raw offset, so clamp to the per-side overflow.
                     return {
-                      x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
-                      y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
+                      x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
+                      y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
                     };
                   });
                 }}
