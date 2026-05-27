@@ -52,7 +52,7 @@ const FAQSection = () => {
         "Existuje nějaká záruka, že neutratím peníze zbytečně?"
       ),
       a: t(
-        "Howard has always included a satisfaction guarantee in T&C since his first website in 2004. It reads: \"I am not satisfied until you are satisfied. If a client is disappointed with a service, we will agree to continue working on it at no extra charge, until client is satisfied. Or, you can fire me on the spot and I'll cancel the invoice.\" Simple as that.",
+        "Howard has always included a satisfaction guarantee in T&C since his first website in 2004. It reads: \"I am not satisfied until you the client is satisfied. If you are disappointed with a service, we will agree to continue working on it at no extra charge, until you are satisfied. Or, you can fire me on the spot and I'll cancel the invoice.\" Simple as that.",
         "Howard má od svých prvních webových stránek z roku 2004 ve smluvních podmínkách vždy zahrnutou záruku spokojenosti. Zní takto: „Nejsem spokojen, dokud nejste spokojeni Vy. Pokud je klient se službou nespokojen, dohodneme se na dalším pokračování bez příplatku, dokud nebude klient spokojen. Nebo mě můžete na místě propustit a já zruším fakturu.“ Tak jednoduché to je."
       ),
     },
