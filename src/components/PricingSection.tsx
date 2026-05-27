@@ -49,7 +49,7 @@ const PricingSection = () => {
     },
     {
       name: t("Keynote Speaking", "Hlavní přednáška"),
-      price: t("From CZK 30,000 (€1,200)", "Od 30 000 Kč (1 200 €)"),
+      price: t("From CZK 30,000 (€1200)", "Od 30 000 Kč (1 200 €)"),
       description: t(
         "A speaking engagement your audience will talk about.",
         "Jednorázové vystoupení, o kterém bude Vaše publikum mluvit."
