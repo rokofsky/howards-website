@@ -10,7 +10,7 @@ const FAQSection = () => {
         "Čím se Howard liší od ostatních konzultantů?"
       ),
       a: t(
-        "He simply does things differently — this will be apparent from the outset, from uncommon professional ethics through transparent communication to generous outputs. You'll immediately notice a lack of (tolerance for) fluff, and a focus on clarity, open-mindedness, and new options. Because he believes in skin in the game, he offers success-fee structures on certain activities. It keeps him sharp and you certain.",
+        "He simply does things differently — and you’ll notice it from day one. From an uncommon standard of professional ethics and transparent communication to generous project outputs, there is no room for fluff. Howard focuses strictly on clarity, an open-minded approach, and uncovering new strategic options. Because he believes in having skin in the game, he offers success-fee structures for select projects. It keeps him sharp, and you certain.",
         "Jednoduše dělá věci jinak — bude to patrné od samého začátku, od neobvyklé profesní etiky přes transparentní komunikaci až po štědré výstupy. Okamžitě si všimnete absence (a netolerance) prázdných řečí a důrazu na jasnost, otevřenost a nové možnosti. Protože věří v osobní zaangažovanost, nabízí u některých aktivit honorář vázaný na úspěch. Jeho to udržuje ve střehu a Vás v jistotě."
       ),
     },
