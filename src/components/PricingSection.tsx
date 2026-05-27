@@ -1,8 +1,16 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { useT } from "@/hooks/useT";
+import { useIsCzech } from "@/hooks/useLanguageRouting";
+import KeynoteInquiryModal from "@/components/KeynoteInquiryModal";
 
 const PricingSection = () => {
   const t = useT();
+  const isCz = useIsCzech();
+  const [keynoteOpen, setKeynoteOpen] = useState(false);
+
   const tiers = [
     {
       name: t("Live Webinars", "Živé webináře"),
@@ -12,24 +20,26 @@ const PricingSection = () => {
         "Od 2 hodin po celý den interaktivního týmového vzdělávání."
       ),
       features: [
-        t("\n2–6 hour sessions", "\nSetkání v délce 2–6 hodin"),
-        t("\nUp to 100 participants", "\nAž 100 účastníků"),
-        t("\nFlexible timing options", "\nFlexibilní časové možnosti"),
-        t("\n", "\n"),
-        t("\n\n\n", "\n\n\n"),
+        t("2–6 hour sessions", "Setkání v délce 2–6 hodin"),
+        t("Up to 100 participants", "Až 100 účastníků"),
+        t("Flexible timing options", "Flexibilní časové možnosti"),
       ],
       highlighted: true,
+      cta: {
+        label: t("Choose a live webinar", "Vyberte si webinář"),
+        to: isCz ? "/cz/services/online-webinars" : "/services/online-webinars",
+      },
     },
     {
       name: t("Inhouse Workshops", "Firemní workshopy"),
       price: t("From CZK 25,000 (€1000)", "Od 25 000 Kč (1 000 €)"),
       description: t("Training for teams.", "Školení pro týmy."),
       features: [
-        t("\n1-3 days", "\n1-3 dny"),
-        t("\nCustom exercises & materials", "\nCvičení a materiály na míru"),
-        t("\nModules can be combined", "\nModuly lze kombinovat"),
-        t("\nFollow-up resources", "\nNavazující materiály"),
-        t("\nFollow-up personal contact", "\nNásledný osobní kontakt"),
+        t("1-3 days", "1-3 dny"),
+        t("Custom exercises & materials", "Cvičení a materiály na míru"),
+        t("Modules can be combined", "Moduly lze kombinovat"),
+        t("Follow-up resources", "Navazující materiály"),
+        t("Follow-up personal contact", "Následný osobní kontakt"),
       ],
     },
     {
@@ -42,14 +52,15 @@ const PricingSection = () => {
       features: [
         t("60–90 minute session", "Vystoupení v délce 60–90 minut"),
         t("Custom topic & storytelling", "Téma a vyprávění na míru"),
-        t("\nQ&A session ", "\nDiskuse s publikem "),
+        t("Q&A session", "Diskuse s publikem"),
         t("Recording rights available", "Možnost práv k záznamu"),
       ],
+      inquire: true,
     },
   ];
 
   return (
-    <section id="pricing" className="section-padding bg-[sidebar-primary-foreground] bg-secondary">
+    <section id="pricing" className="section-padding bg-secondary">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -75,22 +86,43 @@ const PricingSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
-            className={`rounded-lg p-8 ${tier.highlighted ? "glass glow-gold border-gold/20" : "glass"}`}
+            className={`rounded-lg p-8 flex flex-col ${tier.highlighted ? "glass glow-gold border-gold/20" : "glass"}`}
           >
-            <h3 className="text-xl font-semibold mb-1 whitespace-pre-wrap">{tier.name}</h3>
-            <p className="text-2xl font-bold text-gold mb-3 whitespace-pre-wrap">{tier.price}</p>
-            <p className="text-sm text-muted-foreground mb-6 font-normal whitespace-pre-wrap">{tier.description}</p>
-            <ul className="space-y-2">
+            <h3 className="text-xl font-semibold mb-1">{tier.name}</h3>
+            <p className="text-2xl font-bold text-gold mb-3">{tier.price}</p>
+            <p className="text-sm text-muted-foreground mb-6 font-normal">{tier.description}</p>
+            <ul className="space-y-2 mb-6">
               {tier.features.map((f, j) => (
-                <li key={j} className="text-sm text-foreground/80 flex items-start gap-2 font-normal whitespace-pre-wrap">
+                <li key={j} className="text-sm text-foreground/80 flex items-start gap-2 font-normal">
                   <span className="text-gold mt-0.5">✓</span>
-                  {f}
+                  <span>{f}</span>
                 </li>
               ))}
             </ul>
+            {tier.cta && (
+              <div className="mt-auto pt-2">
+                <Button asChild variant="cta" className="w-full">
+                  <Link to={tier.cta.to}>{tier.cta.label}</Link>
+                </Button>
+              </div>
+            )}
+            {tier.inquire && (
+              <div className="mt-auto pt-2">
+                <Button
+                  type="button"
+                  variant="cta"
+                  className="w-full"
+                  onClick={() => setKeynoteOpen(true)}
+                >
+                  {t("Inquire", "Poptat")}
+                </Button>
+              </div>
+            )}
           </motion.div>
         ))}
       </div>
+
+      <KeynoteInquiryModal open={keynoteOpen} onOpenChange={setKeynoteOpen} />
     </section>
   );
 };
