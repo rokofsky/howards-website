@@ -115,7 +115,7 @@ const ServiceDetail = () => {
     : slug === "meetings-moderation"
     ? t("The Six Hats Method for Meetings", "Metoda Šesti klobouků pro porady")
     : slug === "online-webinars"
-    ? t("Online webinars", "Online webináře")
+    ? t("Live Webinars", "Online webináře")
     : serviceTitle;
 
   const subtitle = pickL(service.subtitle, lang);
@@ -371,8 +371,8 @@ const ServiceDetail = () => {
             </h2>
             <p className="text-muted-foreground text-center mb-8 font-normal">
               {t(
-                "Fill in some stuff below (mostly optional) and I'll get back to you next day.",
-                "Vyplňte níže pár údajů (většinou nepovinných) a ozvu se Vám následující den."
+                "Fill in some stuff below (mostly optional) and I'll get back to you by tomorrow.",
+                "Vyplňte níže pár údajů (většinou nepovinných) a ozvu se Vám do zítřka."
               )}
             </p>
             <ContactForm serviceName={serviceTitle} showServiceFields />
