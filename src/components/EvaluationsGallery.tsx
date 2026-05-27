@@ -805,6 +805,45 @@ const IsolatedView = ({
                 ref={(el) => {
                   if (it.key === items[current]?.key) {
                     activeImgRef.current = el;
+
+                    // Detach previous listener to avoid leaks across slide swaps / re-renders
+                    if (wheelHandlerRef.current) {
+                      wheelHandlerRef.current.el.removeEventListener(
+                        "wheel",
+                        wheelHandlerRef.current.fn,
+                      );
+                      wheelHandlerRef.current = null;
+                    }
+                    if (!el) return;
+
+                    const handleWheel = (e: WheelEvent) => {
+                      if (e.shiftKey) return;
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      const isModifier = e.ctrlKey || e.metaKey;
+                      const step = isModifier ? 0.3 : 0.15;
+                      const max = isModifier ? 8.0 : 2.5;
+                      const dir = e.deltaY < 0 ? 1 : -1;
+                      const nextScale = Math.min(max, Math.max(1, scale + dir * step));
+
+                      if (nextScale === 1) {
+                        el.style.transform = "scale(1) translate(0px, 0px)";
+                        el.style.willChange = "transform";
+                        requestAnimationFrame(() => {
+                          setScale(1);
+                          setOffset({ x: 0, y: 0 });
+                        });
+                        return;
+                      }
+
+                      el.style.transform = `scale(${nextScale}) translate(${offset.x / nextScale}px, ${offset.y / nextScale}px)`;
+                      el.style.willChange = "transform";
+                      requestAnimationFrame(() => setScale(nextScale));
+                    };
+
+                    el.addEventListener("wheel", handleWheel, { passive: false });
+                    wheelHandlerRef.current = { el, fn: handleWheel };
                   }
                 }}
                 style={{
