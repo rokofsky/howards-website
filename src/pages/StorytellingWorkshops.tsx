@@ -122,12 +122,12 @@ const StorytellingWorkshops = () => {
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               {t("Free Storytelling Sessions!", "Bezplatná sezení Storytellingu!")}
             </h1>
-            <p className="mb-10 max-w-2xl leading-relaxed font-semibold text-secondary-foreground">
+            <div className="mb-10 max-w-2xl leading-relaxed text-secondary-foreground whitespace-pre-wrap">
               {t(
-                "Join us in a round of neighborly storytelling. We come together on Zoom and take turns telling our story, anecdote, joke, whatever. If you want, get instant feedback from the others.",
-                "Přidejte se k nám na sousedské vyprávění příběhů. Sejdeme se na Zoomu a po jednom vyprávíme svůj příběh, anekdotu, vtip — cokoliv. Pokud chcete, dostanete od ostatních okamžitou zpětnou vazbu."
+                "Storytelling has been around since the dawn of language. Stories were shared and retold around the community fire, at family gatherings in huts, pueblos, igloos and yurts. Do you want to practice your storytelling?\n\nThis is not a reading or writing event; it is a storyTELLING event, where we practice the art of oral storytelling.\n\nYou are encouraged to tell one story (or joke) in English up to 8 minutes; it can be true, fake, myth, fable, metaphor, anecdote. After each turn, if you want, we’ll have a short round of feedback to hopefully improve your story and/or how you tell it.\n\nYou can also just watch, just do us the courtesy of putting your camera on.\n\nGet out of your comfort zone in a safe space of fellow storytellers!\n\n",
+                "Storytelling existuje už od úsvitu jazyka. Příběhy se sdílely a převyprávěly u komunitního ohně, na rodinných setkáních v chatrčích, pueblech, iglú a jurtách. Chcete si procvičit své vypravěčství?\n\nToto není čtenářská ani spisovatelská akce; je to akce storyTELLINGOVÁ, kde trénujeme umění ústního vyprávění.\n\nJste povzbuzováni k vyprávění jednoho příběhu (nebo vtipu) v angličtině v délce do 8 minut; může být pravdivý, vymyšlený, mýtus, bajka, metafora, anekdota. Po každém vystoupení budeme mít, pokud budete chtít, krátké kolo zpětné vazby, abychom doufejme vylepšili váš příběh a/nebo způsob, jakým ho vyprávíte.\n\nMůžete se také jen dívat, jen nám prokažte laskavost a zapněte si kameru.\n\nVystupte ze své komfortní zóny v bezpečném prostoru kolegů vypravěčů!\n\n"
               )}
-            </p>
+            </div>
 
             {loading ? (
               <p className="text-muted-foreground font-light">{t("Loading sessions...", "Načítám termíny…")}</p>
