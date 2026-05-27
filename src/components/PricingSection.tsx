@@ -6,12 +6,14 @@ import { useT } from "@/hooks/useT";
 import { useIsCzech } from "@/hooks/useLanguageRouting";
 import KeynoteInquiryModal from "@/components/KeynoteInquiryModal";
 import InhouseInquiryModal from "@/components/InhouseInquiryModal";
+import IndividualSessionsInquiryModal from "@/components/IndividualSessionsInquiryModal";
 
 const PricingSection = () => {
   const t = useT();
   const isCz = useIsCzech();
   const [keynoteOpen, setKeynoteOpen] = useState(false);
   const [inhouseOpen, setInhouseOpen] = useState(false);
+  const [individualOpen, setIndividualOpen] = useState(false);
 
   const tiers = [
     {
