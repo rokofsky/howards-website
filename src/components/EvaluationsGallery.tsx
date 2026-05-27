@@ -817,29 +817,33 @@ const IsolatedView = ({
                     if (!el) return;
 
                     const handleWheel = (e: WheelEvent) => {
-                      if (e.shiftKey) return;
                       e.preventDefault();
                       e.stopPropagation();
 
-                      const isModifier = e.ctrlKey || e.metaKey;
-                      const step = isModifier ? 0.3 : 0.15;
-                      const max = isModifier ? 8.0 : 2.5;
-                      const dir = e.deltaY < 0 ? 1 : -1;
-                      const nextScale = Math.min(max, Math.max(1, scale + dir * step));
+                      let zoomDirection = 0;
+                      let maxZoom = 2.5;
 
-                      if (nextScale === 1) {
-                        el.style.transform = "scale(1) translate(0px, 0px)";
-                        el.style.willChange = "transform";
-                        requestAnimationFrame(() => {
-                          setScale(1);
-                          setOffset({ x: 0, y: 0 });
-                        });
+                      if (e.ctrlKey || e.metaKey) {
+                        // Fast step and large ceiling for Ctrl+Wheel
+                        zoomDirection = e.deltaY < 0 ? 0.4 : -0.4;
+                        maxZoom = 8.0;
+                      } else if (e.shiftKey) {
                         return;
+                      } else {
+                        // Normal step for standard wheel
+                        zoomDirection = e.deltaY < 0 ? 0.15 : -0.15;
                       }
 
-                      el.style.transform = `scale(${nextScale}) translate(${offset.x / nextScale}px, ${offset.y / nextScale}px)`;
-                      el.style.willChange = "transform";
-                      requestAnimationFrame(() => setScale(nextScale));
+                      setScale((prevScale) => {
+                        // Prevent locking by calculating boundaries directly from the true previous scale state
+                        const nextScale = Math.min(Math.max(prevScale + zoomDirection, 1.0), maxZoom);
+
+                        if (nextScale === 1.0) {
+                          setOffset({ x: 0, y: 0 });
+                        }
+
+                        return nextScale;
+                      });
                     };
 
                     el.addEventListener("wheel", handleWheel, { passive: false });
