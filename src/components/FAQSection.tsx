@@ -4,6 +4,7 @@ import { useIsCzech } from "@/hooks/useLanguageRouting";
 
 const FAQSection = () => {
   const t = useT();
+  const isCz = useIsCzech();
   const faqs = [
     {
       q: t(
@@ -34,6 +35,15 @@ const FAQSection = () => {
       a: t(
         "Depending on the scope, group size, travel distance, we're talking a daily rate between 1000 and 2000 Euros, prorated. To all the overpriced consultants out there, there's no reason to be greedy. There are various success fee options for certain services, get in touch for a custom quote — I promise not to use the word 'synergy'.",
         "V závislosti na rozsahu, velikosti skupiny a dojezdové vzdálenosti se denní sazba pohybuje mezi 1 000 a 2 000 eury, poměrově. Na rozdíl od předražených konzultantů nemá smysl být chamtivý. U některých služeb existují různé varianty honoráře vázaného na úspěch, ozvěte se pro individuální nabídku — slibuji, že nepoužiji slovo „synergie“."
+      ),
+      aElement: isCz ? (
+        <>
+          V závislosti na rozsahu, velikosti skupiny a dojezdové vzdálenosti se denní sazba pohybuje mezi 1 000 a 2 000 eury, poměrově. Na rozdíl od předražených konzultantů nemá smysl být chamtivý. U některých služeb existují různé varianty honoráře vázaného na úspěch, ozvěte se pro individuální nabídku — slibuji, že nepoužiji slovo „synergie“. <a href="#pricing" className="text-primary underline">Cenové informace</a>
+        </>
+      ) : (
+        <>
+          Depending on the scope, group size, travel distance, we're talking a daily rate between 1000 and 2000 Euros, prorated. To all the overpriced consultants out there, there's no reason to be greedy. There are various success fee options for certain services, get in touch for a custom quote — I promise not to use the word 'synergy'. <a href="#pricing" className="text-primary underline">Pricing details</a>
+        </>
       ),
     },
     {
