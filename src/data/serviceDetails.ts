@@ -97,7 +97,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     sections: [],
   },
   "meetings-moderation": {
-    pageTitle: { en: "Six Hats for Meetings", cs: "Šest klobouků myšlení" },
+    pageTitle: { en: "Six Hats for meetings", cs: "Šest klobouků myšlení" },
     lead: { en: "much faster meetings with actionable decisions", cs: "Pomáháme manažerům zlepšit komunikaci v týmu opravou způsobu, jakým fungují porady — umožňujeme paralelní myšlení a rychlejší rozhodování s měřitelnou produktivitou." },
     intro: [
       { en: "Howard will come to your meeting room and, together with your team, demonstrate this fun and innovative method (+/- 3 hours).", cs: "Howard přijde k vám do zasedací místnosti a společně s týmem vám tuto zábavnou a inovativní metodu předvede (cca 3 hodiny)." },
