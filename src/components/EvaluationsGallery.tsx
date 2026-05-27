@@ -874,31 +874,6 @@ useEffect(() => {
                   imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
                   isPanning.current = true;
                 }}
-
-                  // 1. Calculate the strict horizontal pan boundaries
-                  const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
-                  const clampX = maxX * scale;
-
-                  // 2. Only isolate the gesture if the image isn't pulled hard against the side margin
-                  const isAtLeftEdge = offset.x >= clampX;
-                  const isAtRightEdge = offset.x <= -clampX;
-
-                  if (!isAtLeftEdge && !isAtRightEdge) {
-                    e.stopPropagation();
-                  }
-
-                  e.currentTarget.setPointerCapture(e.pointerId);
-                  panStartX.current = e.clientX;
-                  panStartY.current = e.clientY;
-                  
-                  // Keep tracking structural layout scales for the canvas layer
-                  containerBounds.current = {
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                  };
-                  imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
-                  isPanning.current = true;
-                }}
                 onPointerMove={(e) => {
                   if (!isPanning.current) return;
                   e.stopPropagation();
