@@ -606,19 +606,19 @@ const IsolatedView = ({
     };
   }, [emblaApi, onIndexChange]);
 
-  // Ctrl+wheel zoom on desktop
+  // Wheel zoom on desktop — bound only to the active image inside the lightbox.
+  // Ctrl/Cmd+wheel is left to the browser (native page zoom).
   useEffect(() => {
-    if (!emblaApi) return;
-    const node = emblaApi.rootNode();
-    if (!node) return;
+    const img = activeImgRef.current;
+    if (!img) return;
     const onWheel = (e: WheelEvent) => {
-      if (!e.ctrlKey) return;
+      if (e.ctrlKey || e.metaKey) return; // let browser handle native zoom
       e.preventDefault();
-      setScale((s) => Math.min(4, Math.max(1, s - e.deltaY * 0.01)));
+      setScale((s) => Math.min(2.5, Math.max(1, s - e.deltaY * 0.005)));
     };
-    node.addEventListener("wheel", onWheel, { passive: false });
-    return () => node.removeEventListener("wheel", onWheel);
-  }, [emblaApi]);
+    img.addEventListener("wheel", onWheel, { passive: false });
+    return () => img.removeEventListener("wheel", onWheel);
+  }, [emblaApi, current]);
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
