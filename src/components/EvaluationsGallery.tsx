@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271852";
+export const ASSET_VERSION = "202605271858";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -864,17 +864,6 @@ const IsolatedView = ({
                   panStartY.current = e.clientY;
                   
                   // Keep tracking structural layout scales for the canvas layer
-                  containerBounds.current = {
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                  };
-                  imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
-                  isPanning.current = true;
-                }}
-                  panStartX.current = e.clientX;
-                  panStartY.current = e.clientY;
-                  // Use window dimensions as container — parentElement rect is unreliable
-                  // because the slide is positioned off-screen in Embla's flex track
                   containerBounds.current = {
                     width: window.innerWidth,
                     height: window.innerHeight,
