@@ -649,14 +649,17 @@ const IsolatedView = ({
   }, [emblaApi, onClose]);
 
   // Disable Embla's drag/swipe when zoomed in so pan gestures don't get hijacked.
-  useEffect(() => {
+useEffect(() => {
     if (!emblaApi) return;
     const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
     const clampX = maxX * scale;
-    const atEdge = offset.x <= -clampX || offset.x >= clampX;
+    
+    // 5px leeway buffer to prevent pixel-skipping deadlocks during fast swipes
+    const atEdge = offset.x <= (-clampX + 5) || offset.x >= (clampX - 5);
+    
     emblaApi.reInit({ watchDrag: scale <= 1 || atEdge });
   }, [scale, offset.x, emblaApi]);
-
+}, [scale, offset.x, emblaApi]);
   // Native touch listeners — handles pan, swipe-to-navigate, and pinch
   useEffect(() => {
     const img = activeImgRef.current;
@@ -847,8 +850,31 @@ const IsolatedView = ({
                   transition: isPanning.current ? "none" : "transform 0.1s ease",
                 }}
                 className="select-none"
-                onPointerDown={(e) => {
+             onPointerDown={(e) => {
                   if (scale <= 1) return;
+
+                  const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
+                  const clampX = maxX * scale;
+
+                  // ADDED: Match the 5px leeway buffer here so the image releases the event tracking system
+                  const isAtLeftEdge = offset.x >= (clampX - 5);
+                  const isAtRightEdge = offset.x <= (-clampX + 5);
+
+                  if (!isAtLeftEdge && !isAtRightEdge) {
+                    e.stopPropagation();
+                  }
+
+                  e.currentTarget.setPointerCapture(e.pointerId);
+                  panStartX.current = e.clientX;
+                  panStartY.current = e.clientY;
+                  
+                  containerBounds.current = {
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                  };
+                  imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
+                  isPanning.current = true;
+                }}
 
                   // 1. Calculate the strict horizontal pan boundaries
                   const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
