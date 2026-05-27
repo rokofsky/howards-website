@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271525";
+export const ASSET_VERSION = "202605271558";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -610,19 +610,8 @@ const IsolatedView = ({
     };
   }, [emblaApi, onIndexChange]);
 
-  // Wheel zoom on desktop — bound only to the active image inside the lightbox.
-  // Ctrl/Cmd+wheel is left to the browser (native page zoom).
-  useEffect(() => {
-    const img = activeImgRef.current;
-    if (!img) return;
-    const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey || e.metaKey) return; // let browser handle native zoom
-      e.preventDefault();
-      setScale((s) => Math.min(2.5, Math.max(1, s - e.deltaY * 0.005)));
-    };
-    img.addEventListener("wheel", onWheel, { passive: false });
-    return () => img.removeEventListener("wheel", onWheel);
-  }, [emblaApi, currentIndex]);
+  // Wheel zoom is attached via callback ref on the active <img/> below
+  // so it always reflects the latest `scale`/`offset` closure without flicker.
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
