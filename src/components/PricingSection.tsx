@@ -6,12 +6,14 @@ import { useT } from "@/hooks/useT";
 import { useIsCzech } from "@/hooks/useLanguageRouting";
 import KeynoteInquiryModal from "@/components/KeynoteInquiryModal";
 import InhouseInquiryModal from "@/components/InhouseInquiryModal";
+import IndividualSessionsInquiryModal from "@/components/IndividualSessionsInquiryModal";
 
 const PricingSection = () => {
   const t = useT();
   const isCz = useIsCzech();
   const [keynoteOpen, setKeynoteOpen] = useState(false);
   const [inhouseOpen, setInhouseOpen] = useState(false);
+  const [individualOpen, setIndividualOpen] = useState(false);
 
   const tiers = [
     {
@@ -60,6 +62,17 @@ const PricingSection = () => {
       ],
       inquire: true,
     },
+    {
+      name: t("Individual sessions", "Individuální lekce"),
+      price: t("From CZK 1,500 (€ 60)", "Od 1 500 Kč (60 €)"),
+      priceSuffix: t("per hour", "za hodinu"),
+      description: t(
+        "Satisfaction guaranteed or you do not pay",
+        "Spokojenost zaručena, nebo neplatíte"
+      ),
+      features: [] as string[],
+      inquireIndividual: true,
+    },
   ];
 
   return (
@@ -81,7 +94,7 @@ const PricingSection = () => {
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
         {tiers.map((tier, i) => (
           <motion.div
             key={i}
@@ -92,7 +105,12 @@ const PricingSection = () => {
             className={`rounded-lg p-8 flex flex-col ${tier.highlighted ? "glass glow-gold border-gold/20" : "glass"}`}
           >
             <h3 className="text-xl font-semibold mb-1">{tier.name}</h3>
-            <p className="text-2xl font-bold text-gold mb-3">{tier.price}</p>
+            <p className="text-2xl font-bold text-gold mb-3">
+              {tier.price}
+              {tier.priceSuffix && (
+                <span className="block text-sm font-normal text-gold/80 mt-0.5">{tier.priceSuffix}</span>
+              )}
+            </p>
             <p className="text-sm text-muted-foreground mb-6 font-normal">{tier.description}</p>
             <ul className="space-y-2 mb-6">
               {tier.features.map((f, j) => (
@@ -133,12 +151,25 @@ const PricingSection = () => {
                 </Button>
               </div>
             )}
+            {tier.inquireIndividual && (
+              <div className="mt-auto pt-2">
+                <Button
+                  type="button"
+                  variant="cta"
+                  className="w-full"
+                  onClick={() => setIndividualOpen(true)}
+                >
+                  {t("Inquire", "Poptat")}
+                </Button>
+              </div>
+            )}
           </motion.div>
         ))}
       </div>
 
       <KeynoteInquiryModal open={keynoteOpen} onOpenChange={setKeynoteOpen} />
       <InhouseInquiryModal open={inhouseOpen} onOpenChange={setInhouseOpen} />
+      <IndividualSessionsInquiryModal open={individualOpen} onOpenChange={setIndividualOpen} />
     </section>
   );
 };
