@@ -24,7 +24,7 @@ const FAQSection = () => {
       ),
     },
     {
-      q: t("How long are the workshops?", "Jak dlouho workshopy trvají?"),
+      q: t("How long are the sessions?", "Jak dlouho setkání trvají?"),
       a: t(
         "Thanks to video conferencing, all workshops can be tailored to any amount of time (2-2½ hours recommended), spread over any number of sessions you want. In-person training is usually 3-6½\u00a0hours a day. Half-day sessions are the sweet spot for most, though some courses are two intensive days for a room full of people.",
         "Díky videokonferencím lze všechny workshopy přizpůsobit libovolnému časovému rozsahu (doporučujeme 2–2,5 hodiny) a rozdělit do libovolného počtu setkání. Prezenční školení obvykle trvá 3–6 hodin, jeden nebo dva dny. Půldenní setkání jsou pro většinu ideální, ačkoliv Prezentační dovednosti obvykle probíhají dva intenzivní dny pro plný sál účastníků."
