@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271236";
+export const ASSET_VERSION = "202605271456";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -548,6 +548,7 @@ const IsolatedView = ({
 
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [currentIndex, setCurrentIndex] = useState(startIndex);
 
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
@@ -596,7 +597,9 @@ const IsolatedView = ({
   useEffect(() => {
     if (!emblaApi) return;
     const onSelect = () => {
-      onIndexChange(emblaApi.selectedScrollSnap());
+      const i = emblaApi.selectedScrollSnap();
+      setCurrentIndex(i);
+      onIndexChange(i);
       setScale(1);
       setOffset({ x: 0, y: 0 });
     };
@@ -606,19 +609,19 @@ const IsolatedView = ({
     };
   }, [emblaApi, onIndexChange]);
 
-  // Ctrl+wheel zoom on desktop
+  // Wheel zoom on desktop — bound only to the active image inside the lightbox.
+  // Ctrl/Cmd+wheel is left to the browser (native page zoom).
   useEffect(() => {
-    if (!emblaApi) return;
-    const node = emblaApi.rootNode();
-    if (!node) return;
+    const img = activeImgRef.current;
+    if (!img) return;
     const onWheel = (e: WheelEvent) => {
-      if (!e.ctrlKey) return;
+      if (e.ctrlKey || e.metaKey) return; // let browser handle native zoom
       e.preventDefault();
-      setScale((s) => Math.min(4, Math.max(1, s - e.deltaY * 0.01)));
+      setScale((s) => Math.min(2.5, Math.max(1, s - e.deltaY * 0.005)));
     };
-    node.addEventListener("wheel", onWheel, { passive: false });
-    return () => node.removeEventListener("wheel", onWheel);
-  }, [emblaApi]);
+    img.addEventListener("wheel", onWheel, { passive: false });
+    return () => img.removeEventListener("wheel", onWheel);
+  }, [emblaApi, currentIndex]);
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
@@ -760,7 +763,7 @@ const IsolatedView = ({
     };
   }, [scale, emblaApi]);
 
-  const current = emblaApi?.selectedScrollSnap() ?? startIndex;
+  const current = currentIndex;
 
   const btnStyle: React.CSSProperties = {
     position: "fixed",
