@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { useT } from "@/hooks/useT";
 import { useIsCzech } from "@/hooks/useLanguageRouting";
 import KeynoteInquiryModal from "@/components/KeynoteInquiryModal";
+import InhouseInquiryModal from "@/components/InhouseInquiryModal";
 
 const PricingSection = () => {
   const t = useT();
   const isCz = useIsCzech();
   const [keynoteOpen, setKeynoteOpen] = useState(false);
+  const [inhouseOpen, setInhouseOpen] = useState(false);
 
   const tiers = [
     {
