@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271620";
+export const ASSET_VERSION = "202605271525";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -559,7 +559,6 @@ const IsolatedView = ({
   const imageBounds = useRef({ width: 0, height: 0 });
   const containerBounds = useRef({ width: 0, height: 0 });
   const activeImgRef = useRef<HTMLImageElement | null>(null);
-  const wheelHandlerRef = useRef<{ el: HTMLImageElement; fn: (e: WheelEvent) => void } | null>(null);
 
   // Pinch gesture refs
   const pinchStartDist = useRef<number | null>(null);
@@ -610,8 +609,19 @@ const IsolatedView = ({
     };
   }, [emblaApi, onIndexChange]);
 
-  // Wheel zoom is attached via callback ref on the active <img/> below
-  // so it always reflects the latest `scale`/`offset` closure without flicker.
+  // Wheel zoom on desktop — bound only to the active image inside the lightbox.
+  // Ctrl/Cmd+wheel is left to the browser (native page zoom).
+  useEffect(() => {
+    const img = activeImgRef.current;
+    if (!img) return;
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) return; // let browser handle native zoom
+      e.preventDefault();
+      setScale((s) => Math.min(2.5, Math.max(1, s - e.deltaY * 0.005)));
+    };
+    img.addEventListener("wheel", onWheel, { passive: false });
+    return () => img.removeEventListener("wheel", onWheel);
+  }, [emblaApi, currentIndex]);
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
@@ -799,69 +809,48 @@ const IsolatedView = ({
               style={{ overflow: "visible", pointerEvents: "none" }}
             >
               <img
-                src={`${it.src}?v=${ASSET_VERSION}`}
-                alt={`${alt} #${it.num}`}
-                draggable={false}
-                ref={(el) => {
-                  if (it.key === items[current]?.key) {
-                    activeImgRef.current = el;
+ style={{ overflow: "visible", pointerEvents: "none" }}
+        >
+          <img
+            ref={(el) => {
+              if (!el) return;
+              el.removeEventListener('wheel', (el as any)._handleWheel);
 
-                    // Detach previous listener to avoid leaks across slide swaps / re-renders
-                    if (wheelHandlerRef.current) {
-                      wheelHandlerRef.current.el.removeEventListener(
-                        "wheel",
-                        wheelHandlerRef.current.fn,
-                      );
-                      wheelHandlerRef.current = null;
-                    }
-                    if (!el) return;
+              const handleWheel = (e: WheelEvent) => {
+                e.preventDefault();
+                e.stopPropagation();
 
-                    const handleWheel = (e: WheelEvent) => {
-                      e.preventDefault();
-                      e.stopPropagation();
+                let zoomDirection = 0;
+                let maxZoom = 2.5;
 
-                      let zoomDirection = 0;
-                      let maxZoom = 2.5;
+                if (e.ctrlKey || e.metaKey) {
+                  zoomDirection = e.deltaY < 0 ? 0.4 : -0.4;
+                  maxZoom = 8.0;
+                } else if (e.shiftKey) {
+                  return;
+                } else {
+                  zoomDirection = e.deltaY < 0 ? 0.15 : -0.15;
+                }
 
-                      if (e.ctrlKey || e.metaKey) {
-                        // Fast step and large ceiling for Ctrl+Wheel
-                        zoomDirection = e.deltaY < 0 ? 0.4 : -0.4;
-                        maxZoom = 8.0;
-                      } else if (e.shiftKey) {
-                        return;
-                      } else {
-                        // Normal step for standard wheel
-                        zoomDirection = e.deltaY < 0 ? 0.15 : -0.15;
-                      }
+                setScale((prevScale) => {
+                  const nextScale = Math.min(Math.max(prevScale + zoomDirection, 1.0), maxZoom);
+                  
+                  el.style.transform = `scale(${nextScale}) translate(${offset.x / nextScale}px, ${offset.y / nextScale}px)`;
+                  el.style.willChange = 'transform';
 
-                      setScale((prevScale) => {
-                        // Prevent locking by calculating boundaries directly from the true previous scale state
-                        const nextScale = Math.min(Math.max(prevScale + zoomDirection, 1.0), maxZoom);
-
-                        if (nextScale === 1.0) {
-                          setOffset({ x: 0, y: 0 });
-                        }
-
-                        return nextScale;
-                      });
-                    };
-
-                    el.addEventListener("wheel", handleWheel, { passive: false });
-                    wheelHandlerRef.current = { el, fn: handleWheel };
+                  if (nextScale === 1.0) {
+                    setOffset({ x: 0, y: 0 });
                   }
-                }}
-                style={{
-                  pointerEvents: "auto",
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  touchAction: "none",
-                  transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
-                  transformOrigin: "center",
-                  transition: isPanning.current ? "none" : "transform 0.1s ease",
-                }}
-                className="select-none"
-                onPointerDown={(e) => {
+                  return nextScale;
+                });
+              };
+
+              (el as any)._handleWheel = handleWheel;
+              el.addEventListener('wheel', handleWheel, { passive: false });
+            }}
+            src={/* leave your existing src attribute exactly as it is */}
+            className="select-none"
+            onPointerDown={(e) => {
                   if (scale <= 1) return;
                   e.stopPropagation();
                   e.currentTarget.setPointerCapture(e.pointerId);
