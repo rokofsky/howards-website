@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271456";
+export const ASSET_VERSION = "202605271524";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -856,7 +856,6 @@ const IsolatedView = ({
                     // Multiply by scale because offset is applied as translate(offset/scale)
                     const clampX = maxX * scale;
                     const clampY = maxY * scale;
-                    return {
                     return {
                       x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
                       y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
