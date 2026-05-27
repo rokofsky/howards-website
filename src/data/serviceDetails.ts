@@ -120,7 +120,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         ],
       },
       {
-        title: { en: "When might you use Six Thinking Hats?", cs: "Kdy použít metodu Šesti klobouků?" },
+        title: { en: "When can you use Six Thinking Hats?", cs: "Kdy použít metodu Šesti klobouků?" },
         bullets: [
           { en: "Anytime there are differences of opinion in a business meeting", cs: "Kdykoliv vzniknou rozdílné názory na poradě" },
           { en: "Facilitation of meetings", cs: "Facilitace porad" },
