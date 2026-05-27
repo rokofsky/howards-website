@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271236";
+export const ASSET_VERSION = "202605271455";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -618,7 +618,7 @@ const IsolatedView = ({
     };
     img.addEventListener("wheel", onWheel, { passive: false });
     return () => img.removeEventListener("wheel", onWheel);
-  }, [emblaApi, current]);
+  }, [emblaApi, startIndex, scale]);
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
