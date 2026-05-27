@@ -102,18 +102,20 @@ export default function AdminSessions() {
     setLoading(true);
 
     if (editingId) {
+      const payload = {
+        password: getPassword(),
+        action: "update",
+        id: editingId,
+        title: title || null,
+        description: description || null,
+        session_date: new Date(sessionDate).toISOString(),
+        zoom_link: zoomLink || null,
+        zoom_meeting_id: zoomMeetingId || null,
+        status,
+      };
+      console.log("[DEBUG] Admin update payload:", { ...payload, password: "***" });
       const res = await supabase.functions.invoke("admin-sessions", {
-        body: {
-          password: getPassword(),
-          action: "update",
-          id: editingId,
-          title: title || null,
-          description: description || null,
-          session_date: new Date(sessionDate).toISOString(),
-          zoom_link: zoomLink || null,
-          zoom_meeting_id: zoomMeetingId || null,
-          status,
-        },
+        body: payload,
       });
       setLoading(false);
       if (res.error || res.data?.error) {
