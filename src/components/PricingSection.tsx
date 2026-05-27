@@ -62,6 +62,17 @@ const PricingSection = () => {
       ],
       inquire: true,
     },
+    {
+      name: t("Individual sessions", "Individuální lekce"),
+      price: t("From CZK 1,500 (€ 60)", "Od 1 500 Kč (60 €)"),
+      priceSuffix: t("per hour", "za hodinu"),
+      description: t(
+        "Satisfaction guaranteed or you do not pay",
+        "Spokojenost zaručena, nebo neplatíte"
+      ),
+      features: [] as string[],
+      inquireIndividual: true,
+    },
   ];
 
   return (
