@@ -226,7 +226,7 @@ const Header = () => {
 
         <div className="hidden md:block">
           <Button variant="cta" size="lg" asChild>
-            <Link to={lp("/storytelling-workshops")}>
+            <Link to={lp("/storytelling-sessions")}>
               {t("Free Storytelling Sessions!", "Bezplatná sezení Storytellingu!")}
             </Link>
           </Button>
