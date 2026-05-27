@@ -835,13 +835,20 @@ const IsolatedView = ({
                       }
 
                       setScale((prevScale) => {
-                        // Prevent locking by calculating boundaries directly from the true previous scale state
-                        const nextScale = Math.min(Math.max(prevScale + zoomDirection, 1.0), maxZoom);
-
+                        let nextScale = prevScale + zoomDirection;
+                        if (nextScale <= 1.0) nextScale = 1.0;
+                        if (e.ctrlKey || e.metaKey) {
+                          if (nextScale > 8.0) nextScale = 8.0;
+                        } else {
+                          if (nextScale > 2.5) nextScale = 2.5;
+                        }
+                        if (el) {
+                          el.style.transform = `scale(${nextScale})`;
+                          el.style.willChange = 'transform';
+                        }
                         if (nextScale === 1.0) {
                           setOffset({ x: 0, y: 0 });
                         }
-
                         return nextScale;
                       });
                     };
