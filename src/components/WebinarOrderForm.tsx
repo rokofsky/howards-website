@@ -256,6 +256,18 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             />
           </div>
 
+          <div className="rounded-md border border-gold/40 bg-gold/5 px-4 py-3 flex items-center justify-between">
+            <span className="text-sm text-muted-foreground font-medium">
+              {t("Subtotal", "Mezisoučet")}
+            </span>
+            <span className="text-lg font-semibold text-gold">
+              {t(
+                `CZK ${(selectedSlugs.length * 2500).toLocaleString("en-US")} / €${selectedSlugs.length * 100}`,
+                `${(selectedSlugs.length * 2500).toLocaleString("cs-CZ")} Kč / ${selectedSlugs.length * 100} €`
+              )}
+            </span>
+          </div>
+
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("Cancel", "Zrušit")}
