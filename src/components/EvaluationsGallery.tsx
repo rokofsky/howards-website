@@ -808,29 +808,47 @@ const IsolatedView = ({
  style={{ overflow: "visible", pointerEvents: "none" }}
         >
           <img
-            ref={(el) => {
+ref={(el: HTMLImageElement | null) => {
               if (!el) return;
               el.removeEventListener('wheel', (el as any)._handleWheel);
 
-const handleWheel = (e: WheelEvent) => {
-                    e.preventDefault();
-                    e.stopPropagation();
+              const handleWheel = (e: WheelEvent) => {
+                e.preventDefault();
+                e.stopPropagation();
 
-                    let zoomDirection = 0;
-                    let maxZoom = 2.51; // Changed from 2.5 to 2.51 to prevent rounding lockups
+                let zoomDirection = 0;
+                let maxZoom = 2.51;
 
-                    if (e.ctrlKey || e.metaKey) {
-                      zoomDirection = e.deltaY < 0 ? 0.4 : -0.4;
-                      maxZoom = 8.01; // Changed from 8.0 to 8.01 to prevent rounding lockups
-                    } else if (e.shiftKey) {
-                      return;
-                    } else {
-                      zoomDirection = e.deltaY < 0 ? 0.15 : -0.15;
-                    }
+                if (e.ctrlKey || e.metaKey) {
+                  zoomDirection = e.deltaY < 0 ? 0.4 : -0.4;
+                  maxZoom = 8.01;
+                } else if (e.shiftKey) {
+                  return;
+                } else {
+                  zoomDirection = e.deltaY < 0 ? 0.15 : -0.15;
+                }
 
-                    setScale((prevScale) => {
-                      // Clamp strictly between 1.0 and the max target
-                      let nextScale = prevScale + zoomDirection;
+                setScale((prevScale) => {
+                  let nextScale = prevScale + zoomDirection;
+                  if (nextScale <= 1.0) nextScale = 1.0;
+                  if (nextScale >= maxZoom) nextScale = maxZoom - 0.01;
+                  
+                  // Reads the style transforms directly from the DOM to bypass state lag
+                  if (el) {
+                    el.style.transform = `scale(${nextScale})`;
+                    el.style.willChange = 'transform';
+                  }
+
+                  if (nextScale === 1.0) {
+                    setOffset({ x: 0, y: 0 });
+                  }
+                  return nextScale;
+                });
+              };
+
+              (el as any)._handleWheel = handleWheel;
+              el.addEventListener('wheel', handleWheel, { passive: false });
+            }}
                       if (nextScale <= 1.0) nextScale = 1.0;
                       if (nextScale >= maxZoom) nextScale = maxZoom - 0.01; // Clean lock at exactly 2.5 or 8.0
                       
