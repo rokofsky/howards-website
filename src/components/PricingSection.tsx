@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { useT } from "@/hooks/useT";
 import { useIsCzech } from "@/hooks/useLanguageRouting";
 import KeynoteInquiryModal from "@/components/KeynoteInquiryModal";
+import InhouseInquiryModal from "@/components/InhouseInquiryModal";
 
 const PricingSection = () => {
   const t = useT();
   const isCz = useIsCzech();
   const [keynoteOpen, setKeynoteOpen] = useState(false);
+  const [inhouseOpen, setInhouseOpen] = useState(false);
 
   const tiers = [
     {
@@ -41,6 +43,7 @@ const PricingSection = () => {
         t("Follow-up resources", "Navazující materiály"),
         t("Follow-up personal contact", "Následný osobní kontakt"),
       ],
+      inquireInhouse: true,
     },
     {
       name: t("Keynote Speaking", "Hlavní přednáška"),
@@ -118,11 +121,24 @@ const PricingSection = () => {
                 </Button>
               </div>
             )}
+            {tier.inquireInhouse && (
+              <div className="mt-auto pt-2">
+                <Button
+                  type="button"
+                  variant="cta"
+                  className="w-full"
+                  onClick={() => setInhouseOpen(true)}
+                >
+                  {t("Inquire", "Poptat")}
+                </Button>
+              </div>
+            )}
           </motion.div>
         ))}
       </div>
 
       <KeynoteInquiryModal open={keynoteOpen} onOpenChange={setKeynoteOpen} />
+      <InhouseInquiryModal open={inhouseOpen} onOpenChange={setInhouseOpen} />
     </section>
   );
 };
