@@ -52,9 +52,9 @@ export interface ServiceDetailContent {
 export const serviceDetails: Record<string, ServiceDetailContent> = {
   "presentation-speaking-skills": {
     pageTitle: { en: "Persuasive Presentations", cs: "Přesvědčivé prezentace" },
-    lead: { en: "Learn the rhetoric and mechanics to win any audience", cs: "Naučte se mechaniku a rétoriku, abyste si získali jakékoliv publikum" },
+    lead: { en: "Learn the mechanics and rhetoric to win any audience", cs: "Naučte se mechaniku a rétoriku, abyste si získali jakékoliv publikum" },
     intro: [
-      { en: "This workshop is designed especially for anyone who needs to present in front of a group. Most of the techniques are universal, across any culture, business or personal. ", cs: "Tento workshop je určen především lidem, kteří potřebují prezentovat před multikulturní skupinou. Techniky, které si osvojíte, jsou však univerzální a uplatní se v jakékoliv firemní kultuře." },
+      { en: "This workshop is designed especially for people who need to present in front of a multicultural group. However, the techniques we will study are universal and apply to any business culture.", cs: "Tento workshop je určen především lidem, kteří potřebují prezentovat před multikulturní skupinou. Techniky, které si osvojíte, jsou však univerzální a uplatní se v jakékoliv firemní kultuře." },
       { en: "The training is rather hands-on \"technical\" in nature: we will practice the nuances of vocal usage, non-verbal language and rhetorical techniques, all designed to attract the audience, focus them where we want, and keep their attention. With these techniques and a healthy dose of self-control, anyone can learn how to be confident and persuasive in front of a group, even those with stage-fright.", cs: "Trénink je poměrně praktický a „technický\" v tom smyslu, že si vyzkoušíme nuance práce s hlasem, neverbální komunikaci a rétorické techniky — vše navržené tak, aby přitáhlo publikum, zaměřilo jeho pozornost tam, kam potřebujeme, a udrželo ji. S těmito technikami a zdravou dávkou sebekontroly se kdokoliv naučí být před skupinou sebejistý a přesvědčivý, i ten, kdo trpí trémou." },
       { en: "The trainer focuses on revealing specific points for individual improvement and repeating correct behaviours. After completing this workshop, you will have all the tools necessary to speak confidently, persuasively, and motivate your audience to action.", cs: "Trenér se zaměřuje na odhalení konkrétních bodů pro individuální zlepšení a na opakování správných návyků. Po absolvování tohoto workshopu budete mít všechny nástroje potřebné k tomu, abyste mluvili sebejistě, přesvědčivě a dokázali motivovat své publikum k činu." },
     ],
@@ -90,13 +90,13 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
       },
     ],
   },
-  "live-webinars": {
+  "online-webinars": {
     pageTitle: { en: "Choose from these interactive webinars. Inquire about each, or use the general form at the bottom ⬇️", cs: "Vyberte si z těchto interaktivních webinářů. Pošlete dotaz ke konkrétnímu, nebo použijte obecný formulář níže ⬇️" },
     lead: { en: "Turn on your camera and unmute your microphone! Learn all sorts of stuff online in +/- two hours, just about any time of day.", cs: "Zapněte kameru a odhlučněte mikrofon! Online se naučíte spoustu věcí přibližně za dvě hodiny, prakticky kdykoliv během dne." },
     intro: [],
     sections: [],
   },
-  "six-hats": {
+  "meetings-moderation": {
     pageTitle: { en: "Six Thinking Hats", cs: "Šest klobouků myšlení" },
     lead: { en: "Helping managers improve team communication by fixing how meetings work, enabling parallel thinking and reaching faster decisions for measurable productivity.", cs: "Pomáháme manažerům zlepšit komunikaci v týmu opravou způsobu, jakým fungují porady — umožňujeme paralelní myšlení a rychlejší rozhodování s měřitelnou produktivitou." },
     intro: [
@@ -120,7 +120,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         ],
       },
       {
-        title: { en: "When can you use Six Thinking Hats?", cs: "Kdy použít metodu Šesti klobouků?" },
+        title: { en: "When might you use Six Thinking Hats?", cs: "Kdy použít metodu Šesti klobouků?" },
         bullets: [
           { en: "Anytime there are differences of opinion in a business meeting", cs: "Kdykoliv vzniknou rozdílné názory na poradě" },
           { en: "Facilitation of meetings", cs: "Facilitace porad" },
@@ -238,7 +238,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     pageTitle: { en: "The Art of Storytelling", cs: "Umění vyprávění příběhů" },
     taglines: [
       { en: "Empower your team to connect with story.", cs: "Dejte svému týmu sílu spojit se prostřednictvím příběhu." },
-      { en: "facts tell, stories sell", cs: "Fakta informují, příběhy prodávají." },
+      { en: "Facts tell, stories sell.", cs: "Fakta informují, příběhy prodávají." },
     ],
     intro: [
       { en: "Stop delivering data and start driving action. This isn't just about telling better anecdotes; it's about mastering the biological triggers that command attention. This training will give you the specific tools to connect with your listeners and, if your goal is to motivate someone to take direct action, you'll be better equipped. Whether you're pitching a board or leading a team, these techniques will transform the way you speak in public forever.", cs: "Přestaňte podávat data a začněte vyvolávat akci. Nejde jen o lepší vyprávění historek — jde o ovládnutí biologických spouštěčů, které řídí pozornost. Tento trénink vám dá konkrétní nástroje, jak se spojit s posluchači, a pokud je vaším cílem někoho motivovat k přímé akci, budete mít lepší výbavu. Ať už prezentujete před představenstvem nebo vedete tým, tyto techniky navždy promění způsob, jakým mluvíte na veřejnosti." },

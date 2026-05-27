@@ -42,27 +42,10 @@ const StorytellingWorkshops = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchSessions();
-
-    // [DEBUG] Realtime subscription on base table (views don't emit realtime events)
-    const channel = supabase
-      .channel("storytelling_sessions_public_changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "storytelling_sessions" },
-        (payload) => {
-          console.log("[DEBUG] Realtime change on storytelling_sessions:", payload.eventType, payload);
-          fetchSessions();
-        }
-      )
-      .subscribe((status) => {
-        console.log("[DEBUG] Realtime channel status:", status);
-      });
-
-    return () => {
-      console.log("[DEBUG] Cleaning up realtime channel");
-      supabase.removeChannel(channel);
-    };
   }, []);
+
+  // Debug query removed: sensitive columns (zoom_link, zoom_meeting_id) are no longer
+  // exposed to anon/authenticated, so a select("*") on the base table would fail by design.
 
   const fetchSessions = async () => {
     // Public view only exposes safe marketing columns and only published sessions.
@@ -72,8 +55,6 @@ const StorytellingWorkshops = () => {
       .eq("status", statusFilter)
       .gte("session_date", new Date().toISOString())
       .order("session_date", { ascending: true });
-
-    console.log("[DEBUG] fetchSessions received rows:", data?.length ?? 0, "error:", error);
 
     setQueryError(error || null);
 

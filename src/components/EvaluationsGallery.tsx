@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271717";
+export const ASSET_VERSION = "202605261808";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -548,7 +548,6 @@ const IsolatedView = ({
 
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [currentIndex, setCurrentIndex] = useState(startIndex);
 
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
@@ -559,7 +558,6 @@ const IsolatedView = ({
   const imageBounds = useRef({ width: 0, height: 0 });
   const containerBounds = useRef({ width: 0, height: 0 });
   const activeImgRef = useRef<HTMLImageElement | null>(null);
-  const wheelHandlerRef = useRef<{ el: HTMLImageElement; fn: (e: WheelEvent) => void } | null>(null);
 
   // Pinch gesture refs
   const pinchStartDist = useRef<number | null>(null);
@@ -598,9 +596,7 @@ const IsolatedView = ({
   useEffect(() => {
     if (!emblaApi) return;
     const onSelect = () => {
-      const i = emblaApi.selectedScrollSnap();
-      setCurrentIndex(i);
-      onIndexChange(i);
+      onIndexChange(emblaApi.selectedScrollSnap());
       setScale(1);
       setOffset({ x: 0, y: 0 });
     };
@@ -610,8 +606,19 @@ const IsolatedView = ({
     };
   }, [emblaApi, onIndexChange]);
 
-  // Wheel zoom is attached via callback ref on the active <img/> below
-  // so it always reflects the latest `scale`/`offset` closure without flicker.
+  // Ctrl+wheel zoom on desktop
+  useEffect(() => {
+    if (!emblaApi) return;
+    const node = emblaApi.rootNode();
+    if (!node) return;
+    const onWheel = (e: WheelEvent) => {
+      if (!e.ctrlKey) return;
+      e.preventDefault();
+      setScale((s) => Math.min(4, Math.max(1, s - e.deltaY * 0.01)));
+    };
+    node.addEventListener("wheel", onWheel, { passive: false });
+    return () => node.removeEventListener("wheel", onWheel);
+  }, [emblaApi]);
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
@@ -699,11 +706,13 @@ const IsolatedView = ({
       setOffset((o) => {
         const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
         const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
-        // Visual displacement equals raw offset (transform is scale(s) translate(offset/s)),
-        // so clamp directly to the per-side overflow.
+        // Multiply by scale because offset is applied as translate(offset/scale)
+        // so raw offset must be scale times larger than visual pixel distance
+        const clampX = maxX * scale;
+        const clampY = maxY * scale;
         return {
-          x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-          y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+          x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
+          y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
         };
       });
     };
@@ -751,7 +760,7 @@ const IsolatedView = ({
     };
   }, [scale, emblaApi]);
 
-  const current = currentIndex;
+  const current = emblaApi?.selectedScrollSnap() ?? startIndex;
 
   const btnStyle: React.CSSProperties = {
     position: "fixed",
@@ -803,56 +812,6 @@ const IsolatedView = ({
                 ref={(el) => {
                   if (it.key === items[current]?.key) {
                     activeImgRef.current = el;
-
-                    // Detach previous listener to avoid leaks across slide swaps / re-renders
-                    if (wheelHandlerRef.current) {
-                      wheelHandlerRef.current.el.removeEventListener(
-                        "wheel",
-                        wheelHandlerRef.current.fn,
-                      );
-                      wheelHandlerRef.current = null;
-                    }
-                    if (!el) return;
-
-                    const handleWheel = (e: WheelEvent) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      let zoomDirection = 0;
-                      let maxZoom = 2.5;
-
-                      if (e.ctrlKey || e.metaKey) {
-                        // Fast step and large ceiling for Ctrl+Wheel
-                        zoomDirection = e.deltaY < 0 ? 0.4 : -0.4;
-                        maxZoom = 8.0;
-                      } else if (e.shiftKey) {
-                        return;
-                      } else {
-                        // Normal step for standard wheel
-                        zoomDirection = e.deltaY < 0 ? 0.15 : -0.15;
-                      }
-
-                      setScale((prevScale) => {
-                        let nextScale = prevScale + zoomDirection;
-                        if (nextScale <= 1.0) nextScale = 1.0;
-                        if (e.ctrlKey || e.metaKey) {
-                          if (nextScale > 8.0) nextScale = 8.0;
-                        } else {
-                          if (nextScale > 2.5) nextScale = 2.5;
-                        }
-                        if (el) {
-                          el.style.transform = `scale(${nextScale})`;
-                          el.style.willChange = 'transform';
-                        }
-                        if (nextScale === 1.0) {
-                          setOffset({ x: 0, y: 0 });
-                        }
-                        return nextScale;
-                      });
-                    };
-
-                    el.addEventListener("wheel", handleWheel, { passive: false });
-                    wheelHandlerRef.current = { el, fn: handleWheel };
                   }
                 }}
                 style={{
@@ -891,10 +850,12 @@ const IsolatedView = ({
                   setOffset((o) => {
                     const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
                     const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
-                    // Visual displacement equals raw offset, so clamp to the per-side overflow.
+                    // Multiply by scale because offset is applied as translate(offset/scale)
+                    const clampX = maxX * scale;
+                    const clampY = maxY * scale;
                     return {
-                      x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
-                      y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
+                      x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
+                      y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
                     };
                   });
                 }}
