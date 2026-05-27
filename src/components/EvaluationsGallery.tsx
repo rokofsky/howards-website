@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271525";
+export const ASSET_VERSION = "202605271559";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -559,6 +559,7 @@ const IsolatedView = ({
   const imageBounds = useRef({ width: 0, height: 0 });
   const containerBounds = useRef({ width: 0, height: 0 });
   const activeImgRef = useRef<HTMLImageElement | null>(null);
+  const wheelHandlerRef = useRef<{ el: HTMLImageElement; fn: (e: WheelEvent) => void } | null>(null);
 
   // Pinch gesture refs
   const pinchStartDist = useRef<number | null>(null);
@@ -609,19 +610,8 @@ const IsolatedView = ({
     };
   }, [emblaApi, onIndexChange]);
 
-  // Wheel zoom on desktop — bound only to the active image inside the lightbox.
-  // Ctrl/Cmd+wheel is left to the browser (native page zoom).
-  useEffect(() => {
-    const img = activeImgRef.current;
-    if (!img) return;
-    const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey || e.metaKey) return; // let browser handle native zoom
-      e.preventDefault();
-      setScale((s) => Math.min(2.5, Math.max(1, s - e.deltaY * 0.005)));
-    };
-    img.addEventListener("wheel", onWheel, { passive: false });
-    return () => img.removeEventListener("wheel", onWheel);
-  }, [emblaApi, currentIndex]);
+  // Wheel zoom is attached via callback ref on the active <img/> below
+  // so it always reflects the latest `scale`/`offset` closure without flicker.
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
@@ -815,6 +805,45 @@ const IsolatedView = ({
                 ref={(el) => {
                   if (it.key === items[current]?.key) {
                     activeImgRef.current = el;
+
+                    // Detach previous listener to avoid leaks across slide swaps / re-renders
+                    if (wheelHandlerRef.current) {
+                      wheelHandlerRef.current.el.removeEventListener(
+                        "wheel",
+                        wheelHandlerRef.current.fn,
+                      );
+                      wheelHandlerRef.current = null;
+                    }
+                    if (!el) return;
+
+                    const handleWheel = (e: WheelEvent) => {
+                      if (e.shiftKey) return;
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      const isModifier = e.ctrlKey || e.metaKey;
+                      const step = isModifier ? 0.3 : 0.15;
+                      const max = isModifier ? 8.0 : 2.5;
+                      const dir = e.deltaY < 0 ? 1 : -1;
+                      const nextScale = Math.min(max, Math.max(1, scale + dir * step));
+
+                      if (nextScale === 1) {
+                        el.style.transform = "scale(1) translate(0px, 0px)";
+                        el.style.willChange = "transform";
+                        requestAnimationFrame(() => {
+                          setScale(1);
+                          setOffset({ x: 0, y: 0 });
+                        });
+                        return;
+                      }
+
+                      el.style.transform = `scale(${nextScale}) translate(${offset.x / nextScale}px, ${offset.y / nextScale}px)`;
+                      el.style.willChange = "transform";
+                      requestAnimationFrame(() => setScale(nextScale));
+                    };
+
+                    el.addEventListener("wheel", handleWheel, { passive: false });
+                    wheelHandlerRef.current = { el, fn: handleWheel };
                   }
                 }}
                 style={{
