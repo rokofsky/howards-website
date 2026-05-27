@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271509";
+export const ASSET_VERSION = "202605271456";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -610,33 +610,18 @@ const IsolatedView = ({
   }, [emblaApi, onIndexChange]);
 
   // Wheel zoom on desktop — bound only to the active image inside the lightbox.
-  // Mutates transform directly via DOM to avoid React re-render lag on every tick.
-  // Ctrl/Cmd/Shift+wheel is left to the browser (native page zoom / macros).
+  // Ctrl/Cmd+wheel is left to the browser (native page zoom).
   useEffect(() => {
     const img = activeImgRef.current;
     if (!img) return;
-    let currentScale = scale;
-    let commitTimer: ReturnType<typeof setTimeout> | null = null;
     const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+      if (e.ctrlKey || e.metaKey) return; // let browser handle native zoom
       e.preventDefault();
-      e.stopPropagation();
-      const delta = e.deltaY < 0 ? 0.08 : -0.08;
-      currentScale = Math.min(2.5, Math.max(1, currentScale + delta));
-      img.style.transform = `scale(${currentScale})`;
-      img.style.transition = "none";
-      if (commitTimer) clearTimeout(commitTimer);
-      commitTimer = setTimeout(() => {
-        setScale(currentScale);
-      }, 120);
+      setScale((s) => Math.min(2.5, Math.max(1, s - e.deltaY * 0.005)));
     };
     img.addEventListener("wheel", onWheel, { passive: false });
-    return () => {
-      img.removeEventListener("wheel", onWheel);
-      if (commitTimer) clearTimeout(commitTimer);
-    };
+    return () => img.removeEventListener("wheel", onWheel);
   }, [emblaApi, currentIndex]);
-
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
@@ -871,6 +856,58 @@ const IsolatedView = ({
                     // Multiply by scale because offset is applied as translate(offset/scale)
                     const clampX = maxX * scale;
                     const clampY = maxY * scale;
+                    // ... Line 859 (your existing code right before the layout) ...
+
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const targetImage = imgRef.current;
+    if (!targetImage) return;
+
+    targetImage.style.willChange = 'transform';
+    targetImage.style.transition = 'none';
+
+    let targetScale = 1.0;
+    let currentScale = 1.0;
+    let animationFrameId: number | null = null;
+
+    const updateAnimation = () => {
+      currentScale += (targetScale - currentScale) * 0.12;
+      if (targetImage) {
+        targetImage.style.transform = `scale(${currentScale})`;
+      }
+      if (Math.abs(targetScale - currentScale) > 0.001) {
+        animationFrameId = requestAnimationFrame(updateAnimation);
+      } else {
+        currentScale = targetScale;
+        animationFrameId = null;
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      const zoomDirection = e.deltaY < 0 ? 0.18 : -0.18;
+      targetScale = Math.min(Math.max(targetScale + zoomDirection, 1.0), 2.5);
+
+      if (!animationFrameId) {
+        animationFrameId = requestAnimationFrame(updateAnimation);
+      }
+    };
+
+    targetImage.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      targetImage.removeEventListener('wheel', handleWheel);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  // LINE 859: The final return statement of the file
+  return (
+    // ... rest of your layout where you will add ref={imgRef} to the lightbox <img> tag ...
                     return {
                       x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
                       y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
