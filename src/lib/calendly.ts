@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-export const CALENDLY_URL = "https://calendly.com/howardroko";
+export const CALENDLY_URL = "https://calendly.com/howardroko/zoom-with-howard";
 
 export function openCalendly() {
   document.body.style.overflow = "hidden";
