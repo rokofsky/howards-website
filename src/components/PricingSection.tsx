@@ -151,12 +151,25 @@ const PricingSection = () => {
                 </Button>
               </div>
             )}
+            {tier.inquireIndividual && (
+              <div className="mt-auto pt-2">
+                <Button
+                  type="button"
+                  variant="cta"
+                  className="w-full"
+                  onClick={() => setIndividualOpen(true)}
+                >
+                  {t("Inquire", "Poptat")}
+                </Button>
+              </div>
+            )}
           </motion.div>
         ))}
       </div>
 
       <KeynoteInquiryModal open={keynoteOpen} onOpenChange={setKeynoteOpen} />
       <InhouseInquiryModal open={inhouseOpen} onOpenChange={setInhouseOpen} />
+      <IndividualSessionsInquiryModal open={individualOpen} onOpenChange={setIndividualOpen} />
     </section>
   );
 };
