@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605271620";
+export const ASSET_VERSION = "202605271717";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -699,13 +699,11 @@ const IsolatedView = ({
       setOffset((o) => {
         const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
         const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
-        // Multiply by scale because offset is applied as translate(offset/scale)
-        // so raw offset must be scale times larger than visual pixel distance
-        const clampX = maxX * scale;
-        const clampY = maxY * scale;
+        // Visual displacement equals raw offset (transform is scale(s) translate(offset/s)),
+        // so clamp directly to the per-side overflow.
         return {
-          x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
-          y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
+          x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
+          y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
         };
       });
     };
@@ -835,13 +833,20 @@ const IsolatedView = ({
                       }
 
                       setScale((prevScale) => {
-                        // Prevent locking by calculating boundaries directly from the true previous scale state
-                        const nextScale = Math.min(Math.max(prevScale + zoomDirection, 1.0), maxZoom);
-
+                        let nextScale = prevScale + zoomDirection;
+                        if (nextScale <= 1.0) nextScale = 1.0;
+                        if (e.ctrlKey || e.metaKey) {
+                          if (nextScale > 8.0) nextScale = 8.0;
+                        } else {
+                          if (nextScale > 2.5) nextScale = 2.5;
+                        }
+                        if (el) {
+                          el.style.transform = `scale(${nextScale})`;
+                          el.style.willChange = 'transform';
+                        }
                         if (nextScale === 1.0) {
                           setOffset({ x: 0, y: 0 });
                         }
-
                         return nextScale;
                       });
                     };
@@ -886,12 +891,10 @@ const IsolatedView = ({
                   setOffset((o) => {
                     const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
                     const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
-                    // Multiply by scale because offset is applied as translate(offset/scale)
-                    const clampX = maxX * scale;
-                    const clampY = maxY * scale;
+                    // Visual displacement equals raw offset, so clamp to the per-side overflow.
                     return {
-                      x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
-                      y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
+                      x: Math.max(-maxX, Math.min(maxX, o.x + dx)),
+                      y: Math.max(-maxY, Math.min(maxY, o.y + dy)),
                     };
                   });
                 }}
