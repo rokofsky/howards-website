@@ -548,6 +548,7 @@ const IsolatedView = ({
 
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [selectedIdx, setSelectedIdx] = useState(startIndex);
 
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
