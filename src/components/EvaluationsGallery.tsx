@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202605261808";
+export const ASSET_VERSION = "202605271851";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -597,7 +597,9 @@ const IsolatedView = ({
   useEffect(() => {
     if (!emblaApi) return;
     const onSelect = () => {
-      onIndexChange(emblaApi.selectedScrollSnap());
+      const idx = emblaApi.selectedScrollSnap();
+      onIndexChange(idx);
+      setSelectedIdx(idx);
       setScale(1);
       setOffset({ x: 0, y: 0 });
     };
@@ -607,19 +609,28 @@ const IsolatedView = ({
     };
   }, [emblaApi, onIndexChange]);
 
-  // Ctrl+wheel zoom on desktop
+  // Wheel zoom — attached to the active image only, with { passive: false }
   useEffect(() => {
-    if (!emblaApi) return;
-    const node = emblaApi.rootNode();
-    if (!node) return;
+    const img = activeImgRef.current;
+    if (!img) return;
     const onWheel = (e: WheelEvent) => {
-      if (!e.ctrlKey) return;
+      if (e.shiftKey) return;
       e.preventDefault();
-      setScale((s) => Math.min(4, Math.max(1, s - e.deltaY * 0.01)));
+      e.stopPropagation();
+      const precise = e.ctrlKey || e.metaKey;
+      const step = precise ? 0.3 : 0.15;
+      const max = precise ? 5 : 3;
+      const dir = e.deltaY < 0 ? 1 : -1;
+      setScale((s) => {
+        const next = s + dir * step;
+        if (next <= 1) return 1;
+        if (next >= max) return max;
+        return next;
+      });
     };
-    node.addEventListener("wheel", onWheel, { passive: false });
-    return () => node.removeEventListener("wheel", onWheel);
-  }, [emblaApi]);
+    img.addEventListener("wheel", onWheel, { passive: false });
+    return () => img.removeEventListener("wheel", onWheel);
+  }, [selectedIdx, emblaApi]);
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
