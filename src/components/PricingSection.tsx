@@ -5,8 +5,8 @@ const PricingSection = () => {
   const t = useT();
   const tiers = [
     {
-      name: t("Online Workshops", "Online workshopy"),
-      price: t("From CZK 4,000 (€165)", "Od 4 000 Kč (165 €)"),
+      name: t("Live Webinars", "Online workshopy"),
+      price: t("From CZK 2,500 (€100)", "Od 2 500 Kč (100 €)"),
       description: t(
         "From 2 hours to a full day of interactive team learning.",
         "Od 2 hodin po celý den interaktivního týmového vzdělávání."
@@ -15,8 +15,6 @@ const PricingSection = () => {
         t("2–6 hour sessions", "Setkání v délce 2–6 hodin"),
         t("Up to 100 participants", "Až 100 účastníků"),
         t("Flexible timing options", "Flexibilní časové možnosti"),
-        t("Follow-up resources", "Navazující materiály"),
-        t("Post-workshop debrief", "Vyhodnocení po workshopu"),
       ],
       highlighted: true,
     },
@@ -28,8 +26,6 @@ const PricingSection = () => {
         t("Modules can be combined", "Moduly lze kombinovat"),
         t("Custom exercises & materials", "Cvičení a materiály na míru"),
         t("Team assessments", "Hodnocení týmu"),
-        t("Follow-up resources", "Navazující materiály"),
-        t("Post-workshop debrief", "Vyhodnocení po workshopu"),
       ],
     },
     {
