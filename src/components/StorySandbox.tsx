@@ -145,6 +145,10 @@ export default function StorySandbox() {
   const [animKey, setAnimKey] = useState(0);
   const [structure, setStructure] = useState<StructureKey>("3-act");
   const [scratch, setScratch] = useState<Record<string, string>>({});
+  const [allOneLiners, setAllOneLiners] = useState<string[]>([]);
+  const [oneLinerPrompt, setOneLinerPrompt] = useState<string>("");
+  const [oneLinerAnimKey, setOneLinerAnimKey] = useState(0);
+
 
   // Hydrate UI state + cached seeds from localStorage, then fetch fresh from Sheety
   useEffect(() => {
