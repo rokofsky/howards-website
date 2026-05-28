@@ -432,6 +432,7 @@ const EvaluationsGallery = () => {
             )}
       </p>
 
+      {/* TEMPORARILY HIDDEN: evaluations slider block
       {filtered.length > 0 && (
         <div className="relative">
           <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10" />
@@ -514,6 +515,7 @@ const EvaluationsGallery = () => {
           closeLabel={t("Close", "Zavřít")}
         />
       )}
+      */}
     </div>
   );
 };
