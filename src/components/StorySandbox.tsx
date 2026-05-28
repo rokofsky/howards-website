@@ -266,9 +266,6 @@ export default function StorySandbox() {
       </header>
 
       {/* Prompt Generator */}
-
-
-      {/* Prompt Generator */}
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold">Prompts</h3>
@@ -356,29 +353,29 @@ export default function StorySandbox() {
 
       {/* Structure Selector */}
       <section className="space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold">Structure</h3>
+        <h3 className="text-lg font-semibold">Structure</h3>
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <ToggleGroup
+            type="single"
+            value={structure}
+            onValueChange={(v) => v && setStructure(v as StructureKey)}
+            className="justify-start flex-wrap"
+          >
+            {(Object.keys(STRUCTURES) as StructureKey[]).map((k) => (
+              <ToggleGroupItem
+                key={k}
+                value={k}
+                variant="outline"
+                className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+              >
+                {STRUCTURES[k].label}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
           <Button variant="glass" size="sm" onClick={handleSaveStory}>
-            Save Story
+            Save your story
           </Button>
         </div>
-        <ToggleGroup
-          type="single"
-          value={structure}
-          onValueChange={(v) => v && setStructure(v as StructureKey)}
-          className="justify-start flex-wrap"
-        >
-          {(Object.keys(STRUCTURES) as StructureKey[]).map((k) => (
-            <ToggleGroupItem
-              key={k}
-              value={k}
-              variant="outline"
-              className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-            >
-              {STRUCTURES[k].label}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
         <p className="text-sm text-muted-foreground">{current.helper}</p>
       </section>
 
