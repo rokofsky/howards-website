@@ -72,8 +72,8 @@ const PricingSection = () => {
       ),
       features: [
         t("Discretion guaranteed", "Diskrétnost zaručena"),
-        t("\n", "\n"),
-        t("Satisfaction guaranteed", "Spokojenost zaručena"),
+        t("Years of hardcore experience", "Roky tvrdých zkušeností"),
+        t("Wide knowledge of many branches", "Široké znalosti mnoha oborů"),
         t("Couples therapy", "Terapie pro páry"),
       ] as string[],
       inquireIndividual: true,
@@ -120,7 +120,7 @@ const PricingSection = () => {
             <ul className="space-y-2 mb-6">
               {tier.features.map((f, j) => (
                 <li key={j} className="text-sm text-foreground/80 flex items-start gap-2 font-normal">
-                  <span className="text-gold mt-0.5 whitespace-pre-line">{"✓\nWide knowledge of many branches"}</span>
+                  <span className="text-gold mt-0.5">✓</span>
                   <span>{f}</span>
                 </li>
               ))}
