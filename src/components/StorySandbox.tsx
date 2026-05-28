@@ -250,6 +250,13 @@ export default function StorySandbox() {
     );
   }, [prompts, structure, scratch]);
 
+  const shuffle = () => {
+    setPrompts((p) => ({
+      character: pick(seeds.character) ?? p.character,
+      incident: pick(seeds.incident) ?? p.incident,
+      constraint: pick(seeds.constraint) ?? p.constraint,
+      custom: p.custom,
+    }));
     setAnimKey((k) => k + 1);
   };
 
@@ -259,12 +266,6 @@ export default function StorySandbox() {
     setOneLinerAnimKey((k) => k + 1);
   };
 
-      incident: pick(seeds.incident) ?? p.incident,
-      constraint: pick(seeds.constraint) ?? p.constraint,
-      custom: p.custom,
-    }));
-    setAnimKey((k) => k + 1);
-  };
 
 
   const current = STRUCTURES[structure];
