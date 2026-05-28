@@ -224,9 +224,6 @@ export default function StorySandbox() {
   const current = STRUCTURES[structure];
   const sections = useMemo(() => current.sections, [current]);
 
-  const current = STRUCTURES[structure];
-  const sections = useMemo(() => current.sections, [current]);
-
   const handleSaveStory = () => {
     const lines: string[] = [
       "=========================================",
@@ -258,7 +255,24 @@ export default function StorySandbox() {
     URL.revokeObjectURL(url);
   };
 
+  return (
+    <div className="w-full max-w-5xl mx-auto space-y-10">
+      {/* Header */}
+      <header className="text-center space-y-2">
+        <h2 className="text-3xl md:text-4xl font-bold">Story Sandbox</h2>
+        <p className="text-muted-foreground max-w-xl mx-auto">
+          Generate prompts, pick a structure, sketch a micro-story.
+        </p>
+      </header>
 
+      {/* Prompt Generator */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-lg font-semibold">Prompts</h3>
+          <Button variant="glass" size="sm" onClick={shuffle}>
+            <Shuffle className="h-4 w-4" />
+            Shuffle
+          </Button>
 
       {/* Prompt Generator */}
       <section className="space-y-4">
