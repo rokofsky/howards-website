@@ -266,13 +266,7 @@ export default function StorySandbox() {
       </header>
 
       {/* Prompt Generator */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold">Prompts</h3>
-          <Button variant="glass" size="sm" onClick={shuffle}>
-            <Shuffle className="h-4 w-4" />
-            Shuffle
-          </Button>
+
 
       {/* Prompt Generator */}
       <section className="space-y-4">
