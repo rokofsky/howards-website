@@ -234,13 +234,11 @@ export default function StorySandbox() {
     sections.forEach((s) => {
       const val = (scratch[`${structure}:${s.key}`] ?? "").trim();
       lines.push(`[${s.title.toUpperCase()}]`);
-      lines.push("-----------------------------------------");
       lines.push(val || "(Empty)");
       lines.push("");
     });
     const notes = (scratch[`${structure}:notes`] ?? "").trim();
     lines.push("[NOTES]");
-    lines.push("-----------------------------------------");
     lines.push(notes || "(Empty)");
     lines.push("");
 
