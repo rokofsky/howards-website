@@ -168,7 +168,7 @@ const Header = () => {
           />
         </a>
 
-        <nav className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-4 flex-nowrap whitespace-nowrap">
           {navOrder.map((link) => {
             if (link.kind === "external") {
               return (
