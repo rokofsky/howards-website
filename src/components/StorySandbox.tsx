@@ -245,33 +245,27 @@ export default function StorySandbox() {
     lines.push("");
 
     const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
-      {/* Structure Selector */}
-      <section className="space-y-3">
-        <h3 className="text-lg font-semibold">Structure</h3>
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <ToggleGroup
-            type="single"
-            value={structure}
-            onValueChange={(v) => v && setStructure(v as StructureKey)}
-            className="justify-start flex-wrap"
-          >
-            {(Object.keys(STRUCTURES) as StructureKey[]).map((k) => (
-              <ToggleGroupItem
-                key={k}
-                value={k}
-                variant="outline"
-                className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-              >
-                {STRUCTURES[k].label}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-          <Button variant="glass" size="sm" onClick={handleSaveStory}>
-            Save your story
-          </Button>
-        </div>
-        <p className="text-sm text-muted-foreground">{current.helper}</p>
-      </section>
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "my-story-sandbox.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="w-full max-w-5xl mx-auto space-y-10">
+      {/* Header */}
+      <header className="text-center space-y-2">
+        <h2 className="text-3xl md:text-4xl font-bold">Story Sandbox</h2>
+        <p className="text-muted-foreground max-w-xl mx-auto">
+          Generate prompts, pick a structure, sketch a micro-story.
+        </p>
+      </header>
+
+      {/* Prompt Generator */}
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold">Prompts</h3>
@@ -359,29 +353,29 @@ export default function StorySandbox() {
 
       {/* Structure Selector */}
       <section className="space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold">Structure</h3>
+        <h3 className="text-lg font-semibold">Structure</h3>
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <ToggleGroup
+            type="single"
+            value={structure}
+            onValueChange={(v) => v && setStructure(v as StructureKey)}
+            className="justify-start flex-wrap"
+          >
+            {(Object.keys(STRUCTURES) as StructureKey[]).map((k) => (
+              <ToggleGroupItem
+                key={k}
+                value={k}
+                variant="outline"
+                className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+              >
+                {STRUCTURES[k].label}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
           <Button variant="glass" size="sm" onClick={handleSaveStory}>
-            Save Story
+            Save your story
           </Button>
         </div>
-        <ToggleGroup
-          type="single"
-          value={structure}
-          onValueChange={(v) => v && setStructure(v as StructureKey)}
-          className="justify-start flex-wrap"
-        >
-          {(Object.keys(STRUCTURES) as StructureKey[]).map((k) => (
-            <ToggleGroupItem
-              key={k}
-              value={k}
-              variant="outline"
-              className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-            >
-              {STRUCTURES[k].label}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
         <p className="text-sm text-muted-foreground">{current.helper}</p>
       </section>
 
