@@ -249,7 +249,7 @@ const Header = () => {
             className="md:hidden glass border-t border-border/30"
           >
             // Before: px-6 py-4 gap-4
-           <nav className="relative z-[1000] flex flex-col max-w-7xl mx-auto w-full px-6 py-1 gap-2">
+            <nav className="relative z-[1000] flex flex-col px-6 py-1 gap-2">
               {navOrder.map((link) => {
                 if (link.kind === "external") {
                   return (
