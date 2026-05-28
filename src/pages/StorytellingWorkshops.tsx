@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useT } from "@/hooks/useT";
+import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { trackCTA, trackClick } from "@/lib/analytics";
 import {
   Dialog,
@@ -25,6 +27,7 @@ interface Session {
 
 const StorytellingWorkshops = () => {
   const t = useT();
+  const lp = useLocalizedPath();
   const tableName = "storytelling_sessions_public";
   const statusFilter = "published";
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -128,6 +131,29 @@ const StorytellingWorkshops = () => {
                 "Storytelling existuje už od úsvitu jazyka. Příběhy se sdílely a převyprávěly u komunitního ohně, na rodinných setkáních v chatrčích, pueblech, iglú a jurtách. Chcete si procvičit své vypravěčství?\n\nToto není čtenářská ani spisovatelská akce; je to akce storyTELLINGOVÁ, kde trénujeme umění ústního vyprávění.\n\nJste povzbuzováni k vyprávění jednoho příběhu (nebo vtipu) v angličtině v délce do 8 minut; může být pravdivý, vymyšlený, mýtus, bajka, metafora, anekdota. Po každém vystoupení budeme mít, pokud budete chtít, krátké kolo zpětné vazby, abychom doufejme vylepšili váš příběh a/nebo způsob, jakým ho vyprávíte.\n\nMůžete se také jen dívat, jen nám prokažte laskavost a zapněte si kameru.\nVystupte ze své komfortní zóny v bezpečném prostoru kolegů vypravěčů!\n\n"
               )}
             </div>
+
+            {/* Story Sandbox CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="glass rounded-lg border border-border/50 p-6 md:p-8 mb-10"
+            >
+              <h2 className="text-xl md:text-2xl font-semibold mb-3">
+                {t("Interactive Story Sandbox", "Interaktivní Story Sandbox")}
+              </h2>
+              <p className="text-muted-foreground mb-5 max-w-2xl leading-relaxed font-normal">
+                {t(
+                  "Use the Story Sandbox to instantly generate creative characters, unexpected incidents, and obstacles for your story outline.",
+                  "Použijte Story Sandbox a okamžitě generujte kreativní postavy, nečekané události a překážky pro váš příběhový nástřel."
+                )}
+              </p>
+              <Button variant="cta" asChild>
+                <Link to={lp("/story-sandbox")}>
+                  {t("Open Story Sandbox", "Otevřít Story Sandbox")}
+                </Link>
+              </Button>
+            </motion.div>
 
             {loading ? (
               <p className="text-muted-foreground font-light">{t("Loading sessions...", "Načítám termíny…")}</p>
