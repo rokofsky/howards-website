@@ -224,15 +224,41 @@ export default function StorySandbox() {
   const current = STRUCTURES[structure];
   const sections = useMemo(() => current.sections, [current]);
 
-  return (
-    <div className="w-full max-w-5xl mx-auto space-y-10">
-      {/* Header */}
-      <header className="text-center space-y-2">
-        <h2 className="text-3xl md:text-4xl font-bold">Story Sandbox</h2>
-        <p className="text-muted-foreground max-w-xl mx-auto">
-          Generate prompts, pick a structure, sketch a micro-story.
-        </p>
-      </header>
+  const current = STRUCTURES[structure];
+  const sections = useMemo(() => current.sections, [current]);
+
+  const handleSaveStory = () => {
+    const lines: string[] = [
+      "=========================================",
+      "STORY SANDBOX EXPORT",
+      "=========================================",
+      "",
+    ];
+    sections.forEach((s) => {
+      const val = (scratch[`${structure}:${s.key}`] ?? "").trim();
+      lines.push(`[${s.title.toUpperCase()}]`);
+      lines.push("-----------------------------------------");
+      lines.push(val || "(Empty)");
+      lines.push("");
+    });
+    const notes = (scratch[`${structure}:notes`] ?? "").trim();
+    lines.push("[NOTES]");
+    lines.push("-----------------------------------------");
+    lines.push(notes || "(Empty)");
+    lines.push("");
+
+    const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "my-story-sandbox.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+
 
       {/* Prompt Generator */}
       <section className="space-y-4">
