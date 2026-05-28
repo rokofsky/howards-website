@@ -510,6 +510,13 @@ export default function StorySandbox() {
         )}
       </section>
 
+      <div className="flex justify-end pt-4">
+        <Button variant="glass" size="sm" onClick={handleSaveStory}>
+          Save Story
+        </Button>
+      </div>
+
     </div>
+
   );
 }
