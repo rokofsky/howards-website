@@ -25,11 +25,12 @@ const Header = () => {
 
   const plainLinks = [
     { label: t("Home", "Domů"), href: homeHref },
+  const plainLinks = [
+    { label: t("Home", "Domů"), href: homeHref },
     { label: t("References", "Reference"), href: lp("/references") },
     { label: t("Blog", "Blog"), href: lp("/blog") },
+    { label: t("Story Sandbox", "Story Sandbox"), href: lp("/story-sandbox") },
   ];
-
-  const hashLinks = [
     { label: t("Services", "Služby"), href: lp("/#services"), id: "services" },
     { label: t("FAQ", "FAQ"), href: lp("/#faq"), id: "faq" },
     { label: t("Pricing", "Ceník"), href: lp("/#pricing"), id: "pricing" },
