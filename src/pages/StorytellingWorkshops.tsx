@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useT } from "@/hooks/useT";
+import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { trackCTA, trackClick } from "@/lib/analytics";
 import {
   Dialog,
