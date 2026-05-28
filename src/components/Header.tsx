@@ -146,12 +146,12 @@ const Header = () => {
   const desktopLinkClass =
     "text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-primary after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out [@media(hover:none)]:hover:after:scale-x-0";
 
-  // Before: py-2
-  const mobileLinkClass = "text-base font-light text-foreground/70 hover:text-foreground py-1";
+  const mobileLinkClass = "text-base font-light text-foreground/70 hover:text-foreground py-2";
+
   return (
     <header
       ref={headerRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 h-16 max-h-[64px] flex items-center ${scrolled ? "glass" : "bg-transparent"}`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "glass" : "bg-transparent"}`}
     >
       <div className="container mx-auto flex h-16 md:h-[72px] max-lg:landscape:h-11 items-center justify-between px-6 max-lg:landscape:px-4">
         <a
@@ -168,7 +168,7 @@ const Header = () => {
           />
         </a>
 
-        <div className="hidden md:flex items-center gap-4 flex-nowrap whitespace-nowrap">
+        <nav className="hidden md:flex items-center gap-8">
           {navOrder.map((link) => {
             if (link.kind === "external") {
               return (
@@ -248,8 +248,7 @@ const Header = () => {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden glass border-t border-border/30"
           >
-            // Before: px-6 py-4 gap-4
-            <nav className="relative z-[1000] flex flex-col px-6 py-1 gap-2">
+            <nav className="relative z-[1000] flex flex-col px-6 py-4 gap-4">
               {navOrder.map((link) => {
                 if (link.kind === "external") {
                   return (
