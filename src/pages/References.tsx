@@ -72,8 +72,8 @@ const References = () => {
             </div>
             <p className="text-muted-foreground font-light mb-8">
               {t(
-                "Scanned evaluation sheets from past workshops. Click to view full size, and zoom in for detail!",
-                "Naskenované hodnotící formuláře z minulých workshopů. Kliknutím zobrazíte v plné velikosti a můžete si přiblížit detaily!"
+                "Complete, unabridged evaluation sheet scans from past workshops. Click to view full size, and zoom in for detail!",
+                "Kompletní, nezkrácené skeny hodnotících formulářů z minulých workshopů. Kliknutím zobrazíte v plné velikosti a můžete si přiblížit detaily!"
               )}
             </p>
             <EvaluationsGallery />
