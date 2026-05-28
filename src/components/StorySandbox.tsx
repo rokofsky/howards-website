@@ -17,10 +17,42 @@ const SHEETY_URL =
 const SEEDS_CACHE_KEY = "story-sandbox:seeds:v1";
 
 const FALLBACK_SEEDS = {
-  character: ["An undercover food critic"],
-  incident: ["inherits a parrot that quotes Nietzsche"],
-  constraint: ["while pretending everything is fine"],
-  setting: ["in a 24-hour laundromat"],
+  character: [
+    "A retired astronaut",
+    "A small-town librarian",
+    "A street magician",
+    "A burned-out chef",
+    "A lighthouse keeper",
+    "A teenage chess prodigy",
+    "An undercover food critic",
+    "A jaded wedding photographer",
+  ],
+  incident: [
+    "loses their keys at midnight",
+    "receives a letter 40 years late",
+    "finds a stranger asleep on the couch",
+    "is mistaken for a celebrity",
+    "discovers a hidden door at work",
+    "wakes up in the wrong city",
+    "inherits a parrot that quotes Nietzsche",
+    "must give a speech in 10 minutes",
+  ],
+  constraint: [
+    "without speaking a word",
+    "in under five minutes",
+    "while it's pouring rain",
+    "without using their phone",
+    "in front of their ex",
+    "during a power outage",
+    "with only a paper map",
+    "while pretending everything is fine",
+  ],
+  setting: [
+    "in a 24-hour laundromat",
+    "on a delayed night train",
+    "at a quiet beach off-season",
+    "in a half-renovated apartment",
+  ],
 } as const;
 
 type SeedSet = {
@@ -29,6 +61,7 @@ type SeedSet = {
   constraint: string[];
   setting: string[];
 };
+
 
 /* ============================================================
    STRUCTURES — edit/extend freely
@@ -171,7 +204,10 @@ export default function StorySandbox() {
 
   // Persist UI state
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ prompts, structure, scratch }));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ prompts, structure, scratch }),
+    );
   }, [prompts, structure, scratch]);
 
   const shuffle = () => {
@@ -184,8 +220,38 @@ export default function StorySandbox() {
     setAnimKey((k) => k + 1);
   };
 
+
   const current = STRUCTURES[structure];
   const sections = useMemo(() => current.sections, [current]);
+
+  const handleSaveStory = () => {
+    const lines: string[] = [
+      "=========================================",
+      "STORY SANDBOX EXPORT",
+      "=========================================",
+      "",
+    ];
+    sections.forEach((s) => {
+      const val = (scratch[`${structure}:${s.key}`] ?? "").trim();
+      lines.push(`[${s.title.toUpperCase()}]`);
+      lines.push(val || "(Empty)");
+      lines.push("");
+    });
+    const notes = (scratch[`${structure}:notes`] ?? "").trim();
+    lines.push("[NOTES]");
+    lines.push(notes || "(Empty)");
+    lines.push("");
+
+    const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "my-story-sandbox.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-10">
@@ -196,6 +262,9 @@ export default function StorySandbox() {
           Generate prompts, pick a structure, sketch a micro-story.
         </p>
       </header>
+
+      {/* Prompt Generator */}
+
 
       {/* Prompt Generator */}
       <section className="space-y-4">
@@ -221,7 +290,9 @@ export default function StorySandbox() {
                 )}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">{label}</span>
+                  <span className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">
+                    {label}
+                  </span>
                   {!isEditing && !isCustomSlot && (
                     <button
                       type="button"
@@ -239,7 +310,9 @@ export default function StorySandbox() {
                     <Input
                       autoFocus
                       value={value}
-                      onChange={(e) => setPrompts((p) => ({ ...p, [key]: e.target.value }))}
+                      onChange={(e) =>
+                        setPrompts((p) => ({ ...p, [key]: e.target.value }))
+                      }
                       onBlur={() => setEditing(null)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === "Escape") setEditing(null);
@@ -281,7 +354,12 @@ export default function StorySandbox() {
 
       {/* Structure Selector */}
       <section className="space-y-3">
-        <h3 className="text-lg font-semibold">Structure</h3>
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-lg font-semibold">Structure</h3>
+          <Button variant="glass" size="sm" onClick={handleSaveStory}>
+            Save Story
+          </Button>
+        </div>
         <ToggleGroup
           type="single"
           value={structure}
@@ -326,8 +404,45 @@ export default function StorySandbox() {
               />
             </div>
           ))}
+          {structure === "3-act" && (
+            <div className="space-y-1.5">
+              <Label htmlFor="sb-notes" className="text-sm font-semibold">
+                Notes
+              </Label>
+              <p className="text-xs text-muted-foreground">Anything else worth jotting down.</p>
+              <Textarea
+                id="sb-notes"
+                value={scratch[`${structure}:notes`] ?? ""}
+                onChange={(e) =>
+                  setScratch((prev) => ({ ...prev, [`${structure}:notes`]: e.target.value }))
+                }
+                placeholder="Notes…"
+                rows={5}
+              />
+            </div>
+          )}
         </div>
+        {structure === "adventure" && (
+          <div className="animate-fade-in flex justify-center">
+            <div className="w-full md:w-1/2 space-y-1.5">
+              <Label htmlFor="sb-notes" className="text-sm font-semibold">
+                Notes
+              </Label>
+              <p className="text-xs text-muted-foreground">Anything else worth jotting down.</p>
+              <Textarea
+                id="sb-notes"
+                value={scratch[`${structure}:notes`] ?? ""}
+                onChange={(e) =>
+                  setScratch((prev) => ({ ...prev, [`${structure}:notes`]: e.target.value }))
+                }
+                placeholder="Notes…"
+                rows={5}
+              />
+            </div>
+          </div>
+        )}
       </section>
+
     </div>
   );
 }
