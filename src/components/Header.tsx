@@ -23,18 +23,21 @@ const Header = () => {
   const isRoot = location.pathname === "/" || location.pathname === "/cz" || location.pathname === "/cz/";
   const homeHref = isCz ? "/cz" : "/";
 
-  const plainLinks = [
-    { label: t("Home", "Domů"), href: homeHref },
-    { label: t("References", "Reference"), href: lp("/references") },
-    { label: t("Blog", "Blog"), href: lp("/blog") },
-    { label: t("Story Sandbox", "Story Sandbox"), href: lp("/story-sandbox") },
-  ];
+  const homeLink = { kind: "plain" as const, label: t("Home", "Domů"), href: homeHref };
+  const referencesLink = { kind: "plain" as const, label: t("References", "Reference"), href: lp("/references") };
+  const blogLink = { kind: "plain" as const, label: t("Blog", "Blog"), href: lp("/blog") };
+  const cvLink = { kind: "plain" as const, label: "CV", href: lp("/cv") };
+  const bookLink = {
+    kind: "external" as const,
+    label: t("My Book", "Moje kniha"),
+    href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN",
+  };
 
   const hashLinks = [
-    { label: t("Services", "Služby"), href: lp("/#services"), id: "services" },
-    { label: t("FAQ", "FAQ"), href: lp("/#faq"), id: "faq" },
-    { label: t("Pricing", "Ceník"), href: lp("/#pricing"), id: "pricing" },
-    { label: t("Contact", "Kontakt"), href: lp("/#contact-area"), id: "contact-area" },
+    { kind: "hash" as const, label: t("Services", "Služby"), href: lp("/#services"), id: "services" },
+    { kind: "hash" as const, label: t("FAQ", "FAQ"), href: lp("/#faq"), id: "faq" },
+    { kind: "hash" as const, label: t("Pricing", "Ceník"), href: lp("/#pricing"), id: "pricing" },
+    { kind: "hash" as const, label: t("Contact", "Kontakt"), href: lp("/#contact-area"), id: "contact-area" },
   ];
 
   const navOrder: Array<
@@ -42,21 +45,16 @@ const Header = () => {
     | { kind: "hash"; label: string; href: string; id: string }
     | { kind: "external"; label: string; href: string }
   > = [
-    { kind: "plain", label: plainLinks[0].label, href: plainLinks[0].href },
-    { kind: "hash", ...hashLinks[0] },
-    { kind: "hash", ...hashLinks[1] },
-    { kind: "hash", ...hashLinks[2] },
-    { kind: "plain", label: plainLinks[1].label, href: plainLinks[1].href },
-    {
-      kind: "external",
-      label: t("My Book", "Moje kniha"),
-      href: "https://www.amazon.com/How-GET-Great-Service-everyday-ebook/dp/B07CLK5KXN",
-    },
-    { kind: "plain", label: "CV", href: lp("/cv") },
-    { kind: "plain", label: plainLinks[2].label, href: plainLinks[2].href },
-    { kind: "plain", label: plainLinks[3].label, href: plainLinks[3].href },
-    { kind: "hash", ...hashLinks[3] },
-  ];
+    homeLink,
+    hashLinks[0],
+    hashLinks[1],
+    hashLinks[2],
+    referencesLink,
+    bookLink,
+    cvLink,
+    blogLink,
+    hashLinks[3],
+  ].filter(Boolean) as any;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
