@@ -27,6 +27,7 @@ interface Session {
 
 const StorytellingWorkshops = () => {
   const t = useT();
+  const lp = useLocalizedPath();
   const tableName = "storytelling_sessions_public";
   const statusFilter = "published";
   const [sessions, setSessions] = useState<Session[]>([]);
