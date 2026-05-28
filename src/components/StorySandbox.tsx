@@ -92,12 +92,13 @@ const STORAGE_KEY = "story-sandbox:v1";
 
 const pick = <T,>(arr: readonly T[]) => arr[Math.floor(Math.random() * arr.length)];
 
+type Category = "character" | "incident" | "constraint";
 type Prompts = Record<Category, string> & { custom: string };
 
-const initialPrompts = (): Prompts => ({
-  character: pick(SEEDS.character),
-  incident: pick(SEEDS.incident),
-  constraint: pick(SEEDS.constraint),
+const initialPrompts = (seeds: SeedSet): Prompts => ({
+  character: pick(seeds.character) ?? "",
+  incident: pick(seeds.incident) ?? "",
+  constraint: pick(seeds.constraint) ?? "",
   custom: "",
 });
 
@@ -108,28 +109,98 @@ const CATEGORY_META: { key: Category | "custom"; label: string; tone: string }[]
   { key: "custom", label: "Custom", tone: "from-muted to-background border-dashed border-muted-foreground/40" },
 ];
 
+const FALLBACK: SeedSet = {
+  character: [...FALLBACK_SEEDS.character],
+  incident: [...FALLBACK_SEEDS.incident],
+  constraint: [...FALLBACK_SEEDS.constraint],
+  setting: [...FALLBACK_SEEDS.setting],
+};
+
+const parseSheetyRows = (rows: unknown): SeedSet | null => {
+  if (!Array.isArray(rows)) return null;
+  const out: SeedSet = { character: [], incident: [], constraint: [], setting: [] };
+  for (const row of rows) {
+    if (!row || typeof row !== "object") continue;
+    const r = row as Record<string, unknown>;
+    (["character", "incident", "constraint", "setting"] as const).forEach((k) => {
+      const v = r[k];
+      if (typeof v === "string" && v.trim()) out[k].push(v.trim());
+    });
+  }
+  if (!out.character.length && !out.incident.length && !out.constraint.length) return null;
+  // Backfill any empty category from fallback so shuffle never breaks
+  (["character", "incident", "constraint", "setting"] as const).forEach((k) => {
+    if (!out[k].length) out[k] = [...FALLBACK[k]];
+  });
+  return out;
+};
+
 export default function StorySandbox() {
-  const [prompts, setPrompts] = useState<Prompts>(initialPrompts);
+  const [seeds, setSeeds] = useState<SeedSet>(FALLBACK);
+  const [isLoading, setIsLoading] = useState(true);
+  const [prompts, setPrompts] = useState<Prompts>(() => initialPrompts(FALLBACK));
   const [editing, setEditing] = useState<Category | "custom" | null>(null);
   const [animKey, setAnimKey] = useState(0);
   const [structure, setStructure] = useState<StructureKey>("3-act");
   const [scratch, setScratch] = useState<Record<string, string>>({});
 
-  // Hydrate from localStorage
+  // Hydrate UI state + cached seeds from localStorage, then fetch fresh from Sheety
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      if (parsed.prompts) setPrompts({ ...initialPrompts(), ...parsed.prompts });
-      if (parsed.structure) setStructure(parsed.structure);
-      if (parsed.scratch) setScratch(parsed.scratch);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.prompts) setPrompts((p) => ({ ...p, ...parsed.prompts }));
+        if (parsed.structure) setStructure(parsed.structure);
+        if (parsed.scratch) setScratch(parsed.scratch);
+      }
     } catch {
       /* ignore */
     }
+
+    let cached: SeedSet | null = null;
+    try {
+      const rawSeeds = localStorage.getItem(SEEDS_CACHE_KEY);
+      if (rawSeeds) {
+        const parsed = JSON.parse(rawSeeds);
+        if (parsed && Array.isArray(parsed.character)) {
+          cached = parsed as SeedSet;
+          setSeeds(cached);
+          setIsLoading(false);
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(SHEETY_URL);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        const parsed = parseSheetyRows(json?.storySandboxSeedInputs);
+        if (parsed && !cancelled) {
+          setSeeds(parsed);
+          try {
+            localStorage.setItem(SEEDS_CACHE_KEY, JSON.stringify(parsed));
+          } catch {
+            /* ignore */
+          }
+        }
+      } catch (err) {
+        console.warn("[StorySandbox] Sheety fetch failed, using fallback seeds.", err);
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  // Persist
+  // Persist UI state
   useEffect(() => {
     localStorage.setItem(
       STORAGE_KEY,
@@ -139,13 +210,14 @@ export default function StorySandbox() {
 
   const shuffle = () => {
     setPrompts((p) => ({
-      character: pick(SEEDS.character),
-      incident: pick(SEEDS.incident),
-      constraint: pick(SEEDS.constraint),
+      character: pick(seeds.character) ?? p.character,
+      incident: pick(seeds.incident) ?? p.incident,
+      constraint: pick(seeds.constraint) ?? p.constraint,
       custom: p.custom,
     }));
     setAnimKey((k) => k + 1);
   };
+
 
   const current = STRUCTURES[structure];
   const sections = useMemo(() => current.sections, [current]);
