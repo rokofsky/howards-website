@@ -356,7 +356,12 @@ export default function StorySandbox() {
 
       {/* Structure Selector */}
       <section className="space-y-3">
-        <h3 className="text-lg font-semibold">Structure</h3>
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-lg font-semibold">Structure</h3>
+          <Button variant="glass" size="sm" onClick={handleSaveStory}>
+            Save Story
+          </Button>
+        </div>
         <ToggleGroup
           type="single"
           value={structure}
@@ -401,8 +406,45 @@ export default function StorySandbox() {
               />
             </div>
           ))}
+          {structure === "3-act" && (
+            <div className="space-y-1.5">
+              <Label htmlFor="sb-notes" className="text-sm font-semibold">
+                Notes
+              </Label>
+              <p className="text-xs text-muted-foreground">Anything else worth jotting down.</p>
+              <Textarea
+                id="sb-notes"
+                value={scratch[`${structure}:notes`] ?? ""}
+                onChange={(e) =>
+                  setScratch((prev) => ({ ...prev, [`${structure}:notes`]: e.target.value }))
+                }
+                placeholder="Notes…"
+                rows={5}
+              />
+            </div>
+          )}
         </div>
+        {structure === "adventure" && (
+          <div className="animate-fade-in flex justify-center">
+            <div className="w-full md:w-1/2 space-y-1.5">
+              <Label htmlFor="sb-notes" className="text-sm font-semibold">
+                Notes
+              </Label>
+              <p className="text-xs text-muted-foreground">Anything else worth jotting down.</p>
+              <Textarea
+                id="sb-notes"
+                value={scratch[`${structure}:notes`] ?? ""}
+                onChange={(e) =>
+                  setScratch((prev) => ({ ...prev, [`${structure}:notes`]: e.target.value }))
+                }
+                placeholder="Notes…"
+                rows={5}
+              />
+            </div>
+          </div>
+        )}
       </section>
+
     </div>
   );
 }
