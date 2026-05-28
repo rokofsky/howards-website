@@ -399,14 +399,34 @@ export default function StorySandbox() {
         </div>
       </section>
 
-      {/* Structure Selector */}
-      <section className="space-y-3">
+      {/* One-liner Prompt Generator */}
+      <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold">Structure</h3>
-          <Button variant="glass" size="sm" onClick={handleSaveStory}>
-            Save Story
+          <h3 className="text-lg font-semibold">One size fits all prompts</h3>
+          <Button
+            variant="glass"
+            size="sm"
+            onClick={shuffleOneLiner}
+            disabled={!allOneLiners.length}
+          >
+            <Shuffle className="h-4 w-4" />
+            Shuffle
           </Button>
         </div>
+        <Card
+          key={`oneliner-${oneLinerAnimKey}`}
+          className="relative p-4 min-h-[140px] flex items-center justify-center bg-gradient-to-br from-gold/20 to-petrol/10 border border-gold/30 animate-fade-in-up"
+        >
+          <p className="text-base md:text-lg font-medium text-center leading-snug">
+            {oneLinerPrompt || (allOneLiners.length ? "Hit shuffle." : "Loading prompts…")}
+          </p>
+        </Card>
+      </section>
+
+      {/* Structure Selector */}
+      <section className="space-y-3">
+        <h3 className="text-lg font-semibold">Structure</h3>
+
         <ToggleGroup
           type="single"
           value={structure}
