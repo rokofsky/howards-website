@@ -67,12 +67,12 @@ const PricingSection = () => {
       price: t("From CZK 1,500 (€60)", "Od 1 500 Kč (60 €)"),
       priceSuffix: t("per hour", "za hodinu"),
       description: t(
-        "Satisfaction guaranteed or you do not pay",
+        "Satisfaction guaranteed or no need to pay",
         "Spokojenost zaručena, nebo neplatíte"
       ),
       features: [
         t("Discretion guaranteed", "Diskrétnost zaručena"),
-        t("Years of hardcore experience", "Roky tvrdých zkušeností"),
+        t("Out-of-the-box thinking", "Roky tvrdých zkušeností"),
         t("Wide knowledge of many branches", "Široké znalosti mnoha oborů"),
         t("Couples therapy", "Terapie pro páry"),
       ] as string[],
