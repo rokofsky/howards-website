@@ -432,7 +432,7 @@ const EvaluationsGallery = () => {
             )}
       </p>
 
-      {/* TEMPORARILY HIDDEN: evaluations slider block
+      {/* TEMPORARILY HIDDEN: evaluations slider block */}
 
       {false && filtered.length > 0 && (
         <div className="relative">
