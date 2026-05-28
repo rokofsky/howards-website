@@ -250,9 +250,15 @@ export default function StorySandbox() {
     );
   }, [prompts, structure, scratch]);
 
-  const shuffle = () => {
-    setPrompts((p) => ({
-      character: pick(seeds.character) ?? p.character,
+    setAnimKey((k) => k + 1);
+  };
+
+  const shuffleOneLiner = () => {
+    if (!allOneLiners.length) return;
+    setOneLinerPrompt(allOneLiners[Math.floor(Math.random() * allOneLiners.length)]);
+    setOneLinerAnimKey((k) => k + 1);
+  };
+
       incident: pick(seeds.incident) ?? p.incident,
       constraint: pick(seeds.constraint) ?? p.constraint,
       custom: p.custom,
