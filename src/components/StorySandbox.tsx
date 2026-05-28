@@ -206,6 +206,42 @@ export default function StorySandbox() {
     };
   }, []);
 
+  // Fetch one-liner prompts from Sheety
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(
+          "https://api.sheety.co/086a2eae49353df7574b77bca2c248de/storyPromptsOneLiners/sheet1",
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        const rows = Array.isArray(json?.sheet1) ? json.sheet1 : [];
+        const lines: string[] = [];
+        for (const row of rows) {
+          if (!row || typeof row !== "object") continue;
+          const r = row as Record<string, unknown>;
+          const v =
+            r.prompt ??
+            r.oneLiner ??
+            r.text ??
+            Object.values(r).find((x) => typeof x === "string" && (x as string).trim() && x !== r.id);
+          if (typeof v === "string" && v.trim()) lines.push(v.trim());
+        }
+        if (!cancelled && lines.length) {
+          setAllOneLiners(lines);
+          setOneLinerPrompt(lines[Math.floor(Math.random() * lines.length)]);
+        }
+      } catch (err) {
+        console.warn("[StorySandbox] One-liner fetch failed.", err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+
   // Persist UI state
   useEffect(() => {
     localStorage.setItem(
