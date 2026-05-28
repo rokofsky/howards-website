@@ -10,8 +10,11 @@ import { cn } from "@/lib/utils";
 
 /* ============================================================
    SEED VOCABULARY — edit/extend freely
-   ============================================================ */
-const SEEDS = {
+const SHEETY_URL =
+  "https://api.sheety.co/086a2eae49353df7574b77bca2c248de/storySandboxSeedInputs/storySandboxSeedInputs";
+const SEEDS_CACHE_KEY = "story-sandbox:seeds:v1";
+
+const FALLBACK_SEEDS = {
   character: [
     "A retired astronaut",
     "A small-town librarian",
@@ -50,7 +53,13 @@ const SEEDS = {
   ],
 } as const;
 
-type Category = "character" | "incident" | "constraint";
+type SeedSet = {
+  character: string[];
+  incident: string[];
+  constraint: string[];
+  setting: string[];
+};
+
 
 /* ============================================================
    STRUCTURES — edit/extend freely
