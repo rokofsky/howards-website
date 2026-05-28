@@ -502,7 +502,7 @@ const EvaluationsGallery = () => {
               );
             })}
           </div>
-        </div>
+</div>
       )}
 
       {lightboxIndex !== null && (
@@ -517,7 +517,6 @@ const EvaluationsGallery = () => {
           closeLabel={t("Close", "Zavřít")}
         />
       )}
-      */}
     </div>
   );
 };
