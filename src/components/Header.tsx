@@ -27,6 +27,7 @@ const Header = () => {
     { label: t("Home", "Domů"), href: homeHref },
     { label: t("References", "Reference"), href: lp("/references") },
     { label: t("Blog", "Blog"), href: lp("/blog") },
+    { label: t("Story Sandbox", "Story Sandbox"), href: lp("/story-sandbox") },
   ];
 
   const hashLinks = [
@@ -53,6 +54,7 @@ const Header = () => {
     },
     { kind: "plain", label: "CV", href: lp("/cv") },
     { kind: "plain", label: plainLinks[2].label, href: plainLinks[2].href },
+    { kind: "plain", label: plainLinks[3].label, href: plainLinks[3].href },
     { kind: "hash", ...hashLinks[3] },
   ];
 
