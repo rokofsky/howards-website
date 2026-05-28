@@ -145,6 +145,10 @@ export default function StorySandbox() {
   const [animKey, setAnimKey] = useState(0);
   const [structure, setStructure] = useState<StructureKey>("3-act");
   const [scratch, setScratch] = useState<Record<string, string>>({});
+  const [allOneLiners, setAllOneLiners] = useState<string[]>([]);
+  const [oneLinerPrompt, setOneLinerPrompt] = useState<string>("");
+  const [oneLinerAnimKey, setOneLinerAnimKey] = useState(0);
+
 
   // Hydrate UI state + cached seeds from localStorage, then fetch fresh from Sheety
   useEffect(() => {
@@ -202,6 +206,42 @@ export default function StorySandbox() {
     };
   }, []);
 
+  // Fetch one-liner prompts from Sheety
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(
+          "https://api.sheety.co/086a2eae49353df7574b77bca2c248de/storyPromptsOneLiners/sheet1",
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        const rows = Array.isArray(json?.sheet1) ? json.sheet1 : [];
+        const lines: string[] = [];
+        for (const row of rows) {
+          if (!row || typeof row !== "object") continue;
+          const r = row as Record<string, unknown>;
+          const v =
+            r.prompt ??
+            r.oneLiner ??
+            r.text ??
+            Object.values(r).find((x) => typeof x === "string" && (x as string).trim() && x !== r.id);
+          if (typeof v === "string" && v.trim()) lines.push(v.trim());
+        }
+        if (!cancelled && lines.length) {
+          setAllOneLiners(lines);
+          setOneLinerPrompt(lines[Math.floor(Math.random() * lines.length)]);
+        }
+      } catch (err) {
+        console.warn("[StorySandbox] One-liner fetch failed.", err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+
   // Persist UI state
   useEffect(() => {
     localStorage.setItem(
@@ -219,6 +259,13 @@ export default function StorySandbox() {
     }));
     setAnimKey((k) => k + 1);
   };
+
+  const shuffleOneLiner = () => {
+    if (!allOneLiners.length) return;
+    setOneLinerPrompt(allOneLiners[Math.floor(Math.random() * allOneLiners.length)]);
+    setOneLinerAnimKey((k) => k + 1);
+  };
+
 
 
   const current = STRUCTURES[structure];
@@ -352,14 +399,34 @@ export default function StorySandbox() {
         </div>
       </section>
 
-      {/* Structure Selector */}
-      <section className="space-y-3">
+      {/* One-liner Prompt Generator */}
+      <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold">Structure</h3>
-          <Button variant="glass" size="sm" onClick={handleSaveStory}>
-            Save Story
+          <h3 className="text-lg font-semibold">One size fits all prompts</h3>
+          <Button
+            variant="glass"
+            size="sm"
+            onClick={shuffleOneLiner}
+            disabled={!allOneLiners.length}
+          >
+            <Shuffle className="h-4 w-4" />
+            Shuffle
           </Button>
         </div>
+        <Card
+          key={`oneliner-${oneLinerAnimKey}`}
+          className="relative p-4 min-h-[140px] flex items-center justify-center bg-gradient-to-br from-gold/20 to-petrol/10 border border-gold/30 animate-fade-in-up"
+        >
+          <p className="text-base md:text-lg font-medium text-center leading-snug">
+            {oneLinerPrompt || (allOneLiners.length ? "Hit shuffle." : "Loading prompts…")}
+          </p>
+        </Card>
+      </section>
+
+      {/* Structure Selector */}
+      <section className="space-y-3">
+        <h3 className="text-lg font-semibold">Structure</h3>
+
         <ToggleGroup
           type="single"
           value={structure}
@@ -443,6 +510,13 @@ export default function StorySandbox() {
         )}
       </section>
 
+      <div className="flex justify-end pt-4">
+        <Button variant="glass" size="sm" onClick={handleSaveStory}>
+          Save Story
+        </Button>
+      </div>
+
     </div>
+
   );
 }
