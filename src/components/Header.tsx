@@ -27,6 +27,7 @@ const Header = () => {
     { label: t("Home", "Domů"), href: homeHref },
     { label: t("References", "Reference"), href: lp("/references") },
     { label: t("Blog", "Blog"), href: lp("/blog") },
+    { label: t("Story Sandbox", "Story Sandbox"), href: lp("/story-sandbox") },
   ];
 
   const hashLinks = [
