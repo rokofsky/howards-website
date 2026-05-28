@@ -146,8 +146,8 @@ const Header = () => {
   const desktopLinkClass =
     "text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-primary after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out [@media(hover:none)]:hover:after:scale-x-0";
 
-  const mobileLinkClass = "text-base font-light text-foreground/70 hover:text-foreground py-2";
-
+  // Before: py-2
+  const mobileLinkClass = "text-base font-light text-foreground/70 hover:text-foreground py-1";
   return (
     <header
       ref={headerRef}
@@ -248,7 +248,8 @@ const Header = () => {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden glass border-t border-border/30"
           >
-            <nav className="relative z-[1000] flex flex-col px-6 py-4 gap-4">
+            // Before: px-6 py-4 gap-4
+            <nav className="relative z-[1000] flex flex-col px-6 py-1 gap-2">
               {navOrder.map((link) => {
                 if (link.kind === "external") {
                   return (
