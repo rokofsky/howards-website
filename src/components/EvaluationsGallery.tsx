@@ -433,7 +433,9 @@ const EvaluationsGallery = () => {
       </p>
 
       {/* TEMPORARILY HIDDEN: evaluations slider block
-{false && filtered.length > 0 && (
+</p>
+
+      {false && filtered.length > 0 && (
         <div className="relative">
           <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10" />
           <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10" />
