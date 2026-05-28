@@ -14,6 +14,7 @@ import References from "./pages/References";
 import ReferenceScans from "./pages/ReferenceScans";
 import ReferenceScanViewer from "./pages/ReferenceScanViewer";
 import StorytellingWorkshops from "./pages/StorytellingWorkshops";
+import StorySandboxPage from "./pages/StorySandbox";
 import ServiceDetail from "./pages/ServiceDetail";
 import KeynoteTopics from "./pages/KeynoteTopics";
 import Blog from "./pages/Blog";
@@ -211,6 +212,7 @@ function PageRoutes() {
       <Route path="reference/scans/:slot" element={<ReferenceScanViewer />} />
       <Route path="storytelling-sessions" element={<StorytellingWorkshops />} />
       <Route path="storytelling-workshops" element={<StorytellingWorkshops />} />
+      <Route path="story-sandbox" element={<StorySandboxPage />} />
       <Route path="services/:slug" element={<ServiceDetail />} />
       <Route path="keynote-topics" element={<KeynoteTopics />} />
       <Route path="blog" element={<Blog />} />
