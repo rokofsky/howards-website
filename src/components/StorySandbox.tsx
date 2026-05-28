@@ -9,7 +9,9 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
 /* ============================================================
-   SEED VOCABULARY — edit/extend freely
+   SEED VOCABULARY — fetched from Sheety with hardcoded fallback
+   ============================================================ */
+
 const SHEETY_URL =
   "https://api.sheety.co/086a2eae49353df7574b77bca2c248de/storySandboxSeedInputs/storySandboxSeedInputs";
 const SEEDS_CACHE_KEY = "story-sandbox:seeds:v1";
