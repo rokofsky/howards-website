@@ -54,6 +54,7 @@ const Header = () => {
     bookLink,
     cvLink,
     blogLink,
+    storySandboxLink,
     hashLinks[3],
   ].filter(Boolean) as any;
 
