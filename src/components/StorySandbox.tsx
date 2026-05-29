@@ -18,22 +18,23 @@ const ENDPOINT_FOR: Record<SheetKey, string> = {
   sheet3: SHEET3_SCRIPT_URL,
 };
 
-const gasFetch = async (url: string) => {
-  const res = await fetch(url, {
-    method: "GET",
-    redirect: "follow",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
-};
-
 const extractArray = (data: unknown, keys: string[]): unknown[] => {
   if (Array.isArray(data)) return data;
   if (data && typeof data === "object") {
+    const record = data as Record<string, unknown>;
     for (const k of keys) {
-      const v = (data as Record<string, unknown>)[k];
+      const v = record[k];
       if (Array.isArray(v)) return v;
+    }
+    for (const container of ["data", "rows", "result", "payload"]) {
+      const nested = record[container];
+      if (Array.isArray(nested)) return nested;
+      if (nested && typeof nested === "object") {
+        for (const k of keys) {
+          const v = (nested as Record<string, unknown>)[k];
+          if (Array.isArray(v)) return v;
+        }
+      }
     }
   }
   return [];
@@ -225,25 +226,25 @@ export default function StorySandbox() {
   useEffect(() => {
     let cancelled = false;
 
-    const loadOne = async (
+    const loadOne = async <T,>(
       SCRIPT_URL: string,
       label: string,
-      apply: (rows: any[]) => void,
+      keys: string[],
+      apply: (rows: T[]) => void,
       done: () => void,
     ) => {
       try {
         const res = await fetch(SCRIPT_URL, {
           method: "GET",
+          mode: "cors",
           redirect: "follow",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
         });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const rawData = await res.json();
         console.log("Data loaded for " + label + " (" + SCRIPT_URL + ")", rawData);
 
-        // Normalize format safely whether it returns a flat array or a nested object
-        const actualData = Array.isArray(rawData)
-          ? rawData
-          : (rawData.data || rawData.rows || rawData.sandboxPrompts || rawData.sandbox || rawData.oneLiners || rawData.sheet3 || rawData.prompts || rawData.sheet1 || []);
+        const actualData = extractArray(rawData, keys) as T[];
+        console.log("Rows mapped for " + label, actualData);
         if (cancelled) return;
         if (actualData.length > 0) {
           apply(actualData);
@@ -255,9 +256,9 @@ export default function StorySandbox() {
       }
     };
 
-    loadOne(SANDBOX_SCRIPT_URL, "sandbox", (rows) => {
-      setAllSandboxPrompts(rows as SandboxRow[]);
-      const first = rows[0] as SandboxRow;
+    loadOne<SandboxRow>(SANDBOX_SCRIPT_URL, "sandbox", ["sandboxPrompts", "sandbox", "sheet1"], (rows) => {
+      setAllSandboxPrompts(rows);
+      const first = rows[0];
       setSandboxRow(first);
       setPrompts((p) => ({
         ...p,
@@ -267,13 +268,13 @@ export default function StorySandbox() {
       }));
     }, () => setSandboxLoading(false));
 
-    loadOne(ONELINERS_SCRIPT_URL, "oneLiners", (rows) => {
-      setAllOneLiners(rows as PromptRow[]);
-      setOneLinerRow(rows[Math.floor(Math.random() * rows.length)] as PromptRow);
+    loadOne<PromptRow>(ONELINERS_SCRIPT_URL, "oneLiners", ["oneLiners", "oneLinerPrompts", "sheet2", "sheet1", "prompts"], (rows) => {
+      setAllOneLiners(rows);
+      setOneLinerRow(rows[Math.floor(Math.random() * rows.length)]);
     }, () => setOneLinersLoading(false));
 
-    loadOne(SHEET3_SCRIPT_URL, "sheet3", (rows) => {
-      setAllSheet3Prompts(rows as PromptRow[]);
+    loadOne<PromptRow>(SHEET3_SCRIPT_URL, "sheet3", ["sheet3", "extraInspiration", "extraPrompts", "sheet1", "prompts"], (rows) => {
+      setAllSheet3Prompts(rows);
     }, () => { /* no UI loading state */ });
 
     return () => {
