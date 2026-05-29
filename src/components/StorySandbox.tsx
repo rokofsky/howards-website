@@ -196,19 +196,30 @@ export default function StorySandbox() {
     }
   }, []);
 
-  // Fetch all three tabs from Google Apps Script (single source of truth)
+  // Fetch all tabs from Google Apps Script (single source of truth)
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(GOOGLE_SCRIPT_URL);
+        const res = await fetch(GOOGLE_SCRIPT_URL, {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
+        const data = await res.json();
         if (cancelled) return;
 
-        const sandbox = Array.isArray(json?.sandbox) ? (json.sandbox as SandboxRow[]) : [];
-        const oneLiners = Array.isArray(json?.oneLiners) ? (json.oneLiners as PromptRow[]) : [];
-        const sheet3 = Array.isArray(json?.sheet3) ? (json.sheet3 as PromptRow[]) : [];
+        const sandbox: SandboxRow[] =
+          data && Array.isArray(data.sandboxPrompts)
+            ? data.sandboxPrompts
+            : data && Array.isArray(data.sandbox)
+            ? data.sandbox
+            : [];
+        const oneLiners: PromptRow[] =
+          data && Array.isArray(data.oneLiners) ? data.oneLiners : [];
 
         if (sandbox.length) {
           setAllSandboxPrompts(sandbox);
@@ -225,17 +236,12 @@ export default function StorySandbox() {
           setAllOneLiners(oneLiners);
           setOneLinerRow(oneLiners[Math.floor(Math.random() * oneLiners.length)]);
         }
-        if (sheet3.length) {
-          setAllSheet3Prompts(sheet3);
-          setSheet3Row(sheet3[Math.floor(Math.random() * sheet3.length)]);
-        }
       } catch (err) {
         console.error("[StorySandbox] Google Apps Script fetch failed — using fallback seeds.", err);
       } finally {
         if (!cancelled) {
           setSandboxLoading(false);
           setOneLinersLoading(false);
-          setSheet3Loading(false);
         }
       }
     })();
