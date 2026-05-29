@@ -221,74 +221,66 @@ export default function StorySandbox() {
       /* ignore */
     }
   }, []);
-
   // --- THREE INDEPENDENT FETCH PIPELINES (one per Google Apps Script endpoint) ---
   useEffect(() => {
     let cancelled = false;
 
-
-    // 1. Sandbox
-    (async () => {
+    const loadOne = async (
+      SCRIPT_URL: string,
+      label: string,
+      apply: (rows: any[]) => void,
+      done: () => void,
+    ) => {
       try {
-        const data = await gasFetch(SANDBOX_SCRIPT_URL);
+        const res = await fetch(SCRIPT_URL, {
+          method: "GET",
+          redirect: "follow",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+        });
+        const rawData = await res.json();
+        console.log("Data loaded for " + label + " (" + SCRIPT_URL + ")", rawData);
+
+        // Normalize format safely whether it returns a flat array or a nested object
+        const actualData = Array.isArray(rawData)
+          ? rawData
+          : (rawData.data || rawData.rows || rawData.sandboxPrompts || rawData.sandbox || rawData.oneLiners || rawData.sheet3 || rawData.prompts || rawData.sheet1 || []);
         if (cancelled) return;
-        const rows = extractArray(data, ["sandboxPrompts", "sandbox", "sheet1", "data", "rows"]) as SandboxRow[];
-        if (rows.length) {
-          setAllSandboxPrompts(rows);
-          const first = rows[0];
-          setSandboxRow(first);
-          setPrompts((p) => ({
-            ...p,
-            character: first.character ?? p.character,
-            incident: first.incident ?? p.incident,
-            constraint: first.constraint ?? p.constraint,
-          }));
+        if (actualData.length > 0) {
+          apply(actualData);
         }
       } catch (err) {
-        console.error("[StorySandbox] Sandbox fetch failed — using fallback seeds.", err);
+        console.error("Fetch failed for " + label + " (" + SCRIPT_URL + "), using FALLBACK_SEEDS", err);
       } finally {
-        if (!cancelled) setSandboxLoading(false);
+        if (!cancelled) done();
       }
-    })();
+    };
 
-    // 2. One-liners
-    (async () => {
-      try {
-        const data = await gasFetch(ONELINERS_SCRIPT_URL);
-        if (cancelled) return;
-        const rows = extractArray(data, ["oneLiners", "sheet1", "data", "rows"]) as PromptRow[];
-        if (rows.length) {
-          setAllOneLiners(rows);
-          setOneLinerRow(rows[Math.floor(Math.random() * rows.length)]);
-        }
-      } catch (err) {
-        console.error("[StorySandbox] One-liners fetch failed — using fallback seeds.", err);
-      } finally {
-        if (!cancelled) setOneLinersLoading(false);
-      }
-    })();
+    loadOne(SANDBOX_SCRIPT_URL, "sandbox", (rows) => {
+      setAllSandboxPrompts(rows as SandboxRow[]);
+      const first = rows[0] as SandboxRow;
+      setSandboxRow(first);
+      setPrompts((p) => ({
+        ...p,
+        character: first.character ?? p.character,
+        incident: first.incident ?? p.incident,
+        constraint: first.constraint ?? p.constraint,
+      }));
+    }, () => setSandboxLoading(false));
 
-    // 3. Sheet3
-    (async () => {
-      try {
-        const data = await gasFetch(SHEET3_SCRIPT_URL);
-        if (cancelled) return;
-        const rows = extractArray(data, ["sheet3", "prompts", "sheet1", "data", "rows"]) as PromptRow[];
-        if (rows.length) {
-          setAllSheet3Prompts(rows);
-          setSheet3Row(rows[Math.floor(Math.random() * rows.length)]);
-        }
-      } catch (err) {
-        console.error("[StorySandbox] Sheet3 fetch failed — using fallback seeds.", err);
-      } finally {
-        if (!cancelled) setSheet3Loading(false);
-      }
-    })();
+    loadOne(ONELINERS_SCRIPT_URL, "oneLiners", (rows) => {
+      setAllOneLiners(rows as PromptRow[]);
+      setOneLinerRow(rows[Math.floor(Math.random() * rows.length)] as PromptRow);
+    }, () => setOneLinersLoading(false));
+
+    loadOne(SHEET3_SCRIPT_URL, "sheet3", (rows) => {
+      setAllSheet3Prompts(rows as PromptRow[]);
+    }, () => { /* no UI loading state */ });
 
     return () => {
       cancelled = true;
     };
   }, []);
+
 
   // Persist UI state
   useEffect(() => {
