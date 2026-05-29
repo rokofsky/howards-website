@@ -228,31 +228,19 @@ export default function StorySandbox() {
   // Fetch all tabs from Google Apps Script (single source of truth)
   useEffect(() => {
     let cancelled = false;
+  // --- THREE INDEPENDENT FETCH PIPELINES (one per Google Apps Script endpoint) ---
+  useEffect(() => {
+    let cancelled = false;
+
+    // 1. Sandbox
     (async () => {
       try {
-        const res = await fetch(GOOGLE_SCRIPT_URL, {
-          method: "GET",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+        const data = await gasFetch(SANDBOX_SCRIPT_URL);
         if (cancelled) return;
-
-        const sandbox: SandboxRow[] =
-          data && Array.isArray(data.sandboxPrompts)
-            ? data.sandboxPrompts
-            : data && Array.isArray(data.sandbox)
-            ? data.sandbox
-            : [];
-        const oneLiners: PromptRow[] =
-          data && Array.isArray(data.oneLiners) ? data.oneLiners : [];
-
-        if (sandbox.length) {
-          setAllSandboxPrompts(sandbox);
-          const first = sandbox[0];
+        const rows = extractArray(data, ["sandboxPrompts", "sandbox", "sheet1", "data", "rows"]) as SandboxRow[];
+        if (rows.length) {
+          setAllSandboxPrompts(rows);
+          const first = rows[0];
           setSandboxRow(first);
           setPrompts((p) => ({
             ...p,
@@ -261,19 +249,47 @@ export default function StorySandbox() {
             constraint: first.constraint ?? p.constraint,
           }));
         }
-        if (oneLiners.length) {
-          setAllOneLiners(oneLiners);
-          setOneLinerRow(oneLiners[Math.floor(Math.random() * oneLiners.length)]);
-        }
       } catch (err) {
-        console.error("[StorySandbox] Google Apps Script fetch failed — using fallback seeds.", err);
+        console.error("[StorySandbox] Sandbox fetch failed — using fallback seeds.", err);
       } finally {
-        if (!cancelled) {
-          setSandboxLoading(false);
-          setOneLinersLoading(false);
-        }
+        if (!cancelled) setSandboxLoading(false);
       }
     })();
+
+    // 2. One-liners
+    (async () => {
+      try {
+        const data = await gasFetch(ONELINERS_SCRIPT_URL);
+        if (cancelled) return;
+        const rows = extractArray(data, ["oneLiners", "sheet1", "data", "rows"]) as PromptRow[];
+        if (rows.length) {
+          setAllOneLiners(rows);
+          setOneLinerRow(rows[Math.floor(Math.random() * rows.length)]);
+        }
+      } catch (err) {
+        console.error("[StorySandbox] One-liners fetch failed — using fallback seeds.", err);
+      } finally {
+        if (!cancelled) setOneLinersLoading(false);
+      }
+    })();
+
+    // 3. Sheet3
+    (async () => {
+      try {
+        const data = await gasFetch(SHEET3_SCRIPT_URL);
+        if (cancelled) return;
+        const rows = extractArray(data, ["sheet3", "prompts", "sheet1", "data", "rows"]) as PromptRow[];
+        if (rows.length) {
+          setAllSheet3Prompts(rows);
+          setSheet3Row(rows[Math.floor(Math.random() * rows.length)]);
+        }
+      } catch (err) {
+        console.error("[StorySandbox] Sheet3 fetch failed — using fallback seeds.", err);
+      } finally {
+        if (!cancelled) setSheet3Loading(false);
+      }
+    })();
+
     return () => {
       cancelled = true;
     };
