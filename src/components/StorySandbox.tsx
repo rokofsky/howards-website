@@ -194,8 +194,8 @@ export default function StorySandbox() {
   // --- Independent loading states ---
   const [sandboxLoading, setSandboxLoading] = useState(true);
   const [oneLinersLoading, setOneLinersLoading] = useState(true);
-  const [sheet3Loading, setSheet3Loading] = useState(true);
-  const [sheet3Row, setSheet3Row] = useState<PromptRow | null>(null);
+  const [, setSheet3Loading] = useState(true);
+  const [, setSheet3Row] = useState<PromptRow | null>(null);
 
   // --- Independent active rows / cycle keys ---
   const initialSandbox = useMemo(() => buildFallbackSandbox(), []);
@@ -211,7 +211,6 @@ export default function StorySandbox() {
   const [editing, setEditing] = useState<Category | "custom" | null>(null);
   const [animKey, setAnimKey] = useState(0);
   const [oneLinerAnimKey, setOneLinerAnimKey] = useState(0);
-  const [sheet3AnimKey, setSheet3AnimKey] = useState(0);
 
   const [structure, setStructure] = useState<StructureKey>("3-act");
   const [scratch, setScratch] = useState<Record<string, string>>({});
@@ -247,6 +246,7 @@ export default function StorySandbox() {
       try {
         const res = await fetch(SCRIPT_URL, {
           method: "GET",
+          mode: "cors",
           redirect: "follow",
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -341,13 +341,6 @@ export default function StorySandbox() {
     if (!row) return;
     setOneLinerRow(row);
     setOneLinerAnimKey((k) => k + 1);
-  };
-
-  const shuffleSheet3 = () => {
-    const row = pickRandom(allSheet3Prompts);
-    if (!row) return;
-    setSheet3Row(row);
-    setSheet3AnimKey((k) => k + 1);
   };
 
   // --- Voting (each sheet posts to its own endpoint) ---
@@ -541,47 +534,24 @@ export default function StorySandbox() {
         </div>
       </section>
 
-      {/* One-liner Prompt Generator (Sheet2) + Sheet3 */}
+      {/* One-liner Prompt Generator (Sheet2) */}
       <section className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between gap-3">
-              <h3 className="text-lg font-semibold">One size fits all prompts</h3>
-              <Button variant="glass" size="sm" onClick={shuffleOneLiner} disabled={!allOneLiners.length}>
-                <Shuffle className="h-4 w-4" />
-                Shuffle
-              </Button>
-            </div>
-            <Card
-              key={`oneliner-${oneLinerAnimKey}`}
-              className="relative p-4 min-h-[140px] flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-gold/20 to-petrol/10 border border-gold/30 animate-fade-in-up"
-            >
-              <p className="text-base md:text-lg font-medium text-center leading-snug">
-                {oneLinerText || (oneLinersLoading ? "Loading prompts…" : "Hit shuffle.")}
-              </p>
-              <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
-            </Card>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between gap-3">
-              <h3 className="text-lg font-semibold">Extra inspiration</h3>
-              <Button variant="glass" size="sm" onClick={shuffleSheet3} disabled={!allSheet3Prompts.length}>
-                <Shuffle className="h-4 w-4" />
-                Shuffle
-              </Button>
-            </div>
-            <Card
-              key={`sheet3-${sheet3AnimKey}`}
-              className="relative p-4 min-h-[140px] flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-petrol/20 to-gold/10 border border-petrol/30 animate-fade-in-up"
-            >
-              <p className="text-base md:text-lg font-medium text-center leading-snug">
-                {sheet3Row ? extractText(sheet3Row) : (sheet3Loading ? "Loading prompts…" : "Hit shuffle.")}
-              </p>
-              <VoteThumbs sheetKey="sheet3" id={sheet3Row?.id} box="generic" />
-            </Card>
-          </div>
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-lg font-semibold">One size fits all prompts</h3>
+          <Button variant="glass" size="sm" onClick={shuffleOneLiner} disabled={!allOneLiners.length}>
+            <Shuffle className="h-4 w-4" />
+            Shuffle
+          </Button>
         </div>
+        <Card
+          key={`oneliner-${oneLinerAnimKey}`}
+          className="relative p-4 min-h-[140px] flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-gold/20 to-petrol/10 border border-gold/30 animate-fade-in-up"
+        >
+          <p className="text-base md:text-lg font-medium text-center leading-snug">
+            {oneLinerText || (oneLinersLoading ? "Loading prompts…" : "Hit shuffle.")}
+          </p>
+          <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
+        </Card>
       </section>
 
       {/* Structure Selector + Save Story (aligned horizontally) */}
