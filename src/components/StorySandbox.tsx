@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Shuffle, Plus, X, Pencil, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Shuffle, Plus, X, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,44 +8,14 @@ import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
-const SANDBOX_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbwzWso-MMMvfENkt_10n4qgrwTtUjRbZSf9nlDzVe8r7RS4g0bEeftbAQjC8_fCJQM/exec";
-const ONELINERS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbzm_rTEefyFP6ikhLER5k1etBdR2fphYLmETcySEhzur7WVhPIAOXnaRcMaD4lkLQuX/exec";
-const SHEET3_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxllCrQSgTbsU8JoPobNfFVlXbHeCB8WzJSaxT-ZPpbeDix9OFQgvaEaPUYfqOi9Gw/exec";
-
-const ENDPOINT_FOR: Record<SheetKey, string> = {
-  sandbox: SANDBOX_SCRIPT_URL,
-  oneLiners: ONELINERS_SCRIPT_URL,
-  sheet3: SHEET3_SCRIPT_URL,
-};
-
-const extractArray = (data: unknown, keys: string[]): unknown[] => {
-  if (Array.isArray(data)) return data;
-  if (data && typeof data === "object") {
-    const record = data as Record<string, unknown>;
-    for (const k of keys) {
-      const v = record[k];
-      if (Array.isArray(v)) return v;
-    }
-    for (const container of ["data", "rows", "result", "payload"]) {
-      const nested = record[container];
-      if (Array.isArray(nested)) return nested;
-      if (nested && typeof nested === "object") {
-        for (const k of keys) {
-          const v = (nested as Record<string, unknown>)[k];
-          if (Array.isArray(v)) return v;
-        }
-      }
-    }
-  }
-  return [];
-};
-
 /* ============================================================
-   FALLBACK SEED VOCABULARY (used if remote fetch fails)
+   SEED VOCABULARY — fetched from Sheety with hardcoded fallback
    ============================================================ */
+
+const SHEETY_URL =
+  "https://api.sheety.co/086a2eae49353df7574b77bca2c248de/storySandboxSeedInputs/storySandboxSeedInputs";
+const SEEDS_CACHE_KEY = "story-sandbox:seeds:v1";
+
 const FALLBACK_SEEDS = {
   character: [
     "A retired astronaut",
@@ -85,22 +55,16 @@ const FALLBACK_SEEDS = {
   ],
 } as const;
 
-const FALLBACK_ONE_LINERS = [
-  "Write the scene right before everything changes.",
-  "Tell a story using only dialogue from one phone call.",
-  "Describe a goodbye that isn't really goodbye.",
-  "A character lies to protect someone — show the cost.",
-];
+type SeedSet = {
+  character: string[];
+  incident: string[];
+  constraint: string[];
+  setting: string[];
+};
 
-const FALLBACK_SHEET3 = [
-  "Open with a sentence that ends in a question.",
-  "Set the story during a single song.",
-  "Begin and end in the same place — but different.",
-  "Let weather change the meaning halfway through.",
-];
 
 /* ============================================================
-   STRUCTURES
+   STRUCTURES — edit/extend freely
    ============================================================ */
 const STRUCTURES = {
   "3-act": {
@@ -125,100 +89,68 @@ const STRUCTURES = {
 } as const;
 
 type StructureKey = keyof typeof STRUCTURES;
+
 const STORAGE_KEY = "story-sandbox:v1";
+
+const pick = <T,>(arr: readonly T[]) => arr[Math.floor(Math.random() * arr.length)];
 
 type Category = "character" | "incident" | "constraint";
 type Prompts = Record<Category, string> & { custom: string };
 
-const CATEGORY_META: { key: Category | "custom"; label: string; tone: string; box: ElementBox }[] = [
-  { key: "character", label: "Character", tone: "from-petrol/20 to-petrol/5 border-petrol/30", box: "character" },
-  { key: "incident", label: "Incident", tone: "from-gold/25 to-gold/5 border-gold/40", box: "incident" },
-  { key: "constraint", label: "Constraint", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
-  {
-    key: "custom",
-    label: "Custom",
-    tone: "from-muted to-background border-dashed border-muted-foreground/40",
-    box: "untitled",
-  },
+const initialPrompts = (seeds: SeedSet): Prompts => ({
+  character: pick(seeds.character) ?? "",
+  incident: pick(seeds.incident) ?? "",
+  constraint: pick(seeds.constraint) ?? "",
+  custom: "",
+});
+
+const CATEGORY_META: { key: Category | "custom"; label: string; tone: string }[] = [
+  { key: "character", label: "Character", tone: "from-petrol/20 to-petrol/5 border-petrol/30" },
+  { key: "incident", label: "Incident", tone: "from-gold/25 to-gold/5 border-gold/40" },
+  { key: "constraint", label: "Constraint", tone: "from-primary/20 to-primary/5 border-primary/30" },
+  { key: "custom", label: "Custom", tone: "from-muted to-background border-dashed border-muted-foreground/40" },
 ];
 
-type SheetKey = "sandbox" | "oneLiners" | "sheet3";
-type ElementBox = "character" | "incident" | "constraint" | "untitled" | "generic";
-
-type SandboxRow = {
-  id?: string | number;
-  character?: string;
-  incident?: string;
-  constraint?: string;
-  setting?: string;
-  untitled?: string;
-};
-type PromptRow = {
-  id?: string | number;
-  prompt?: string;
-  text?: string;
-  oneLiner?: string;
+const FALLBACK: SeedSet = {
+  character: [...FALLBACK_SEEDS.character],
+  incident: [...FALLBACK_SEEDS.incident],
+  constraint: [...FALLBACK_SEEDS.constraint],
+  setting: [...FALLBACK_SEEDS.setting],
 };
 
-const pickRandom = <T,>(arr: T[]): T | undefined =>
-  arr.length ? arr[Math.floor(Math.random() * arr.length)] : undefined;
-
-const extractText = (r: PromptRow): string => {
-  if (typeof r.prompt === "string" && r.prompt.trim()) return r.prompt.trim();
-  if (typeof r.oneLiner === "string" && r.oneLiner.trim()) return r.oneLiner.trim();
-  if (typeof r.text === "string" && r.text.trim()) return r.text.trim();
-  for (const v of Object.values(r)) {
-    if (typeof v === "string" && v.trim() && v !== String(r.id)) return v.trim();
+const parseSheetyRows = (rows: unknown): SeedSet | null => {
+  if (!Array.isArray(rows)) return null;
+  const out: SeedSet = { character: [], incident: [], constraint: [], setting: [] };
+  for (const row of rows) {
+    if (!row || typeof row !== "object") continue;
+    const r = row as Record<string, unknown>;
+    (["character", "incident", "constraint", "setting"] as const).forEach((k) => {
+      const v = r[k];
+      if (typeof v === "string" && v.trim()) out[k].push(v.trim());
+    });
   }
-  return "";
+  if (!out.character.length && !out.incident.length && !out.constraint.length) return null;
+  // Backfill any empty category from fallback so shuffle never breaks
+  (["character", "incident", "constraint", "setting"] as const).forEach((k) => {
+    if (!out[k].length) out[k] = [...FALLBACK[k]];
+  });
+  return out;
 };
-
-const buildFallbackSandbox = (): SandboxRow[] =>
-  FALLBACK_SEEDS.character.map((c, i) => ({
-    id: `fb-${i}`,
-    character: c,
-    incident: FALLBACK_SEEDS.incident[i % FALLBACK_SEEDS.incident.length],
-    constraint: FALLBACK_SEEDS.constraint[i % FALLBACK_SEEDS.constraint.length],
-    setting: FALLBACK_SEEDS.setting[i % FALLBACK_SEEDS.setting.length],
-  }));
-
-const buildFallbackPrompts = (lines: readonly string[]): PromptRow[] =>
-  lines.map((p, i) => ({ id: `fb-${i}`, prompt: p }));
 
 export default function StorySandbox() {
-  // --- Independent data sources ---
-  const [allSandboxPrompts, setAllSandboxPrompts] = useState<SandboxRow[]>(buildFallbackSandbox());
-  const [allOneLiners, setAllOneLiners] = useState<PromptRow[]>(buildFallbackPrompts(FALLBACK_ONE_LINERS));
-  const [allSheet3Prompts, setAllSheet3Prompts] = useState<PromptRow[]>(buildFallbackPrompts(FALLBACK_SHEET3));
-
-  // --- Independent loading states ---
-  const [sandboxLoading, setSandboxLoading] = useState(true);
-  const [oneLinersLoading, setOneLinersLoading] = useState(true);
-  const [, setSheet3Loading] = useState(true);
-  const [, setSheet3Row] = useState<PromptRow | null>(null);
-
-  // --- Independent active rows / cycle keys ---
-  const initialSandbox = useMemo(() => buildFallbackSandbox(), []);
-  const [sandboxRow, setSandboxRow] = useState<SandboxRow | null>(initialSandbox[0] ?? null);
-  const [oneLinerRow, setOneLinerRow] = useState<PromptRow | null>(null);
-
-  const [prompts, setPrompts] = useState<Prompts>(() => ({
-    character: initialSandbox[0]?.character ?? "",
-    incident: initialSandbox[0]?.incident ?? "",
-    constraint: initialSandbox[0]?.constraint ?? "",
-    custom: "",
-  }));
+  const [seeds, setSeeds] = useState<SeedSet>(FALLBACK);
+  const [isLoading, setIsLoading] = useState(true);
+  const [prompts, setPrompts] = useState<Prompts>(() => initialPrompts(FALLBACK));
   const [editing, setEditing] = useState<Category | "custom" | null>(null);
   const [animKey, setAnimKey] = useState(0);
-  const [oneLinerAnimKey, setOneLinerAnimKey] = useState(0);
-
   const [structure, setStructure] = useState<StructureKey>("3-act");
   const [scratch, setScratch] = useState<Record<string, string>>({});
+  const [allOneLiners, setAllOneLiners] = useState<string[]>([]);
+  const [oneLinerPrompt, setOneLinerPrompt] = useState<string>("");
+  const [oneLinerAnimKey, setOneLinerAnimKey] = useState(0);
 
-  // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
-  const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
 
-  // Hydrate persisted UI state
+  // Hydrate UI state + cached seeds from localStorage, then fetch fresh from Sheety
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -231,178 +163,110 @@ export default function StorySandbox() {
     } catch {
       /* ignore */
     }
-  }, []);
-  // --- THREE INDEPENDENT FETCH PIPELINES (one per Google Apps Script endpoint) ---
-  useEffect(() => {
+
+    let cached: SeedSet | null = null;
+    try {
+      const rawSeeds = localStorage.getItem(SEEDS_CACHE_KEY);
+      if (rawSeeds) {
+        const parsed = JSON.parse(rawSeeds);
+        if (parsed && Array.isArray(parsed.character)) {
+          cached = parsed as SeedSet;
+          setSeeds(cached);
+          setIsLoading(false);
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+
     let cancelled = false;
-
-    const loadOne = async <T,>(
-      SCRIPT_URL: string,
-      label: string,
-      keys: string[],
-      apply: (rows: T[]) => void,
-      done: () => void,
-    ) => {
+    (async () => {
       try {
-        const res = await fetch(SCRIPT_URL, {
-          method: "GET",
-          mode: "cors",
-          redirect: "follow",
-        });
+        const res = await fetch(SHEETY_URL);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const rawData = await res.json();
-        console.log("Data loaded for " + label + " (" + SCRIPT_URL + ")", rawData);
-
-        const actualData = extractArray(rawData, keys) as T[];
-        console.log("Rows mapped for " + label, actualData);
-        if (cancelled) return;
-        if (actualData.length > 0) {
-          apply(actualData);
+        const json = await res.json();
+        const parsed = parseSheetyRows(json?.storySandboxSeedInputs);
+        if (parsed && !cancelled) {
+          setSeeds(parsed);
+          try {
+            localStorage.setItem(SEEDS_CACHE_KEY, JSON.stringify(parsed));
+          } catch {
+            /* ignore */
+          }
         }
       } catch (err) {
-        console.error("Fetch failed for " + label + " (" + SCRIPT_URL + "), using FALLBACK_SEEDS", err);
+        console.warn("[StorySandbox] Sheety fetch failed, using fallback seeds.", err);
       } finally {
-        if (!cancelled) done();
+        if (!cancelled) setIsLoading(false);
       }
-    };
-
-    loadOne<SandboxRow>(
-      SANDBOX_SCRIPT_URL,
-      "sandbox",
-      ["sheet1", "sandboxPrompts", "sandbox"],
-      (rows) => {
-        setAllSandboxPrompts(rows);
-        if (rows && rows.length > 0) {
-          const first = rows[0];
-          setSandboxRow(first);
-          setPrompts((p) => ({
-            ...p,
-            character: first.character ?? p.character,
-            incident: first.incident ?? p.incident,
-            constraint: first.constraint ?? p.constraint,
-          }));
-        }
-      },
-      () => setSandboxLoading(false),
-    );
-
-    loadOne<PromptRow>(
-      ONELINERS_SCRIPT_URL,
-      "oneLiners",
-      ["sheet2", "oneLiners", "oneLinerPrompts"],
-      (rows) => {
-        setAllOneLiners(rows);
-        if (rows && rows.length > 0) {
-          setOneLinerRow(rows[Math.floor(Math.random() * rows.length)]);
-        }
-      },
-      () => setOneLinersLoading(false),
-    );
-
-    loadOne<PromptRow>(
-      SHEET3_SCRIPT_URL,
-      "sheet3",
-      ["sheet3", "sheet3", "sheet3"],
-      (rows) => {
-        setAllSheet3Prompts(rows);
-        if (rows && rows.length > 0) {
-          setSheet3Row(rows[Math.floor(Math.random() * rows.length)]);
-        }
-      },
-      () => setSheet3Loading(false),
-    );
+    })();
 
     return () => {
       cancelled = true;
     };
   }, []);
 
+  // Fetch one-liner prompts from Sheety
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(
+          "https://api.sheety.co/086a2eae49353df7574b77bca2c248de/storyPromptsOneLiners/sheet1",
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        const rows = Array.isArray(json?.sheet1) ? json.sheet1 : [];
+        const lines: string[] = [];
+        for (const row of rows) {
+          if (!row || typeof row !== "object") continue;
+          const r = row as Record<string, unknown>;
+          const v =
+            r.prompt ??
+            r.oneLiner ??
+            r.text ??
+            Object.values(r).find((x) => typeof x === "string" && (x as string).trim() && x !== r.id);
+          if (typeof v === "string" && v.trim()) lines.push(v.trim());
+        }
+        if (!cancelled && lines.length) {
+          setAllOneLiners(lines);
+          setOneLinerPrompt(lines[Math.floor(Math.random() * lines.length)]);
+        }
+      } catch (err) {
+        console.warn("[StorySandbox] One-liner fetch failed.", err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+
   // Persist UI state
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ prompts, structure, scratch }));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ prompts, structure, scratch }),
+    );
   }, [prompts, structure, scratch]);
 
-  // --- Independent shuffle handlers ---
   const shuffle = () => {
-    const row = pickRandom(allSandboxPrompts);
-    if (!row) return;
-    setSandboxRow(row);
     setPrompts((p) => ({
-      character: row.character ?? p.character,
-      incident: row.incident ?? p.incident,
-      constraint: row.constraint ?? p.constraint,
+      character: pick(seeds.character) ?? p.character,
+      incident: pick(seeds.incident) ?? p.incident,
+      constraint: pick(seeds.constraint) ?? p.constraint,
       custom: p.custom,
     }));
     setAnimKey((k) => k + 1);
   };
 
   const shuffleOneLiner = () => {
-    const row = pickRandom(allOneLiners);
-    if (!row) return;
-    setOneLinerRow(row);
+    if (!allOneLiners.length) return;
+    setOneLinerPrompt(allOneLiners[Math.floor(Math.random() * allOneLiners.length)]);
     setOneLinerAnimKey((k) => k + 1);
   };
 
-  // --- Voting (each sheet posts to its own endpoint) ---
-  const handleVote = (
-    sheetKey: SheetKey,
-    id: string | number | undefined,
-    elementBox: ElementBox,
-    vote: "up" | "down",
-  ) => {
-    if (id === undefined || id === null || id === "") return;
-    const key = `${sheetKey}:${id}:${elementBox}`;
-    setVoteCounts((prev) => {
-      const cur = prev[key] ?? { up: 0, down: 0 };
-      return { ...prev, [key]: { ...cur, [vote]: cur[vote] + 1 } };
-    });
-    // Fire-and-forget; don't block UI
-    fetch(ENDPOINT_FOR[sheetKey], {
-      method: "POST",
-      mode: "no-cors",
-      redirect: "follow",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ sheetKey, id, vote, elementBox }),
-    }).catch((err) => console.warn("[StorySandbox] vote post failed", err));
-  };
 
-  const VoteThumbs = ({
-    sheetKey,
-    id,
-    box,
-  }: {
-    sheetKey: SheetKey;
-    id: string | number | undefined;
-    box: ElementBox;
-  }) => {
-    const key = `${sheetKey}:${id}:${box}`;
-    const counts = voteCounts[key] ?? { up: 0, down: 0 };
-    const disabled = id === undefined || id === null || id === "";
-    return (
-      <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={() => handleVote(sheetKey, id, box, "up")}
-          className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
-          aria-label="Thumbs up"
-        >
-          <ThumbsUp className="h-3.5 w-3.5" />
-          <span>{counts.up}</span>
-        </button>
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={() => handleVote(sheetKey, id, box, "down")}
-          className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
-          aria-label="Thumbs down"
-        >
-          <ThumbsDown className="h-3.5 w-3.5" />
-          <span>{counts.down}</span>
-        </button>
-      </div>
-    );
-  };
 
   const current = STRUCTURES[structure];
   const sections = useMemo(() => current.sections, [current]);
@@ -436,8 +300,6 @@ export default function StorySandbox() {
     URL.revokeObjectURL(url);
   };
 
-  const oneLinerText = oneLinerRow ? extractText(oneLinerRow) : "";
-
   return (
     <div className="w-full max-w-5xl mx-auto space-y-10">
       {/* Header */}
@@ -448,18 +310,21 @@ export default function StorySandbox() {
         </p>
       </header>
 
-      {/* Prompt Generator (Sandbox / Sheet1) */}
+      {/* Prompt Generator */}
+
+
+      {/* Prompt Generator */}
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold">Prompts</h3>
-          <Button variant="glass" size="sm" onClick={shuffle} disabled={sandboxLoading && !allSandboxPrompts.length}>
+          <Button variant="glass" size="sm" onClick={shuffle}>
             <Shuffle className="h-4 w-4" />
             Shuffle
           </Button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {CATEGORY_META.map(({ key, label, tone, box }) => {
+          {CATEGORY_META.map(({ key, label, tone }) => {
             const value = prompts[key];
             const isCustomSlot = key === "custom";
             const isEditing = editing === key;
@@ -472,7 +337,9 @@ export default function StorySandbox() {
                 )}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">{label}</span>
+                  <span className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">
+                    {label}
+                  </span>
                   {!isEditing && !isCustomSlot && (
                     <button
                       type="button"
@@ -490,7 +357,9 @@ export default function StorySandbox() {
                     <Input
                       autoFocus
                       value={value}
-                      onChange={(e) => setPrompts((p) => ({ ...p, [key]: e.target.value }))}
+                      onChange={(e) =>
+                        setPrompts((p) => ({ ...p, [key]: e.target.value }))
+                      }
                       onBlur={() => setEditing(null)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === "Escape") setEditing(null);
@@ -524,68 +393,57 @@ export default function StorySandbox() {
                 ) : (
                   <p className="text-base font-medium leading-snug">{value}</p>
                 )}
-
-                <div className="mt-3 flex justify-end">
-                  <VoteThumbs sheetKey="sandbox" id={sandboxRow?.id} box={box} />
-                </div>
               </Card>
             );
           })}
         </div>
       </section>
 
-      {/* One-liner Prompt Generator (Sheet2) */}
+      {/* One-liner Prompt Generator */}
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold">One size fits all prompts</h3>
-          <Button variant="glass" size="sm" onClick={shuffleOneLiner} disabled={!allOneLiners.length}>
+          <Button
+            variant="glass"
+            size="sm"
+            onClick={shuffleOneLiner}
+            disabled={!allOneLiners.length}
+          >
             <Shuffle className="h-4 w-4" />
             Shuffle
           </Button>
         </div>
         <Card
           key={`oneliner-${oneLinerAnimKey}`}
-          className="relative p-4 min-h-[140px] flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-gold/20 to-petrol/10 border border-gold/30 animate-fade-in-up"
+          className="relative p-4 min-h-[140px] flex items-center justify-center bg-gradient-to-br from-gold/20 to-petrol/10 border border-gold/30 animate-fade-in-up"
         >
           <p className="text-base md:text-lg font-medium text-center leading-snug">
-            {oneLinerText || (oneLinersLoading ? "Loading prompts…" : "Hit shuffle.")}
+            {oneLinerPrompt || (allOneLiners.length ? "Hit shuffle." : "Loading prompts…")}
           </p>
-          <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
         </Card>
       </section>
 
-      {/* Structure Selector + Save Story (aligned horizontally) */}
+      {/* Structure Selector */}
       <section className="space-y-3">
         <h3 className="text-lg font-semibold">Structure</h3>
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <ToggleGroup
-            type="single"
-            value={structure}
-            onValueChange={(v) => v && setStructure(v as StructureKey)}
-            className="justify-start flex-wrap"
-          >
-            {(Object.keys(STRUCTURES) as StructureKey[]).map((k) => (
-              <ToggleGroupItem
-                key={k}
-                value={k}
-                variant="outline"
-                className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-              >
-                {STRUCTURES[k].label}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-
-          <Button
-            size="lg"
-            onClick={handleSaveStory}
-            className="text-base font-semibold px-6 py-5 text-white hover:opacity-90 mr-[8%]"
-            style={{ backgroundColor: "#175f87" }}
-          >
-            Save Story
-          </Button>
-        </div>
+        <ToggleGroup
+          type="single"
+          value={structure}
+          onValueChange={(v) => v && setStructure(v as StructureKey)}
+          className="justify-start flex-wrap"
+        >
+          {(Object.keys(STRUCTURES) as StructureKey[]).map((k) => (
+            <ToggleGroupItem
+              key={k}
+              value={k}
+              variant="outline"
+              className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+            >
+              {STRUCTURES[k].label}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
         <p className="text-sm text-muted-foreground">{current.helper}</p>
       </section>
 
@@ -622,7 +480,9 @@ export default function StorySandbox() {
               <Textarea
                 id="sb-notes"
                 value={scratch[`${structure}:notes`] ?? ""}
-                onChange={(e) => setScratch((prev) => ({ ...prev, [`${structure}:notes`]: e.target.value }))}
+                onChange={(e) =>
+                  setScratch((prev) => ({ ...prev, [`${structure}:notes`]: e.target.value }))
+                }
                 placeholder="Notes…"
                 rows={5}
               />
@@ -639,7 +499,9 @@ export default function StorySandbox() {
               <Textarea
                 id="sb-notes"
                 value={scratch[`${structure}:notes`] ?? ""}
-                onChange={(e) => setScratch((prev) => ({ ...prev, [`${structure}:notes`]: e.target.value }))}
+                onChange={(e) =>
+                  setScratch((prev) => ({ ...prev, [`${structure}:notes`]: e.target.value }))
+                }
                 placeholder="Notes…"
                 rows={5}
               />
@@ -647,6 +509,14 @@ export default function StorySandbox() {
           </div>
         )}
       </section>
+
+      <div className="flex justify-end pt-4">
+        <Button variant="glass" size="sm" onClick={handleSaveStory}>
+          Save Story
+        </Button>
+      </div>
+
     </div>
+
   );
 }
