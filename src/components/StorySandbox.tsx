@@ -151,18 +151,15 @@ export default function StorySandbox() {
   // --- Independent data sources ---
   const [allSandboxPrompts, setAllSandboxPrompts] = useState<SandboxRow[]>(buildFallbackSandbox());
   const [allOneLiners, setAllOneLiners] = useState<PromptRow[]>(buildFallbackPrompts(FALLBACK_ONE_LINERS));
-  const [allSheet3Prompts, setAllSheet3Prompts] = useState<PromptRow[]>(buildFallbackPrompts(FALLBACK_SHEET3));
 
   // --- Independent loading states ---
   const [sandboxLoading, setSandboxLoading] = useState(true);
   const [oneLinersLoading, setOneLinersLoading] = useState(true);
-  const [sheet3Loading, setSheet3Loading] = useState(true);
 
   // --- Independent active rows / cycle keys ---
   const initialSandbox = useMemo(() => buildFallbackSandbox(), []);
   const [sandboxRow, setSandboxRow] = useState<SandboxRow | null>(initialSandbox[0] ?? null);
   const [oneLinerRow, setOneLinerRow] = useState<PromptRow | null>(null);
-  const [sheet3Row, setSheet3Row] = useState<PromptRow | null>(null);
 
   const [prompts, setPrompts] = useState<Prompts>(() => ({
     character: initialSandbox[0]?.character ?? "",
@@ -173,7 +170,6 @@ export default function StorySandbox() {
   const [editing, setEditing] = useState<Category | "custom" | null>(null);
   const [animKey, setAnimKey] = useState(0);
   const [oneLinerAnimKey, setOneLinerAnimKey] = useState(0);
-  const [sheet3AnimKey, setSheet3AnimKey] = useState(0);
 
   const [structure, setStructure] = useState<StructureKey>("3-act");
   const [scratch, setScratch] = useState<Record<string, string>>({});
@@ -196,19 +192,30 @@ export default function StorySandbox() {
     }
   }, []);
 
-  // Fetch all three tabs from Google Apps Script (single source of truth)
+  // Fetch all tabs from Google Apps Script (single source of truth)
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(GOOGLE_SCRIPT_URL);
+        const res = await fetch(GOOGLE_SCRIPT_URL, {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
+        const data = await res.json();
         if (cancelled) return;
 
-        const sandbox = Array.isArray(json?.sandbox) ? (json.sandbox as SandboxRow[]) : [];
-        const oneLiners = Array.isArray(json?.oneLiners) ? (json.oneLiners as PromptRow[]) : [];
-        const sheet3 = Array.isArray(json?.sheet3) ? (json.sheet3 as PromptRow[]) : [];
+        const sandbox: SandboxRow[] =
+          data && Array.isArray(data.sandboxPrompts)
+            ? data.sandboxPrompts
+            : data && Array.isArray(data.sandbox)
+            ? data.sandbox
+            : [];
+        const oneLiners: PromptRow[] =
+          data && Array.isArray(data.oneLiners) ? data.oneLiners : [];
 
         if (sandbox.length) {
           setAllSandboxPrompts(sandbox);
@@ -225,17 +232,12 @@ export default function StorySandbox() {
           setAllOneLiners(oneLiners);
           setOneLinerRow(oneLiners[Math.floor(Math.random() * oneLiners.length)]);
         }
-        if (sheet3.length) {
-          setAllSheet3Prompts(sheet3);
-          setSheet3Row(sheet3[Math.floor(Math.random() * sheet3.length)]);
-        }
       } catch (err) {
         console.error("[StorySandbox] Google Apps Script fetch failed — using fallback seeds.", err);
       } finally {
         if (!cancelled) {
           setSandboxLoading(false);
           setOneLinersLoading(false);
-          setSheet3Loading(false);
         }
       }
     })();
@@ -273,12 +275,6 @@ export default function StorySandbox() {
     setOneLinerAnimKey((k) => k + 1);
   };
 
-  const shuffleSheet3 = () => {
-    const row = pickRandom(allSheet3Prompts);
-    if (!row) return;
-    setSheet3Row(row);
-    setSheet3AnimKey((k) => k + 1);
-  };
 
   // --- Voting ---
   const handleVote = (
@@ -373,7 +369,7 @@ export default function StorySandbox() {
   };
 
   const oneLinerText = oneLinerRow ? extractText(oneLinerRow) : "";
-  const sheet3Text = sheet3Row ? extractText(sheet3Row) : "";
+  
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-10">
@@ -500,30 +496,6 @@ export default function StorySandbox() {
         </Card>
       </section>
 
-      {/* Third Generator (Sheet3) */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold">Extra inspiration</h3>
-          <Button
-            variant="glass"
-            size="sm"
-            onClick={shuffleSheet3}
-            disabled={!allSheet3Prompts.length}
-          >
-            <Shuffle className="h-4 w-4" />
-            Shuffle
-          </Button>
-        </div>
-        <Card
-          key={`sheet3-${sheet3AnimKey}`}
-          className="relative p-4 min-h-[140px] flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-primary/15 to-gold/10 border border-primary/30 animate-fade-in-up"
-        >
-          <p className="text-base md:text-lg font-medium text-center leading-snug">
-            {sheet3Text || (sheet3Loading ? "Loading prompts…" : "Hit shuffle.")}
-          </p>
-          <VoteThumbs sheetKey="sheet3" id={sheet3Row?.id} box="generic" />
-        </Card>
-      </section>
 
       {/* Structure Selector + Save Story (aligned horizontally) */}
       <section className="space-y-3">
