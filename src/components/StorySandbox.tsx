@@ -533,30 +533,6 @@ export default function StorySandbox() {
         </Card>
       </section>
 
-      {/* Third Prompt Generator (Sheet3) */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold">Extra inspiration</h3>
-          <Button
-            variant="glass"
-            size="sm"
-            onClick={shuffleSheet3}
-            disabled={!allSheet3Prompts.length}
-          >
-            <Shuffle className="h-4 w-4" />
-            Shuffle
-          </Button>
-        </div>
-        <Card
-          key={`sheet3-${sheet3AnimKey}`}
-          className="relative p-4 min-h-[140px] flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-petrol/20 to-primary/10 border border-petrol/30 animate-fade-in-up"
-        >
-          <p className="text-base md:text-lg font-medium text-center leading-snug">
-            {sheet3Row ? extractText(sheet3Row) : (sheet3Loading ? "Loading prompts…" : "Hit shuffle.")}
-          </p>
-          <VoteThumbs sheetKey="sheet3" id={sheet3Row?.id} box="generic" />
-        </Card>
-      </section>
 
 
       {/* Structure Selector + Save Story (aligned horizontally) */}
