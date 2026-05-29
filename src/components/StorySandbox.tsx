@@ -225,12 +225,10 @@ export default function StorySandbox() {
     }
   }, []);
 
-  // Fetch all tabs from Google Apps Script (single source of truth)
-  useEffect(() => {
-    let cancelled = false;
   // --- THREE INDEPENDENT FETCH PIPELINES (one per Google Apps Script endpoint) ---
   useEffect(() => {
     let cancelled = false;
+
 
     // 1. Sandbox
     (async () => {
