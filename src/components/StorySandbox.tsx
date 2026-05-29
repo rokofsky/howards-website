@@ -445,6 +445,7 @@ export default function StorySandbox() {
   };
 
   const oneLinerText = oneLinerRow ? extractText(oneLinerRow) : "";
+  const sheet3Text = sheet3Row ? extractText(sheet3Row) : "";
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-10">
