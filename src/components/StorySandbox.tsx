@@ -194,6 +194,8 @@ export default function StorySandbox() {
   // --- Independent loading states ---
   const [sandboxLoading, setSandboxLoading] = useState(true);
   const [oneLinersLoading, setOneLinersLoading] = useState(true);
+  const [, setSheet3Loading] = useState(true);
+  const [, setSheet3Row] = useState<PromptRow | null>(null);
 
   // --- Independent active rows / cycle keys ---
   const initialSandbox = useMemo(() => buildFallbackSandbox(), []);
