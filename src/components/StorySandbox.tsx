@@ -18,22 +18,23 @@ const ENDPOINT_FOR: Record<SheetKey, string> = {
   sheet3: SHEET3_SCRIPT_URL,
 };
 
-const gasFetch = async (url: string) => {
-  const res = await fetch(url, {
-    method: "GET",
-    redirect: "follow",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
-};
-
 const extractArray = (data: unknown, keys: string[]): unknown[] => {
   if (Array.isArray(data)) return data;
   if (data && typeof data === "object") {
+    const record = data as Record<string, unknown>;
     for (const k of keys) {
-      const v = (data as Record<string, unknown>)[k];
+      const v = record[k];
       if (Array.isArray(v)) return v;
+    }
+    for (const container of ["data", "rows", "result", "payload"]) {
+      const nested = record[container];
+      if (Array.isArray(nested)) return nested;
+      if (nested && typeof nested === "object") {
+        for (const k of keys) {
+          const v = (nested as Record<string, unknown>)[k];
+          if (Array.isArray(v)) return v;
+        }
+      }
     }
   }
   return [];
