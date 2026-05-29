@@ -194,6 +194,8 @@ export default function StorySandbox() {
   // --- Independent loading states ---
   const [sandboxLoading, setSandboxLoading] = useState(true);
   const [oneLinersLoading, setOneLinersLoading] = useState(true);
+  const [, setSheet3Loading] = useState(true);
+  const [, setSheet3Row] = useState<PromptRow | null>(null);
 
   // --- Independent active rows / cycle keys ---
   const initialSandbox = useMemo(() => buildFallbackSandbox(), []);
@@ -267,17 +269,19 @@ export default function StorySandbox() {
     loadOne<SandboxRow>(
       SANDBOX_SCRIPT_URL,
       "sandbox",
-      ["sandboxPrompts", "sandbox", "sheet1"],
+      ["sheet1", "sandboxPrompts", "sandbox"],
       (rows) => {
         setAllSandboxPrompts(rows);
-        const first = rows[0];
-        setSandboxRow(first);
-        setPrompts((p) => ({
-          ...p,
-          character: first.character ?? p.character,
-          incident: first.incident ?? p.incident,
-          constraint: first.constraint ?? p.constraint,
-        }));
+        if (rows && rows.length > 0) {
+          const first = rows[0];
+          setSandboxRow(first);
+          setPrompts((p) => ({
+            ...p,
+            character: first.character ?? p.character,
+            incident: first.incident ?? p.incident,
+            constraint: first.constraint ?? p.constraint,
+          }));
+        }
       },
       () => setSandboxLoading(false),
     );
@@ -285,10 +289,12 @@ export default function StorySandbox() {
     loadOne<PromptRow>(
       ONELINERS_SCRIPT_URL,
       "oneLiners",
-      ["oneLiners", "oneLinerPrompts", "sheet2", "sheet1", "prompts"],
+      ["sheet2", "oneLiners", "oneLinerPrompts"],
       (rows) => {
         setAllOneLiners(rows);
-        setOneLinerRow(rows[Math.floor(Math.random() * rows.length)]);
+        if (rows && rows.length > 0) {
+          setOneLinerRow(rows[Math.floor(Math.random() * rows.length)]);
+        }
       },
       () => setOneLinersLoading(false),
     );
@@ -296,13 +302,14 @@ export default function StorySandbox() {
     loadOne<PromptRow>(
       SHEET3_SCRIPT_URL,
       "sheet3",
-      ["sheet3", "extraInspiration", "extraPrompts", "sheet1", "prompts"],
+      ["sheet3", "sheet3", "sheet3"],
       (rows) => {
         setAllSheet3Prompts(rows);
+        if (rows && rows.length > 0) {
+          setSheet3Row(rows[Math.floor(Math.random() * rows.length)]);
+        }
       },
-      () => {
-        /* no UI loading state */
-      },
+      () => setSheet3Loading(false),
     );
 
     return () => {
