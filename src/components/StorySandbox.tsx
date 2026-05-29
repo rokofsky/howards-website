@@ -151,18 +151,15 @@ export default function StorySandbox() {
   // --- Independent data sources ---
   const [allSandboxPrompts, setAllSandboxPrompts] = useState<SandboxRow[]>(buildFallbackSandbox());
   const [allOneLiners, setAllOneLiners] = useState<PromptRow[]>(buildFallbackPrompts(FALLBACK_ONE_LINERS));
-  const [allSheet3Prompts, setAllSheet3Prompts] = useState<PromptRow[]>(buildFallbackPrompts(FALLBACK_SHEET3));
 
   // --- Independent loading states ---
   const [sandboxLoading, setSandboxLoading] = useState(true);
   const [oneLinersLoading, setOneLinersLoading] = useState(true);
-  const [sheet3Loading, setSheet3Loading] = useState(true);
 
   // --- Independent active rows / cycle keys ---
   const initialSandbox = useMemo(() => buildFallbackSandbox(), []);
   const [sandboxRow, setSandboxRow] = useState<SandboxRow | null>(initialSandbox[0] ?? null);
   const [oneLinerRow, setOneLinerRow] = useState<PromptRow | null>(null);
-  const [sheet3Row, setSheet3Row] = useState<PromptRow | null>(null);
 
   const [prompts, setPrompts] = useState<Prompts>(() => ({
     character: initialSandbox[0]?.character ?? "",
@@ -173,7 +170,6 @@ export default function StorySandbox() {
   const [editing, setEditing] = useState<Category | "custom" | null>(null);
   const [animKey, setAnimKey] = useState(0);
   const [oneLinerAnimKey, setOneLinerAnimKey] = useState(0);
-  const [sheet3AnimKey, setSheet3AnimKey] = useState(0);
 
   const [structure, setStructure] = useState<StructureKey>("3-act");
   const [scratch, setScratch] = useState<Record<string, string>>({});
