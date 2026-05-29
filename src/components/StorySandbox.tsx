@@ -236,6 +236,7 @@ export default function StorySandbox() {
       try {
         const res = await fetch(SCRIPT_URL, {
           method: "GET",
+          mode: "cors",
           redirect: "follow",
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
