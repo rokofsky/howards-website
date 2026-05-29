@@ -603,7 +603,7 @@ export default function StorySandbox() {
           <Button
             size="lg"
             onClick={handleSaveStory}
-            className="text-base font-semibold px-6 py-5 text-white hover:opacity-90"
+            className="text-base font-semibold px-6 py-5 text-white hover:opacity-90 mr-[8%]"
             style={{ backgroundColor: "#175f87" }}
           >
             Save Story
