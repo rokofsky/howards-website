@@ -26,6 +26,7 @@ const Header = () => {
   const homeLink = { kind: "plain" as const, label: t("Home", "Domů"), href: homeHref };
   const referencesLink = { kind: "plain" as const, label: t("References", "Reference"), href: lp("/references") };
   const blogLink = { kind: "plain" as const, label: t("Blog", "Blog"), href: lp("/blog") };
+  const storySandboxLink = { kind: "plain" as const, label: t("Story Sandbox", "Story Sandbox"), href: lp("/story-sandbox") };
   const cvLink = { kind: "plain" as const, label: "CV", href: lp("/cv") };
   const bookLink = {
     kind: "external" as const,
@@ -53,6 +54,7 @@ const Header = () => {
     bookLink,
     cvLink,
     blogLink,
+    storySandboxLink,
     hashLinks[3],
   ].filter(Boolean) as any;
 
