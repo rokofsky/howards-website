@@ -244,11 +244,7 @@ export default function StorySandbox() {
       done: () => void,
     ) => {
       try {
-        const res = await fetch(SCRIPT_URL, {
-          method: "GET",
-          mode: "cors",
-          redirect: "follow",
-        });
+        const res = await fetch(SCRIPT_URL);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const rawData = await res.json();
         console.log("Data loaded for " + label + " (" + SCRIPT_URL + ")", rawData);
