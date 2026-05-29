@@ -311,13 +311,6 @@ export default function StorySandbox() {
     setOneLinerAnimKey((k) => k + 1);
   };
 
-  const shuffleSheet3 = () => {
-    const row = pickRandom(allSheet3Prompts);
-    if (!row) return;
-    setSheet3Row(row);
-    setSheet3AnimKey((k) => k + 1);
-  };
-
 
   // --- Voting (each sheet posts to its own endpoint) ---
   const handleVote = (
