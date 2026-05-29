@@ -8,7 +8,36 @@ import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzWso-MMMvfENkt_10n4qgrwTtUjRbZSf9nlDzVe8r7RS4g0bEeftbAQjC8_fCJQM/exec";
+const SANDBOX_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzWso-MMMvfENkt_10n4qgrwTtUjRbZSf9nlDzVe8r7RS4g0bEeftbAQjC8_fCJQM/exec";
+const ONELINERS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzWso-MMMvfENkt_10n4qgrwTtUjRbZSf9nlDzVe8r7RS4g0bEeftbAQjC8_fCJQM/exec";
+const SHEET3_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzWso-MMMvfENkt_10n4qgrwTtUjRbZSf9nlDzVe8r7RS4g0bEeftbAQjC8_fCJQM/exec";
+
+const ENDPOINT_FOR: Record<SheetKey, string> = {
+  sandbox: SANDBOX_SCRIPT_URL,
+  oneLiners: ONELINERS_SCRIPT_URL,
+  sheet3: SHEET3_SCRIPT_URL,
+};
+
+const gasFetch = async (url: string) => {
+  const res = await fetch(url, {
+    method: "GET",
+    redirect: "follow",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+};
+
+const extractArray = (data: unknown, keys: string[]): unknown[] => {
+  if (Array.isArray(data)) return data;
+  if (data && typeof data === "object") {
+    for (const k of keys) {
+      const v = (data as Record<string, unknown>)[k];
+      if (Array.isArray(v)) return v;
+    }
+  }
+  return [];
+};
 
 /* ============================================================
    FALLBACK SEED VOCABULARY (used if remote fetch fails)
