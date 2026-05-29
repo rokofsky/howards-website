@@ -8,9 +8,12 @@ import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
-const SANDBOX_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzWso-MMMvfENkt_10n4qgrwTtUjRbZSf9nlDzVe8r7RS4g0bEeftbAQjC8_fCJQM/exec";
-const ONELINERS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzWso-MMMvfENkt_10n4qgrwTtUjRbZSf9nlDzVe8r7RS4g0bEeftbAQjC8_fCJQM/exec";
-const SHEET3_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzWso-MMMvfENkt_10n4qgrwTtUjRbZSf9nlDzVe8r7RS4g0bEeftbAQjC8_fCJQM/exec";
+const SANDBOX_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbwzWso-MMMvfENkt_10n4qgrwTtUjRbZSf9nlDzVe8r7RS4g0bEeftbAQjC8_fCJQM/exec";
+const ONELINERS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbzm_rTEefyFP6ikhLER5k1etBdR2fphYLmETcySEhzur7WVhPIAOXnaRcMaD4lkLQuX/exec";
+const SHEET3_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxllCrQSgTbsU8JoPobNfFVlXbHeCB8WzJSaxT-ZPpbeDix9OFQgvaEaPUYfqOi9Gw/exec";
 
 const ENDPOINT_FOR: Record<SheetKey, string> = {
   sandbox: SANDBOX_SCRIPT_URL,
@@ -131,7 +134,12 @@ const CATEGORY_META: { key: Category | "custom"; label: string; tone: string; bo
   { key: "character", label: "Character", tone: "from-petrol/20 to-petrol/5 border-petrol/30", box: "character" },
   { key: "incident", label: "Incident", tone: "from-gold/25 to-gold/5 border-gold/40", box: "incident" },
   { key: "constraint", label: "Constraint", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
-  { key: "custom", label: "Custom", tone: "from-muted to-background border-dashed border-muted-foreground/40", box: "untitled" },
+  {
+    key: "custom",
+    label: "Custom",
+    tone: "from-muted to-background border-dashed border-muted-foreground/40",
+    box: "untitled",
+  },
 ];
 
 type SheetKey = "sandbox" | "oneLiners" | "sheet3";
@@ -256,39 +264,55 @@ export default function StorySandbox() {
       }
     };
 
-    loadOne<SandboxRow>(SANDBOX_SCRIPT_URL, "sandbox", ["sandboxPrompts", "sandbox", "sheet1"], (rows) => {
-      setAllSandboxPrompts(rows);
-      const first = rows[0];
-      setSandboxRow(first);
-      setPrompts((p) => ({
-        ...p,
-        character: first.character ?? p.character,
-        incident: first.incident ?? p.incident,
-        constraint: first.constraint ?? p.constraint,
-      }));
-    }, () => setSandboxLoading(false));
+    loadOne<SandboxRow>(
+      SANDBOX_SCRIPT_URL,
+      "sandbox",
+      ["sandboxPrompts", "sandbox", "sheet1"],
+      (rows) => {
+        setAllSandboxPrompts(rows);
+        const first = rows[0];
+        setSandboxRow(first);
+        setPrompts((p) => ({
+          ...p,
+          character: first.character ?? p.character,
+          incident: first.incident ?? p.incident,
+          constraint: first.constraint ?? p.constraint,
+        }));
+      },
+      () => setSandboxLoading(false),
+    );
 
-    loadOne<PromptRow>(ONELINERS_SCRIPT_URL, "oneLiners", ["oneLiners", "oneLinerPrompts", "sheet2", "sheet1", "prompts"], (rows) => {
-      setAllOneLiners(rows);
-      setOneLinerRow(rows[Math.floor(Math.random() * rows.length)]);
-    }, () => setOneLinersLoading(false));
+    loadOne<PromptRow>(
+      ONELINERS_SCRIPT_URL,
+      "oneLiners",
+      ["oneLiners", "oneLinerPrompts", "sheet2", "sheet1", "prompts"],
+      (rows) => {
+        setAllOneLiners(rows);
+        setOneLinerRow(rows[Math.floor(Math.random() * rows.length)]);
+      },
+      () => setOneLinersLoading(false),
+    );
 
-    loadOne<PromptRow>(SHEET3_SCRIPT_URL, "sheet3", ["sheet3", "extraInspiration", "extraPrompts", "sheet1", "prompts"], (rows) => {
-      setAllSheet3Prompts(rows);
-    }, () => { /* no UI loading state */ });
+    loadOne<PromptRow>(
+      SHEET3_SCRIPT_URL,
+      "sheet3",
+      ["sheet3", "extraInspiration", "extraPrompts", "sheet1", "prompts"],
+      (rows) => {
+        setAllSheet3Prompts(rows);
+      },
+      () => {
+        /* no UI loading state */
+      },
+    );
 
     return () => {
       cancelled = true;
     };
   }, []);
 
-
   // Persist UI state
   useEffect(() => {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ prompts, structure, scratch }),
-    );
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ prompts, structure, scratch }));
   }, [prompts, structure, scratch]);
 
   // --- Independent shuffle handlers ---
@@ -311,7 +335,6 @@ export default function StorySandbox() {
     setOneLinerRow(row);
     setOneLinerAnimKey((k) => k + 1);
   };
-
 
   // --- Voting (each sheet posts to its own endpoint) ---
   const handleVote = (
@@ -407,7 +430,6 @@ export default function StorySandbox() {
   };
 
   const oneLinerText = oneLinerRow ? extractText(oneLinerRow) : "";
-  
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-10">
@@ -443,9 +465,7 @@ export default function StorySandbox() {
                 )}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">
-                    {label}
-                  </span>
+                  <span className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">{label}</span>
                   {!isEditing && !isCustomSlot && (
                     <button
                       type="button"
@@ -463,9 +483,7 @@ export default function StorySandbox() {
                     <Input
                       autoFocus
                       value={value}
-                      onChange={(e) =>
-                        setPrompts((p) => ({ ...p, [key]: e.target.value }))
-                      }
+                      onChange={(e) => setPrompts((p) => ({ ...p, [key]: e.target.value }))}
                       onBlur={() => setEditing(null)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === "Escape") setEditing(null);
@@ -513,12 +531,7 @@ export default function StorySandbox() {
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold">One size fits all prompts</h3>
-          <Button
-            variant="glass"
-            size="sm"
-            onClick={shuffleOneLiner}
-            disabled={!allOneLiners.length}
-          >
+          <Button variant="glass" size="sm" onClick={shuffleOneLiner} disabled={!allOneLiners.length}>
             <Shuffle className="h-4 w-4" />
             Shuffle
           </Button>
@@ -533,8 +546,6 @@ export default function StorySandbox() {
           <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
         </Card>
       </section>
-
-
 
       {/* Structure Selector + Save Story (aligned horizontally) */}
       <section className="space-y-3">
@@ -604,9 +615,7 @@ export default function StorySandbox() {
               <Textarea
                 id="sb-notes"
                 value={scratch[`${structure}:notes`] ?? ""}
-                onChange={(e) =>
-                  setScratch((prev) => ({ ...prev, [`${structure}:notes`]: e.target.value }))
-                }
+                onChange={(e) => setScratch((prev) => ({ ...prev, [`${structure}:notes`]: e.target.value }))}
                 placeholder="Notes…"
                 rows={5}
               />
@@ -623,9 +632,7 @@ export default function StorySandbox() {
               <Textarea
                 id="sb-notes"
                 value={scratch[`${structure}:notes`] ?? ""}
-                onChange={(e) =>
-                  setScratch((prev) => ({ ...prev, [`${structure}:notes`]: e.target.value }))
-                }
+                onChange={(e) => setScratch((prev) => ({ ...prev, [`${structure}:notes`]: e.target.value }))}
                 placeholder="Notes…"
                 rows={5}
               />
