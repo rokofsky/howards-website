@@ -18,23 +18,22 @@ const ENDPOINT_FOR: Record<SheetKey, string> = {
   sheet3: SHEET3_SCRIPT_URL,
 };
 
+const gasFetch = async (url: string) => {
+  const res = await fetch(url, {
+    method: "GET",
+    redirect: "follow",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+};
+
 const extractArray = (data: unknown, keys: string[]): unknown[] => {
   if (Array.isArray(data)) return data;
   if (data && typeof data === "object") {
-    const record = data as Record<string, unknown>;
     for (const k of keys) {
-      const v = record[k];
+      const v = (data as Record<string, unknown>)[k];
       if (Array.isArray(v)) return v;
-    }
-    for (const container of ["data", "rows", "result", "payload"]) {
-      const nested = record[container];
-      if (Array.isArray(nested)) return nested;
-      if (nested && typeof nested === "object") {
-        for (const k of keys) {
-          const v = (nested as Record<string, unknown>)[k];
-          if (Array.isArray(v)) return v;
-        }
-      }
     }
   }
   return [];
@@ -186,11 +185,13 @@ export default function StorySandbox() {
   // --- Independent loading states ---
   const [sandboxLoading, setSandboxLoading] = useState(true);
   const [oneLinersLoading, setOneLinersLoading] = useState(true);
+  const [sheet3Loading, setSheet3Loading] = useState(true);
 
   // --- Independent active rows / cycle keys ---
   const initialSandbox = useMemo(() => buildFallbackSandbox(), []);
   const [sandboxRow, setSandboxRow] = useState<SandboxRow | null>(initialSandbox[0] ?? null);
   const [oneLinerRow, setOneLinerRow] = useState<PromptRow | null>(null);
+  const [sheet3Row, setSheet3Row] = useState<PromptRow | null>(null);
 
   const [prompts, setPrompts] = useState<Prompts>(() => ({
     character: initialSandbox[0]?.character ?? "",
@@ -201,6 +202,7 @@ export default function StorySandbox() {
   const [editing, setEditing] = useState<Category | "custom" | null>(null);
   const [animKey, setAnimKey] = useState(0);
   const [oneLinerAnimKey, setOneLinerAnimKey] = useState(0);
+  const [sheet3AnimKey, setSheet3AnimKey] = useState(0);
 
   const [structure, setStructure] = useState<StructureKey>("3-act");
   const [scratch, setScratch] = useState<Record<string, string>>({});
@@ -222,66 +224,74 @@ export default function StorySandbox() {
       /* ignore */
     }
   }, []);
+
   // --- THREE INDEPENDENT FETCH PIPELINES (one per Google Apps Script endpoint) ---
   useEffect(() => {
     let cancelled = false;
 
-    const loadOne = async <T,>(
-      SCRIPT_URL: string,
-      label: string,
-      keys: string[],
-      apply: (rows: T[]) => void,
-      done: () => void,
-    ) => {
-      try {
-        const res = await fetch(SCRIPT_URL, {
-          method: "GET",
-          mode: "cors",
-          redirect: "follow",
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const rawData = await res.json();
-        console.log("Data loaded for " + label + " (" + SCRIPT_URL + ")", rawData);
 
-        const actualData = extractArray(rawData, keys) as T[];
-        console.log("Rows mapped for " + label, actualData);
+    // 1. Sandbox
+    (async () => {
+      try {
+        const data = await gasFetch(SANDBOX_SCRIPT_URL);
         if (cancelled) return;
-        if (actualData.length > 0) {
-          apply(actualData);
+        const rows = extractArray(data, ["sandboxPrompts", "sandbox", "sheet1", "data", "rows"]) as SandboxRow[];
+        if (rows.length) {
+          setAllSandboxPrompts(rows);
+          const first = rows[0];
+          setSandboxRow(first);
+          setPrompts((p) => ({
+            ...p,
+            character: first.character ?? p.character,
+            incident: first.incident ?? p.incident,
+            constraint: first.constraint ?? p.constraint,
+          }));
         }
       } catch (err) {
-        console.error("Fetch failed for " + label + " (" + SCRIPT_URL + "), using FALLBACK_SEEDS", err);
+        console.error("[StorySandbox] Sandbox fetch failed — using fallback seeds.", err);
       } finally {
-        if (!cancelled) done();
+        if (!cancelled) setSandboxLoading(false);
       }
-    };
+    })();
 
-    loadOne<SandboxRow>(SANDBOX_SCRIPT_URL, "sandbox", ["sandboxPrompts", "sandbox", "sheet1"], (rows) => {
-      setAllSandboxPrompts(rows);
-      const first = rows[0];
-      setSandboxRow(first);
-      setPrompts((p) => ({
-        ...p,
-        character: first.character ?? p.character,
-        incident: first.incident ?? p.incident,
-        constraint: first.constraint ?? p.constraint,
-      }));
-    }, () => setSandboxLoading(false));
+    // 2. One-liners
+    (async () => {
+      try {
+        const data = await gasFetch(ONELINERS_SCRIPT_URL);
+        if (cancelled) return;
+        const rows = extractArray(data, ["oneLiners", "sheet1", "data", "rows"]) as PromptRow[];
+        if (rows.length) {
+          setAllOneLiners(rows);
+          setOneLinerRow(rows[Math.floor(Math.random() * rows.length)]);
+        }
+      } catch (err) {
+        console.error("[StorySandbox] One-liners fetch failed — using fallback seeds.", err);
+      } finally {
+        if (!cancelled) setOneLinersLoading(false);
+      }
+    })();
 
-    loadOne<PromptRow>(ONELINERS_SCRIPT_URL, "oneLiners", ["oneLiners", "oneLinerPrompts", "sheet2", "sheet1", "prompts"], (rows) => {
-      setAllOneLiners(rows);
-      setOneLinerRow(rows[Math.floor(Math.random() * rows.length)]);
-    }, () => setOneLinersLoading(false));
-
-    loadOne<PromptRow>(SHEET3_SCRIPT_URL, "sheet3", ["sheet3", "extraInspiration", "extraPrompts", "sheet1", "prompts"], (rows) => {
-      setAllSheet3Prompts(rows);
-    }, () => { /* no UI loading state */ });
+    // 3. Sheet3
+    (async () => {
+      try {
+        const data = await gasFetch(SHEET3_SCRIPT_URL);
+        if (cancelled) return;
+        const rows = extractArray(data, ["sheet3", "prompts", "sheet1", "data", "rows"]) as PromptRow[];
+        if (rows.length) {
+          setAllSheet3Prompts(rows);
+          setSheet3Row(rows[Math.floor(Math.random() * rows.length)]);
+        }
+      } catch (err) {
+        console.error("[StorySandbox] Sheet3 fetch failed — using fallback seeds.", err);
+      } finally {
+        if (!cancelled) setSheet3Loading(false);
+      }
+    })();
 
     return () => {
       cancelled = true;
     };
   }, []);
-
 
   // Persist UI state
   useEffect(() => {
@@ -310,6 +320,13 @@ export default function StorySandbox() {
     if (!row) return;
     setOneLinerRow(row);
     setOneLinerAnimKey((k) => k + 1);
+  };
+
+  const shuffleSheet3 = () => {
+    const row = pickRandom(allSheet3Prompts);
+    if (!row) return;
+    setSheet3Row(row);
+    setSheet3AnimKey((k) => k + 1);
   };
 
 
@@ -534,6 +551,30 @@ export default function StorySandbox() {
         </Card>
       </section>
 
+      {/* Third Prompt Generator (Sheet3) */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-lg font-semibold">Extra inspiration</h3>
+          <Button
+            variant="glass"
+            size="sm"
+            onClick={shuffleSheet3}
+            disabled={!allSheet3Prompts.length}
+          >
+            <Shuffle className="h-4 w-4" />
+            Shuffle
+          </Button>
+        </div>
+        <Card
+          key={`sheet3-${sheet3AnimKey}`}
+          className="relative p-4 min-h-[140px] flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-petrol/20 to-primary/10 border border-petrol/30 animate-fade-in-up"
+        >
+          <p className="text-base md:text-lg font-medium text-center leading-snug">
+            {sheet3Row ? extractText(sheet3Row) : (sheet3Loading ? "Loading prompts…" : "Hit shuffle.")}
+          </p>
+          <VoteThumbs sheetKey="sheet3" id={sheet3Row?.id} box="generic" />
+        </Card>
+      </section>
 
 
       {/* Structure Selector + Save Story (aligned horizontally) */}
