@@ -9,11 +9,11 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
 const SANDBOX_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbyMPnD_Yy6g_OwC2cYLHlABaweTewNQepn2ionjYOdgiEgeLvx0a5d6dac0kh4br63D/exec";
+  "https://script.google.com/macros/s/AKfycbxW9PeACm4LoKxSOY890qmC6py8EU0F64KbwYFCTHc0OL-ZsW7eLdpsprUBIU3Tzcfi/exec";
 const ONELINERS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxq5WsL6vDiZxCnGX3O0Dq4YSa5rkN5W5iOElMGWRjBoEdifZRsu_gmSH_zrC4QLQ/exec";
+  "https://script.google.com/macros/s/AKfycbyws1eFpbD395kEuaMwriiGiOhGy6_Cgt-PPC4bURowx5UpVfXgwucxrIwsq8ERrcI/exec";
 const SHEET3_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxyWogGNBCCrny9BKVNyfZOku5iKtATVDrb1fXhU_4Gh2fRBLlBD_-gRna2nQDRtBQ/exec";
+  "https://script.google.com/macros/s/AKfycbw4R91CvvhMg7Fz7CxkxeDIS89VUEt4lNp8HB5oYm88mbCmg-eSuIeyhDMS7YWnA8o/exec";
 
 const SUPABASE_PROXY = "https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/sheets-proxy";
 
@@ -551,10 +551,7 @@ export default function StorySandbox() {
                 )}
 
                 <div className="mt-3 flex justify-end">
-                  <>
-                    <small>ID: {String(sandboxRow?.id)}</small>
-                    <VoteThumbs sheetKey="sandbox" id={sandboxRow?.id} box={box} />
-                  </>
+                  <VoteThumbs sheetKey="sandbox" id={sandboxRow?.id} box={box} />
                 </div>
               </Card>
             );
