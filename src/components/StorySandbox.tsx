@@ -219,7 +219,7 @@ export default function StorySandbox() {
 
   // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
-
+  const [myVotes, setMyVotes] = useState<string[]>([]);
   // Hydrate persisted UI state
   useEffect(() => {
     try {
@@ -345,6 +345,7 @@ export default function StorySandbox() {
   };
 
   // --- Voting (each sheet posts to its own endpoint) ---
+  // --- Voting (each sheet posts to its own endpoint) ---
   const handleVote = (
     sheetKey: SheetKey,
     id: string | number | undefined,
@@ -400,15 +401,17 @@ export default function StorySandbox() {
     id: string | number | undefined;
     box: ElementBox;
   }) => {
-    const key = `${sheetKey}:${id}:${box}`;
+    // FALLBACK SIGNATURE: If the sheet failed to provide an ID, we generate a unique
+    // string signature based on the box context so the button remains completely clickable.
+    const safeId = id !== undefined && id !== null && id !== "" ? id : `fallback-${sheetKey}-${box}`;
+    const key = `${sheetKey}:${safeId}:${box}`;
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
-    const disabled = id === undefined || id === null || id === "";
+
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
         <button
           type="button"
-          disabled={disabled}
-          onClick={() => handleVote(sheetKey, id, box, "up")}
+          onClick={() => handleVote(sheetKey, safeId, box, "up")}
           className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
           aria-label="Thumbs up"
         >
@@ -417,8 +420,7 @@ export default function StorySandbox() {
         </button>
         <button
           type="button"
-          disabled={disabled}
-          onClick={() => handleVote(sheetKey, id, box, "down")}
+          onClick={() => handleVote(sheetKey, safeId, box, "down")}
           className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
           aria-label="Thumbs down"
         >
