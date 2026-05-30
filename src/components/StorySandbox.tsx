@@ -409,20 +409,24 @@ export default function StorySandbox() {
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "up")}
-          className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
+          className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
+            counts.up > 0 ? "text-green-600 font-bold" : "hover:text-foreground"
+          }`}
           aria-label="Thumbs up"
         >
-          <ThumbsUp className="h-3.5 w-3.5" />
+          <ThumbsUp className={`h-3.5 w-3.5 ${counts.up > 0 ? "fill-green-600" : ""}`} />
           <span>{counts.up}</span>
         </button>
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "down")}
-          className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
+          className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
+            counts.down > 0 ? "text-red-600 font-bold" : "hover:text-foreground"
+          }`}
           aria-label="Thumbs down"
         >
-          <ThumbsDown className="h-3.5 w-3.5" />
+          <ThumbsDown className={`h-3.5 w-3.5 ${counts.down > 0 ? "fill-red-600" : ""}`} />
           <span>{counts.down}</span>
         </button>
       </div>
