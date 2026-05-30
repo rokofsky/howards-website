@@ -551,7 +551,10 @@ export default function StorySandbox() {
                 )}
 
                 <div className="mt-3 flex justify-end">
-                  <VoteThumbs sheetKey="sandbox" id={sandboxRow?.id} box={box} />
+                  <>
+                    <small>ID: {String(sandboxRow?.id)}</small>
+                    <VoteThumbs sheetKey="sandbox" id={sandboxRow?.id} box={box} />
+                  </>
                 </div>
               </Card>
             );
