@@ -9,11 +9,12 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
 const SANDBOX_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbyL5f9y1a17rs3F75lqaiBHA5a2rJ8I7CK0Kp-wfiwOfGmDCInHNPrcJ-ONDbl1_45I/exec";
+  "https://script.google.com/macros/s/AKfycbyMPnD_Yy6g_OwC2cYLHlABaweTewNQepn2ionjYOdgiEgeLvx0a5d6dac0kh4br63D/exec";
 const ONELINERS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbzb8GefrOBO0_TSua0qS36OMkYXat6NmpoMCsXxh_XoAw3AkJmSfTw2Cgo_sRH2_5A/exec";
+  "https://script.google.com/macros/s/AKfycbxq5WsL6vDiZxCnGX3O0Dq4YSa5rkN5W5iOElMGWRjBoEdifZRsu_gmSH_zrC4QLQ/exec";
 const SHEET3_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbyP2FNt0bj5329oofwGeTA8W1A5ui2EvzhFEeh1eVvejAugUEgR2rsnF6kwLChlbEc/exec";
+  "https://script.google.com/macros/s/AKfycbxyWogGNBCCrny9BKVNyfZOku5iKtATVDrb1fXhU_4Gh2fRBLlBD_-gRna2nQDRtBQ/exec";
+
 const SUPABASE_PROXY = "https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/sheets-proxy";
 
 const ENDPOINT_FOR: Record<SheetKey, string> = {
