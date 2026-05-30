@@ -345,6 +345,10 @@ export default function StorySandbox() {
   };
 
   // --- Voting (each sheet posts to its own endpoint) ---
+  // --- Dedicated state to track active clicks in this session without disk lag ---
+  const [activeUserVotes, setActiveUserVotes] = useState<Record<string, "up" | "down">>({});
+
+  // --- Voting (each sheet posts to its own endpoint) ---
   const handleVote = (
     sheetKey: SheetKey,
     id: string | number | undefined,
@@ -354,40 +358,48 @@ export default function StorySandbox() {
     if (id === undefined || id === null || id === "") return;
 
     const storeKey = `${sheetKey}:${id}:${elementBox}`;
+    const currentActiveVote = activeUserVotes[storeKey]; // "up" | "down" | undefined
 
-    let votes: Record<string, "up" | "down"> = {};
-    try {
-      votes = JSON.parse(localStorage.getItem("userVotes") ?? "{}");
-    } catch {
-      votes = {};
-    }
-
-    const current = votes[storeKey]; // "up" | "down" | undefined
-
+    // 1. Calculate the local counter totals dynamically
     setVoteCounts((prev) => {
       const cur = prev[storeKey] ?? { up: 0, down: 0 };
       const next = { ...cur };
 
-      if (current) next[current] = Math.max(0, next[current] - 1); // remove old vote
-      if (current !== vote) next[vote] = next[vote] + 1; // add new vote (unless nullifying)
+      // If they already voted this way, nullify it (turn it off)
+      if (currentActiveVote === vote) {
+        next[vote] = Math.max(0, next[vote] - 1);
+      }
+      // If they are switching their vote from up to down (or down to up)
+      else if (currentActiveVote) {
+        next[currentActiveVote] = Math.max(0, next[currentActiveVote] - 1); // remove old
+        next[vote] = next[vote] + 1; // add new
+      }
+      // Pristine fresh vote
+      else {
+        next[vote] = next[vote] + 1;
+      }
 
       return { ...prev, [storeKey]: next };
     });
 
-    // Update localStorage
-    if (current === vote) {
-      delete votes[storeKey]; // nullify
-    } else {
-      votes[storeKey] = vote; // set or switch
-    }
-    localStorage.setItem("userVotes", JSON.stringify(votes));
+    // 2. Update the React state tracker so the buttons switch colors instantly
+    setActiveUserVotes((prev) => {
+      const next = { ...prev };
+      if (currentActiveVote === vote) {
+        delete next[storeKey]; // turned off
+      } else {
+        next[storeKey] = vote; // switched or set
+      }
+      return next;
+    });
 
+    // 3. Keep your database sync endpoint completely active
     fetch(ENDPOINT_FOR[sheetKey], {
       method: "POST",
       mode: "no-cors",
       redirect: "follow",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ sheetKey, id, vote, elementBox, previous: current ?? null }),
+      body: JSON.stringify({ sheetKey, id, vote, elementBox, previous: currentActiveVote ?? null }),
     }).catch((err) => console.warn("[StorySandbox] vote post failed", err));
   };
 
@@ -403,16 +415,7 @@ export default function StorySandbox() {
     const key = `${sheetKey}:${id}:${box}`;
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
     const disabled = id === undefined || id === null || id === "";
-
-    // 🕵️‍♂️ THE REACTIVE FIX: Parse localStorage every time this specific sub-component renders
-    let votes: Record<string, "up" | "down"> = {};
-    try {
-      // By checking this inline during render, React catches the changes made by handleVote
-      votes = JSON.parse(localStorage.getItem("userVotes") ?? "{}");
-    } catch {
-      votes = {};
-    }
-    const currentVote = votes[key]; // Evaluates to "up", "down", or undefined
+    const directUserChoice = activeUserVotes[key]; // "up", "down", or undefined
 
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
@@ -422,11 +425,11 @@ export default function StorySandbox() {
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "up")}
           className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
-            currentVote === "up" ? "text-green-600 font-bold scale-105" : "hover:text-foreground hover:scale-105"
+            directUserChoice === "up" ? "text-green-600 font-bold scale-105" : "hover:text-foreground"
           }`}
           aria-label="Thumbs up"
         >
-          <ThumbsUp className={`h-3.5 w-3.5 ${currentVote === "up" ? "fill-green-600" : ""}`} />
+          <ThumbsUp className={`h-3.5 w-3.5 ${directUserChoice === "up" ? "fill-green-600" : ""}`} />
           <span>{counts.up}</span>
         </button>
 
@@ -436,16 +439,16 @@ export default function StorySandbox() {
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "down")}
           className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
-            currentVote === "down" ? "text-red-600 font-bold scale-105" : "hover:text-foreground hover:scale-105"
+            directUserChoice === "down" ? "text-red-600 font-bold scale-105" : "hover:text-foreground"
           }`}
           aria-label="Thumbs down"
         >
-          <ThumbsDown className={`h-3.5 w-3.5 ${currentVote === "down" ? "fill-red-600" : ""}`} />
+          <ThumbsDown className={`h-3.5 w-3.5 ${directUserChoice === "down" ? "fill-red-600" : ""}`} />
           <span>{counts.down}</span>
         </button>
       </div>
-    ); // Closes return
-  }; // Closes VoteThumbs component
+    );
+  };
 
   const current = STRUCTURES[structure];
   const sections = useMemo(() => current.sections, [current]);
