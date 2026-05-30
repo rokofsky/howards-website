@@ -7,6 +7,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+
+const readUserVotes = (): Record<string, "up" | "down"> => {
+  try {
+    const raw = localStorage.getItem("userVotes");
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+};
 
 const SANDBOX_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbxW9PeACm4LoKxSOY890qmC6py8EU0F64KbwYFCTHc0OL-ZsW7eLdpsprUBIU3Tzcfi/exec";
