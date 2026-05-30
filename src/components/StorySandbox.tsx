@@ -384,7 +384,7 @@ export default function StorySandbox() {
     setOneLinerAnimKey((k) => k + 1);
   };
 
-  // --- Voting (each sheet posts to its own endpoint) ---
+  // --- Voting: instant local state update, then async Supabase upsert ---
   const handleVote = (
     sheetKey: SheetKey,
     id: string | number | undefined,
@@ -394,41 +394,42 @@ export default function StorySandbox() {
     if (id === undefined || id === null || id === "") return;
 
     const storeKey = `${sheetKey}:${id}:${elementBox}`;
+    const votes = readUserVotes();
+    const current = votes[storeKey];
 
-    let votes: Record<string, "up" | "down"> = {};
-    try {
-      votes = JSON.parse(localStorage.getItem("userVotes") ?? "{}");
-    } catch {
-      votes = {};
-    }
-
-    const current = votes[storeKey]; // "up" | "down" | undefined
-
+    // 1) SYNCHRONOUS state update first — never blocked by network
+    let nextCounts = { up: 0, down: 0 };
     setVoteCounts((prev) => {
       const cur = prev[storeKey] ?? { up: 0, down: 0 };
       const next = { ...cur };
-
-      if (current) next[current] = Math.max(0, next[current] - 1); // remove old vote
-      if (current !== vote) next[vote] = next[vote] + 1; // add new vote (unless nullifying)
-
+      if (current) next[current] = Math.max(0, next[current] - 1);
+      if (current !== vote) next[vote] = next[vote] + 1;
+      nextCounts = next;
       return { ...prev, [storeKey]: next };
     });
 
-    // Update localStorage
-    if (current === vote) {
-      delete votes[storeKey]; // nullify
-    } else {
-      votes[storeKey] = vote; // set or switch
-    }
+    // 2) localStorage immediately after
+    if (current === vote) delete votes[storeKey];
+    else votes[storeKey] = vote;
     localStorage.setItem("userVotes", JSON.stringify(votes));
 
-    fetch(ENDPOINT_FOR[sheetKey], {
-      method: "POST",
-      mode: "no-cors",
-      redirect: "follow",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ sheetKey, id, vote, elementBox, previous: current ?? null }),
-    }).catch((err) => console.warn("[StorySandbox] vote post failed", err));
+    // 3) Async Supabase upsert (fire-and-forget) — never blocks UI
+    void supabase
+      .from("votes")
+      .upsert(
+        {
+          sheet_key: sheetKey,
+          row_id: String(id),
+          element_box: elementBox,
+          up_count: nextCounts.up,
+          down_count: nextCounts.down,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "sheet_key,row_id,element_box" },
+      )
+      .then(({ error }) => {
+        if (error) console.warn("[StorySandbox] vote upsert failed", error);
+      });
   };
 
   const VoteThumbs = ({
@@ -443,26 +444,34 @@ export default function StorySandbox() {
     const key = `${sheetKey}:${id}:${box}`;
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
     const disabled = id === undefined || id === null || id === "";
+    const userVotes = readUserVotes();
+    const userVote = userVotes[key];
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "up")}
-          className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
+          className={cn(
+            "inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40",
+            userVote === "up" && "text-green-600 font-bold",
+          )}
           aria-label="Thumbs up"
         >
-          <ThumbsUp className="h-3.5 w-3.5" />
+          <ThumbsUp className={cn("h-3.5 w-3.5", userVote === "up" && "fill-green-600")} />
           <span>{counts.up}</span>
         </button>
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "down")}
-          className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
+          className={cn(
+            "inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40",
+            userVote === "down" && "text-red-600 font-bold",
+          )}
           aria-label="Thumbs down"
         >
-          <ThumbsDown className="h-3.5 w-3.5" />
+          <ThumbsDown className={cn("h-3.5 w-3.5", userVote === "down" && "fill-red-600")} />
           <span>{counts.down}</span>
         </button>
       </div>
