@@ -188,6 +188,33 @@ export type Database = {
         }
         Relationships: []
       }
+      votes: {
+        Row: {
+          down_count: number
+          element_box: string
+          row_id: string
+          sheet_key: string
+          up_count: number
+          updated_at: string
+        }
+        Insert: {
+          down_count?: number
+          element_box: string
+          row_id: string
+          sheet_key: string
+          up_count?: number
+          updated_at?: string
+        }
+        Update: {
+          down_count?: number
+          element_box?: string
+          row_id?: string
+          sheet_key?: string
+          up_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       webinar_orders: {
         Row: {
           chosen_date: string | null
