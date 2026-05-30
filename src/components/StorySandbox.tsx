@@ -130,7 +130,7 @@ type Prompts = Record<Category, string> & { custom: string };
 const CATEGORY_META: { key: Category | "custom"; label: string; tone: string; box: ElementBox }[] = [
   { key: "character", label: "Character", tone: "from-petrol/20 to-petrol/5 border-petrol/30", box: "character" },
   { key: "incident", label: "Incident", tone: "from-gold/25 to-gold/5 border-gold/40", box: "incident" },
-  { key: "constraint", label: "By the way", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
+  { key: "constraint", label: "Constraint", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
 // Hiding the Custom box 
   /*  {
     key: "custom",
