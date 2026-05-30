@@ -401,48 +401,43 @@ export default function StorySandbox() {
     id: string | number | undefined;
     box: ElementBox;
   }) => {
-    // 🛡️ ULTRA-ISOLATION FIX:
-    // By compounding the sheet, the row ID, AND the specific category box text,
-    // we guarantee that this button has a 100% unique fingerprint on the page.
-    const safeId = id !== undefined && id !== null && id !== "" ? id : "default";
-    const key = `${sheetKey}:${safeId}:${box}`;
-
+    const key = `${sheetKey}:${id}:${box}`;
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
+    const disabled = id === undefined || id === null || id === "";
 
-    // Safely look up the local browser storage session for this exact isolated key
-    let localVotes: Record<string, "up" | "down"> = {};
-    try {
-      localVotes = JSON.parse(localStorage.getItem("userVotes") ?? "{}");
-    } catch {
-      localVotes = {};
-    }
-    const hasVoted = localVotes[key]; // Checks ONLY this exact button box
+    // 🕵️‍♂️ SAFELY DERIVE THE VOTED STATE PURELY FROM THE DYNAMIC STATE COUNTS
+    // Instead of parsing disk storage inline, we check if the active item context contains an increment.
+    // This allows it to switch, turn off to 0, and cleanly bypass any local disk lag.
+    const isUpvoted = counts.up > 0;
+    const isDownvoted = counts.down > 0;
 
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
         {/* --- UP VOTE BUTTON --- */}
         <button
           type="button"
-          onClick={() => handleVote(sheetKey, safeId, box, "up")}
-          className={`inline-flex items-center gap-0.5 transition-colors ${
-            hasVoted === "up" ? "text-green-600 font-bold scale-105" : "hover:text-foreground"
+          disabled={disabled}
+          onClick={() => handleVote(sheetKey, id, box, "up")}
+          className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
+            isUpvoted ? "text-green-600 font-bold" : "hover:text-foreground"
           }`}
           aria-label="Thumbs up"
         >
-          <ThumbsUp className={`h-3.5 w-3.5 ${hasVoted === "up" ? "fill-green-600" : ""}`} />
+          <ThumbsUp className={`h-3.5 w-3.5 ${isUpvoted ? "fill-green-600" : ""}`} />
           <span>{counts.up}</span>
         </button>
 
         {/* --- DOWN VOTE BUTTON --- */}
         <button
           type="button"
-          onClick={() => handleVote(sheetKey, safeId, box, "down")}
-          className={`inline-flex items-center gap-0.5 transition-colors ${
-            hasVoted === "down" ? "text-red-600 font-bold scale-105" : "hover:text-foreground"
+          disabled={disabled}
+          onClick={() => handleVote(sheetKey, id, box, "down")}
+          className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
+            isDownvoted ? "text-red-600 font-bold" : "hover:text-foreground"
           }`}
           aria-label="Thumbs down"
         >
-          <ThumbsDown className={`h-3.5 w-3.5 ${hasVoted === "down" ? "fill-red-600" : ""}`} />
+          <ThumbsDown className={`h-3.5 w-3.5 ${isDownvoted ? "fill-red-600" : ""}`} />
           <span>{counts.down}</span>
         </button>
       </div>
@@ -571,13 +566,7 @@ export default function StorySandbox() {
                 )}
 
                 <div className="mt-3 flex justify-end">
-                  <VoteThumbs
-                    sheetKey="sandbox"
-                    // 🔑 UNIQUE SEED: By appending the box name (e.g., "12-character"),
-                    // we force each card to generate its own isolated tracking key!
-                    id={sandboxRow?.id ? `${sandboxRow.id}-${box}` : undefined}
-                    box={box}
-                  />
+                  <VoteThumbs sheetKey="sandbox" id={sandboxRow?.id} box={box} />
                 </div>
               </Card>
             );
