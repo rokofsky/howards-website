@@ -244,10 +244,10 @@ export default function StorySandbox() {
       done: () => void,
     ) => {
       try {
-        const CORS_PROXY = "https://api.allorigins.win/raw?url=";
-
-        const res = await fetch(CORS_PROXY + encodeURIComponent(SCRIPT_URL), {
+        const res = await fetch(SCRIPT_URL, {
           method: "GET",
+          mode: "cors",
+          redirect: "follow",
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const rawData = await res.json();
