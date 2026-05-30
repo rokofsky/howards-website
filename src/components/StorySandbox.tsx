@@ -219,7 +219,7 @@ export default function StorySandbox() {
 
   // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
-  const [myVotes, setMyVotes] = useState<string[]>([]);
+
   // Hydrate persisted UI state
   useEffect(() => {
     try {
@@ -345,7 +345,6 @@ export default function StorySandbox() {
   };
 
   // --- Voting (each sheet posts to its own endpoint) ---
-  // --- Voting (each sheet posts to its own endpoint) ---
   const handleVote = (
     sheetKey: SheetKey,
     id: string | number | undefined,
@@ -404,40 +403,26 @@ export default function StorySandbox() {
     const key = `${sheetKey}:${id}:${box}`;
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
     const disabled = id === undefined || id === null || id === "";
-
-    // 🕵️‍♂️ SAFELY DERIVE THE VOTED STATE PURELY FROM THE DYNAMIC STATE COUNTS
-    // Instead of parsing disk storage inline, we check if the active item context contains an increment.
-    // This allows it to switch, turn off to 0, and cleanly bypass any local disk lag.
-    const isUpvoted = counts.up > 0;
-    const isDownvoted = counts.down > 0;
-
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-        {/* --- UP VOTE BUTTON --- */}
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "up")}
-          className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
-            isUpvoted ? "text-green-600 font-bold" : "hover:text-foreground"
-          }`}
+          className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
           aria-label="Thumbs up"
         >
-          <ThumbsUp className={`h-3.5 w-3.5 ${isUpvoted ? "fill-green-600" : ""}`} />
+          <ThumbsUp className="h-3.5 w-3.5" />
           <span>{counts.up}</span>
         </button>
-
-        {/* --- DOWN VOTE BUTTON --- */}
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "down")}
-          className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
-            isDownvoted ? "text-red-600 font-bold" : "hover:text-foreground"
-          }`}
+          className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
           aria-label="Thumbs down"
         >
-          <ThumbsDown className={`h-3.5 w-3.5 ${isDownvoted ? "fill-red-600" : ""}`} />
+          <ThumbsDown className="h-3.5 w-3.5" />
           <span>{counts.down}</span>
         </button>
       </div>
