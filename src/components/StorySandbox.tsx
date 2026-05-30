@@ -353,24 +353,40 @@ export default function StorySandbox() {
     if (id === undefined || id === null || id === "") return;
 
     const storeKey = `${sheetKey}:${id}:${elementBox}`;
-    const dedupKey = `${storeKey}:${vote}`;
 
-    const voted = new Set(JSON.parse(localStorage.getItem("votedKeys") ?? "[]"));
-    if (voted.has(dedupKey)) return;
-    voted.add(dedupKey);
-    localStorage.setItem("votedKeys", JSON.stringify([...voted]));
+    let votes: Record<string, "up" | "down"> = {};
+    try {
+      votes = JSON.parse(localStorage.getItem("userVotes") ?? "{}");
+    } catch {
+      votes = {};
+    }
+
+    const current = votes[storeKey]; // "up" | "down" | undefined
 
     setVoteCounts((prev) => {
       const cur = prev[storeKey] ?? { up: 0, down: 0 };
-      return { ...prev, [storeKey]: { ...cur, [vote]: cur[vote] + 1 } };
+      const next = { ...cur };
+
+      if (current) next[current] = Math.max(0, next[current] - 1); // remove old vote
+      if (current !== vote) next[vote] = next[vote] + 1; // add new vote (unless nullifying)
+
+      return { ...prev, [storeKey]: next };
     });
+
+    // Update localStorage
+    if (current === vote) {
+      delete votes[storeKey]; // nullify
+    } else {
+      votes[storeKey] = vote; // set or switch
+    }
+    localStorage.setItem("userVotes", JSON.stringify(votes));
 
     fetch(ENDPOINT_FOR[sheetKey], {
       method: "POST",
       mode: "no-cors",
       redirect: "follow",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ sheetKey, id, vote, elementBox }),
+      body: JSON.stringify({ sheetKey, id, vote, elementBox, previous: current ?? null }),
     }).catch((err) => console.warn("[StorySandbox] vote post failed", err));
   };
 
