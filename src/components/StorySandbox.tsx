@@ -250,10 +250,13 @@ export default function StorySandbox() {
         const rawData = await res.json();
         console.log("Data loaded for " + label + " (" + SCRIPT_URL + ")", rawData);
 
-        const actualData = extractArray(rawData, keys) as T[];
+        // --- THE FIX ---
+        // If rawData is already a flat array, use it directly! Otherwise, use extractArray fallback.
+        const actualData = Array.isArray(rawData) ? rawData : (extractArray(rawData, keys) as T[]);
+
         console.log("Rows mapped for " + label, actualData);
         if (cancelled) return;
-        if (actualData.length > 0) {
+        if (actualData && actualData.length > 0) {
           apply(actualData);
         }
       } catch (err) {
