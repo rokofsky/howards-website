@@ -29,11 +29,6 @@ const SHEET3_SCRIPT_URL =
 
 const SUPABASE_PROXY = "https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/sheets-proxy";
 
-const ENDPOINT_FOR: Record<SheetKey, string> = {
-  sandbox: SANDBOX_SCRIPT_URL,
-  oneLiners: ONELINERS_SCRIPT_URL,
-  sheet3: SHEET3_SCRIPT_URL,
-};
 
 const extractArray = (data: unknown, keys: string[]): unknown[] => {
   if (Array.isArray(data)) return data;
