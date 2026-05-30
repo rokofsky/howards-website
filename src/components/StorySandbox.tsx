@@ -404,14 +404,15 @@ export default function StorySandbox() {
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
     const disabled = id === undefined || id === null || id === "";
 
-    // 🕵️‍♂️ LOOKUP CURRENT VOTE STATE FOR VISUALS
+    // 🕵️‍♂️ THE REACTIVE FIX: Parse localStorage every time this specific sub-component renders
     let votes: Record<string, "up" | "down"> = {};
     try {
+      // By checking this inline during render, React catches the changes made by handleVote
       votes = JSON.parse(localStorage.getItem("userVotes") ?? "{}");
     } catch {
       votes = {};
     }
-    const currentVote = votes[key]; // "up", "down", or undefined
+    const currentVote = votes[key]; // Evaluates to "up", "down", or undefined
 
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
@@ -421,7 +422,7 @@ export default function StorySandbox() {
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "up")}
           className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
-            currentVote === "up" ? "text-green-600 font-bold scale-105" : "hover:text-foreground"
+            currentVote === "up" ? "text-green-600 font-bold scale-105" : "hover:text-foreground hover:scale-105"
           }`}
           aria-label="Thumbs up"
         >
@@ -435,7 +436,7 @@ export default function StorySandbox() {
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "down")}
           className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
-            currentVote === "down" ? "text-red-600 font-bold scale-105" : "hover:text-foreground"
+            currentVote === "down" ? "text-red-600 font-bold scale-105" : "hover:text-foreground hover:scale-105"
           }`}
           aria-label="Thumbs down"
         >
@@ -443,8 +444,8 @@ export default function StorySandbox() {
           <span>{counts.down}</span>
         </button>
       </div>
-    );
-  };
+    ); // Closes return
+  }; // Closes VoteThumbs component
 
   const current = STRUCTURES[structure];
   const sections = useMemo(() => current.sections, [current]);
