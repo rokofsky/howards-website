@@ -50,6 +50,11 @@ const extractArray = (data: unknown, keys: string[]): unknown[] => {
    ============================================================ */
 const FALLBACK_SEEDS = {
   character: [
+    "A retired astronaut",
+    "A small-town librarian",
+    "A street magician",
+    "A burned-out chef",
+    "A lighthouse keeper",
     "A teenage chess prodigy",
     "An undercover food critic",
     "A jaded wedding photographer",
@@ -213,8 +218,7 @@ export default function StorySandbox() {
   const [scratch, setScratch] = useState<Record<string, string>>({});
 
   // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
-  const [voteCounts, set// line 221 - initialize from Supabase on load
-const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});] = useState<Record<string, { up: number; down: number }>>({});
+  const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
 
   // Hydrate persisted UI state
   useEffect(() => {
