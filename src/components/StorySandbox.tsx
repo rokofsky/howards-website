@@ -353,6 +353,7 @@ export default function StorySandbox() {
   ) => {
     if (id === undefined || id === null || id === "") return;
 
+    // 🔑 COMPREHENSIVE UNIQUE KEY: Matches the sub-component key signature exactly
     const storeKey = `${sheetKey}:${id}:${elementBox}`;
 
     let votes: Record<string, "up" | "down"> = {};
@@ -403,26 +404,43 @@ export default function StorySandbox() {
     const key = `${sheetKey}:${id}:${box}`;
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
     const disabled = id === undefined || id === null || id === "";
+
+    // Safely check what this user chose for THIS SPECIFIC CARD in this browser session
+    let localVotes: Record<string, "up" | "down"> = {};
+    try {
+      localVotes = JSON.parse(localStorage.getItem("userVotes") ?? "{}");
+    } catch {
+      localVotes = {};
+    }
+    const hasVoted = localVotes[key]; // Will evaluate uniquely for "character", "setting", etc.
+
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
+        {/* --- UP VOTE BUTTON --- */}
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "up")}
-          className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
+          className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
+            hasVoted === "up" ? "text-green-600 font-bold" : "hover:text-foreground"
+          }`}
           aria-label="Thumbs up"
         >
-          <ThumbsUp className="h-3.5 w-3.5" />
+          <ThumbsUp className={`h-3.5 w-3.5 ${hasVoted === "up" ? "fill-green-600" : ""}`} />
           <span>{counts.up}</span>
         </button>
+
+        {/* --- DOWN VOTE BUTTON --- */}
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "down")}
-          className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
+          className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
+            hasVoted === "down" ? "text-red-600 font-bold" : "hover:text-foreground"
+          }`}
           aria-label="Thumbs down"
         >
-          <ThumbsDown className="h-3.5 w-3.5" />
+          <ThumbsDown className={`h-3.5 w-3.5 ${hasVoted === "down" ? "fill-red-600" : ""}`} />
           <span>{counts.down}</span>
         </button>
       </div>
