@@ -14,6 +14,7 @@ const ONELINERS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbzb8GefrOBO0_TSua0qS36OMkYXat6NmpoMCsXxh_XoAw3AkJmSfTw2Cgo_sRH2_5A/exec";
 const SHEET3_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbyP2FNt0bj5329oofwGeTA8W1A5ui2EvzhFEeh1eVvejAugUEgR2rsnF6kwLChlbEc/exec";
+const SUPABASE_PROXY = "https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/sheets-proxy";
 
 const ENDPOINT_FOR: Record<SheetKey, string> = {
   sandbox: SANDBOX_SCRIPT_URL,
@@ -244,11 +245,7 @@ export default function StorySandbox() {
       done: () => void,
     ) => {
       try {
-        const res = await fetch(SCRIPT_URL, {
-          method: "GET",
-          mode: "cors",
-          redirect: "follow",
-        });
+        const res = await fetch(`${SUPABASE_PROXY}?url=${encodeURIComponent(SCRIPT_URL)}`, { method: "GET" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const rawData = await res.json();
         console.log("Data loaded for " + label + " (" + SCRIPT_URL + ")", rawData);
