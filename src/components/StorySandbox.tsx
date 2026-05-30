@@ -345,6 +345,7 @@ export default function StorySandbox() {
   };
 
   // --- Voting (each sheet posts to its own endpoint) ---
+  // --- Voting (each sheet posts to its own endpoint) ---
   const handleVote = (
     sheetKey: SheetKey,
     id: string | number | undefined,
@@ -404,42 +405,39 @@ export default function StorySandbox() {
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
     const disabled = id === undefined || id === null || id === "";
 
-    // 🕵️‍♂️ LOOKUP CURRENT VOTE STATE FOR VISUALS
-    let votes: Record<string, "up" | "down"> = {};
+    // Safely check the active vote state for this specific item layout
+    let localVotes: Record<string, "up" | "down"> = {};
     try {
-      votes = JSON.parse(localStorage.getItem("userVotes") ?? "{}");
+      localVotes = JSON.parse(localStorage.getItem("userVotes") ?? "{}");
     } catch {
-      votes = {};
+      localVotes = {};
     }
-    const currentVote = votes[key]; // "up", "down", or undefined
+    const hasVoted = localVotes[key];
 
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-        {/* --- UP VOTE BUTTON --- */}
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "up")}
           className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
-            currentVote === "up" ? "text-green-600 font-bold scale-105" : "hover:text-foreground"
+            hasVoted === "up" ? "text-green-600 font-bold" : "hover:text-foreground"
           }`}
           aria-label="Thumbs up"
         >
-          <ThumbsUp className={`h-3.5 w-3.5 ${currentVote === "up" ? "fill-green-600" : ""}`} />
+          <ThumbsUp className={`h-3.5 w-3.5 ${hasVoted === "up" ? "fill-green-600" : ""}`} />
           <span>{counts.up}</span>
         </button>
-
-        {/* --- DOWN VOTE BUTTON --- */}
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "down")}
           className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
-            currentVote === "down" ? "text-red-600 font-bold scale-105" : "hover:text-foreground"
+            hasVoted === "down" ? "text-red-600 font-bold" : "hover:text-foreground"
           }`}
           aria-label="Thumbs down"
         >
-          <ThumbsDown className={`h-3.5 w-3.5 ${currentVote === "down" ? "fill-red-600" : ""}`} />
+          <ThumbsDown className={`h-3.5 w-3.5 ${hasVoted === "down" ? "fill-red-600" : ""}`} />
           <span>{counts.down}</span>
         </button>
       </div>
