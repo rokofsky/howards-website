@@ -403,35 +403,49 @@ export default function StorySandbox() {
     const key = `${sheetKey}:${id}:${box}`;
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
     const disabled = id === undefined || id === null || id === "";
+
+    // 🕵️‍♂️ THE REACTIVE FIX: Parse localStorage every time this specific sub-component renders
+    let votes: Record<string, "up" | "down"> = {};
+    try {
+      // By checking this inline during render, React catches the changes made by handleVote
+      votes = JSON.parse(localStorage.getItem("userVotes") ?? "{}");
+    } catch {
+      votes = {};
+    }
+    const currentVote = votes[key]; // Evaluates to "up", "down", or undefined
+
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
+        {/* --- UP VOTE BUTTON --- */}
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "up")}
           className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
-            counts.up > 0 ? "text-green-600 font-bold" : "hover:text-foreground"
+            currentVote === "up" ? "text-green-600 font-bold scale-105" : "hover:text-foreground hover:scale-105"
           }`}
           aria-label="Thumbs up"
         >
-          <ThumbsUp className={`h-3.5 w-3.5 ${counts.up > 0 ? "fill-green-600" : ""}`} />
+          <ThumbsUp className={`h-3.5 w-3.5 ${currentVote === "up" ? "fill-green-600" : ""}`} />
           <span>{counts.up}</span>
         </button>
+
+        {/* --- DOWN VOTE BUTTON --- */}
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "down")}
           className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
-            counts.down > 0 ? "text-red-600 font-bold" : "hover:text-foreground"
+            currentVote === "down" ? "text-red-600 font-bold scale-105" : "hover:text-foreground hover:scale-105"
           }`}
           aria-label="Thumbs down"
         >
-          <ThumbsDown className={`h-3.5 w-3.5 ${counts.down > 0 ? "fill-red-600" : ""}`} />
+          <ThumbsDown className={`h-3.5 w-3.5 ${currentVote === "down" ? "fill-red-600" : ""}`} />
           <span>{counts.down}</span>
         </button>
       </div>
-    );
-  };
+    ); // Closes return
+  }; // Closes VoteThumbs component
 
   const current = STRUCTURES[structure];
   const sections = useMemo(() => current.sections, [current]);
