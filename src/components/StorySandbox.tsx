@@ -343,7 +343,7 @@ export default function StorySandbox() {
     setOneLinerAnimKey((k) => k + 1);
   };
 
-// --- Voting (each sheet posts to its own endpoint) ---
+  // --- Voting (each sheet posts to its own endpoint) ---
   const handleVote = (
     sheetKey: SheetKey,
     id: string | number | undefined,
@@ -351,26 +351,10 @@ export default function StorySandbox() {
     vote: "up" | "down",
   ) => {
     if (id === undefined || id === null || id === "") return;
-
-    // 1. Create the exact same unique key used by your state engine
-    const storageKey = `voted:${sheetKey}:${id}:${elementBox}`;
-
-    // 2. Check if this key exists in the browser's localStorage
-    if (localStorage.getItem(storageKey)) {
-      alert("You have already voted on this item!");
-      return; // Stop the code right here so no vote increments
-    }
-
-    // 3. If they haven't voted, track it in state (your existing logic)
     const key = `${sheetKey}:${id}:${elementBox}`;
     setVoteCounts((prev) => {
       const cur = prev[key] ?? { up: 0, down: 0 };
       return { ...prev, [key]: { ...cur, [vote]: cur[vote] + 1 } };
-    });
-
-    // 4. Lock it down in localStorage so they can't do it again
-    localStorage.setItem(storageKey, vote); // Saves "up" or "down"
-  };
     });
     // Fire-and-forget; don't block UI
     fetch(ENDPOINT_FOR[sheetKey], {
