@@ -7,6 +7,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+
+const readUserVotes = (): Record<string, "up" | "down"> => {
+  try {
+    const raw = localStorage.getItem("userVotes");
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+};
 
 const SANDBOX_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbxW9PeACm4LoKxSOY890qmC6py8EU0F64KbwYFCTHc0OL-ZsW7eLdpsprUBIU3Tzcfi/exec";
@@ -17,11 +29,6 @@ const SHEET3_SCRIPT_URL =
 
 const SUPABASE_PROXY = "https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/sheets-proxy";
 
-const ENDPOINT_FOR: Record<SheetKey, string> = {
-  sandbox: SANDBOX_SCRIPT_URL,
-  oneLiners: ONELINERS_SCRIPT_URL,
-  sheet3: SHEET3_SCRIPT_URL,
-};
 
 const extractArray = (data: unknown, keys: string[]): unknown[] => {
   if (Array.isArray(data)) return data;
@@ -50,6 +57,11 @@ const extractArray = (data: unknown, keys: string[]): unknown[] => {
    ============================================================ */
 const FALLBACK_SEEDS = {
   character: [
+    "A retired astronaut",
+    "A small-town librarian",
+    "A street magician",
+    "A burned-out chef",
+    "A lighthouse keeper",
     "A teenage chess prodigy",
     "An undercover food critic",
     "A jaded wedding photographer",
@@ -130,14 +142,13 @@ type Prompts = Record<Category, string> & { custom: string };
 const CATEGORY_META: { key: Category | "custom"; label: string; tone: string; box: ElementBox }[] = [
   { key: "character", label: "Character", tone: "from-petrol/20 to-petrol/5 border-petrol/30", box: "character" },
   { key: "incident", label: "Incident", tone: "from-gold/25 to-gold/5 border-gold/40", box: "incident" },
-  { key: "constraint", label: "By the way", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
-// Hiding the Custom box 
-  /*  {
+  { key: "constraint", label: "Constraint", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
+  {
     key: "custom",
     label: "Custom",
     tone: "from-muted to-background border-dashed border-muted-foreground/40",
     box: "untitled",
-  },*/
+  },
 ];
 
 type SheetKey = "sandbox" | "oneLiners" | "sheet3";
@@ -214,8 +225,7 @@ export default function StorySandbox() {
   const [scratch, setScratch] = useState<Record<string, string>>({});
 
   // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
-  const [voteCounts, set// line 221 - initialize from Supabase on load
-const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});] = useState<Record<string, { up: number; down: number }>>({});
+  const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
 
   // Hydrate persisted UI state
   useEffect(() => {
@@ -271,7 +281,7 @@ const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: 
       (rows) => {
         setAllSandboxPrompts(rows);
         if (rows && rows.length > 0) {
-          const first = rows[0];
+          const first = rows[Math.floor(Math.random() * rows.length)];
           setSandboxRow(first);
           setPrompts((p) => ({
             ...p,
@@ -315,6 +325,34 @@ const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: 
     };
   }, []);
 
+  // Seed voteCounts from Supabase 'votes' table so global tallies are visible
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase
+        .from("votes")
+        .select("sheet_key,row_id,element_box,up_count,down_count");
+      if (cancelled || error || !data) return;
+      const seeded: Record<string, { up: number; down: number }> = {};
+      for (const r of data as Array<{
+        sheet_key: string;
+        row_id: string;
+        element_box: string;
+        up_count: number;
+        down_count: number;
+      }>) {
+        seeded[`${r.sheet_key}:${r.row_id}:${r.element_box}`] = {
+          up: r.up_count ?? 0,
+          down: r.down_count ?? 0,
+        };
+      }
+      setVoteCounts((prev) => ({ ...seeded, ...prev }));
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   // Persist UI state
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ prompts, structure, scratch }));
@@ -341,7 +379,7 @@ const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: 
     setOneLinerAnimKey((k) => k + 1);
   };
 
-  // --- Voting (each sheet posts to its own endpoint) ---
+  // --- Voting: instant local state update, then async Supabase upsert ---
   const handleVote = (
     sheetKey: SheetKey,
     id: string | number | undefined,
@@ -351,41 +389,42 @@ const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: 
     if (id === undefined || id === null || id === "") return;
 
     const storeKey = `${sheetKey}:${id}:${elementBox}`;
+    const votes = readUserVotes();
+    const current = votes[storeKey];
 
-    let votes: Record<string, "up" | "down"> = {};
-    try {
-      votes = JSON.parse(localStorage.getItem("userVotes") ?? "{}");
-    } catch {
-      votes = {};
-    }
-
-    const current = votes[storeKey]; // "up" | "down" | undefined
-
+    // 1) SYNCHRONOUS state update first — never blocked by network
+    let nextCounts = { up: 0, down: 0 };
     setVoteCounts((prev) => {
       const cur = prev[storeKey] ?? { up: 0, down: 0 };
       const next = { ...cur };
-
-      if (current) next[current] = Math.max(0, next[current] - 1); // remove old vote
-      if (current !== vote) next[vote] = next[vote] + 1; // add new vote (unless nullifying)
-
+      if (current) next[current] = Math.max(0, next[current] - 1);
+      if (current !== vote) next[vote] = next[vote] + 1;
+      nextCounts = next;
       return { ...prev, [storeKey]: next };
     });
 
-    // Update localStorage
-    if (current === vote) {
-      delete votes[storeKey]; // nullify
-    } else {
-      votes[storeKey] = vote; // set or switch
-    }
+    // 2) localStorage immediately after
+    if (current === vote) delete votes[storeKey];
+    else votes[storeKey] = vote;
     localStorage.setItem("userVotes", JSON.stringify(votes));
 
-    fetch(ENDPOINT_FOR[sheetKey], {
-      method: "POST",
-      mode: "no-cors",
-      redirect: "follow",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ sheetKey, id, vote, elementBox, previous: current ?? null }),
-    }).catch((err) => console.warn("[StorySandbox] vote post failed", err));
+    // 3) Async Supabase upsert (fire-and-forget) — never blocks UI
+    void supabase
+      .from("votes")
+      .upsert(
+        {
+          sheet_key: sheetKey,
+          row_id: String(id),
+          element_box: elementBox,
+          up_count: nextCounts.up,
+          down_count: nextCounts.down,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "sheet_key,row_id,element_box" },
+      )
+      .then(({ error }) => {
+        if (error) console.warn("[StorySandbox] vote upsert failed", error);
+      });
   };
 
   const VoteThumbs = ({
@@ -400,26 +439,34 @@ const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: 
     const key = `${sheetKey}:${id}:${box}`;
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
     const disabled = id === undefined || id === null || id === "";
+    const userVotes = readUserVotes();
+    const userVote = userVotes[key];
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "up")}
-          className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
+          className={cn(
+            "inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40",
+            userVote === "up" && "text-green-600 font-bold",
+          )}
           aria-label="Thumbs up"
         >
-          <ThumbsUp className="h-3.5 w-3.5" />
+          <ThumbsUp className={cn("h-3.5 w-3.5", userVote === "up" && "fill-green-600")} />
           <span>{counts.up}</span>
         </button>
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "down")}
-          className="inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40"
+          className={cn(
+            "inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40",
+            userVote === "down" && "text-red-600 font-bold",
+          )}
           aria-label="Thumbs down"
         >
-          <ThumbsDown className="h-3.5 w-3.5" />
+          <ThumbsDown className={cn("h-3.5 w-3.5", userVote === "down" && "fill-red-600")} />
           <span>{counts.down}</span>
         </button>
       </div>
