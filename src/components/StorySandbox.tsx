@@ -244,10 +244,10 @@ export default function StorySandbox() {
       done: () => void,
     ) => {
       try {
-        const res = await fetch(SCRIPT_URL, {
+        const CORS_PROXY = "https://corsproxy.io/?";
+
+        const res = await fetch(CORS_PROXY + encodeURIComponent(SCRIPT_URL), {
           method: "GET",
-          redirect: "follow",
-          // remove mode: "cors" entirely
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const rawData = await res.json();
