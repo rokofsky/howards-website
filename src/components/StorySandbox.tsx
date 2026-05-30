@@ -29,7 +29,6 @@ const SHEET3_SCRIPT_URL =
 
 const SUPABASE_PROXY = "https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/sheets-proxy";
 
-
 const extractArray = (data: unknown, keys: string[]): unknown[] => {
   if (Array.isArray(data)) return data;
   if (data && typeof data === "object") {
@@ -142,7 +141,7 @@ type Prompts = Record<Category, string> & { custom: string };
 const CATEGORY_META: { key: Category | "custom"; label: string; tone: string; box: ElementBox }[] = [
   { key: "character", label: "Character", tone: "from-petrol/20 to-petrol/5 border-petrol/30", box: "character" },
   { key: "incident", label: "Incident", tone: "from-gold/25 to-gold/5 border-gold/40", box: "incident" },
-  { key: "constraint", label: "Constraint", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
+  { key: "constraint", label: "By the way", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
   {
     key: "custom",
     label: "Custom",
@@ -329,9 +328,7 @@ export default function StorySandbox() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const { data, error } = await supabase
-        .from("votes")
-        .select("sheet_key,row_id,element_box,up_count,down_count");
+      const { data, error } = await supabase.from("votes").select("sheet_key,row_id,element_box,up_count,down_count");
       if (cancelled || error || !data) return;
       const seeded: Record<string, { up: number; down: number }> = {};
       for (const r of data as Array<{
