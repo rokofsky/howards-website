@@ -286,7 +286,7 @@ export default function StorySandbox() {
       (rows) => {
         setAllSandboxPrompts(rows);
         if (rows && rows.length > 0) {
-          const first = rows[0];
+          const first = rows[Math.floor(Math.random() * rows.length)];
           setSandboxRow(first);
           setPrompts((p) => ({
             ...p,
@@ -325,6 +325,34 @@ export default function StorySandbox() {
       () => setSheet3Loading(false),
     );
 
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Seed voteCounts from Supabase 'votes' table so global tallies are visible
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase
+        .from("votes")
+        .select("sheet_key,row_id,element_box,up_count,down_count");
+      if (cancelled || error || !data) return;
+      const seeded: Record<string, { up: number; down: number }> = {};
+      for (const r of data as Array<{
+        sheet_key: string;
+        row_id: string;
+        element_box: string;
+        up_count: number;
+        down_count: number;
+      }>) {
+        seeded[`${r.sheet_key}:${r.row_id}:${r.element_box}`] = {
+          up: r.up_count ?? 0,
+          down: r.down_count ?? 0,
+        };
+      }
+      setVoteCounts((prev) => ({ ...seeded, ...prev }));
+    })();
     return () => {
       cancelled = true;
     };
