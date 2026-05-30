@@ -9,11 +9,11 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
 const SANDBOX_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbyW6yf7qxCX75Ev7gUrsDr2C9p1b2_LBqsrVyePNdafPzU7qVl4cf4E_crI559dYfhw/exec";
+  "https://script.google.com/macros/s/AKfycbyL5f9y1a17rs3F75lqaiBHA5a2rJ8I7CK0Kp-wfiwOfGmDCInHNPrcJ-ONDbl1_45I/exec";
 const ONELINERS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbzHV874kpUYmkxBoDIlDfCrhv7mp4IdKsQNJztKpbrjInz-OvemrP-X0JuMZWOPLzw/exec";
+  "https://script.google.com/macros/s/AKfycbzb8GefrOBO0_TSua0qS36OMkYXat6NmpoMCsXxh_XoAw3AkJmSfTw2Cgo_sRH2_5A/exec";
 const SHEET3_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbz4rTUVZfdignJBwGXRaWFqSqhYuWKFS2qEk0dLyaJfxGlGA4N6n_AT8lsDR2_mX_o/exec";
+  "https://script.google.com/macros/s/AKfycbyP2FNt0bj5329oofwGeTA8W1A5ui2EvzhFEeh1eVvejAugUEgR2rsnF6kwLChlbEc/exec";
 
 const ENDPOINT_FOR: Record<SheetKey, string> = {
   sandbox: SANDBOX_SCRIPT_URL,
