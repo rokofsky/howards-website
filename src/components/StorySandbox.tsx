@@ -344,18 +344,31 @@ export default function StorySandbox() {
   };
 
   // --- Voting (each sheet posts to its own endpoint) ---
-  const handleVote = (
-    sheetKey: SheetKey,
-    id: string | number | undefined,
-    elementBox: ElementBox,
-    vote: "up" | "down",
-  ) => {
-    if (id === undefined || id === null || id === "") return;
-    const key = `${sheetKey}:${id}:${elementBox}`;
-    setVoteCounts((prev) => {
-      const cur = prev[key] ?? { up: 0, down: 0 };
-      return { ...prev, [key]: { ...cur, [vote]: cur[vote] + 1 } };
-    });
+const handleVote = (
+  sheetKey: SheetKey,
+  id: string | number | undefined,
+  elementBox: ElementBox,
+  vote: "up" | "down",
+) => {
+  if (id === undefined || id === null || id === "") return;
+
+  const storeKey = `${sheetKey}:${id}:${elementBox}`;   // for vote counts
+  const dedupKey = `${storeKey}:${vote}`;               // for dedup
+
+  try {
+    const voted = new Set(JSON.parse(localStorage.getItem("votedKeys") ?? "[]"));
+    if (voted.has(dedupKey)) return;
+    voted.add(dedupKey);
+    localStorage.setItem("votedKeys", JSON.stringify([...voted]));
+  } catch {
+    return; // if localStorage is blocked, fail silently
+  }
+
+  setVoteCounts((prev) => {
+    const cur = prev[storeKey] ?? { up: 0, down: 0 };
+    return { ...prev, [storeKey]: { ...cur, [vote]: cur[vote] + 1 } };
+  });
+};
     // Fire-and-forget; don't block UI
     fetch(ENDPOINT_FOR[sheetKey], {
       method: "POST",
