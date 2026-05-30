@@ -345,7 +345,6 @@ export default function StorySandbox() {
   };
 
   // --- Voting (each sheet posts to its own endpoint) ---
-  // --- Voting (each sheet posts to its own endpoint) ---
   const handleVote = (
     sheetKey: SheetKey,
     id: string | number | undefined,
@@ -405,11 +404,15 @@ export default function StorySandbox() {
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
     const disabled = id === undefined || id === null || id === "";
 
-    // 🕵️‍♂️ SAFELY DERIVE THE VOTED STATE PURELY FROM THE DYNAMIC STATE COUNTS
-    // Instead of parsing disk storage inline, we check if the active item context contains an increment.
-    // This allows it to switch, turn off to 0, and cleanly bypass any local disk lag.
-    const isUpvoted = counts.up > 0;
-    const isDownvoted = counts.down > 0;
+    // 🕵️‍♂️ THE REACTIVE FIX: Parse localStorage every time this specific sub-component renders
+    let votes: Record<string, "up" | "down"> = {};
+    try {
+      // By checking this inline during render, React catches the changes made by handleVote
+      votes = JSON.parse(localStorage.getItem("userVotes") ?? "{}");
+    } catch {
+      votes = {};
+    }
+    const currentVote = votes[key]; // Evaluates to "up", "down", or undefined
 
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
@@ -419,11 +422,11 @@ export default function StorySandbox() {
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "up")}
           className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
-            isUpvoted ? "text-green-600 font-bold" : "hover:text-foreground"
+            currentVote === "up" ? "text-green-600 font-bold scale-105" : "hover:text-foreground hover:scale-105"
           }`}
           aria-label="Thumbs up"
         >
-          <ThumbsUp className={`h-3.5 w-3.5 ${isUpvoted ? "fill-green-600" : ""}`} />
+          <ThumbsUp className={`h-3.5 w-3.5 ${currentVote === "up" ? "fill-green-600" : ""}`} />
           <span>{counts.up}</span>
         </button>
 
@@ -433,16 +436,16 @@ export default function StorySandbox() {
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "down")}
           className={`inline-flex items-center gap-0.5 transition-colors disabled:opacity-40 ${
-            isDownvoted ? "text-red-600 font-bold" : "hover:text-foreground"
+            currentVote === "down" ? "text-red-600 font-bold scale-105" : "hover:text-foreground hover:scale-105"
           }`}
           aria-label="Thumbs down"
         >
-          <ThumbsDown className={`h-3.5 w-3.5 ${isDownvoted ? "fill-red-600" : ""}`} />
+          <ThumbsDown className={`h-3.5 w-3.5 ${currentVote === "down" ? "fill-red-600" : ""}`} />
           <span>{counts.down}</span>
         </button>
       </div>
-    );
-  };
+    ); // Closes return
+  }; // Closes VoteThumbs component
 
   const current = STRUCTURES[structure];
   const sections = useMemo(() => current.sections, [current]);
