@@ -132,28 +132,6 @@ const StorytellingWorkshops = () => {
               )}
             </div>
 
-            {/* Story Sandbox CTA */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-              className="glass rounded-lg border border-border/50 p-6 md:p-8 mb-10"
-            >
-              <h2 className="text-xl md:text-2xl font-semibold mb-3">
-                {t("Interactive Story Sandbox", "Interaktivní Story Sandbox")}
-              </h2>
-              <p className="text-muted-foreground mb-5 max-w-2xl leading-relaxed font-normal">
-                {t(
-                  "Use the Story Sandbox to instantly generate creative characters, unexpected incidents, and obstacles for your story outline.",
-                  "Použijte Story Sandbox a okamžitě generujte kreativní postavy, nečekané události a překážky pro váš příběhový nástřel."
-                )}
-              </p>
-              <Button variant="cta" asChild>
-                <Link to={lp("/story-sandbox")}>
-                  {t("Open Story Sandbox", "Otevřít Story Sandbox")}
-                </Link>
-              </Button>
-            </motion.div>
 
             {loading ? (
               <p className="text-muted-foreground font-light">{t("Loading sessions...", "Načítám termíny…")}</p>
