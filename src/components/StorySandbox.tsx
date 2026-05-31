@@ -355,12 +355,27 @@ export default function StorySandbox() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ prompts, structure, scratch }));
   }, [prompts, structure, scratch]);
 
+  // --- Robust case-insensitive field lookup (handles "Character", "character ", "CHARACTER", etc.) ---
+  const getFieldValue = (row: Record<string, unknown> | null | undefined, cat: Category): string => {
+    if (!row) return "Loading character prompt...";
+    const direct = (row as Record<string, unknown>)[cat] ?? (row as Record<string, unknown>)[cat.charAt(0).toUpperCase() + cat.slice(1)];
+    if (typeof direct === "string" && direct.trim()) return direct.trim();
+    const matchKey = Object.keys(row).find((k) => k.toLowerCase().includes(cat));
+    if (matchKey) {
+      const v = (row as Record<string, unknown>)[matchKey];
+      if (typeof v === "string" && v.trim()) return v.trim();
+    }
+    console.error("Available row keys:", Object.keys(row));
+    return cat === "character" ? "Loading character prompt..." : "";
+  };
+
   // --- Independent shuffle handlers ---
   const shuffleCard = (cat: Category) => {
     const row = pickRandom(allSandboxPrompts);
     if (!row) return;
     setCardRows((prev) => ({ ...prev, [cat]: row }));
-    setPrompts((p) => ({ ...p, [cat]: (row[cat] as string | undefined) ?? p[cat] }));
+    const text = getFieldValue(row as unknown as Record<string, unknown>, cat);
+    setPrompts((p) => ({ ...p, [cat]: text || p[cat] }));
     setAnimKeys((prev) => ({ ...prev, [cat]: prev[cat] + 1 }));
   };
 
