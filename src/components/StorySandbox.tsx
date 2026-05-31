@@ -324,27 +324,40 @@ export default function StorySandbox() {
     };
   }, []);
 
+ Please replace the `useEffect` block that seeds the voteCounts from Supabase (lines 327-351) with this optimized, debugged version:
+
+```typescript
   // Seed voteCounts from Supabase 'votes' table so global tallies are visible
   useEffect(() => {
     let cancelled = false;
+    
     (async () => {
-      const { data, error } = await supabase.from("votes").select("sheet_key,row_id,element_box,up_count,down_count");
-      if (cancelled || error || !data) return;
+      console.log("Fetching vote data from Supabase...");
+      const { data, error } = await supabase
+        .from("votes")
+        .select("sheet_key,row_id,element_box,up_count,down_count");
+        
+      if (error) {
+        console.error("Error loading votes from Supabase:", error.message);
+        return;
+      }
+      
+      if (cancelled || !data) return;
+      
+      console.log(`Successfully fetched ${data.length} vote records from database:`, data);
+      
       const seeded: Record<string, { up: number; down: number }> = {};
-      for (const r of data as Array<{
-        sheet_key: string;
-        row_id: string;
-        element_box: string;
-        up_count: number;
-        down_count: number;
-      }>) {
+      for (const r of data) {
         seeded[`${r.sheet_key}:${r.row_id}:${r.element_box}`] = {
-          up: r.up_count ?? 0,
-          down: r.down_count ?? 0,
+          up: Number(r.up_count ?? 0),
+          down: Number(r.down_count ?? 0),
         };
       }
-      setVoteCounts((prev) => ({ ...seeded, ...prev }));
+      
+      // FIX: Spread seeded LAST so the database data overwrites uninitialized local UI values
+      setVoteCounts((prev) => ({ ...prev, ...seeded }));
     })();
+    
     return () => {
       cancelled = true;
     };
