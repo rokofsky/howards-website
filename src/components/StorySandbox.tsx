@@ -568,20 +568,10 @@ export default function StorySandbox() {
                       <button
                         type="button"
                         onClick={() => shuffleCard(key)}
-                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        className="text-foreground hover:opacity-70 transition-opacity"
                         aria-label={`Shuffle ${label}`}
                       >
-                        <Shuffle className="h-3.5 w-3.5" />
-                      </button>
-                    )}
-                    {!isEditing && !isConstraint && (
-                      <button
-                        type="button"
-                        onClick={() => setEditing(key)}
-                        className="text-muted-foreground hover:text-foreground transition-colors"
-                        aria-label={`Edit ${label}`}
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
+                        <Shuffle className="h-5 w-5" strokeWidth={2.5} />
                       </button>
                     )}
                   </div>
