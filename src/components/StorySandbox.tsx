@@ -136,18 +136,12 @@ type StructureKey = keyof typeof STRUCTURES;
 const STORAGE_KEY = "story-sandbox:v1";
 
 type Category = "character" | "incident" | "constraint";
-type Prompts = Record<Category, string> & { custom: string };
+type Prompts = Record<Category, string>;
 
-const CATEGORY_META: { key: Category | "custom"; label: string; tone: string; box: ElementBox }[] = [
+const CATEGORY_META: { key: Category; label: string; tone: string; box: ElementBox }[] = [
   { key: "character", label: "Character", tone: "from-petrol/20 to-petrol/5 border-petrol/30", box: "character" },
   { key: "incident", label: "By the way", tone: "from-gold/25 to-gold/5 border-gold/40", box: "incident" },
   { key: "constraint", label: "Add here", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
-  {
-    key: "custom",
-    label: "Custom",
-    tone: "from-muted to-background border-dashed border-muted-foreground/40",
-    box: "untitled",
-  },
 ];
 
 type SheetKey = "sandbox" | "oneLiners" | "sheet3";
