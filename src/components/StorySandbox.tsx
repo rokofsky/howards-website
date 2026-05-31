@@ -278,15 +278,19 @@ export default function StorySandbox() {
       (rows) => {
         setAllSandboxPrompts(rows);
         if (rows && rows.length > 0) {
+          console.log("Raw character row sample:", rows[0]);
           const pick = () => rows[Math.floor(Math.random() * rows.length)];
           const c = pick();
           const i = pick();
           const k = pick();
           setCardRows({ character: c, incident: i, constraint: k });
+          const cText = getFieldValue(c as unknown as Record<string, unknown>, "character");
+          const iText = getFieldValue(i as unknown as Record<string, unknown>, "incident");
+          const kText = getFieldValue(k as unknown as Record<string, unknown>, "constraint");
           setPrompts((p) => ({
-            character: c.character ?? p.character,
-            incident: i.incident ?? p.incident,
-            constraint: k.constraint ?? p.constraint,
+            character: cText || p.character,
+            incident: iText || p.incident,
+            constraint: kText || p.constraint,
           }));
         }
       },
