@@ -431,7 +431,9 @@ export default function StorySandbox() {
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
     const disabled = id === undefined || id === null || id === "";
     const userVotes = readUserVotes();
-    const userVote = userVotes[key];
+    const userVote: "up" | "down" | null = Object.prototype.hasOwnProperty.call(userVotes, key)
+      ? userVotes[key] ?? null
+      : null;
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
         <button
