@@ -355,17 +355,12 @@ export default function StorySandbox() {
   }, [prompts, structure, scratch]);
 
   // --- Independent shuffle handlers ---
-  const shuffle = () => {
+  const shuffleCard = (cat: Category) => {
     const row = pickRandom(allSandboxPrompts);
     if (!row) return;
-    setSandboxRow(row);
-    setPrompts((p) => ({
-      character: row.character ?? p.character,
-      incident: row.incident ?? p.incident,
-      constraint: row.constraint ?? p.constraint,
-      custom: p.custom,
-    }));
-    setAnimKey((k) => k + 1);
+    setCardRows((prev) => ({ ...prev, [cat]: row }));
+    setPrompts((p) => ({ ...p, [cat]: (row[cat] as string | undefined) ?? p[cat] }));
+    setAnimKeys((prev) => ({ ...prev, [cat]: prev[cat] + 1 }));
   };
 
   const shuffleOneLiner = () => {
