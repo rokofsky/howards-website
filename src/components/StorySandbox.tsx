@@ -434,11 +434,9 @@ export default function StorySandbox() {
     const hasAnyVotes = total > 0;
     const disabled = id === undefined || id === null || id === "";
     const userVotes = readUserVotes();
-    const rawUserVote: "up" | "down" | null = Object.prototype.hasOwnProperty.call(userVotes, key)
-      ? userVotes[key] ?? null
-      : null;
-    // Strict rule: no green/red styling unless there are actual votes recorded
-    const userVote = hasAnyVotes ? rawUserVote : null;
+    const stored = Object.prototype.hasOwnProperty.call(userVotes, key) ? userVotes[key] : null;
+    const userVote: "up" | "down" | null =
+      stored === "up" || stored === "down" ? stored : null;
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
         <TooltipProvider delayDuration={150}>
