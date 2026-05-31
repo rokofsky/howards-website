@@ -512,40 +512,58 @@ export default function StorySandbox() {
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold">Prompts</h3>
-          <Button variant="glass" size="sm" onClick={shuffle} disabled={sandboxLoading && !allSandboxPrompts.length}>
-            <Shuffle className="h-4 w-4" />
-            Shuffle
-          </Button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           {CATEGORY_META.map(({ key, label, tone, box }) => {
             const value = prompts[key];
-            const isCustomSlot = key === "custom";
             const isEditing = editing === key;
+            const isConstraint = key === "constraint";
+            const showShuffle = key === "character" || key === "incident";
             return (
               <Card
-                key={`${key}-${animKey}`}
+                key={`${key}-${animKeys[key]}`}
                 className={cn(
-                  "relative p-4 min-h-[140px] flex flex-col justify-between bg-gradient-to-br animate-fade-in-up border",
+                  "relative p-4 min-h-[140px] h-full flex flex-col justify-between bg-gradient-to-br animate-fade-in-up border",
                   tone,
                 )}
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">{label}</span>
-                  {!isEditing && !isCustomSlot && (
-                    <button
-                      type="button"
-                      onClick={() => setEditing(key)}
-                      className="text-muted-foreground hover:text-foreground transition-colors"
-                      aria-label={`Edit ${label}`}
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                    </button>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {showShuffle && (
+                      <button
+                        type="button"
+                        onClick={() => shuffleCard(key)}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label={`Shuffle ${label}`}
+                      >
+                        <Shuffle className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                    {!isEditing && !isConstraint && (
+                      <button
+                        type="button"
+                        onClick={() => setEditing(key)}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label={`Edit ${label}`}
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                  </div>
                 </div>
 
-                {isEditing ? (
+                {isConstraint ? (
+                  <textarea
+                    value={scratch["sandbox:constraint"] ?? ""}
+                    onChange={(e) =>
+                      setScratch((prev) => ({ ...prev, "sandbox:constraint": e.target.value }))
+                    }
+                    placeholder="Type your idea here…"
+                    className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full flex-1 text-base font-medium leading-snug"
+                  />
+                ) : isEditing ? (
                   <div className="space-y-2">
                     <Input
                       autoFocus
@@ -558,41 +576,21 @@ export default function StorySandbox() {
                       placeholder={`Your own ${label.toLowerCase()}…`}
                     />
                   </div>
-                ) : isCustomSlot ? (
-                  value ? (
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="text-base font-medium">{value}</p>
-                      <button
-                        type="button"
-                        onClick={() => setPrompts((p) => ({ ...p, custom: "" }))}
-                        className="text-muted-foreground hover:text-foreground"
-                        aria-label="Clear custom"
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setEditing("custom")}
-                      className="flex-1 flex flex-col items-center justify-center text-muted-foreground hover:text-foreground transition-colors gap-1"
-                    >
-                      <Plus className="h-5 w-5" />
-                      <span className="text-sm">Add your own</span>
-                    </button>
-                  )
                 ) : (
                   <p className="text-base font-medium leading-snug">{value}</p>
                 )}
 
-                <div className="mt-3 flex justify-end">
-                  <VoteThumbs sheetKey="sandbox" id={sandboxRow?.id} box={box} />
-                </div>
+                {!isConstraint && (
+                  <div className="mt-3 flex justify-end">
+                    <VoteThumbs sheetKey="sandbox" id={cardRows[key]?.id} box={box} />
+                  </div>
+                )}
               </Card>
             );
           })}
         </div>
       </section>
+
 
       {/* One-liner Prompt Generator (Sheet2) */}
       <section className="space-y-4">
