@@ -201,17 +201,20 @@ export default function StorySandbox() {
 
   // --- Independent active rows / cycle keys ---
   const initialSandbox = useMemo(() => buildFallbackSandbox(), []);
-  const [sandboxRow, setSandboxRow] = useState<SandboxRow | null>(initialSandbox[0] ?? null);
+  const [cardRows, setCardRows] = useState<Record<Category, SandboxRow | null>>({
+    character: initialSandbox[0] ?? null,
+    incident: initialSandbox[0] ?? null,
+    constraint: initialSandbox[0] ?? null,
+  });
   const [oneLinerRow, setOneLinerRow] = useState<PromptRow | null>(null);
 
   const [prompts, setPrompts] = useState<Prompts>(() => ({
     character: initialSandbox[0]?.character ?? "",
     incident: initialSandbox[0]?.incident ?? "",
     constraint: initialSandbox[0]?.constraint ?? "",
-    custom: "",
   }));
-  const [editing, setEditing] = useState<Category | "custom" | null>(null);
-  const [animKey, setAnimKey] = useState(0);
+  const [editing, setEditing] = useState<Category | null>(null);
+  const [animKeys, setAnimKeys] = useState<Record<Category, number>>({ character: 0, incident: 0, constraint: 0 });
   const [oneLinerAnimKey, setOneLinerAnimKey] = useState(0);
 
   const [structure, setStructure] = useState<StructureKey>("3-act");
