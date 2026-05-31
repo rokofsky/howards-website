@@ -136,18 +136,12 @@ type StructureKey = keyof typeof STRUCTURES;
 const STORAGE_KEY = "story-sandbox:v1";
 
 type Category = "character" | "incident" | "constraint";
-type Prompts = Record<Category, string> & { custom: string };
+type Prompts = Record<Category, string>;
 
-const CATEGORY_META: { key: Category | "custom"; label: string; tone: string; box: ElementBox }[] = [
+const CATEGORY_META: { key: Category; label: string; tone: string; box: ElementBox }[] = [
   { key: "character", label: "Character", tone: "from-petrol/20 to-petrol/5 border-petrol/30", box: "character" },
   { key: "incident", label: "By the way", tone: "from-gold/25 to-gold/5 border-gold/40", box: "incident" },
   { key: "constraint", label: "Add here", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
-  {
-    key: "custom",
-    label: "Custom",
-    tone: "from-muted to-background border-dashed border-muted-foreground/40",
-    box: "untitled",
-  },
 ];
 
 type SheetKey = "sandbox" | "oneLiners" | "sheet3";
@@ -207,17 +201,20 @@ export default function StorySandbox() {
 
   // --- Independent active rows / cycle keys ---
   const initialSandbox = useMemo(() => buildFallbackSandbox(), []);
-  const [sandboxRow, setSandboxRow] = useState<SandboxRow | null>(initialSandbox[0] ?? null);
+  const [cardRows, setCardRows] = useState<Record<Category, SandboxRow | null>>({
+    character: initialSandbox[0] ?? null,
+    incident: initialSandbox[0] ?? null,
+    constraint: initialSandbox[0] ?? null,
+  });
   const [oneLinerRow, setOneLinerRow] = useState<PromptRow | null>(null);
 
   const [prompts, setPrompts] = useState<Prompts>(() => ({
     character: initialSandbox[0]?.character ?? "",
     incident: initialSandbox[0]?.incident ?? "",
     constraint: initialSandbox[0]?.constraint ?? "",
-    custom: "",
   }));
-  const [editing, setEditing] = useState<Category | "custom" | null>(null);
-  const [animKey, setAnimKey] = useState(0);
+  const [editing, setEditing] = useState<Category | null>(null);
+  const [animKeys, setAnimKeys] = useState<Record<Category, number>>({ character: 0, incident: 0, constraint: 0 });
   const [oneLinerAnimKey, setOneLinerAnimKey] = useState(0);
 
   const [structure, setStructure] = useState<StructureKey>("3-act");
@@ -280,13 +277,15 @@ export default function StorySandbox() {
       (rows) => {
         setAllSandboxPrompts(rows);
         if (rows && rows.length > 0) {
-          const first = rows[Math.floor(Math.random() * rows.length)];
-          setSandboxRow(first);
+          const pick = () => rows[Math.floor(Math.random() * rows.length)];
+          const c = pick();
+          const i = pick();
+          const k = pick();
+          setCardRows({ character: c, incident: i, constraint: k });
           setPrompts((p) => ({
-            ...p,
-            character: first.character ?? p.character,
-            incident: first.incident ?? p.incident,
-            constraint: first.constraint ?? p.constraint,
+            character: c.character ?? p.character,
+            incident: i.incident ?? p.incident,
+            constraint: k.constraint ?? p.constraint,
           }));
         }
       },
@@ -356,17 +355,12 @@ export default function StorySandbox() {
   }, [prompts, structure, scratch]);
 
   // --- Independent shuffle handlers ---
-  const shuffle = () => {
+  const shuffleCard = (cat: Category) => {
     const row = pickRandom(allSandboxPrompts);
     if (!row) return;
-    setSandboxRow(row);
-    setPrompts((p) => ({
-      character: row.character ?? p.character,
-      incident: row.incident ?? p.incident,
-      constraint: row.constraint ?? p.constraint,
-      custom: p.custom,
-    }));
-    setAnimKey((k) => k + 1);
+    setCardRows((prev) => ({ ...prev, [cat]: row }));
+    setPrompts((p) => ({ ...p, [cat]: (row[cat] as string | undefined) ?? p[cat] }));
+    setAnimKeys((prev) => ({ ...prev, [cat]: prev[cat] + 1 }));
   };
 
   const shuffleOneLiner = () => {
@@ -437,7 +431,9 @@ export default function StorySandbox() {
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
     const disabled = id === undefined || id === null || id === "";
     const userVotes = readUserVotes();
-    const userVote = userVotes[key];
+    const userVote: "up" | "down" | null = Object.prototype.hasOwnProperty.call(userVotes, key)
+      ? userVotes[key] ?? null
+      : null;
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
         <button
@@ -491,6 +487,11 @@ export default function StorySandbox() {
     lines.push(notes || "(Empty)");
     lines.push("");
 
+    const additional = (scratch["sandbox:constraint"] ?? "").trim();
+    lines.push("[ADDITIONAL]");
+    lines.push(additional || "(Empty)");
+    lines.push("");
+
     const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -518,40 +519,58 @@ export default function StorySandbox() {
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold">Prompts</h3>
-          <Button variant="glass" size="sm" onClick={shuffle} disabled={sandboxLoading && !allSandboxPrompts.length}>
-            <Shuffle className="h-4 w-4" />
-            Shuffle
-          </Button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           {CATEGORY_META.map(({ key, label, tone, box }) => {
             const value = prompts[key];
-            const isCustomSlot = key === "custom";
             const isEditing = editing === key;
+            const isConstraint = key === "constraint";
+            const showShuffle = key === "character" || key === "incident";
             return (
               <Card
-                key={`${key}-${animKey}`}
+                key={`${key}-${animKeys[key]}`}
                 className={cn(
-                  "relative p-4 min-h-[140px] flex flex-col justify-between bg-gradient-to-br animate-fade-in-up border",
+                  "relative p-4 min-h-[140px] h-full flex flex-col justify-between bg-gradient-to-br animate-fade-in-up border",
                   tone,
                 )}
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">{label}</span>
-                  {!isEditing && !isCustomSlot && (
-                    <button
-                      type="button"
-                      onClick={() => setEditing(key)}
-                      className="text-muted-foreground hover:text-foreground transition-colors"
-                      aria-label={`Edit ${label}`}
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                    </button>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {showShuffle && (
+                      <button
+                        type="button"
+                        onClick={() => shuffleCard(key)}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label={`Shuffle ${label}`}
+                      >
+                        <Shuffle className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                    {!isEditing && !isConstraint && (
+                      <button
+                        type="button"
+                        onClick={() => setEditing(key)}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label={`Edit ${label}`}
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                  </div>
                 </div>
 
-                {isEditing ? (
+                {isConstraint ? (
+                  <textarea
+                    value={scratch["sandbox:constraint"] ?? ""}
+                    onChange={(e) =>
+                      setScratch((prev) => ({ ...prev, "sandbox:constraint": e.target.value }))
+                    }
+                    placeholder="Type your idea here…"
+                    className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full flex-1 text-base font-medium leading-snug"
+                  />
+                ) : isEditing ? (
                   <div className="space-y-2">
                     <Input
                       autoFocus
@@ -564,41 +583,21 @@ export default function StorySandbox() {
                       placeholder={`Your own ${label.toLowerCase()}…`}
                     />
                   </div>
-                ) : isCustomSlot ? (
-                  value ? (
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="text-base font-medium">{value}</p>
-                      <button
-                        type="button"
-                        onClick={() => setPrompts((p) => ({ ...p, custom: "" }))}
-                        className="text-muted-foreground hover:text-foreground"
-                        aria-label="Clear custom"
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setEditing("custom")}
-                      className="flex-1 flex flex-col items-center justify-center text-muted-foreground hover:text-foreground transition-colors gap-1"
-                    >
-                      <Plus className="h-5 w-5" />
-                      <span className="text-sm">Add your own</span>
-                    </button>
-                  )
                 ) : (
                   <p className="text-base font-medium leading-snug">{value}</p>
                 )}
 
-                <div className="mt-3 flex justify-end">
-                  <VoteThumbs sheetKey="sandbox" id={sandboxRow?.id} box={box} />
-                </div>
+                {!isConstraint && (
+                  <div className="mt-3 flex justify-end">
+                    <VoteThumbs sheetKey="sandbox" id={cardRows[key]?.id} box={box} />
+                  </div>
+                )}
               </Card>
             );
           })}
         </div>
       </section>
+
 
       {/* One-liner Prompt Generator (Sheet2) */}
       <section className="space-y-4">
