@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { Shuffle, Plus, X, Pencil, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Shuffle, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -429,20 +430,43 @@ export default function StorySandbox() {
   }) => {
     const key = `${sheetKey}:${id}:${box}`;
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
+    const total = counts.up + counts.down;
+    const hasAnyVotes = total > 0;
     const disabled = id === undefined || id === null || id === "";
     const userVotes = readUserVotes();
-    const userVote: "up" | "down" | null = Object.prototype.hasOwnProperty.call(userVotes, key)
+    const rawUserVote: "up" | "down" | null = Object.prototype.hasOwnProperty.call(userVotes, key)
       ? userVotes[key] ?? null
       : null;
+    // Strict rule: no green/red styling unless there are actual votes recorded
+    const userVote = hasAnyVotes ? rawUserVote : null;
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
+        <TooltipProvider delayDuration={150}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                disabled={disabled}
+                className="inline-flex items-center rounded-full border border-border bg-background/60 px-2.5 py-0.5 text-xs font-medium hover:bg-accent hover:text-accent-foreground transition-colors disabled:opacity-40"
+                aria-label={`${total} votes`}
+              >
+                {total} {total === 1 ? "vote" : "votes"}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <span className="text-xs">
+                {counts.up} Up | {counts.down} Down
+              </span>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <button
           type="button"
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "up")}
           className={cn(
-            "inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40",
-            userVote === "up" && "text-green-600 font-bold",
+            "inline-flex items-center gap-0.5 transition-colors disabled:opacity-40",
+            userVote === "up" ? "text-green-600 font-bold" : "text-muted-foreground hover:text-foreground",
           )}
           aria-label="Thumbs up"
         >
@@ -454,8 +478,8 @@ export default function StorySandbox() {
           disabled={disabled}
           onClick={() => handleVote(sheetKey, id, box, "down")}
           className={cn(
-            "inline-flex items-center gap-0.5 hover:text-foreground transition-colors disabled:opacity-40",
-            userVote === "down" && "text-red-600 font-bold",
+            "inline-flex items-center gap-0.5 transition-colors disabled:opacity-40",
+            userVote === "down" ? "text-red-600 font-bold" : "text-muted-foreground hover:text-foreground",
           )}
           aria-label="Thumbs down"
         >
@@ -544,20 +568,10 @@ export default function StorySandbox() {
                       <button
                         type="button"
                         onClick={() => shuffleCard(key)}
-                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        className="text-foreground hover:opacity-70 transition-opacity"
                         aria-label={`Shuffle ${label}`}
                       >
-                        <Shuffle className="h-3.5 w-3.5" />
-                      </button>
-                    )}
-                    {!isEditing && !isConstraint && (
-                      <button
-                        type="button"
-                        onClick={() => setEditing(key)}
-                        className="text-muted-foreground hover:text-foreground transition-colors"
-                        aria-label={`Edit ${label}`}
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
+                        <Shuffle className="h-5 w-5" strokeWidth={2.5} />
                       </button>
                     )}
                   </div>
