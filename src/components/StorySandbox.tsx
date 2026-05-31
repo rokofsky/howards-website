@@ -278,15 +278,19 @@ export default function StorySandbox() {
       (rows) => {
         setAllSandboxPrompts(rows);
         if (rows && rows.length > 0) {
+          console.log("Raw character row sample:", rows[0]);
           const pick = () => rows[Math.floor(Math.random() * rows.length)];
           const c = pick();
           const i = pick();
           const k = pick();
           setCardRows({ character: c, incident: i, constraint: k });
+          const cText = getFieldValue(c as unknown as Record<string, unknown>, "character");
+          const iText = getFieldValue(i as unknown as Record<string, unknown>, "incident");
+          const kText = getFieldValue(k as unknown as Record<string, unknown>, "constraint");
           setPrompts((p) => ({
-            character: c.character ?? p.character,
-            incident: i.incident ?? p.incident,
-            constraint: k.constraint ?? p.constraint,
+            character: cText || p.character,
+            incident: iText || p.incident,
+            constraint: kText || p.constraint,
           }));
         }
       },
@@ -355,12 +359,27 @@ export default function StorySandbox() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ prompts, structure, scratch }));
   }, [prompts, structure, scratch]);
 
+  // --- Robust case-insensitive field lookup (handles "Character", "character ", "CHARACTER", etc.) ---
+  const getFieldValue = (row: Record<string, unknown> | null | undefined, cat: Category): string => {
+    if (!row) return "Loading character prompt...";
+    const direct = (row as Record<string, unknown>)[cat] ?? (row as Record<string, unknown>)[cat.charAt(0).toUpperCase() + cat.slice(1)];
+    if (typeof direct === "string" && direct.trim()) return direct.trim();
+    const matchKey = Object.keys(row).find((k) => k.toLowerCase().includes(cat));
+    if (matchKey) {
+      const v = (row as Record<string, unknown>)[matchKey];
+      if (typeof v === "string" && v.trim()) return v.trim();
+    }
+    console.error("Available row keys:", Object.keys(row));
+    return cat === "character" ? "Loading character prompt..." : "";
+  };
+
   // --- Independent shuffle handlers ---
   const shuffleCard = (cat: Category) => {
     const row = pickRandom(allSandboxPrompts);
     if (!row) return;
     setCardRows((prev) => ({ ...prev, [cat]: row }));
-    setPrompts((p) => ({ ...p, [cat]: (row[cat] as string | undefined) ?? p[cat] }));
+    const text = getFieldValue(row as unknown as Record<string, unknown>, cat);
+    setPrompts((p) => ({ ...p, [cat]: text || p[cat] }));
     setAnimKeys((prev) => ({ ...prev, [cat]: prev[cat] + 1 }));
   };
 
@@ -464,11 +483,11 @@ export default function StorySandbox() {
           onClick={() => handleVote(sheetKey, id, box, "up")}
           className={cn(
             "inline-flex items-center gap-0.5 transition-colors disabled:opacity-40",
-            userVote === "up" ? "text-green-600 font-bold" : "text-muted-foreground hover:text-foreground",
+            userVote === "up" && counts.up > 0 ? "text-green-600 font-bold" : "text-muted-foreground hover:text-foreground",
           )}
           aria-label="Thumbs up"
         >
-          <ThumbsUp className={cn("h-3.5 w-3.5", userVote === "up" && "fill-green-600")} />
+          <ThumbsUp className={cn("h-3.5 w-3.5", userVote === "up" && counts.up > 0 && "fill-green-600")} />
           <span>{counts.up}</span>
         </button>
         <button
@@ -477,11 +496,11 @@ export default function StorySandbox() {
           onClick={() => handleVote(sheetKey, id, box, "down")}
           className={cn(
             "inline-flex items-center gap-0.5 transition-colors disabled:opacity-40",
-            userVote === "down" ? "text-red-600 font-bold" : "text-muted-foreground hover:text-foreground",
+            userVote === "down" && counts.down > 0 ? "text-red-600 font-bold" : "text-muted-foreground hover:text-foreground",
           )}
           aria-label="Thumbs down"
         >
-          <ThumbsDown className={cn("h-3.5 w-3.5", userVote === "down" && "fill-red-600")} />
+          <ThumbsDown className={cn("h-3.5 w-3.5", userVote === "down" && counts.down > 0 && "fill-red-600")} />
           <span>{counts.down}</span>
         </button>
       </div>
