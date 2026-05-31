@@ -277,13 +277,15 @@ export default function StorySandbox() {
       (rows) => {
         setAllSandboxPrompts(rows);
         if (rows && rows.length > 0) {
-          const first = rows[Math.floor(Math.random() * rows.length)];
-          setSandboxRow(first);
+          const pick = () => rows[Math.floor(Math.random() * rows.length)];
+          const c = pick();
+          const i = pick();
+          const k = pick();
+          setCardRows({ character: c, incident: i, constraint: k });
           setPrompts((p) => ({
-            ...p,
-            character: first.character ?? p.character,
-            incident: first.incident ?? p.incident,
-            constraint: first.constraint ?? p.constraint,
+            character: c.character ?? p.character,
+            incident: i.incident ?? p.incident,
+            constraint: k.constraint ?? p.constraint,
           }));
         }
       },
