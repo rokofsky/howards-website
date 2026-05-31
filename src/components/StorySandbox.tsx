@@ -510,8 +510,10 @@ export default function StorySandbox() {
       {/* Header */}
       <header className="text-center space-y-2">
         <h2 className="text-3xl md:text-4xl font-bold">Story Sandbox</h2>
-        <p className="text-muted-foreground max-w-xl mx-auto">
-          Generate prompts, pick a structure, sketch a micro-story.
+        <p className="text-muted-foreground max-w-xl mx-auto whitespace-pre-line">
+          Generate prompts, pick a structure, sketch a micro-story.{"\n"}
+          You can vote up or down as you go.{"\n"}
+          Save your story stores only on your computer locally. I don't save anything except the anonymous votes.
         </p>
       </header>
 
