@@ -361,7 +361,7 @@ export default function StorySandbox() {
 
   // --- Robust case-insensitive field lookup (handles "Character", "character ", "CHARACTER", etc.) ---
   const getFieldValue = (row: Record<string, unknown> | null | undefined, cat: Category): string => {
-    if (!row) return "Loading character prompt...";
+    if (!row) return "";
     const direct =
       (row as Record<string, unknown>)[cat] ??
       (row as Record<string, unknown>)[cat.charAt(0).toUpperCase() + cat.slice(1)];
@@ -421,18 +421,15 @@ export default function StorySandbox() {
     else votes[storeKey] = vote;
     localStorage.setItem("userVotes", JSON.stringify(votes));
     console.log("Calling increment_vote rpc:", { sheetKey, id, elementBox, vote, current });
-    void (supabase.rpc as any)(
-      "increment_vote",
-      {
-        p_sheet_key: sheetKey,
-        p_row_id: String(id),
-        p_element_box: elementBox,
-        p_vote: current === vote ? `nullify_${vote}` : vote,
-        p_previous: current ?? null,
-      })
-      .then(({ error }) => {
-        if (error) console.warn("[StorySandbox] vote rpc failed", error);
-      });
+    void (supabase.rpc as any)("increment_vote", {
+      p_sheet_key: sheetKey,
+      p_row_id: String(id),
+      p_element_box: elementBox,
+      p_vote: current === vote ? `nullify_${vote}` : vote,
+      p_previous: current ?? null,
+    }).then(({ error }) => {
+      if (error) console.warn("[StorySandbox] vote rpc failed", error);
+    });
   };
 
   const VoteThumbs = ({
