@@ -421,8 +421,9 @@ export default function StorySandbox() {
     else votes[storeKey] = vote;
     localStorage.setItem("userVotes", JSON.stringify(votes));
     console.log("Calling increment_vote rpc:", { sheetKey, id, elementBox, vote, current });
-    void supabase
-      .rpc("increment_vote", {
+    void (supabase.rpc as any)(
+      "increment_vote",
+      {
         p_sheet_key: sheetKey,
         p_row_id: String(id),
         p_element_box: elementBox,
@@ -613,11 +614,16 @@ export default function StorySandbox() {
                       placeholder={`Your own ${label.toLowerCase()}…`}
                     />
                   </div>
+                ) : sandboxLoading ? (
+                  <div className="space-y-2 flex-1">
+                    <div className="h-4 w-3/4 bg-muted animate-pulse rounded" />
+                    <div className="h-4 w-1/2 bg-muted animate-pulse rounded" />
+                  </div>
                 ) : (
                   <p className="text-base font-medium leading-snug">{value}</p>
                 )}
 
-                {!isConstraint && (
+                {!isConstraint && !sandboxLoading && (
                   <div className="mt-3 flex justify-end">
                     <VoteThumbs sheetKey="sandbox" id={cardRows[key]?.id} box={box} />
                   </div>
