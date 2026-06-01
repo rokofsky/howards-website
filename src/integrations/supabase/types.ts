@@ -303,7 +303,16 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      increment_vote: {
+        Args: {
+          p_element_box: string
+          p_previous: string
+          p_row_id: string
+          p_sheet_key: string
+          p_vote: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
