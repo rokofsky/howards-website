@@ -22,6 +22,7 @@ import BlogPost from "./pages/BlogPost";
 import WebinarDetail from "./pages/WebinarDetail";
 import AdminSessions from "./pages/AdminSessions";
 import AdminWebinars from "./pages/AdminWebinars";
+import RokofAdmin from "./pages/RokofAdmin";
 import Diagnostics from "./pages/Diagnostics";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import GDPR from "./pages/GDPR";
