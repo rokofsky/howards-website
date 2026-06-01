@@ -59,6 +59,39 @@ export type Database = {
         }
         Relationships: []
       }
+      prompts: {
+        Row: {
+          character: string | null
+          constraint_text: string | null
+          created_at: string
+          id: string
+          incident: string | null
+          prompt: string | null
+          setting: string | null
+          sheet_key: string
+        }
+        Insert: {
+          character?: string | null
+          constraint_text?: string | null
+          created_at?: string
+          id?: string
+          incident?: string | null
+          prompt?: string | null
+          setting?: string | null
+          sheet_key: string
+        }
+        Update: {
+          character?: string | null
+          constraint_text?: string | null
+          created_at?: string
+          id?: string
+          incident?: string | null
+          prompt?: string | null
+          setting?: string | null
+          sheet_key?: string
+        }
+        Relationships: []
+      }
       reference_scans: {
         Row: {
           created_at: string

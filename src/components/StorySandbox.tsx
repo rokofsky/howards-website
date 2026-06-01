@@ -21,36 +21,8 @@ const readUserVotes = (): Record<string, "up" | "down"> => {
   }
 };
 
-const SANDBOX_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxW9PeACm4LoKxSOY890qmC6py8EU0F64KbwYFCTHc0OL-ZsW7eLdpsprUBIU3Tzcfi/exec";
-const ONELINERS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbyws1eFpbD395kEuaMwriiGiOhGy6_Cgt-PPC4bURowx5UpVfXgwucxrIwsq8ERrcI/exec";
-const SHEET3_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbw4R91CvvhMg7Fz7CxkxeDIS89VUEt4lNp8HB5oYm88mbCmg-eSuIeyhDMS7YWnA8o/exec";
 
-const SUPABASE_PROXY = "https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/sheets-proxy";
 
-const extractArray = (data: unknown, keys: string[]): unknown[] => {
-  if (Array.isArray(data)) return data;
-  if (data && typeof data === "object") {
-    const record = data as Record<string, unknown>;
-    for (const k of keys) {
-      const v = record[k];
-      if (Array.isArray(v)) return v;
-    }
-    for (const container of ["data", "rows", "result", "payload"]) {
-      const nested = record[container];
-      if (Array.isArray(nested)) return nested;
-      if (nested && typeof nested === "object") {
-        for (const k of keys) {
-          const v = (nested as Record<string, unknown>)[k];
-          if (Array.isArray(v)) return v;
-        }
-      }
-    }
-  }
-  return [];
-};
 
 /* ============================================================
    FALLBACK SEED VOCABULARY (used if remote fetch fails)
@@ -238,95 +210,50 @@ export default function StorySandbox() {
       /* ignore */
     }
   }, []);
-  // --- THREE INDEPENDENT FETCH PIPELINES (one per Google Apps Script endpoint) ---
+  // --- Fetch all prompts from Supabase, grouped by sheet_key ---
   useEffect(() => {
     let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase.from("prompts").select("*");
+      if (cancelled) return;
+      if (error) {
+        console.error("Failed to load prompts from Supabase, using fallbacks", error);
+      } else if (data) {
+        const sandboxRows = data.filter((r) => r.sheet_key === "sandbox") as unknown as SandboxRow[];
+        const oneLinerRows = data.filter((r) => r.sheet_key === "oneLiners") as unknown as PromptRow[];
+        const sheet3Rows = data.filter((r) => r.sheet_key === "sheet3") as unknown as PromptRow[];
 
-    const loadOne = async <T,>(
-      SCRIPT_URL: string,
-      label: string,
-      keys: string[],
-      apply: (rows: T[]) => void,
-      done: () => void,
-    ) => {
-      try {
-        const res = await fetch(`${SUPABASE_PROXY}?url=${encodeURIComponent(SCRIPT_URL)}`, { method: "GET" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const rawData = await res.json();
-        console.log("Data loaded for " + label + " (" + SCRIPT_URL + ")", rawData);
-
-        // --- THE FIX ---
-        // If rawData is already a flat array, use it directly! Otherwise, use extractArray fallback.
-        const actualData = Array.isArray(rawData) ? rawData : (extractArray(rawData, keys) as T[]);
-
-        console.log("Rows mapped for " + label, actualData);
-        if (cancelled) return;
-        if (actualData && actualData.length > 0) {
-          apply(actualData);
-        }
-      } catch (err) {
-        console.error("Fetch failed for " + label + " (" + SCRIPT_URL + "), using FALLBACK_SEEDS", err);
-      } finally {
-        if (!cancelled) done();
-      }
-    };
-
-    loadOne<SandboxRow>(
-      SANDBOX_SCRIPT_URL,
-      "sandbox",
-      ["sheet1", "sandboxPrompts", "sandbox"],
-      (rows) => {
-        setAllSandboxPrompts(rows);
-        if (rows && rows.length > 0) {
-          console.log("Raw character row sample:", rows[0]);
-          const pick = () => rows[Math.floor(Math.random() * rows.length)];
+        if (sandboxRows.length > 0) {
+          setAllSandboxPrompts(sandboxRows);
+          const pick = () => sandboxRows[Math.floor(Math.random() * sandboxRows.length)];
           const c = pick();
           const i = pick();
           const k = pick();
           setCardRows({ character: c, incident: i, constraint: k });
-          const cText = getFieldValue(c as unknown as Record<string, unknown>, "character");
-          const iText = getFieldValue(i as unknown as Record<string, unknown>, "incident");
-          const kText = getFieldValue(k as unknown as Record<string, unknown>, "constraint");
           setPrompts((p) => ({
-            character: cText || p.character,
-            incident: iText || p.incident,
-            constraint: kText || p.constraint,
+            character: getFieldValue(c as unknown as Record<string, unknown>, "character") || p.character,
+            incident: getFieldValue(i as unknown as Record<string, unknown>, "incident") || p.incident,
+            constraint: getFieldValue(k as unknown as Record<string, unknown>, "constraint") || p.constraint,
           }));
         }
-      },
-      () => setSandboxLoading(false),
-    );
-
-    loadOne<PromptRow>(
-      ONELINERS_SCRIPT_URL,
-      "oneLiners",
-      ["sheet2", "oneLiners", "oneLinerPrompts"],
-      (rows) => {
-        setAllOneLiners(rows);
-        if (rows && rows.length > 0) {
-          setOneLinerRow(rows[Math.floor(Math.random() * rows.length)]);
+        if (oneLinerRows.length > 0) {
+          setAllOneLiners(oneLinerRows);
+          setOneLinerRow(oneLinerRows[Math.floor(Math.random() * oneLinerRows.length)]);
         }
-      },
-      () => setOneLinersLoading(false),
-    );
-
-    loadOne<PromptRow>(
-      SHEET3_SCRIPT_URL,
-      "sheet3",
-      ["sheet3", "sheet3", "sheet3"],
-      (rows) => {
-        setAllSheet3Prompts(rows);
-        if (rows && rows.length > 0) {
-          setSheet3Row(rows[Math.floor(Math.random() * rows.length)]);
+        if (sheet3Rows.length > 0) {
+          setAllSheet3Prompts(sheet3Rows);
+          setSheet3Row(sheet3Rows[Math.floor(Math.random() * sheet3Rows.length)]);
         }
-      },
-      () => setSheet3Loading(false),
-    );
-
+      }
+      setSandboxLoading(false);
+      setOneLinersLoading(false);
+      setSheet3Loading(false);
+    })();
     return () => {
       cancelled = true;
     };
   }, []);
+
 
   // Seed voteCounts from Supabase 'votes' table so global tallies are visible
   useEffect(() => {
