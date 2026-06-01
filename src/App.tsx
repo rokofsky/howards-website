@@ -213,6 +213,7 @@ function PageRoutes() {
       <Route path="reference/scans/:slot" element={<ReferenceScanViewer />} />
       <Route path="storytelling-sessions" element={<StorytellingWorkshops />} />
       <Route path="storytelling-workshops" element={<StorytellingWorkshops />} />
+      <Route path="story-sandbox" element={<StorySandboxPage />} />
       <Route path="diagnostics" element={<Diagnostics />} />
       <Route path="services/:slug" element={<ServiceDetail />} />
       <Route path="keynote-topics" element={<KeynoteTopics />} />
