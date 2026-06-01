@@ -421,9 +421,9 @@ export default function StorySandbox() {
     else votes[storeKey] = vote;
     localStorage.setItem("userVotes", JSON.stringify(votes));
     console.log("Calling increment_vote rpc:", { sheetKey, id, elementBox, vote, current });
-    // @ts-expect-error increment_vote RPC not in generated types yet
-    void supabase
-      .rpc("increment_vote", {
+    void (supabase.rpc as any)(
+      "increment_vote",
+      {
         p_sheet_key: sheetKey,
         p_row_id: String(id),
         p_element_box: elementBox,
