@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
@@ -13,16 +13,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "@/hooks/use-toast";
+import { toast, useToast } from "@/hooks/use-toast";
 import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
 import { addSessionPost } from "@/data/blogStore";
 
-// Password is kept only in component state — never persisted to storage
+const ADMIN_PASSWORD = "rokofskyzzz";
+const AUTH_STORAGE_KEY = "admin_auth_status";
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
 const RokofAdmin = () => {
   const navigate = useNavigate();
+  const { dismiss } = useToast();
   const [authenticated, setAuthenticated] = useState(false);
   const [adminPassword, setAdminPassword] = useState("");
   const [password, setPassword] = useState("");
@@ -36,30 +38,38 @@ const RokofAdmin = () => {
   const [generatedCode, setGeneratedCode] = useState("");
   const [generatedSlug, setGeneratedSlug] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  // Restore auth from localStorage on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (localStorage.getItem(AUTH_STORAGE_KEY) === "true") {
+      const stored = localStorage.getItem("admin_password") || ADMIN_PASSWORD;
+      setAdminPassword(stored);
+      setAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const { data, error } = await supabase.functions.invoke("admin-sessions", {
-        body: { password, action: "verify" },
-      });
-      if (error) throw error;
-      if (data?.ok) {
-        setAdminPassword(password);
-        setAuthenticated(true);
-        setPassword("");
-      } else {
-        toast({ title: "Incorrect password", variant: "destructive" });
-      }
-    } catch {
-      toast({ title: "Login failed", variant: "destructive" });
+    if (password === ADMIN_PASSWORD) {
+      dismiss();
+      localStorage.setItem(AUTH_STORAGE_KEY, "true");
+      localStorage.setItem("admin_password", password);
+      setAdminPassword(password);
+      setAuthenticated(true);
+      setPassword("");
+    } else {
+      toast({ title: "Incorrect password", variant: "destructive" });
     }
   };
 
   const handleLogout = () => {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    localStorage.removeItem("admin_password");
     setAdminPassword("");
     setAuthenticated(false);
-    navigate("/");
+    setPassword("");
   };
+
 
   const generateSlug = (t: string) =>
     t
