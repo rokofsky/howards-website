@@ -587,9 +587,13 @@ export default function StorySandbox() {
           key={`oneliner-${oneLinerAnimKey}`}
           className="relative p-4 min-h-[140px] flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-gold/20 to-petrol/10 border border-gold/30 animate-fade-in-up"
         >
-          <p className="text-base md:text-lg font-medium text-center leading-snug">
-            {oneLinerText || (oneLinersLoading ? "Loading prompts…" : "Hit shuffle.")}
-          </p>
+          {oneLinersLoading ? (
+            <div className="h-4 w-2/3 bg-muted animate-pulse rounded" />
+          ) : oneLinerText ? (
+            <p className="text-base md:text-lg font-medium text-center leading-snug">{oneLinerText}</p>
+          ) : (
+            <p className="text-base md:text-lg italic text-muted-foreground text-center leading-snug">Coming soon</p>
+          )}
           <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
         </Card>
       </section>
