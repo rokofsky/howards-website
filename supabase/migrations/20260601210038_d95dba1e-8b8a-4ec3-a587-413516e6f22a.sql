@@ -1,0 +1,1 @@
+GRANT SELECT ON public.storytelling_sessions_public TO anon, authenticated;
