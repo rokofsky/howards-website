@@ -21,36 +21,8 @@ const readUserVotes = (): Record<string, "up" | "down"> => {
   }
 };
 
-const SANDBOX_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxW9PeACm4LoKxSOY890qmC6py8EU0F64KbwYFCTHc0OL-ZsW7eLdpsprUBIU3Tzcfi/exec";
-const ONELINERS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbyws1eFpbD395kEuaMwriiGiOhGy6_Cgt-PPC4bURowx5UpVfXgwucxrIwsq8ERrcI/exec";
-const SHEET3_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbw4R91CvvhMg7Fz7CxkxeDIS89VUEt4lNp8HB5oYm88mbCmg-eSuIeyhDMS7YWnA8o/exec";
 
-const SUPABASE_PROXY = "https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/sheets-proxy";
 
-const extractArray = (data: unknown, keys: string[]): unknown[] => {
-  if (Array.isArray(data)) return data;
-  if (data && typeof data === "object") {
-    const record = data as Record<string, unknown>;
-    for (const k of keys) {
-      const v = record[k];
-      if (Array.isArray(v)) return v;
-    }
-    for (const container of ["data", "rows", "result", "payload"]) {
-      const nested = record[container];
-      if (Array.isArray(nested)) return nested;
-      if (nested && typeof nested === "object") {
-        for (const k of keys) {
-          const v = (nested as Record<string, unknown>)[k];
-          if (Array.isArray(v)) return v;
-        }
-      }
-    }
-  }
-  return [];
-};
 
 /* ============================================================
    FALLBACK SEED VOCABULARY (used if remote fetch fails)
