@@ -557,8 +557,10 @@ export default function StorySandbox() {
                     <div className="h-4 w-3/4 bg-muted animate-pulse rounded" />
                     <div className="h-4 w-1/2 bg-muted animate-pulse rounded" />
                   </div>
-                ) : (
+                ) : value && value.trim() ? (
                   <p className="text-base font-medium leading-snug">{value}</p>
+                ) : (
+                  <p className="text-base italic text-muted-foreground leading-snug">Coming soon</p>
                 )}
 
                 {!isConstraint && !sandboxLoading && (
