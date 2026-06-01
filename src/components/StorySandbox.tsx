@@ -362,7 +362,9 @@ export default function StorySandbox() {
   // --- Robust case-insensitive field lookup (handles "Character", "character ", "CHARACTER", etc.) ---
   const getFieldValue = (row: Record<string, unknown> | null | undefined, cat: Category): string => {
     if (!row) return "Loading character prompt...";
-    const direct = (row as Record<string, unknown>)[cat] ?? (row as Record<string, unknown>)[cat.charAt(0).toUpperCase() + cat.slice(1)];
+    const direct =
+      (row as Record<string, unknown>)[cat] ??
+      (row as Record<string, unknown>)[cat.charAt(0).toUpperCase() + cat.slice(1)];
     if (typeof direct === "string" && direct.trim()) return direct.trim();
     const matchKey = Object.keys(row).find((k) => k.toLowerCase().includes(cat));
     if (matchKey) {
@@ -419,22 +421,16 @@ export default function StorySandbox() {
     else votes[storeKey] = vote;
     localStorage.setItem("userVotes", JSON.stringify(votes));
 
-    // 3) Async Supabase upsert (fire-and-forget) — never blocks UI
     void supabase
-      .from("votes")
-      .upsert(
-        {
-          sheet_key: sheetKey,
-          row_id: String(id),
-          element_box: elementBox,
-          up_count: nextCounts.up,
-          down_count: nextCounts.down,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "sheet_key,row_id,element_box" },
-      )
+      .rpc("increment_vote", {
+        p_sheet_key: sheetKey,
+        p_row_id: String(id),
+        p_element_box: elementBox,
+        p_vote: current === vote ? `nullify_${vote}` : vote,
+        p_previous: current ?? null,
+      })
       .then(({ error }) => {
-        if (error) console.warn("[StorySandbox] vote upsert failed", error);
+        if (error) console.warn("[StorySandbox] vote rpc failed", error);
       });
   };
 
@@ -454,8 +450,7 @@ export default function StorySandbox() {
     const disabled = id === undefined || id === null || id === "";
     const userVotes = readUserVotes();
     const stored = Object.prototype.hasOwnProperty.call(userVotes, key) ? userVotes[key] : null;
-    const userVote: "up" | "down" | null =
-      stored === "up" || stored === "down" ? stored : null;
+    const userVote: "up" | "down" | null = stored === "up" || stored === "down" ? stored : null;
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
         <TooltipProvider delayDuration={150}>
@@ -483,7 +478,9 @@ export default function StorySandbox() {
           onClick={() => handleVote(sheetKey, id, box, "up")}
           className={cn(
             "inline-flex items-center gap-0.5 transition-colors disabled:opacity-40",
-            userVote === "up" && counts.up > 0 ? "text-green-600 font-bold" : "text-muted-foreground hover:text-foreground",
+            userVote === "up" && counts.up > 0
+              ? "text-green-600 font-bold"
+              : "text-muted-foreground hover:text-foreground",
           )}
           aria-label="Thumbs up"
         >
@@ -496,7 +493,9 @@ export default function StorySandbox() {
           onClick={() => handleVote(sheetKey, id, box, "down")}
           className={cn(
             "inline-flex items-center gap-0.5 transition-colors disabled:opacity-40",
-            userVote === "down" && counts.down > 0 ? "text-red-600 font-bold" : "text-muted-foreground hover:text-foreground",
+            userVote === "down" && counts.down > 0
+              ? "text-red-600 font-bold"
+              : "text-muted-foreground hover:text-foreground",
           )}
           aria-label="Thumbs down"
         >
@@ -597,9 +596,7 @@ export default function StorySandbox() {
                 {isConstraint ? (
                   <textarea
                     value={scratch["sandbox:constraint"] ?? ""}
-                    onChange={(e) =>
-                      setScratch((prev) => ({ ...prev, "sandbox:constraint": e.target.value }))
-                    }
+                    onChange={(e) => setScratch((prev) => ({ ...prev, "sandbox:constraint": e.target.value }))}
                     placeholder="Type your idea here…"
                     className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full flex-1 text-base font-medium leading-snug"
                   />
@@ -630,7 +627,6 @@ export default function StorySandbox() {
           })}
         </div>
       </section>
-
 
       {/* One-liner Prompt Generator (Sheet2) */}
       <section className="space-y-4">
