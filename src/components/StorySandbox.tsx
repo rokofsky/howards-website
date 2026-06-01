@@ -482,7 +482,7 @@ export default function StorySandbox() {
     URL.revokeObjectURL(url);
   };
 
-  const oneLinerText = oneLinerRow ? extractText(oneLinerRow) : "";
+  const oneLinerText = getFieldValue(oneLinerRow as unknown as Record<string, unknown>, "oneLiners");
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-10">
