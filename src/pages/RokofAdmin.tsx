@@ -17,9 +17,6 @@ import { toast, useToast } from "@/hooks/use-toast";
 import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
 import { addSessionPost } from "@/data/blogStore";
 
-const ADMIN_PASSWORD = "rokofskyzzz";
-const AUTH_STORAGE_KEY = "admin_auth_status";
-
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
 const RokofAdmin = () => {
@@ -38,33 +35,27 @@ const RokofAdmin = () => {
   const [generatedCode, setGeneratedCode] = useState("");
   const [generatedSlug, setGeneratedSlug] = useState("");
 
-  // Restore auth from localStorage on mount
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (localStorage.getItem(AUTH_STORAGE_KEY) === "true") {
-      const stored = localStorage.getItem("admin_password") || ADMIN_PASSWORD;
-      setAdminPassword(stored);
-      setAuthenticated(true);
-    }
-  }, []);
-
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      dismiss();
-      localStorage.setItem(AUTH_STORAGE_KEY, "true");
-      localStorage.setItem("admin_password", password);
-      setAdminPassword(password);
-      setAuthenticated(true);
-      setPassword("");
-    } else {
-      toast({ title: "Incorrect password", variant: "destructive" });
+    try {
+      const res = await supabase.functions.invoke("admin-sessions", {
+        method: "POST",
+        body: { password, action: "verify" },
+      });
+      if (res.data?.ok) {
+        dismiss();
+        setAdminPassword(password);
+        setAuthenticated(true);
+        setPassword("");
+      } else {
+        toast({ title: "Incorrect password", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Error verifying password", variant: "destructive" });
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem(AUTH_STORAGE_KEY);
-    localStorage.removeItem("admin_password");
     setAdminPassword("");
     setAuthenticated(false);
     setPassword("");
