@@ -249,6 +249,7 @@ const App = () => (
             <Route path="/admin/sessions" element={<AdminSessions />} />
             <Route path="/admin/webinars" element={<AdminWebinars />} />
             <Route path="/rokofsky-admin" element={<RokofAdmin />} />
+            <Route path="/diagnostics" element={<Diagnostics />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
