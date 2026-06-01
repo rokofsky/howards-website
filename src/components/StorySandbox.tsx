@@ -420,7 +420,7 @@ export default function StorySandbox() {
     if (current === vote) delete votes[storeKey];
     else votes[storeKey] = vote;
     localStorage.setItem("userVotes", JSON.stringify(votes));
-
+    console.log("Calling increment_vote rpc:", { sheetKey, id, elementBox, vote, current });
     void supabase
       .rpc("increment_vote", {
         p_sheet_key: sheetKey,
