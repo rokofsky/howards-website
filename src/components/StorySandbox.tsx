@@ -286,20 +286,34 @@ export default function StorySandbox() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ prompts, structure, scratch }));
   }, [prompts, structure, scratch]);
 
-  // --- Robust case-insensitive field lookup (handles "Character", "character ", "CHARACTER", etc.) ---
-  const getFieldValue = (row: Record<string, unknown> | null | undefined, cat: Category): string => {
+  // --- Strict field lookup matching exact Supabase column names ---
+  const getFieldValue = (row: Record<string, unknown> | null | undefined, cat: string): string => {
     if (!row) return "";
-    const direct =
-      (row as Record<string, unknown>)[cat] ??
-      (row as Record<string, unknown>)[cat.charAt(0).toUpperCase() + cat.slice(1)];
-    if (typeof direct === "string" && direct.trim()) return direct.trim();
-    const matchKey = Object.keys(row).find((k) => k.toLowerCase().includes(cat));
-    if (matchKey) {
-      const v = (row as Record<string, unknown>)[matchKey];
-      if (typeof v === "string" && v.trim()) return v.trim();
+    let col: string | null = null;
+    switch (cat) {
+      case "character":
+        col = "character";
+        break;
+      case "incident":
+        col = "incident";
+        break;
+      case "constraint":
+        col = "constraint_text";
+        break;
+      case "oneLiners":
+      case "generic":
+        col = "one_liner";
+        break;
+      case "sheet3":
+      case "text":
+        col = "text";
+        break;
+      default:
+        return "";
     }
-    console.error("Available row keys:", Object.keys(row));
-    return cat === "character" ? "Loading character prompt..." : "";
+    const v = (row as Record<string, unknown>)[col];
+    if (typeof v === "string" && v.trim()) return v.trim();
+    return "";
   };
 
   // --- Independent shuffle handlers ---
@@ -468,7 +482,7 @@ export default function StorySandbox() {
     URL.revokeObjectURL(url);
   };
 
-  const oneLinerText = oneLinerRow ? extractText(oneLinerRow) : "";
+  const oneLinerText = getFieldValue(oneLinerRow as unknown as Record<string, unknown>, "oneLiners");
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-10">
