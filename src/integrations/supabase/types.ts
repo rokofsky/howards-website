@@ -336,6 +336,16 @@ export type Database = {
       }
     }
     Functions: {
+      get_published_storytelling_sessions: {
+        Args: never
+        Returns: {
+          description: string
+          id: string
+          session_date: string
+          status: string
+          title: string
+        }[]
+      }
       increment_vote: {
         Args: {
           p_element_box: string
