@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.get_published_storytelling_sessions() FROM anon, authenticated, PUBLIC;
