@@ -1,13 +1,11 @@
+// Nothing reads from this page anymore
 import haraImg from "@/assets/blog-hara.jpg";
 import cvImg from "@/assets/blog-cv.jpg";
 import storytellingImg from "@/assets/blog-storytelling.jpg";
 
 export type L = { en: string; cs: string };
 
-export const pickL = (
-  value: L | string | undefined,
-  lang: "en" | "cs"
-): string => {
+export const pickL = (value: L | string | undefined, lang: "en" | "cs"): string => {
   if (typeof value === "string") return value;
   return value?.[lang] || value?.en || "";
 };
