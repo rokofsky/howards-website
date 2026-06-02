@@ -35,7 +35,6 @@ const Blog = () => {
       .from("blog_posts")
       .select("*")
       .eq("published", true)
-      .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false })
       .then(({ data }) => setPosts((data as BlogPostRow[]) ?? []));
   }, []);
