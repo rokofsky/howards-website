@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Shuffle, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -193,8 +193,6 @@ export default function StorySandbox() {
   // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
 
-  const votingRef = useRef<string | null>(null);
-
   // Hydrate persisted UI state
   useEffect(() => {
     try {
@@ -338,13 +336,10 @@ export default function StorySandbox() {
     elementBox: ElementBox,
     vote: "up" | "down",
   ) => {
+    console.trace("handleVote called");
     if (id === undefined || id === null || id === "") return;
 
     const storeKey = `${sheetKey}:${id}:${elementBox}`;
-    if (votingRef.current === storeKey) return;
-    votingRef.current = storeKey;
-    setTimeout(() => { votingRef.current = null; }, 500);
-
     const votes = readUserVotes();
     const current = votes[storeKey];
     console.log("handleVote storeKey:", storeKey, "current:", current, "vote:", vote);
