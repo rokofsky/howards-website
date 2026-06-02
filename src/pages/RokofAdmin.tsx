@@ -53,11 +53,8 @@ const RokofAdmin = () => {
   const [posts, setPosts] = useState<BlogPostRow[]>([]);
 
   const loadPosts = async () => {
-    const { data } = await supabase
-      .from("blog_posts")
-      .select("id,slug,title_en,date_en,published,created_at")
-      .order("sort_order", { ascending: true })
-      .order("created_at", { ascending: false });
+    const { data, error } = await supabase.from("blog_posts").select("*");
+    console.log("Admin Component Fetch - Data:", data, "Error:", error);
     setPosts((data as BlogPostRow[]) ?? []);
   };
 
