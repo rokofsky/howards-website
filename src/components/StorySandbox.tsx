@@ -242,10 +242,6 @@ const [totalSandboxDownvotes, setTotalSandboxDownvotes] = useState<number>(0);
             incident: getFieldValue(i as unknown as Record<string, unknown>, "incident") || p.incident,
             constraint: getFieldValue(k as unknown as Record<string, unknown>, "constraint") || p.constraint,
           }));
-            character: getFieldValue(c as unknown as Record<string, unknown>, "character") || p.character,
-            incident: getFieldValue(i as unknown as Record<string, unknown>, "incident") || p.incident,
-            constraint: getFieldValue(k as unknown as Record<string, unknown>, "constraint") || p.constraint,
-          }));
         }
         if (oneLinerRows.length > 0) {
           setAllOneLiners(oneLinerRows);
