@@ -15,7 +15,14 @@ import {
 } from "@/components/ui/select";
 import { toast, useToast } from "@/hooks/use-toast";
 import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
   ADMIN_PASSWORD,
@@ -30,7 +37,16 @@ interface BlogPostRow {
   id: string;
   slug: string;
   title_en: string;
+  title_cs: string;
+  excerpt_en: string;
+  excerpt_cs: string;
+  content_en: string;
+  content_cs: string;
+  category_en: string;
+  category_cs: string;
   date_en: string;
+  date_cs: string;
+  image_url: string | null;
   published: boolean;
   created_at: string;
 }
@@ -51,6 +67,8 @@ const RokofAdmin = () => {
   const [generatedSlug, setGeneratedSlug] = useState("");
 
   const [posts, setPosts] = useState<BlogPostRow[]>([]);
+  const [editingPost, setEditingPost] = useState<BlogPostRow | null>(null);
+  const [savingEdit, setSavingEdit] = useState(false);
 
   const loadPosts = async () => {
     const { data, error } = await supabase.from("blog_posts").select("*");
@@ -153,6 +171,36 @@ const RokofAdmin = () => {
     }
   };
 
+  const handleSaveEdit = async () => {
+    if (!editingPost) return;
+    setSavingEdit(true);
+    const { id, slug, published, created_at, ...rest } = editingPost;
+    const { error } = await supabase
+      .from("blog_posts")
+      .update({
+        title_en: rest.title_en,
+        title_cs: rest.title_cs,
+        excerpt_en: rest.excerpt_en,
+        excerpt_cs: rest.excerpt_cs,
+        content_en: rest.content_en,
+        content_cs: rest.content_cs,
+        category_en: rest.category_en,
+        category_cs: rest.category_cs,
+        date_en: rest.date_en,
+        date_cs: rest.date_cs,
+        image_url: rest.image_url,
+      })
+      .eq("id", id);
+    setSavingEdit(false);
+    if (error) {
+      toast({ title: "Update failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    setEditingPost(null);
+    toast({ title: "Post updated" });
+    await loadPosts();
+  };
+
   if (!authenticated) {
     return (
       <Layout>
@@ -243,6 +291,14 @@ const RokofAdmin = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      onClick={() => setEditingPost(post)}
+                      aria-label="Edit post"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => handleDelete(post)}
                       aria-label="Delete post"
                     >
@@ -306,6 +362,59 @@ const RokofAdmin = () => {
           </div>
         </div>
       </section>
+
+      <Dialog open={!!editingPost} onOpenChange={(open) => !open && setEditingPost(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Blog Post</DialogTitle>
+          </DialogHeader>
+          {editingPost && (
+            <div className="space-y-4">
+              {([
+                ["title_en", "Title (EN)", "input"],
+                ["title_cs", "Title (CS)", "input"],
+                ["category_en", "Category (EN)", "input"],
+                ["category_cs", "Category (CS)", "input"],
+                ["date_en", "Date (EN)", "input"],
+                ["date_cs", "Date (CS)", "input"],
+                ["image_url", "Image URL", "input"],
+                ["excerpt_en", "Excerpt (EN)", "textarea"],
+                ["excerpt_cs", "Excerpt (CS)", "textarea"],
+                ["content_en", "Content (EN)", "textarea"],
+                ["content_cs", "Content (CS)", "textarea"],
+              ] as const).map(([key, label, kind]) => (
+                <div key={key}>
+                  <Label>{label}</Label>
+                  {kind === "input" ? (
+                    <Input
+                      value={(editingPost[key] as string) ?? ""}
+                      onChange={(e) =>
+                        setEditingPost({ ...editingPost, [key]: e.target.value })
+                      }
+                    />
+                  ) : (
+                    <Textarea
+                      className="min-h-[140px]"
+                      value={(editingPost[key] as string) ?? ""}
+                      onChange={(e) =>
+                        setEditingPost({ ...editingPost, [key]: e.target.value })
+                      }
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingPost(null)} disabled={savingEdit}>
+              Cancel
+            </Button>
+            <Button variant="cta" onClick={handleSaveEdit} disabled={savingEdit}>
+              {savingEdit ? "Saving..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
