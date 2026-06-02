@@ -261,6 +261,14 @@ const RokofAdmin = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      onClick={() => setEditingPost(post)}
+                      aria-label="Edit post"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => handleDelete(post)}
                       aria-label="Delete post"
                     >
