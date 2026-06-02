@@ -225,8 +225,8 @@ const [totalSandboxDownvotes, setTotalSandboxDownvotes] = useState<number>(0);
           setAllSandboxPrompts(sandboxRows);
           
           // Math aggregation loop to sum up the 1s into running totals
-          const totalUp = sandboxRows.reduce((sum, row) => sum + (Number(row.up_count) || 0), 0);
-          const totalDown = sandboxRows.reduce((sum, row) => sum + (Number(row.down_count) || 0), 0);
+          const totalUp = sandboxRows.reduce((sum, row) => sum + (Number((row as unknown as Record<string, unknown>).up_count) || 0), 0);
+          const totalDown = sandboxRows.reduce((sum, row) => sum + (Number((row as unknown as Record<string, unknown>).down_count) || 0), 0);
           
           // Connect to the actual state hooks from lines 162-164
           setTotalSandboxUpvotes(totalUp);
