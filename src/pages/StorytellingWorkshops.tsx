@@ -56,7 +56,6 @@ const StorytellingWorkshops = () => {
       .from(tableName as any)
       .select("id, session_date, title, description")
       .eq("status", statusFilter)
-      .gte("session_date", new Date().toISOString())
       .order("session_date", { ascending: true });
 
     setQueryError(error || null);
