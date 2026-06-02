@@ -225,8 +225,8 @@ const [totalSandboxDownvotes, setTotalSandboxDownvotes] = useState<number>(0);
           setAllSandboxPrompts(sandboxRows);
           
           // Math aggregation loop to sum up the 1s into running totals
-          const totalUp = sandboxRows.reduce((sum, row) => sum + (Number(row.up_count) || 0), 0);
-          const totalDown = sandboxRows.reduce((sum, row) => sum + (Number(row.down_count) || 0), 0);
+          const totalUp = sandboxRows.reduce((sum, row) => sum + (Number((row as unknown as Record<string, unknown>).up_count) || 0), 0);
+          const totalDown = sandboxRows.reduce((sum, row) => sum + (Number((row as unknown as Record<string, unknown>).down_count) || 0), 0);
           
           // Connect to the actual state hooks from lines 162-164
           setTotalSandboxUpvotes(totalUp);
@@ -238,10 +238,6 @@ const [totalSandboxDownvotes, setTotalSandboxDownvotes] = useState<number>(0);
           const k = pick();
           setCardRows({ character: c, incident: i, constraint: k });
           setPrompts((p) => ({
-            character: getFieldValue(c as unknown as Record<string, unknown>, "character") || p.character,
-            incident: getFieldValue(i as unknown as Record<string, unknown>, "incident") || p.incident,
-            constraint: getFieldValue(k as unknown as Record<string, unknown>, "constraint") || p.constraint,
-          }));
             character: getFieldValue(c as unknown as Record<string, unknown>, "character") || p.character,
             incident: getFieldValue(i as unknown as Record<string, unknown>, "incident") || p.incident,
             constraint: getFieldValue(k as unknown as Record<string, unknown>, "constraint") || p.constraint,
