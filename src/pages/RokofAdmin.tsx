@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,14 +15,20 @@ import {
 import { toast, useToast } from "@/hooks/use-toast";
 import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
 import { addSessionPost } from "@/data/blogStore";
+import {
+  ADMIN_PASSWORD,
+  isAdminAuthenticated,
+  setAdminAuthenticated,
+  clearAdminAuthenticated,
+} from "@/lib/adminAuth";
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
 const RokofAdmin = () => {
   const navigate = useNavigate();
   const { dismiss } = useToast();
-  const [authenticated, setAuthenticated] = useState(false);
-  const [adminPassword, setAdminPassword] = useState("");
+  const [authenticated, setAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
+  const adminPassword = ADMIN_PASSWORD;
   const [password, setPassword] = useState("");
 
   // Blog generator state
@@ -35,28 +40,20 @@ const RokofAdmin = () => {
   const [generatedCode, setGeneratedCode] = useState("");
   const [generatedSlug, setGeneratedSlug] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const res = await supabase.functions.invoke("admin-sessions", {
-        method: "POST",
-        body: { password, action: "verify" },
-      });
-      if (res.data?.ok) {
-        dismiss();
-        setAdminPassword(password);
-        setAuthenticated(true);
-        setPassword("");
-      } else {
-        toast({ title: "Incorrect password", variant: "destructive" });
-      }
-    } catch {
-      toast({ title: "Error verifying password", variant: "destructive" });
+    if (password === ADMIN_PASSWORD) {
+      dismiss();
+      setAdminAuthenticated();
+      setAuthenticated(true);
+      setPassword("");
+    } else {
+      toast({ title: "Incorrect password", variant: "destructive" });
     }
   };
 
   const handleLogout = () => {
-    setAdminPassword("");
+    clearAdminAuthenticated();
     setAuthenticated(false);
     setPassword("");
   };

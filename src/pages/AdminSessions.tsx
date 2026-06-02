@@ -19,9 +19,11 @@ interface Session {
   created_at: string;
 }
 
+import { ADMIN_PASSWORD, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
+
 export default function AdminSessions() {
   const [password, setPassword] = useState("");
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -44,32 +46,22 @@ export default function AdminSessions() {
   const fetchSessions = async () => {
     const res = await supabase.functions.invoke("admin-sessions", {
       method: "POST",
-      body: { password, action: "list" },
+      body: { password: ADMIN_PASSWORD, action: "list" },
     });
     if (Array.isArray(res.data)) setSessions(res.data);
   };
 
-  const handleLogin = async () => {
-    try {
-      const res = await supabase.functions.invoke("admin-sessions", {
-        method: "POST",
-        body: { password, action: "verify" },
-      });
-      if (res.data?.error) {
-        toast({ title: "Wrong password", variant: "destructive" });
-        return;
-      }
-      if (res.data?.ok) {
-        setAuthenticated(true);
-      } else {
-        toast({ title: "Unexpected response", variant: "destructive" });
-      }
-    } catch {
-      toast({ title: "Error verifying password", variant: "destructive" });
+  const handleLogin = () => {
+    if (password === ADMIN_PASSWORD) {
+      setAdminAuthenticated();
+      setAuthenticated(true);
+      setPassword("");
+    } else {
+      toast({ title: "Wrong password", variant: "destructive" });
     }
   };
 
-  const getPassword = () => password;
+  const getPassword = () => ADMIN_PASSWORD;
 
   const clearForm = () => {
     setTitle("");

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { ADMIN_PASSWORD, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -96,7 +97,7 @@ function SortableWebinarRow({
 export default function AdminWebinars() {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
   const [webinars, setWebinars] = useState<Webinar[]>([]);
   const [loading, setLoading] = useState(false);
   const [loginAttempts, setLoginAttempts] = useState(0);
@@ -117,10 +118,6 @@ export default function AdminWebinars() {
   );
 
   useEffect(() => {
-    // No persistent auth — admin must log in each visit
-  }, []);
-
-  useEffect(() => {
     if (authenticated) fetchWebinars();
   }, [authenticated]);
 
@@ -132,29 +129,22 @@ export default function AdminWebinars() {
     if (data) setWebinars(data as Webinar[]);
   };
 
-  const handleLogin = async () => {
-    try {
-      const res = await supabase.functions.invoke("admin-webinars", {
-        method: "POST",
-        body: { password, action: "verify" },
-      });
-      if (res.data?.ok) {
-        setAuthenticated(true);
+  const handleLogin = () => {
+    if (password === ADMIN_PASSWORD) {
+      setAdminAuthenticated();
+      setAuthenticated(true);
+    } else {
+      const next = loginAttempts + 1;
+      setLoginAttempts(next);
+      if (next >= 2) {
+        navigate("/");
       } else {
-        const next = loginAttempts + 1;
-        setLoginAttempts(next);
-        if (next >= 2) {
-          navigate("/");
-        } else {
-          toast({ title: "Wrong password", variant: "destructive" });
-        }
+        toast({ title: "Wrong password", variant: "destructive" });
       }
-    } catch {
-      toast({ title: "Error verifying password", variant: "destructive" });
     }
   };
 
-  const getPassword = () => password;
+  const getPassword = () => ADMIN_PASSWORD;
 
   const handleCreate = async () => {
     if (!title.trim()) {
