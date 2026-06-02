@@ -193,6 +193,8 @@ export default function StorySandbox() {
   // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
 
+  const votingRef = useRef<string | null>(null);
+
   // Hydrate persisted UI state
   useEffect(() => {
     try {
