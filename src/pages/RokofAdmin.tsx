@@ -171,6 +171,36 @@ const RokofAdmin = () => {
     }
   };
 
+  const handleSaveEdit = async () => {
+    if (!editingPost) return;
+    setSavingEdit(true);
+    const { id, slug, published, created_at, ...rest } = editingPost;
+    const { error } = await supabase
+      .from("blog_posts")
+      .update({
+        title_en: rest.title_en,
+        title_cs: rest.title_cs,
+        excerpt_en: rest.excerpt_en,
+        excerpt_cs: rest.excerpt_cs,
+        content_en: rest.content_en,
+        content_cs: rest.content_cs,
+        category_en: rest.category_en,
+        category_cs: rest.category_cs,
+        date_en: rest.date_en,
+        date_cs: rest.date_cs,
+        image_url: rest.image_url,
+      })
+      .eq("id", id);
+    setSavingEdit(false);
+    if (error) {
+      toast({ title: "Update failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    setEditingPost(null);
+    toast({ title: "Post updated" });
+    await loadPosts();
+  };
+
   if (!authenticated) {
     return (
       <Layout>
