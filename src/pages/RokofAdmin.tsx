@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -14,7 +15,8 @@ import {
 } from "@/components/ui/select";
 import { toast, useToast } from "@/hooks/use-toast";
 import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
-import { addSessionPost } from "@/data/blogStore";
+import { Trash2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   ADMIN_PASSWORD,
   isAdminAuthenticated,
@@ -23,6 +25,15 @@ import {
 } from "@/lib/adminAuth";
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
+
+interface BlogPostRow {
+  id: string;
+  slug: string;
+  title_en: string;
+  date_en: string;
+  published: boolean;
+  created_at: string;
+}
 
 const RokofAdmin = () => {
   const navigate = useNavigate();
@@ -37,8 +48,22 @@ const RokofAdmin = () => {
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const [generatedCode, setGeneratedCode] = useState("");
   const [generatedSlug, setGeneratedSlug] = useState("");
+
+  const [posts, setPosts] = useState<BlogPostRow[]>([]);
+
+  const loadPosts = async () => {
+    const { data } = await supabase
+      .from("blog_posts")
+      .select("id,slug,title_en,date_en,published,created_at")
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false });
+    setPosts((data as BlogPostRow[]) ?? []);
+  };
+
+  useEffect(() => {
+    if (authenticated) void loadPosts();
+  }, [authenticated]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +83,6 @@ const RokofAdmin = () => {
     setPassword("");
   };
 
-
   const generateSlug = (t: string) =>
     t
       .toLowerCase()
@@ -66,7 +90,7 @@ const RokofAdmin = () => {
       .trim()
       .replace(/\s+/g, "-");
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!title || !category || !excerpt || !content) {
       toast({ title: "Please fill in all required fields", variant: "destructive" });
       return;
@@ -80,44 +104,56 @@ const RokofAdmin = () => {
     });
 
     const slug = generateSlug(title);
-    const escapedContent = content.replace(/`/g, "\\`").replace(/\$/g, "\\$");
 
-    const code = `  {
-    slug: "${slug}",
-    title: "${title.replace(/"/g, '\\"')}",
-    excerpt: "${excerpt.replace(/"/g, '\\"')}",
-    date: "${dateStr}",
-    category: "${category}",${imageUrl ? `\n    imageUrl: "${imageUrl}",` : ""}
-    content: \`${escapedContent}\`,
-  },`;
-
-    setGeneratedCode(code);
-    setGeneratedSlug(slug);
-
-    addSessionPost({
+    const { error } = await supabase.from("blog_posts").insert({
       slug,
-      title: { en: title, cs: title },
-      excerpt: { en: excerpt, cs: excerpt },
-      date: { en: dateStr, cs: dateStr },
-      category: { en: category, cs: category },
-      imageUrl: imageUrl || undefined,
-      content: { en: content, cs: content },
+      title_en: title,
+      title_cs: title,
+      excerpt_en: excerpt,
+      excerpt_cs: excerpt,
+      content_en: content,
+      content_cs: content,
+      category_en: category,
+      category_cs: category,
+      date_en: dateStr,
+      date_cs: dateStr,
+      image_url: imageUrl || null,
+      published: true,
     });
 
-    toast({
-      title: "Post added (session preview)",
-      description: "Scroll down — copy the generated code and ask Lovable to make it permanent.",
-    });
+    if (error) {
+      toast({ title: "Failed to create post", description: error.message, variant: "destructive" });
+      return;
+    }
 
-    // Scroll the generated code into view (no auto-redirect)
-    setTimeout(() => {
-      document.getElementById("generated-code-block")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
+    setGeneratedSlug(slug);
+    toast({ title: "Post created", description: "It's now live on the blog." });
+    setTitle("");
+    setCategory("");
+    setExcerpt("");
+    setContent("");
+    setImageUrl("");
+    await loadPosts();
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(generatedCode);
-    toast({ title: "Copied to clipboard!" });
+  const handleDelete = async (post: BlogPostRow) => {
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
+    const { error } = await supabase.from("blog_posts").delete().eq("id", post.id);
+    if (error) {
+      toast({ title: "Delete failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    setPosts((prev) => prev.filter((p) => p.id !== post.id));
+    toast({ title: "Post deleted" });
+  };
+
+  const handleTogglePublished = async (post: BlogPostRow, value: boolean) => {
+    setPosts((prev) => prev.map((p) => (p.id === post.id ? { ...p, published: value } : p)));
+    const { error } = await supabase.from("blog_posts").update({ published: value }).eq("id", post.id);
+    if (error) {
+      toast({ title: "Update failed", description: error.message, variant: "destructive" });
+      await loadPosts();
+    }
   };
 
   if (!authenticated) {
@@ -182,9 +218,48 @@ const RokofAdmin = () => {
             <ReferenceScansManager password={adminPassword} />
           </div>
 
+          {/* Manage Blog Posts */}
+          <div className="glass rounded-xl p-8 mb-14">
+            <h2 className="text-xl font-bold mb-2">Manage Blog Posts</h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              Toggle visibility or permanently delete posts. Changes apply immediately.
+            </p>
+            {posts.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No posts yet.</p>
+            ) : (
+              <ul className="divide-y divide-border">
+                {posts.map((post) => (
+                  <li key={post.id} className="flex items-center justify-between gap-4 py-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium truncate">{post.title_en}</p>
+                      <p className="text-xs text-muted-foreground">{post.date_en}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground">
+                        {post.published ? "Published" : "Hidden"}
+                      </span>
+                      <Switch
+                        checked={post.published}
+                        onCheckedChange={(v) => handleTogglePublished(post, v)}
+                      />
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDelete(post)}
+                      aria-label="Delete post"
+                    >
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           {/* Blog Post Generator */}
           <div className="glass rounded-xl p-8">
-            <h2 className="text-xl font-bold mb-6">Blog Post Generator</h2>
+            <h2 className="text-xl font-bold mb-6">New Blog Post</h2>
             <div className="space-y-4">
               <div>
                 <Label>Title *</Label>
@@ -220,40 +295,17 @@ const RokofAdmin = () => {
                   className="min-h-[200px]"
                 />
               </div>
-              <Button variant="cta" onClick={handleGenerate}>
-                Generate Post
-              </Button>
-            </div>
-
-            {generatedCode && (
-              <div id="generated-code-block" className="mt-8 space-y-3">
-                <div className="rounded-md border border-accent/40 bg-accent/10 p-3 text-xs">
-                  <strong>Post added to session preview.</strong> To make it permanent for everyone,
-                  copy the code below and ask Lovable to{" "}
-                  <em>"add this post to src/data/blogPosts.ts"</em>.
-                </div>
-                <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <span className="font-bold text-sm">Generated Code</span>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={copyToClipboard}>
-                      Copy
-                    </Button>
-                    <Button variant="cta" size="sm" onClick={() => navigate(`/blog/${generatedSlug}`)}>
-                      View on Blog →
-                    </Button>
-                  </div>
-                </div>
-                <Textarea
-                  readOnly
-                  value={generatedCode}
-                  className="font-mono text-xs min-h-[260px] bg-primary/90 text-primary-foreground"
-                  onFocus={(e) => e.currentTarget.select()}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Paste this into the <code>blogPosts</code> array in <code>src/data/blogPosts.ts</code>.
-                </p>
+              <div className="flex gap-3">
+                <Button variant="cta" onClick={handleGenerate}>
+                  Publish Post
+                </Button>
+                {generatedSlug && (
+                  <Button variant="outline" onClick={() => navigate(`/blog/${generatedSlug}`)}>
+                    View Last Post →
+                  </Button>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
       </section>
