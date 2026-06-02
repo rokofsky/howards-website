@@ -359,11 +359,13 @@ export default function StorySandbox() {
     else votes[storeKey] = vote;
     localStorage.setItem("userVotes", JSON.stringify(votes));
     console.log("Calling increment_vote rpc:", { sheetKey, id, elementBox, vote, current });
+    const pVote = current === vote ? `nullify_${vote}` : vote;
+    console.log("p_vote being sent:", pVote, "current:", current, "vote:", vote);
     void (supabase.rpc as any)("increment_vote", {
       p_sheet_key: sheetKey,
       p_row_id: String(id),
       p_element_box: elementBox,
-      p_vote: current === vote ? `nullify_${vote}` : vote,
+      p_vote: pVote,
       p_previous: current ?? null,
     }).then(({ error }) => {
       if (error) console.warn("[StorySandbox] vote rpc failed", error);
