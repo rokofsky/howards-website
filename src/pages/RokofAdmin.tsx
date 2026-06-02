@@ -362,6 +362,59 @@ const RokofAdmin = () => {
           </div>
         </div>
       </section>
+
+      <Dialog open={!!editingPost} onOpenChange={(open) => !open && setEditingPost(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Blog Post</DialogTitle>
+          </DialogHeader>
+          {editingPost && (
+            <div className="space-y-4">
+              {([
+                ["title_en", "Title (EN)", "input"],
+                ["title_cs", "Title (CS)", "input"],
+                ["category_en", "Category (EN)", "input"],
+                ["category_cs", "Category (CS)", "input"],
+                ["date_en", "Date (EN)", "input"],
+                ["date_cs", "Date (CS)", "input"],
+                ["image_url", "Image URL", "input"],
+                ["excerpt_en", "Excerpt (EN)", "textarea"],
+                ["excerpt_cs", "Excerpt (CS)", "textarea"],
+                ["content_en", "Content (EN)", "textarea"],
+                ["content_cs", "Content (CS)", "textarea"],
+              ] as const).map(([key, label, kind]) => (
+                <div key={key}>
+                  <Label>{label}</Label>
+                  {kind === "input" ? (
+                    <Input
+                      value={(editingPost[key] as string) ?? ""}
+                      onChange={(e) =>
+                        setEditingPost({ ...editingPost, [key]: e.target.value })
+                      }
+                    />
+                  ) : (
+                    <Textarea
+                      className="min-h-[140px]"
+                      value={(editingPost[key] as string) ?? ""}
+                      onChange={(e) =>
+                        setEditingPost({ ...editingPost, [key]: e.target.value })
+                      }
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingPost(null)} disabled={savingEdit}>
+              Cancel
+            </Button>
+            <Button variant="cta" onClick={handleSaveEdit} disabled={savingEdit}>
+              {savingEdit ? "Saving..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
