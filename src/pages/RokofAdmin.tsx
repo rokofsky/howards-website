@@ -15,7 +15,14 @@ import {
 } from "@/components/ui/select";
 import { toast, useToast } from "@/hooks/use-toast";
 import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
   ADMIN_PASSWORD,
