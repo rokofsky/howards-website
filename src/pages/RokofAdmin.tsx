@@ -37,7 +37,16 @@ interface BlogPostRow {
   id: string;
   slug: string;
   title_en: string;
+  title_cs: string;
+  excerpt_en: string;
+  excerpt_cs: string;
+  content_en: string;
+  content_cs: string;
+  category_en: string;
+  category_cs: string;
   date_en: string;
+  date_cs: string;
+  image_url: string | null;
   published: boolean;
   created_at: string;
 }
