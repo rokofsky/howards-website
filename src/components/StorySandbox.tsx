@@ -336,13 +336,12 @@ export default function StorySandbox() {
     elementBox: ElementBox,
     vote: "up" | "down",
   ) => {
-    console.trace("handleVote called");
+    
     if (id === undefined || id === null || id === "") return;
 
     const storeKey = `${sheetKey}:${id}:${elementBox}`;
     const votes = readUserVotes();
     const current = votes[storeKey];
-    console.log("handleVote storeKey:", storeKey, "current:", current, "vote:", vote);
 
     // 1) SYNCHRONOUS state update first — never blocked by network
     let nextCounts = { up: 0, down: 0 };
@@ -359,9 +358,7 @@ export default function StorySandbox() {
     if (current === vote) delete votes[storeKey];
     else votes[storeKey] = vote;
     localStorage.setItem("userVotes", JSON.stringify(votes));
-    console.log("Calling increment_vote rpc:", { sheetKey, id, elementBox, vote, current });
     const pVote = current === vote ? `nullify_${vote}` : vote;
-    console.log("p_vote being sent:", pVote, "current:", current, "vote:", vote);
     void (supabase.rpc as any)("increment_vote", {
       p_sheet_key: sheetKey,
       p_row_id: String(id),
@@ -396,7 +393,6 @@ export default function StorySandbox() {
   }) => {
     const key = `${sheetKey}:${id}:${box}`;
     const counts = voteCounts[key] ?? { up: 0, down: 0 };
-   console.log("VoteThumbs key:", key, "counts:", voteCounts[key]);
     const total = counts.up + counts.down;
     const hasAnyVotes = total > 0;
     const disabled = id === undefined || id === null || id === "";
