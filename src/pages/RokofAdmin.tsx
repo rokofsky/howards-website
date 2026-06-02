@@ -67,6 +67,8 @@ const RokofAdmin = () => {
   const [generatedSlug, setGeneratedSlug] = useState("");
 
   const [posts, setPosts] = useState<BlogPostRow[]>([]);
+  const [editingPost, setEditingPost] = useState<BlogPostRow | null>(null);
+  const [savingEdit, setSavingEdit] = useState(false);
 
   const loadPosts = async () => {
     const { data, error } = await supabase.from("blog_posts").select("*");
