@@ -162,8 +162,7 @@ export default function StorySandbox() {
   const [allSandboxPrompts, setAllSandboxPrompts] = useState<SandboxRow[]>(buildFallbackSandbox());
   const [allOneLiners, setAllOneLiners] = useState<PromptRow[]>(buildFallbackPrompts(FALLBACK_ONE_LINERS));
   const [allSheet3Prompts, setAllSheet3Prompts] = useState<PromptRow[]>(buildFallbackPrompts(FALLBACK_SHEET3));
-  const [totalSandboxUpvotes, setTotalSandboxUpvotes] = useState<number>(0);
-const [totalSandboxDownvotes, setTotalSandboxDownvotes] = useState<number>(0);
+
   // --- Independent loading states ---
   const [sandboxLoading, setSandboxLoading] = useState(true);
   const [oneLinersLoading, setOneLinersLoading] = useState(true);
@@ -208,7 +207,7 @@ const [totalSandboxDownvotes, setTotalSandboxDownvotes] = useState<number>(0);
       /* ignore */
     }
   }, []);
- // --- Fetch all prompts from Supabase, grouped by sheet_key ---
+  // --- Fetch all prompts from Supabase, grouped by sheet_key ---
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -223,15 +222,6 @@ const [totalSandboxDownvotes, setTotalSandboxDownvotes] = useState<number>(0);
 
         if (sandboxRows.length > 0) {
           setAllSandboxPrompts(sandboxRows);
-          
-          // Math aggregation loop to sum up the 1s into running totals
-          const totalUp = sandboxRows.reduce((sum, row) => sum + (Number((row as unknown as Record<string, unknown>).up_count) || 0), 0);
-          const totalDown = sandboxRows.reduce((sum, row) => sum + (Number((row as unknown as Record<string, unknown>).down_count) || 0), 0);
-          
-          // Connect to the actual state hooks from lines 162-164
-          setTotalSandboxUpvotes(totalUp);
-          setTotalSandboxDownvotes(totalDown);
-
           const pick = () => sandboxRows[Math.floor(Math.random() * sandboxRows.length)];
           const c = pick();
           const i = pick();
