@@ -1,15 +1,37 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { blogPosts, pickL } from "@/data/blogPosts";
 import { useT } from "@/hooks/useT";
 import { useLocalizedPath, useIsCzech } from "@/hooks/useLanguageRouting";
+import { supabase } from "@/integrations/supabase/client";
+
+interface PreviewRow {
+  slug: string;
+  title_en: string;
+  title_cs: string;
+  excerpt_en: string;
+  excerpt_cs: string;
+  date_en: string;
+  date_cs: string;
+}
 
 const BlogPreview = () => {
   const t = useT();
   const lp = useLocalizedPath();
   const isCz = useIsCzech();
   const lang: "en" | "cs" = isCz ? "cs" : "en";
-  const displayPosts = blogPosts.slice(0, 6);
+  const [displayPosts, setDisplayPosts] = useState<PreviewRow[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from("blog_posts")
+      .select("slug,title_en,title_cs,excerpt_en,excerpt_cs,date_en,date_cs")
+      .eq("published", true)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false })
+      .limit(6)
+      .then(({ data }) => setDisplayPosts((data as PreviewRow[]) ?? []));
+  }, []);
 
   return (
     <section id="blog" className="section-padding bg-sidebar">
@@ -36,9 +58,9 @@ const BlogPreview = () => {
               to={lp(`/blog/${post.slug}`)}
               className="block glass rounded-lg p-6 hover:shadow-lg transition-shadow duration-300 cursor-pointer group h-full"
             >
-              <time className="text-xs text-muted-foreground font-light">{pickL(post.date, lang)}</time>
-              <h3 className="text-lg font-semibold mt-2 mb-3 group-hover:text-gold transition-colors">{pickL(post.title, lang)}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed font-normal">{pickL(post.excerpt, lang)}</p>
+              <time className="text-xs text-muted-foreground font-light">{lang === "cs" ? post.date_cs : post.date_en}</time>
+              <h3 className="text-lg font-semibold mt-2 mb-3 group-hover:text-gold transition-colors">{lang === "cs" ? post.title_cs : post.title_en}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-normal">{lang === "cs" ? post.excerpt_cs : post.excerpt_en}</p>
             </Link>
           </motion.article>
         ))}
