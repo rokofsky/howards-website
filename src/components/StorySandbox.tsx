@@ -341,6 +341,10 @@ export default function StorySandbox() {
     if (id === undefined || id === null || id === "") return;
 
     const storeKey = `${sheetKey}:${id}:${elementBox}`;
+    if (votingRef.current === storeKey) return;
+    votingRef.current = storeKey;
+    setTimeout(() => { votingRef.current = null; }, 500);
+
     const votes = readUserVotes();
     const current = votes[storeKey];
     console.log("handleVote storeKey:", storeKey, "current:", current, "vote:", vote);
