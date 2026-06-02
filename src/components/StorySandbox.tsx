@@ -344,31 +344,48 @@ export default function StorySandbox() {
 
     const storeKey = `${sheetKey}:${id}:${elementBox}`;
     const votes = readUserVotes();
-    const current = votes[storeKey];
+    const previous = votes[storeKey] === "up" || votes[storeKey] === "down" ? votes[storeKey] : null;
 
-    // 1) SYNCHRONOUS state update first — never blocked by network
-    let nextCounts = { up: 0, down: 0 };
+    // Determine the three cases
+    // Case A: no previous vote          -> new vote
+    // Case B: previous === vote         -> nullify (toggle off)
+    // Case C: previous !== vote (opposite) -> switch
+    let rpcVote: string;
+    let nextStored: "up" | "down" | null;
+
+    if (previous === null) {
+      rpcVote = vote;
+      nextStored = vote;
+    } else if (previous === vote) {
+      rpcVote = `nullify_${vote}`;
+      nextStored = null;
+    } else {
+      rpcVote = vote;
+      nextStored = vote;
+    }
+
+    // 1) SYNCHRONOUS counts update
     setVoteCounts((prev) => {
       const cur = prev[storeKey] ?? { up: 0, down: 0 };
       const next = { ...cur };
-      if (current) next[current] = Math.max(0, next[current] - 1);
-      if (current !== vote) next[vote] = next[vote] + 1;
-      nextCounts = next;
+      if (previous) next[previous] = Math.max(0, next[previous] - 1);
+      if (nextStored) next[nextStored] = next[nextStored] + 1;
       return { ...prev, [storeKey]: next };
     });
 
-    // 2) localStorage immediately after
-    if (current === vote) delete votes[storeKey];
-    else votes[storeKey] = vote;
+    // 2) localStorage update for all three cases
+    if (nextStored === null) delete votes[storeKey];
+    else votes[storeKey] = nextStored;
     localStorage.setItem("userVotes", JSON.stringify(votes));
-    console.log("Calling increment_vote rpc:", { sheetKey, id, elementBox, vote, current });
+
+    // 3) Fire-and-forget RPC with correct p_vote / p_previous
     void (supabase.rpc as any)("increment_vote", {
       p_sheet_key: sheetKey,
       p_row_id: String(id),
       p_element_box: elementBox,
-      p_vote: current === vote ? `nullify_${vote}` : vote,
-      p_previous: current ?? null,
-    }).then(({ error }) => {
+      p_vote: rpcVote,
+      p_previous: previous ?? null,
+    }).then(({ error }: { error: unknown }) => {
       if (error) console.warn("[StorySandbox] vote rpc failed", error);
     });
   };
