@@ -218,8 +218,9 @@ const Header = () => {
                 </a>
               );
             }
+            const isWrappable = link.label === t("Story Sandbox", "Story Sandbox");
             return (
-              <Link key={link.label} to={link.href} onClick={() => setMobileOpen(false)} className={desktopLinkClass}>
+              <Link key={link.label} to={link.href} onClick={() => setMobileOpen(false)} className={`${desktopLinkClass} ${isWrappable ? wrappableLandscapeClass : ""}`}>
                 {link.label}
               </Link>
             );
