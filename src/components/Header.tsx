@@ -146,7 +146,7 @@ const Header = () => {
   }, [location.pathname, location.hash]);
 
   const desktopLinkClass =
-    "text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-primary after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out [@media(hover:none)]:hover:after:scale-x-0";
+    "text-sm max-lg:landscape:text-xs text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold whitespace-nowrap relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-primary after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out [@media(hover:none)]:hover:after:scale-x-0";
 
   const mobileLinkClass = "text-base font-light text-foreground/70 hover:text-foreground py-2";
 
