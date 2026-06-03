@@ -56,7 +56,7 @@ const Bio = () => {
               </p>
               <p className="mb-4">
                 {t(
-                  "Being away at college was a burst of freedom. I tried out just about everything intra- and extracurricular, on campus and off, making up for the girls and partying I'd ignored throughout high school. I eventually chose English Literature/Rhetoric as a major with a Philosophy minor, for no other reason than I'd earned more credits in those subjects than the others I dabbled in. Contrary to expectations, some of that study has proven useful from time to time.",
+                  "Being away at college was a burst of freedom. I tried out just about everything intra- and extracurricular, on campus and off, making up for the girls and partying I'd neglected throughout high school. I eventually chose English Literature/Rhetoric as a major with a Philosophy minor, for no other reason than I'd earned more credits in those subjects than the others I dabbled in. Contrary to expectations, some of that study has proven useful from time to time.",
                   "Studium na vysoké škole pro mě znamenalo nával svobody. Vyzkoušel jsem snad všechno, co se dalo – ať už v rámci studijního programu nebo mimo něj, na kampusu i mimo něj – a doháněl jsem tak to, co jsem během střední školy zanedbával, ať už šlo o holky nebo večírky. Nakonec jsem si jako hlavní obor vybral anglickou literaturu a rétoriku s vedlejší specializací na filozofii, a to jen proto, že jsem v těchto předmětech nasbíral víc kreditů než v těch ostatních, které jsem si vyzkoušel. Na rozdíl od očekávání se některé z těchto studií čas od času ukázaly jako užitečné."
                 )}
               </p>
