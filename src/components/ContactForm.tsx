@@ -335,6 +335,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
               placeholder={t("10-50 humans", "10–50 lidí")}
               value={form.groupSize}
               onChange={handleChange}
+              onFocus={scrollIntoViewOnFocus}
               className={inputClasses}
             />
           </div>
