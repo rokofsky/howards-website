@@ -545,6 +545,12 @@ export default function StorySandbox() {
                   <textarea
                     value={scratch["sandbox:constraint"] ?? ""}
                     onChange={(e) => setScratch((prev) => ({ ...prev, "sandbox:constraint": e.target.value }))}
+                    onFocus={(e) => {
+                      const target = e.target;
+                      setTimeout(() => {
+                        target.scrollIntoView({ behavior: "smooth", block: "center" });
+                      }, 300);
+                    }}
                     placeholder="Type your idea here…"
                     className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full flex-1 text-base font-medium leading-snug"
                   />
