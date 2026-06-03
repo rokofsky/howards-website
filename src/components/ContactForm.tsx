@@ -320,6 +320,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
               placeholder="Apple"
               value={form.companyName}
               onChange={handleChange}
+              onFocus={scrollIntoViewOnFocus}
               className={inputClasses}
             />
           </div>
