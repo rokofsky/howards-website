@@ -285,6 +285,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             placeholder={t("The name people call you", "Jméno, kterým vás lidé oslovují")}
             value={form.name}
             onChange={handleChange}
+            onFocus={scrollIntoViewOnFocus}
             className={inputClasses}
           />
         </div>
