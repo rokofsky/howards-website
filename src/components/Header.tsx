@@ -146,7 +146,8 @@ const Header = () => {
   }, [location.pathname, location.hash]);
 
   const desktopLinkClass =
-    "text-sm max-lg:landscape:text-xs text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold whitespace-nowrap relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-primary after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out [@media(hover:none)]:hover:after:scale-x-0";
+    "text-sm max-lg:landscape:text-[11px] text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold whitespace-nowrap max-lg:landscape:whitespace-normal max-lg:landscape:text-center px-1.5 relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-primary after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out [@media(hover:none)]:hover:after:scale-x-0";
+  const wrappableLandscapeClass = "max-lg:landscape:max-w-[60px] max-lg:landscape:leading-tight";
 
   const mobileLinkClass = "text-base font-light text-foreground/70 hover:text-foreground py-2";
 
@@ -170,7 +171,7 @@ const Header = () => {
           />
         </a>
 
-        <nav className="hidden md:flex items-center gap-4 lg:gap-6 max-lg:landscape:gap-2">
+        <nav className="hidden md:flex items-center gap-2 lg:gap-3 max-lg:landscape:gap-1">
           {navOrder.map((link) => {
             if (link.kind === "external") {
               return (
@@ -179,7 +180,7 @@ const Header = () => {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`${desktopLinkClass} flex items-center gap-1.5`}
+                  className={`${desktopLinkClass} ${wrappableLandscapeClass} flex items-center gap-1.5`}
                 >
                   <img
                     src={bookCover}
@@ -217,8 +218,9 @@ const Header = () => {
                 </a>
               );
             }
+            const isWrappable = link.label === t("Story Sandbox", "Story Sandbox");
             return (
-              <Link key={link.label} to={link.href} onClick={() => setMobileOpen(false)} className={desktopLinkClass}>
+              <Link key={link.label} to={link.href} onClick={() => setMobileOpen(false)} className={`${desktopLinkClass} ${isWrappable ? wrappableLandscapeClass : ""}`}>
                 {link.label}
               </Link>
             );
