@@ -301,6 +301,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             placeholder="your@bestemail.com"
             value={form.email}
             onChange={handleChange}
+            onFocus={scrollIntoViewOnFocus}
             className={inputClasses}
           />
         </div>
