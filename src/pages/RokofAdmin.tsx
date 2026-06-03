@@ -54,7 +54,6 @@ const RokofAdmin = () => {
   const navigate = useNavigate();
   const { dismiss } = useToast();
   const [authenticated, setAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
-  const adminPassword = ADMIN_PASSWORD;
   const [password, setPassword] = useState("");
 
   // Blog generator state
