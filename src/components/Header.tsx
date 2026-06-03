@@ -26,7 +26,11 @@ const Header = () => {
   const homeLink = { kind: "plain" as const, label: t("Home", "Domů"), href: homeHref };
   const referencesLink = { kind: "plain" as const, label: t("References", "Reference"), href: lp("/references") };
   const blogLink = { kind: "plain" as const, label: t("Blog", "Blog"), href: lp("/blog") };
-  const storySandboxLink = { kind: "plain" as const, label: t("Story Sandbox", "Story Sandbox"), href: lp("/story-sandbox") };
+  const storySandboxLink = {
+    kind: "plain" as const,
+    label: t("Story Sandbox", "Story Sandbox"),
+    href: lp("/story-sandbox"),
+  };
   const cvLink = { kind: "plain" as const, label: "CV", href: lp("/cv") };
   const bookLink = {
     kind: "external" as const,
@@ -156,7 +160,7 @@ const Header = () => {
       ref={headerRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "glass" : "bg-transparent"}`}
     >
-      <div className="container mx-auto flex h-16 md:h-[72px] max-lg:landscape:h-11 items-center justify-between px-6 max-lg:landscape:px-4">
+      <div className="container mx-auto flex h-16 md:h-14 max-lg:landscape:h-11 items-center justify-between px-6 max-lg:landscape:px-4">
         <a
           href={homeHref}
           onClick={(e) => handleHomeClick(e)}
@@ -220,7 +224,12 @@ const Header = () => {
             }
             const isWrappable = link.label === t("Story Sandbox", "Story Sandbox");
             return (
-              <Link key={link.label} to={link.href} onClick={() => setMobileOpen(false)} className={`${desktopLinkClass} ${isWrappable ? wrappableLandscapeClass : ""}`}>
+              <Link
+                key={link.label}
+                to={link.href}
+                onClick={() => setMobileOpen(false)}
+                className={`${desktopLinkClass} ${isWrappable ? wrappableLandscapeClass : ""}`}
+              >
                 {link.label}
               </Link>
             );
