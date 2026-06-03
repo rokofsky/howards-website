@@ -158,7 +158,7 @@ const Header = () => {
   return (
     <header
       ref={headerRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "glass" : "bg-primary/30 backdrop-blur-sm"}`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "glass" : "bg-transparent"}`}
     >
       <div className="container mx-auto flex h-16 md:h-10 max-lg:landscape:h-11 items-center justify-between px-6 max-lg:landscape:px-4">
         <a
