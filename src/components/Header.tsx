@@ -160,7 +160,7 @@ const Header = () => {
       ref={headerRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "glass" : "bg-transparent"}`}
     >
-      <div className="container mx-auto flex h-16 md:h-14 max-lg:landscape:h-11 items-center justify-between px-6 max-lg:landscape:px-4">
+      <div className="container mx-auto flex h-16 md:h-10 max-lg:landscape:h-11 items-center justify-between px-6 max-lg:landscape:px-4">
         <a
           href={homeHref}
           onClick={(e) => handleHomeClick(e)}
