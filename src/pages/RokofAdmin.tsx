@@ -14,7 +14,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast, useToast } from "@/hooks/use-toast";
-import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
 import { Trash2, Pencil } from "lucide-react";
 import {
   Dialog,
