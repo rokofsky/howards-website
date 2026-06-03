@@ -180,7 +180,7 @@ const Header = () => {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`${desktopLinkClass} flex items-center gap-1.5`}
+                  className={`${desktopLinkClass} ${wrappableLandscapeClass} flex items-center gap-1.5`}
                 >
                   <img
                     src={bookCover}
