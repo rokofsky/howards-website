@@ -41,6 +41,13 @@ const timelineOptions: SelectOption[] = [
 
 const inputClasses = "w-full h-12 md:h-11 px-4 rounded-md bg-background border border-gold/40 text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow";
 
+const scrollIntoViewOnFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const target = e.target;
+  setTimeout(() => {
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 300);
+};
+
 // Fix common mobile typos: comma or lowercase 'l' immediately before the TLD.
 // Returns a fixed email only if the original fails standard validation and the fix passes.
 export const fixCommonEmailTypos = (email: string): string => {
@@ -278,6 +285,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             placeholder={t("The name people call you", "Jméno, kterým vás lidé oslovují")}
             value={form.name}
             onChange={handleChange}
+            onFocus={scrollIntoViewOnFocus}
             className={inputClasses}
           />
         </div>
@@ -293,6 +301,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
             placeholder="your@bestemail.com"
             value={form.email}
             onChange={handleChange}
+            onFocus={scrollIntoViewOnFocus}
             className={inputClasses}
           />
         </div>
@@ -311,6 +320,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
               placeholder="Apple"
               value={form.companyName}
               onChange={handleChange}
+              onFocus={scrollIntoViewOnFocus}
               className={inputClasses}
             />
           </div>
@@ -325,6 +335,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
               placeholder={t("10-50 humans", "10–50 lidí")}
               value={form.groupSize}
               onChange={handleChange}
+              onFocus={scrollIntoViewOnFocus}
               className={inputClasses}
             />
           </div>
@@ -375,6 +386,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
           placeholder={t("Tell me where it hurts.", "Řekněte mi, kde vás tlačí bota.")}
           value={form.message}
           onChange={handleChange}
+          onFocus={scrollIntoViewOnFocus}
           className="w-full px-4 py-3 rounded-md bg-background border border-gold/40 text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow resize-none min-h-[100px]"
         />
       </div>

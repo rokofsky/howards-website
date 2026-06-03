@@ -146,7 +146,7 @@ const Header = () => {
   }, [location.pathname, location.hash]);
 
   const desktopLinkClass =
-    "text-sm text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-primary after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out [@media(hover:none)]:hover:after:scale-x-0";
+    "text-sm max-lg:landscape:text-xs text-foreground/70 hover:text-foreground transition-colors tracking-wide font-bold whitespace-nowrap relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-primary after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out [@media(hover:none)]:hover:after:scale-x-0";
 
   const mobileLinkClass = "text-base font-light text-foreground/70 hover:text-foreground py-2";
 
@@ -170,7 +170,7 @@ const Header = () => {
           />
         </a>
 
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-4 lg:gap-6 max-lg:landscape:gap-2">
           {navOrder.map((link) => {
             if (link.kind === "external") {
               return (
@@ -227,7 +227,11 @@ const Header = () => {
         </nav>
 
         <div className="hidden md:block">
-          <Button variant="cta" size="lg" asChild>
+          <Button
+            variant="cta"
+            asChild
+            className="rounded-full py-1 px-3.5 text-sm h-auto whitespace-nowrap max-lg:landscape:text-xs max-lg:landscape:px-2 max-lg:landscape:py-0.5"
+          >
             <Link to={lp("/storytelling-sessions")}>
               {t("Free Storytelling Sessions!", "Bezplatná sezení Storytellingu!")}
             </Link>
@@ -309,7 +313,11 @@ const Header = () => {
                   </Link>
                 );
               })}
-              <Button variant="cta" size="lg" asChild className="mt-2">
+              <Button
+                variant="cta"
+                asChild
+                className="mt-2 rounded-full py-1 px-3.5 text-sm h-auto whitespace-nowrap self-start"
+              >
                 <Link to={lp("/storytelling-sessions")} onClick={() => setMobileOpen(false)}>
                   {t("Free Storytelling Sessions!", "Bezplatná sezení Storytellingu!")}
                 </Link>
