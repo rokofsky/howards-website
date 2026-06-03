@@ -313,7 +313,11 @@ const Header = () => {
                   </Link>
                 );
               })}
-              <Button variant="cta" size="lg" asChild className="mt-2">
+              <Button
+                variant="cta"
+                asChild
+                className="mt-2 rounded-full py-1 px-3.5 text-sm h-auto whitespace-nowrap self-start"
+              >
                 <Link to={lp("/storytelling-sessions")} onClick={() => setMobileOpen(false)}>
                   {t("Free Storytelling Sessions!", "Bezplatná sezení Storytellingu!")}
                 </Link>
