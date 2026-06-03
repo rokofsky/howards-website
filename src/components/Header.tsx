@@ -170,8 +170,10 @@ const Header = () => {
           <img
             src={logo}
             alt="Rokofsky Communication Consulting Logo"
-            className="block h-8 md:h-9 max-lg:landscape:h-6 w-auto shrink-0 object-contain min-h-[32px]"
+            className="block h-8 md:h-9 max-lg:landscape:h-6 w-auto min-w-[80px] min-h-[32px] shrink-0 object-contain"
             style={{ backgroundColor: "transparent" }}
+            width={120}
+            height={40}
           />
         </a>
 
