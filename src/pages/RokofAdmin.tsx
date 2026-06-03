@@ -14,7 +14,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast, useToast } from "@/hooks/use-toast";
-import ReferenceScansManager from "@/components/admin/ReferenceScansManager";
 import { Trash2, Pencil } from "lucide-react";
 import {
   Dialog,
@@ -55,7 +54,6 @@ const RokofAdmin = () => {
   const navigate = useNavigate();
   const { dismiss } = useToast();
   const [authenticated, setAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
-  const adminPassword = ADMIN_PASSWORD;
   const [password, setPassword] = useState("");
 
   // Blog generator state
@@ -257,10 +255,11 @@ const RokofAdmin = () => {
           {/* Reference Scans Manager */}
           <div className="glass rounded-xl p-8 mb-14">
             <h2 className="text-xl font-bold mb-2">Reference Scans (PDF)</h2>
-            <p className="text-sm text-muted-foreground mb-6">
-              Upload, replace, or delete the 80 evaluation form PDFs shown on the References page.
-            </p>
-            <ReferenceScansManager password={adminPassword} />
+            <div className="rounded-lg border border-border bg-muted/40 p-4">
+              <p className="text-sm text-muted-foreground">
+                Reference Scans (PDF) — upload to GitHub at: src/components/EvaluationsGallery.tsx
+              </p>
+            </div>
           </div>
 
           {/* Manage Blog Posts */}
