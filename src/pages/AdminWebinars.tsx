@@ -152,7 +152,8 @@ export default function AdminWebinars() {
     }
     setLoading(true);
     const maxOrder = webinars.length > 0 ? Math.max(...webinars.map((w) => w.sort_order)) + 1 : 0;
-    const { error } = await supabase.from("webinars").insert({ title, description, sort_order: maxOrder });
+    const slug = title.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+    const { error } = await supabase.from("webinars").insert({ title, description, sort_order: maxOrder, slug });
     setLoading(false);
     if (error) {
       toast({ title: "Error creating webinar", description: error.message, variant: "destructive" });
