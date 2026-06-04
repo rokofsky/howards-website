@@ -54,6 +54,7 @@ export const verifyAdminPassword = async (password: string): Promise<boolean> =>
     if (payload?.ok === true && payload.token) {
       try {
         localStorage.setItem(TOKEN_KEY, payload.token);
+        localStorage.setItem(AUTH_KEY, "true");
       } catch {
         /* ignore */
       }
