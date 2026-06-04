@@ -85,7 +85,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
         customer_name: name,
         customer_email: fixedEmail,
         session_ids: session_ids.length > 0 ? session_ids : null,
-        chosen_date,
         // legacy fields kept for compatibility
         session_id: session_ids[0] ?? null,
         chosen_date: [chosen_date.join(", "), preferredTime ? `Time: ${preferredTime}` : ""]
