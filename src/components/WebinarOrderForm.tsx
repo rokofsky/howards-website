@@ -84,9 +84,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       {
         customer_name: name,
         customer_email: fixedEmail,
-        session_id: session_id.length > 0 ? session_id : null,
-        chosen_date,
-        // legacy fields kept for compatibility
         session_id: session_id[0] ?? null,
         chosen_date: [chosen_date.join(", "), preferredTime ? `Time: ${preferredTime}` : ""]
           .filter(Boolean)
