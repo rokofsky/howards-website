@@ -5,7 +5,7 @@ const TOKEN_KEY = "admin_session_token";
 
 export const isAdminAuthenticated = (): boolean => {
   try {
-    return localStorage.getItem(AUTH_KEY) === "true" && !!localStorage.getItem(TOKEN_KEY);
+    return localStorage.getItem(AUTH_KEY) === "true";
   } catch {
     return false;
   }
@@ -51,9 +51,11 @@ export const verifyAdminPassword = async (password: string): Promise<boolean> =>
     });
     if (error) return false;
     const payload = data as { ok?: boolean; token?: string } | null;
-    if (payload?.ok === true && payload.token) {
+    if (payload?.ok === true) {
       try {
-        localStorage.setItem(TOKEN_KEY, payload.token);
+        if (payload.token) {
+          localStorage.setItem(TOKEN_KEY, payload.token);
+        }
         localStorage.setItem(AUTH_KEY, "true");
       } catch {
         /* ignore */
