@@ -145,19 +145,25 @@ export default function AdminWebinars() {
     }
   };
 
-   setLoading(true);
-  const maxOrder = webinars.length > 0 ? Math.max(...webinars.map((w) => w.sort_order)) + 1 : 0;
-  const { error } = await supabase.from("webinars").insert({ title, description, sort_order: maxOrder });
-  setLoading(false);
-  if (error) {
-    toast({ title: "Error creating webinar", description: error.message, variant: "destructive" });
-    return;
-  }
-  toast({ title: "Webinar created!" });
-  setTitle("");
-  setDescription("");
-  fetchWebinars();
-};
+  const handleCreate = async () => {
+    if (!title.trim()) {
+      toast({ title: "Title is required", variant: "destructive" });
+      return;
+    }
+    setLoading(true);
+    const maxOrder = webinars.length > 0 ? Math.max(...webinars.map((w) => w.sort_order)) + 1 : 0;
+    const slug = title.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+    const { error } = await supabase.from("webinars").insert({ title, description, sort_order: maxOrder, slug });
+    setLoading(false);
+    if (error) {
+      toast({ title: "Error creating webinar", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: "Webinar created!" });
+    setTitle("");
+    setDescription("");
+    fetchWebinars();
+  };
 
   const handleEditOpen = (w: Webinar) => {
     setEditId(w.id);
@@ -172,25 +178,27 @@ export default function AdminWebinars() {
       return;
     }
     setEditLoading(true);
-  const { error } = await supabase.from("webinars").update({ title: editTitle, description: editDescription }).eq("id", editId);
-setEditLoading(false);
-if (error) {
-  toast({ title: "Error updating", description: error.message, variant: "destructive" });
-  return;
-}
+    const { error } = await supabase.from("webinars").update({ title: editTitle, description: editDescription }).eq("id", editId);
+    setEditLoading(false);
+    if (error) {
+      toast({ title: "Error updating", description: error.message, variant: "destructive" });
+      return;
+    }
     toast({ title: "Webinar updated!" });
     setEditDialogOpen(false);
     fetchWebinars();
   };
 
- const { error } = await supabase.from("webinars").delete().eq("id", id);
-if (error) {
-  toast({ title: "Error deleting", variant: "destructive" });
-  return;
-}
+  const handleDelete = async (id: string) => {
+    const { error } = await supabase.from("webinars").delete().eq("id", id);
+    if (error) {
+      toast({ title: "Error deleting", variant: "destructive" });
+      return;
+    }
     toast({ title: "Webinar deleted" });
     fetchWebinars();
   };
+
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -207,6 +215,9 @@ if (error) {
     supabase.from("webinars").update({ sort_order }).eq("id", id)
   )
 );
+  };
+
+
 
   if (!authenticated) {
     return (
