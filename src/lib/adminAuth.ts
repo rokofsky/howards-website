@@ -1,11 +1,11 @@
 import { supabase } from "@/integrations/supabase/client";
 
-const STORAGE_KEY = "admin_authenticated";
-const PASSWORD_KEY = "admin_password";
+const AUTH_KEY = "admin_authenticated";
+const TOKEN_KEY = "admin_session_token";
 
 export const isAdminAuthenticated = (): boolean => {
   try {
-    return localStorage.getItem(STORAGE_KEY) === "true";
+    return localStorage.getItem(AUTH_KEY) === "true" && !!localStorage.getItem(TOKEN_KEY);
   } catch {
     return false;
   }
@@ -13,7 +13,7 @@ export const isAdminAuthenticated = (): boolean => {
 
 export const setAdminAuthenticated = (): void => {
   try {
-    localStorage.setItem(STORAGE_KEY, "true");
+    localStorage.setItem(AUTH_KEY, "true");
   } catch {
     /* ignore */
   }
@@ -21,16 +21,16 @@ export const setAdminAuthenticated = (): void => {
 
 export const clearAdminAuthenticated = (): void => {
   try {
-    localStorage.removeItem(STORAGE_KEY);
-    sessionStorage.removeItem(PASSWORD_KEY);
+    localStorage.removeItem(AUTH_KEY);
+    localStorage.removeItem(TOKEN_KEY);
   } catch {
     /* ignore */
   }
 };
 
-export const getAdminPassword = (): string => {
+export const getAdminToken = (): string => {
   try {
-    return sessionStorage.getItem(PASSWORD_KEY) ?? "";
+    return localStorage.getItem(TOKEN_KEY) ?? "";
   } catch {
     return "";
   }
@@ -38,10 +38,10 @@ export const getAdminPassword = (): string => {
 
 /**
  * Verify the admin password against the admin-sessions edge function.
- * The password is never compared in client code; it is sent to the server,
- * which holds the source-of-truth value as a secret.
- * On success, the password is cached in sessionStorage so subsequent
- * edge-function calls can authenticate.
+ * The raw password is sent only for this single verification call and is
+ * never persisted in client storage. On success, the server returns an
+ * opaque session token (HMAC-signed) which is stored in localStorage so
+ * the admin remains logged in across browser restarts.
  */
 export const verifyAdminPassword = async (password: string): Promise<boolean> => {
   try {
@@ -50,9 +50,10 @@ export const verifyAdminPassword = async (password: string): Promise<boolean> =>
       body: { password, action: "verify" },
     });
     if (error) return false;
-    if (data && (data as any).ok === true) {
+    const payload = data as { ok?: boolean; token?: string } | null;
+    if (payload?.ok === true && payload.token) {
       try {
-        sessionStorage.setItem(PASSWORD_KEY, password);
+        localStorage.setItem(TOKEN_KEY, payload.token);
       } catch {
         /* ignore */
       }
