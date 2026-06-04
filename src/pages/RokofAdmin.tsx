@@ -11,7 +11,7 @@ import { toast, useToast } from "@/hooks/use-toast";
 import { Trash2, Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
-import { ADMIN_PASSWORD, isAdminAuthenticated, setAdminAuthenticated, clearAdminAuthenticated } from "@/lib/adminAuth";
+import { isAdminAuthenticated, setAdminAuthenticated, clearAdminAuthenticated, verifyAdminPassword } from "@/lib/adminAuth";
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
