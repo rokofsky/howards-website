@@ -151,9 +151,9 @@ export default function AdminWebinars() {
       return;
     }
     setLoading(true);
+    const slug = title.toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-") + "-" + Date.now();
     const maxOrder = webinars.length > 0 ? Math.max(...webinars.map((w) => w.sort_order)) + 1 : 0;
-    const slug = title.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
-    const { error } = await supabase.from("webinars").insert({ title, description, sort_order: maxOrder, slug });
+    const { error } = await supabase.from("webinars").insert({ title, description, slug, sort_order: maxOrder });
     setLoading(false);
     if (error) {
       toast({ title: "Error creating webinar", description: error.message, variant: "destructive" });
