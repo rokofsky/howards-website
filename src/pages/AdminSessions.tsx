@@ -19,7 +19,7 @@ interface Session {
   created_at: string;
 }
 
-import { verifyAdminPassword, getAdminToken, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
+import { verifyAdminPassword, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
 
 export default function AdminSessions() {
   const [password, setPassword] = useState("");
@@ -28,7 +28,6 @@ export default function AdminSessions() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  // Form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [sessionDate, setSessionDate] = useState("");
@@ -36,7 +35,6 @@ export default function AdminSessions() {
   const [zoomMeetingId, setZoomMeetingId] = useState("");
   const [status, setStatus] = useState<"draft" | "published">("draft");
 
-  // Edit mode
   const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -44,11 +42,11 @@ export default function AdminSessions() {
   }, [authenticated]);
 
   const fetchSessions = async () => {
-    const res = await supabase.functions.invoke("admin-sessions", {
-      method: "POST",
-      body: { token: getAdminToken(), action: "list" },
-    });
-    if (Array.isArray(res.data)) setSessions(res.data);
+    const { data, error } = await supabase
+      .from("storytelling_sessions")
+      .select("*")
+      .order("session_date", { ascending: true });
+    if (!error && data) setSessions(data as Session[]);
   };
 
   const handleLogin = async () => {
@@ -61,8 +59,6 @@ export default function AdminSessions() {
       toast({ title: "Wrong password", variant: "destructive" });
     }
   };
-
-  const getAuth = () => ({ token: getAdminToken() });
 
   const clearForm = () => {
     setTitle("");
@@ -78,7 +74,6 @@ export default function AdminSessions() {
     setEditingId(s.id);
     setTitle(s.title || "");
     setDescription(s.description || "");
-    // Format date for datetime-local input
     const d = new Date(s.session_date);
     const pad = (n: number) => n.toString().padStart(2, "0");
     setSessionDate(`${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`);
@@ -94,42 +89,34 @@ export default function AdminSessions() {
     }
     setLoading(true);
 
+    const cleanMeetingId = zoomMeetingId ? zoomMeetingId.replace(/\D/g, "") : null;
+    const payload = {
+      title: title || null,
+      description: description || null,
+      session_date: new Date(sessionDate).toISOString(),
+      zoom_link: zoomLink || null,
+      zoom_meeting_id: cleanMeetingId,
+      status: status === "published" ? "published" : "draft",
+    };
+
     if (editingId) {
-      const res = await supabase.functions.invoke("admin-sessions", {
-        body: {
-          ...getAuth(),
-          action: "update",
-          id: editingId,
-          title: title || null,
-          description: description || null,
-          session_date: new Date(sessionDate).toISOString(),
-          zoom_link: zoomLink || null,
-          zoom_meeting_id: zoomMeetingId || null,
-          status,
-        },
-      });
+      const { error } = await supabase
+        .from("storytelling_sessions")
+        .update(payload)
+        .eq("id", editingId);
       setLoading(false);
-      if (res.error || res.data?.error) {
-        toast({ title: "Error updating session", description: res.error?.message || res.data?.error, variant: "destructive" });
+      if (error) {
+        toast({ title: "Error updating session", description: error.message, variant: "destructive" });
         return;
       }
       toast({ title: "Session updated!" });
     } else {
-      const res = await supabase.functions.invoke("admin-sessions", {
-        body: {
-          ...getAuth(),
-          action: "create",
-          title: title || null,
-          description: description || null,
-          session_date: new Date(sessionDate).toISOString(),
-          zoom_link: zoomLink || null,
-          zoom_meeting_id: zoomMeetingId || null,
-          status,
-        },
-      });
+      const { error } = await supabase
+        .from("storytelling_sessions")
+        .insert(payload);
       setLoading(false);
-      if (res.error || res.data?.error) {
-        toast({ title: "Error creating session", description: res.error?.message || res.data?.error, variant: "destructive" });
+      if (error) {
+        toast({ title: "Error creating session", description: error.message, variant: "destructive" });
         return;
       }
       toast({ title: "Session created!" });
@@ -141,10 +128,11 @@ export default function AdminSessions() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this session?")) return;
-    const res = await supabase.functions.invoke("admin-sessions", {
-      body: { ...getAuth(), action: "delete", id },
-    });
-    if (res.error) {
+    const { error } = await supabase
+      .from("storytelling_sessions")
+      .delete()
+      .eq("id", id);
+    if (error) {
       toast({ title: "Error deleting", variant: "destructive" });
       return;
     }
