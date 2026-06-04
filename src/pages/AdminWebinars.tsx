@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { verifyAdminPassword, getAdminPassword, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
+import { verifyAdminPassword, getAdminToken, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -145,7 +145,7 @@ export default function AdminWebinars() {
     }
   };
 
-  const getPassword = () => getAdminPassword();
+  const getAuth = () => ({ token: getAdminToken() });
 
   const handleCreate = async () => {
     if (!title.trim()) {
@@ -155,7 +155,7 @@ export default function AdminWebinars() {
     setLoading(true);
     const maxOrder = webinars.length > 0 ? Math.max(...webinars.map((w) => w.sort_order)) + 1 : 0;
     const res = await supabase.functions.invoke("admin-webinars", {
-      body: { password: getPassword(), action: "create", title, description, sort_order: maxOrder },
+      body: { ...getAuth(), action: "create", title, description, sort_order: maxOrder },
     });
     setLoading(false);
     if (res.error || res.data?.error) {
@@ -183,7 +183,7 @@ export default function AdminWebinars() {
     setEditLoading(true);
     const res = await supabase.functions.invoke("admin-webinars", {
       body: {
-        password: getPassword(),
+        ...getAuth(),
         action: "update",
         id: editId,
         title: editTitle,
@@ -203,7 +203,7 @@ export default function AdminWebinars() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this webinar?")) return;
     const res = await supabase.functions.invoke("admin-webinars", {
-      body: { password: getPassword(), action: "delete", id },
+      body: { ...getAuth(), action: "delete", id },
     });
     if (res.error) {
       toast({ title: "Error deleting", variant: "destructive" });
@@ -224,7 +224,7 @@ export default function AdminWebinars() {
 
     const items = reordered.map((w, i) => ({ id: w.id, sort_order: i }));
     await supabase.functions.invoke("admin-webinars", {
-      body: { password: getPassword(), action: "reorder", items },
+      body: { ...getAuth(), action: "reorder", items },
     });
   };
 

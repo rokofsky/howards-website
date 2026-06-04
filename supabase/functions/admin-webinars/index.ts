@@ -5,12 +5,45 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const TOKEN_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
+
+async function hmacSign(secret: string, data: string): Promise<string> {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, enc.encode(data));
+  return btoa(String.fromCharCode(...new Uint8Array(sig)));
+}
+
+async function verifyToken(token: string, secret: string): Promise<boolean> {
+  const parts = token.split(".");
+  if (parts.length !== 2) return false;
+  const [issuedAt, sig] = parts;
+  const ts = Number(issuedAt);
+  if (!Number.isFinite(ts)) return false;
+  if (Date.now() - ts > TOKEN_MAX_AGE_MS) return false;
+  const expected = await hmacSign(secret, issuedAt);
+  return expected === sig;
+}
+
+async function isAuthorized(body: any, secret: string): Promise<boolean> {
+  if (typeof body?.token === "string" && body.token.length > 0) {
+    return await verifyToken(body.token, secret);
+  }
+  return typeof body?.password === "string" && body.password === secret;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  const password = Deno.env.get("ADMIN_PASSWORD");
+  const password = Deno.env.get("ADMIN_PASSWORD") ?? "";
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
@@ -19,7 +52,7 @@ Deno.serve(async (req) => {
   try {
     const body = await req.json();
 
-    if (body.password !== password) {
+    if (!(await isAuthorized(body, password))) {
       return new Response(JSON.stringify({ error: "Invalid password" }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -27,12 +60,6 @@ Deno.serve(async (req) => {
     }
 
     const action = body.action;
-
-    if (action === "verify") {
-      return new Response(JSON.stringify({ ok: true }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
 
     if (action === "create") {
       const { title, description } = body;
