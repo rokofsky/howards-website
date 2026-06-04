@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { verifyAdminPassword, getAdminToken, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
+import { verifyAdminPassword, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -145,7 +145,7 @@ export default function AdminWebinars() {
     }
   };
 
-  const getAuth = () => ({ token: getAdminToken() });
+  
 
   const handleCreate = async () => {
     if (!title.trim()) {
@@ -154,12 +154,16 @@ export default function AdminWebinars() {
     }
     setLoading(true);
     const maxOrder = webinars.length > 0 ? Math.max(...webinars.map((w) => w.sort_order)) + 1 : 0;
-    const res = await supabase.functions.invoke("admin-webinars", {
-      body: { ...getAuth(), action: "create", title, description, sort_order: maxOrder },
+    const slug = title.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+    const { error } = await supabase.from("webinars").insert({
+      title,
+      description,
+      sort_order: maxOrder,
+      slug,
     });
     setLoading(false);
-    if (res.error || res.data?.error) {
-      toast({ title: "Error creating webinar", description: res.error?.message || res.data?.error, variant: "destructive" });
+    if (error) {
+      toast({ title: "Error creating webinar", description: error.message, variant: "destructive" });
       return;
     }
     toast({ title: "Webinar created!" });
@@ -181,18 +185,13 @@ export default function AdminWebinars() {
       return;
     }
     setEditLoading(true);
-    const res = await supabase.functions.invoke("admin-webinars", {
-      body: {
-        ...getAuth(),
-        action: "update",
-        id: editId,
-        title: editTitle,
-        description: editDescription,
-      },
-    });
+    const { error } = await supabase.from("webinars").update({
+      title: editTitle,
+      description: editDescription,
+    }).eq("id", editId);
     setEditLoading(false);
-    if (res.error || res.data?.error) {
-      toast({ title: "Error updating webinar", description: res.error?.message || res.data?.error, variant: "destructive" });
+    if (error) {
+      toast({ title: "Error updating webinar", description: error.message, variant: "destructive" });
       return;
     }
     toast({ title: "Webinar updated!" });
@@ -202,10 +201,8 @@ export default function AdminWebinars() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this webinar?")) return;
-    const res = await supabase.functions.invoke("admin-webinars", {
-      body: { ...getAuth(), action: "delete", id },
-    });
-    if (res.error) {
+    const { error } = await supabase.from("webinars").delete().eq("id", id);
+    if (error) {
       toast({ title: "Error deleting", variant: "destructive" });
       return;
     }
@@ -223,9 +220,11 @@ export default function AdminWebinars() {
     setWebinars(reordered);
 
     const items = reordered.map((w, i) => ({ id: w.id, sort_order: i }));
-    await supabase.functions.invoke("admin-webinars", {
-      body: { ...getAuth(), action: "reorder", items },
-    });
+    await Promise.all(
+      items.map((item) =>
+        supabase.from("webinars").update({ sort_order: item.sort_order }).eq("id", item.id)
+      )
+    );
   };
 
   if (!authenticated) {
