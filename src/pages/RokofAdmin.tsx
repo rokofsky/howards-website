@@ -66,7 +66,7 @@ const RokofAdmin = () => {
     const ok = await verifyAdminPassword(password);
     if (ok) {
       dismiss();
-      setAdminAuthenticated();
+      localStorage.setItem("admin_authenticated", "true");
       setAuthenticated(true);
       setPassword("");
     } else {
