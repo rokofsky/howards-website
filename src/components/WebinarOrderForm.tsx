@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useT } from "@/hooks/useT";
@@ -39,6 +40,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [preferredTime, setPreferredTime] = useState("");
   const [undecided, setUndecided] = useState(false);
+  const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
@@ -104,6 +106,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           customer_email: fixedEmail,
           chosen_date: chosenDateStr,
           webinar_title: selectedWebinarTitle,
+          note,
         },
       });
     }
@@ -120,6 +123,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     setSelectedDates([]);
     setPreferredTime("");
     setUndecided(false);
+    setNote("");
     toast.success(t("Howard will send you an email within 24 hours.", "Howard vám pošle e-mail do 24 hodin."));
   };
 
@@ -266,15 +270,30 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             {t("There is no payment now, we will be in touch", "Nyní se neplatí, ozveme se vám")}
           </p>
 
-          <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t("Cancel", "Zrušit")}
-            </Button>
-            <Button type="submit" disabled={loading}>
-              {loading
-                ? t("Submitting...", "Odesílám...")
-                : t("Submit non-binding order", "Odeslat nezávaznou objednávku")}
-            </Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+            <div>
+              <Label htmlFor="order-note" className="mb-2 block">
+                {t("Optional note", "Volitelná poznámka")}
+              </Label>
+              <Textarea
+                id="order-note"
+                placeholder={t("Any questions or special requests?", "Máte nějaké otázky nebo speciální požadavky?")}
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                className={fieldBorder}
+                rows={3}
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                {t("Cancel", "Zrušit")}
+              </Button>
+              <Button type="submit" disabled={loading}>
+                {loading
+                  ? t("Submitting...", "Odesílám...")
+                  : t("Submit non-binding order", "Odeslat nezávaznou objednávku")}
+              </Button>
+            </div>
           </div>
         </form>
       </DialogContent>
