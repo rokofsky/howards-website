@@ -366,19 +366,16 @@ export default function StorySandbox() {
       p_vote: pVote,
       p_previous: current ?? null,
     }).then(({ error }: { error: any }) => {
-      if (error) {
-        console.warn("[StorySandbox] vote rpc failed", error);
-      } else {
-        supabase.from("votes").select("*").then(({ data }) => {
-          if (!data) return;
-          const counts: Record<string, { up: number; down: number }> = {};
-          data.forEach((row) => {
-            const key = `${row.sheet_key}:${row.row_id}:${row.element_box}`;
-            counts[key] = { up: row.up_count, down: row.down_count };
-          });
-          setVoteCounts(counts);
+      if (error) return;
+      supabase.from("votes").select("*").then(({ data }) => {
+        if (!data) return;
+        const counts: Record<string, { up: number; down: number }> = {};
+        data.forEach((row) => {
+          const key = `${row.sheet_key}:${row.row_id}:${row.element_box}`;
+          counts[key] = { up: row.up_count, down: row.down_count };
         });
-      }
+        setVoteCounts(counts);
+      });
     });
   };
 
