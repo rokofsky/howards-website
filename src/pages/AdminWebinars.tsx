@@ -214,6 +214,9 @@ export default function AdminWebinars() {
     supabase.from("webinars").update({ sort_order }).eq("id", id)
   )
 );
+  };
+
+
 
   if (!authenticated) {
     return (
