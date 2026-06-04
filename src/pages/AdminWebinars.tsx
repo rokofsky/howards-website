@@ -152,24 +152,17 @@ export default function AdminWebinars() {
     }
     setLoading(true);
     const maxOrder = webinars.length > 0 ? Math.max(...webinars.map((w) => w.sort_order)) + 1 : 0;
-const handleCreate = async () => {
-  if (!title.trim()) {
-    toast({ title: "Title is required", variant: "destructive" });
-    return;
-  }
-  setLoading(true);
-  const maxOrder = webinars.length > 0 ? Math.max(...webinars.map((w) => w.sort_order)) + 1 : 0;
-  const { error } = await supabase.from("webinars").insert({ title, description, sort_order: maxOrder });
-  setLoading(false);
-  if (error) {
-    toast({ title: "Error creating webinar", description: error.message, variant: "destructive" });
-    return;
-  }
-  toast({ title: "Webinar created!" });
-  setTitle("");
-  setDescription("");
-  fetchWebinars();
-};
+    const { error } = await supabase.from("webinars").insert({ title, description, sort_order: maxOrder });
+    setLoading(false);
+    if (error) {
+      toast({ title: "Error creating webinar", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: "Webinar created!" });
+    setTitle("");
+    setDescription("");
+    fetchWebinars();
+  };
 
   const handleEditOpen = (w: Webinar) => {
     setEditId(w.id);
@@ -184,22 +177,23 @@ const handleCreate = async () => {
       return;
     }
     setEditLoading(true);
-  const { error } = await supabase.from("webinars").update({ title: editTitle, description: editDescription }).eq("id", editId);
-setEditLoading(false);
-if (error) {
-  toast({ title: "Error updating", description: error.message, variant: "destructive" });
-  return;
-}
+    const { error } = await supabase.from("webinars").update({ title: editTitle, description: editDescription }).eq("id", editId);
+    setEditLoading(false);
+    if (error) {
+      toast({ title: "Error updating", description: error.message, variant: "destructive" });
+      return;
+    }
     toast({ title: "Webinar updated!" });
     setEditDialogOpen(false);
     fetchWebinars();
   };
 
- const { error } = await supabase.from("webinars").delete().eq("id", id);
-if (error) {
-  toast({ title: "Error deleting", variant: "destructive" });
-  return;
-}
+  const handleDelete = async (id: string) => {
+    const { error } = await supabase.from("webinars").delete().eq("id", id);
+    if (error) {
+      toast({ title: "Error deleting", variant: "destructive" });
+      return;
+    }
     toast({ title: "Webinar deleted" });
     fetchWebinars();
   };
@@ -215,10 +209,12 @@ if (error) {
 
     const items = reordered.map((w, i) => ({ id: w.id, sort_order: i }));
     await Promise.all(
-  items.map(({ id, sort_order }) =>
-    supabase.from("webinars").update({ sort_order }).eq("id", id)
-  )
-);
+      items.map(({ id, sort_order }) =>
+        supabase.from("webinars").update({ sort_order }).eq("id", id)
+      )
+    );
+  };
+
 
   if (!authenticated) {
     return (
