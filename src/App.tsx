@@ -23,7 +23,7 @@ import WebinarDetail from "./pages/WebinarDetail";
 import AdminSessions from "./pages/AdminSessions";
 import AdminWebinars from "./pages/AdminWebinars";
 import RokofAdmin from "./pages/RokofAdmin";
-import Diagnostics from "./pages/Diagnostics";
+
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import GDPR from "./pages/GDPR";
 import TermsOfService from "./pages/TermsOfService";
@@ -214,7 +214,7 @@ function PageRoutes() {
       <Route path="storytelling-sessions" element={<StorytellingWorkshops />} />
       <Route path="storytelling-workshops" element={<StorytellingWorkshops />} />
       <Route path="story-sandbox" element={<StorySandboxPage />} />
-      <Route path="diagnostics" element={<Diagnostics />} />
+      
       <Route path="services/:slug" element={<ServiceDetail />} />
       <Route path="keynote-topics" element={<KeynoteTopics />} />
       <Route path="blog" element={<Blog />} />
@@ -250,7 +250,7 @@ const App = () => (
             <Route path="/admin/sessions" element={<AdminSessions />} />
             <Route path="/admin/webinars" element={<AdminWebinars />} />
             <Route path="/rokofsky-admin" element={<RokofAdmin />} />
-            <Route path="/diagnostics" element={<Diagnostics />} />
+            
 
             <Route path="*" element={<NotFound />} />
           </Routes>
