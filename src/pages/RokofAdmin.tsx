@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  ADMIN_PASSWORD,
+  verifyAdminPassword,
   isAdminAuthenticated,
   setAdminAuthenticated,
   clearAdminAuthenticated,
@@ -78,9 +78,10 @@ const RokofAdmin = () => {
     if (authenticated) void loadPosts();
   }, [authenticated]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
+    const ok = await verifyAdminPassword(password);
+    if (ok) {
       dismiss();
       setAdminAuthenticated();
       setAuthenticated(true);
