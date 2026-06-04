@@ -11,7 +11,7 @@ import { toast, useToast } from "@/hooks/use-toast";
 import { Trash2, Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
-import { ADMIN_PASSWORD, isAdminAuthenticated, setAdminAuthenticated, clearAdminAuthenticated } from "@/lib/adminAuth";
+import { isAdminAuthenticated, setAdminAuthenticated, clearAdminAuthenticated, verifyAdminPassword } from "@/lib/adminAuth";
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
@@ -61,12 +61,11 @@ const RokofAdmin = () => {
     if (authenticated) void loadPosts();
   }, [authenticated]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
+    const ok = await verifyAdminPassword(password);
+    if (ok) {
       dismiss();
-      localStorage.setItem("admin_authenticated", "true");
-      console.log("Set localStorage:", localStorage.getItem("admin_authenticated"));
       setAdminAuthenticated();
       setAuthenticated(true);
       setPassword("");
