@@ -61,12 +61,11 @@ const RokofAdmin = () => {
     if (authenticated) void loadPosts();
   }, [authenticated]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
+    const ok = await verifyAdminPassword(password);
+    if (ok) {
       dismiss();
-      localStorage.setItem("admin_authenticated", "true");
-      console.log("Set localStorage:", localStorage.getItem("admin_authenticated"));
       setAdminAuthenticated();
       setAuthenticated(true);
       setPassword("");
