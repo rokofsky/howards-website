@@ -46,6 +46,7 @@ Deno.serve(async (req) => {
     const customer_email = String(body.customer_email ?? "").trim().slice(0, 255);
     const chosen_date = String(body.chosen_date ?? "").trim().slice(0, 500);
     const webinar_title = String(body.webinar_title ?? "").trim().slice(0, 300);
+    const note = String(body.note ?? "").trim().slice(0, 2000);
 
     if (!customer_name || !customer_email) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
@@ -84,7 +85,8 @@ Deno.serve(async (req) => {
     <p><strong>Email:</strong> ${esc(customer_email)}</p>
     <p><strong>Webinar:</strong> ${esc(webinar_title) || "—"}</p>
     <p><strong>Chosen date:</strong> ${esc(chosen_date) || "—"}</p>
-  </div>
+    ${note ? `<p><strong>Note:</strong> ${esc(note)}</p>` : ""}
+  </div>`, 
 </div></body></html>`;
 
     await sendEmail({
