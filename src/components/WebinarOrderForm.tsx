@@ -80,22 +80,40 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
 
     const session_id = (dbWebinars || []).map((w: { id: string }) => w.id);
 
+    const chosenDateStr = [chosen_date.join(", "), preferredTime ? `Time: ${preferredTime}` : ""]
+      .filter(Boolean)
+      .join(" | ");
+
     const { error } = await supabase.from("webinar_orders").insert([
       {
         customer_name: name,
         customer_email: fixedEmail,
         session_id: session_id[0] ?? undefined,
-        chosen_date: [chosen_date.join(", "), preferredTime ? `Time: ${preferredTime}` : ""]
-          .filter(Boolean)
-          .join(" | "),
+        chosen_date: chosenDateStr,
       },
     ]);
+
+    if (!error) {
+      const selectedWebinarTitle = allWebinars
+        .filter((w) => selectedSlugs.includes(w.slug))
+        .map((w) => w.title)
+        .join(", ");
+      await supabase.functions.invoke("send-webinar-email", {
+        body: {
+          customer_name: name,
+          customer_email: fixedEmail,
+          chosen_date: chosenDateStr,
+          webinar_title: selectedWebinarTitle,
+        },
+      });
+    }
 
     setLoading(false);
     if (error) {
       toast.error(t("Order failed: ", "Objednávka selhala: ") + error.message);
       return;
     }
+
     onOpenChange(false);
     setName("");
     setEmail("");
