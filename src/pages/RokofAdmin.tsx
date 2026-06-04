@@ -6,29 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast, useToast } from "@/hooks/use-toast";
 import { Trash2, Pencil } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  verifyAdminPassword,
-  isAdminAuthenticated,
-  setAdminAuthenticated,
-  clearAdminAuthenticated,
-} from "@/lib/adminAuth";
+import { ADMIN_PASSWORD, isAdminAuthenticated, setAdminAuthenticated, clearAdminAuthenticated } from "@/lib/adminAuth";
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
@@ -78,11 +61,12 @@ const RokofAdmin = () => {
     if (authenticated) void loadPosts();
   }, [authenticated]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const ok = await verifyAdminPassword(password);
-    if (ok) {
+    if (password === ADMIN_PASSWORD) {
       dismiss();
+      localStorage.setItem("admin_authenticated", "true");
+      console.log("Set localStorage:", localStorage.getItem("admin_authenticated"));
       setAdminAuthenticated();
       setAuthenticated(true);
       setPassword("");
@@ -237,17 +221,11 @@ const RokofAdmin = () => {
 
           {/* Admin Tools */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-14">
-            <Link
-              to="/admin/sessions"
-              className="glass rounded-xl p-6 text-center hover:shadow-lg transition-shadow"
-            >
+            <Link to="/admin/sessions" className="glass rounded-xl p-6 text-center hover:shadow-lg transition-shadow">
               <h3 className="font-bold text-lg mb-1">Manage Storytelling Sessions</h3>
               <p className="text-sm text-muted-foreground">Create and manage sessions</p>
             </Link>
-            <Link
-              to="/admin/webinars"
-              className="glass rounded-xl p-6 text-center hover:shadow-lg transition-shadow"
-            >
+            <Link to="/admin/webinars" className="glass rounded-xl p-6 text-center hover:shadow-lg transition-shadow">
               <h3 className="font-bold text-lg mb-1">Manage Webinars</h3>
               <p className="text-sm text-muted-foreground">Create and manage webinars</p>
             </Link>
@@ -280,28 +258,13 @@ const RokofAdmin = () => {
                       <p className="text-xs text-muted-foreground">{post.date_en}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground">
-                        {post.published ? "Published" : "Hidden"}
-                      </span>
-                      <Switch
-                        checked={post.published}
-                        onCheckedChange={(v) => handleTogglePublished(post, v)}
-                      />
+                      <span className="text-xs text-muted-foreground">{post.published ? "Published" : "Hidden"}</span>
+                      <Switch checked={post.published} onCheckedChange={(v) => handleTogglePublished(post, v)} />
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setEditingPost(post)}
-                      aria-label="Edit post"
-                    >
+                    <Button variant="ghost" size="icon" onClick={() => setEditingPost(post)} aria-label="Edit post">
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(post)}
-                      aria-label="Delete post"
-                    >
+                    <Button variant="ghost" size="icon" onClick={() => handleDelete(post)} aria-label="Delete post">
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
                   </li>
@@ -326,7 +289,9 @@ const RokofAdmin = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((c) => (
-                      <SelectItem key={c} value={c}>{c}</SelectItem>
+                      <SelectItem key={c} value={c}>
+                        {c}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -370,35 +335,33 @@ const RokofAdmin = () => {
           </DialogHeader>
           {editingPost && (
             <div className="space-y-4">
-              {([
-                ["title_en", "Title (EN)", "input"],
-                ["title_cs", "Title (CS)", "input"],
-                ["category_en", "Category (EN)", "input"],
-                ["category_cs", "Category (CS)", "input"],
-                ["date_en", "Date (EN)", "input"],
-                ["date_cs", "Date (CS)", "input"],
-                ["image_url", "Image URL", "input"],
-                ["excerpt_en", "Excerpt (EN)", "textarea"],
-                ["excerpt_cs", "Excerpt (CS)", "textarea"],
-                ["content_en", "Content (EN)", "textarea"],
-                ["content_cs", "Content (CS)", "textarea"],
-              ] as const).map(([key, label, kind]) => (
+              {(
+                [
+                  ["title_en", "Title (EN)", "input"],
+                  ["title_cs", "Title (CS)", "input"],
+                  ["category_en", "Category (EN)", "input"],
+                  ["category_cs", "Category (CS)", "input"],
+                  ["date_en", "Date (EN)", "input"],
+                  ["date_cs", "Date (CS)", "input"],
+                  ["image_url", "Image URL", "input"],
+                  ["excerpt_en", "Excerpt (EN)", "textarea"],
+                  ["excerpt_cs", "Excerpt (CS)", "textarea"],
+                  ["content_en", "Content (EN)", "textarea"],
+                  ["content_cs", "Content (CS)", "textarea"],
+                ] as const
+              ).map(([key, label, kind]) => (
                 <div key={key}>
                   <Label>{label}</Label>
                   {kind === "input" ? (
                     <Input
                       value={(editingPost[key] as string) ?? ""}
-                      onChange={(e) =>
-                        setEditingPost({ ...editingPost, [key]: e.target.value })
-                      }
+                      onChange={(e) => setEditingPost({ ...editingPost, [key]: e.target.value })}
                     />
                   ) : (
                     <Textarea
                       className="min-h-[140px]"
                       value={(editingPost[key] as string) ?? ""}
-                      onChange={(e) =>
-                        setEditingPost({ ...editingPost, [key]: e.target.value })
-                      }
+                      onChange={(e) => setEditingPost({ ...editingPost, [key]: e.target.value })}
                     />
                   )}
                 </div>
