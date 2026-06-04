@@ -88,7 +88,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
         chosen_date: [chosen_date.join(", "), preferredTime ? `Time: ${preferredTime}` : ""]
           .filter(Boolean)
           .join(" | "),
-        status: "pending",
       },
     ]);
 
