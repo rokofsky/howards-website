@@ -1,54 +1,26 @@
-import { supabase } from "@/integrations/supabase/client";
+export const ADMIN_PASSWORD = "rokofskyzzz";
+const STORAGE_KEY = "admin_authenticated";
 
-const PASSWORD_KEY = "admin_password";
-
-export const getAdminPassword = (): string | null => {
+export const isAdminAuthenticated = (): boolean => {
   try {
-    return sessionStorage.getItem(PASSWORD_KEY);
+    return localStorage.getItem(STORAGE_KEY) === "true";
   } catch {
-    return null;
+    return false;
   }
 };
 
-export const setAdminPassword = (password: string): void => {
-  try {
-    sessionStorage.setItem(PASSWORD_KEY, password);
-  } catch {
-    /* ignore */
-  }
-};
-
-export const clearAdminPassword = (): void => {
-  try {
-    sessionStorage.removeItem(PASSWORD_KEY);
-  } catch {
-    /* ignore */
-  }
-};
-
-export const isAdminAuthenticated = (): boolean => !!getAdminPassword();
-
-export const clearAdminAuthenticated = clearAdminPassword;
 export const setAdminAuthenticated = (): void => {
-  /* deprecated no-op; password is stored via setAdminPassword */
+  try {
+    localStorage.setItem(STORAGE_KEY, "true");
+  } catch {
+    /* ignore */
+  }
 };
 
-/**
- * Verify admin password against the server. On success, password is stored in
- * sessionStorage for reuse by subsequent admin edge function calls.
- */
-export const verifyAdminPassword = async (password: string): Promise<boolean> => {
+export const clearAdminAuthenticated = (): void => {
   try {
-    const { data, error } = await supabase.functions.invoke("admin-sessions", {
-      body: { password, action: "verify" },
-    });
-    if (error) return false;
-    if (data && (data as { ok?: boolean }).ok) {
-      setAdminPassword(password);
-      return true;
-    }
-    return false;
+    localStorage.removeItem(STORAGE_KEY);
   } catch {
-    return false;
+    /* ignore */
   }
 };

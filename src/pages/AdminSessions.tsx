@@ -19,7 +19,7 @@ interface Session {
   created_at: string;
 }
 
-import { isAdminAuthenticated, getAdminPassword, verifyAdminPassword } from "@/lib/adminAuth";
+import { ADMIN_PASSWORD, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
 
 export default function AdminSessions() {
   const [password, setPassword] = useState("");
@@ -46,14 +46,14 @@ export default function AdminSessions() {
   const fetchSessions = async () => {
     const res = await supabase.functions.invoke("admin-sessions", {
       method: "POST",
-      body: { password: getAdminPassword() ?? "", action: "list" },
+      body: { password: ADMIN_PASSWORD, action: "list" },
     });
     if (Array.isArray(res.data)) setSessions(res.data);
   };
 
-  const handleLogin = async () => {
-    const ok = await verifyAdminPassword(password);
-    if (ok) {
+  const handleLogin = () => {
+    if (password === ADMIN_PASSWORD) {
+      setAdminAuthenticated();
       setAuthenticated(true);
       setPassword("");
     } else {
@@ -61,7 +61,7 @@ export default function AdminSessions() {
     }
   };
 
-  const getPassword = () => getAdminPassword() ?? "";
+  const getPassword = () => ADMIN_PASSWORD;
 
   const clearForm = () => {
     setTitle("");

@@ -24,10 +24,10 @@ import {
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
+  ADMIN_PASSWORD,
   isAdminAuthenticated,
-  getAdminPassword,
-  verifyAdminPassword,
-  clearAdminPassword,
+  setAdminAuthenticated,
+  clearAdminAuthenticated,
 } from "@/lib/adminAuth";
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
@@ -69,22 +69,20 @@ const RokofAdmin = () => {
   const [savingEdit, setSavingEdit] = useState(false);
 
   const loadPosts = async () => {
-    const res = await supabase.functions.invoke("admin-blog", {
-      body: { password: getAdminPassword() ?? "", action: "list" },
-    });
-    console.log("Admin Component Fetch - Data:", res.data, "Error:", res.error);
-    if (Array.isArray(res.data)) setPosts(res.data as BlogPostRow[]);
+    const { data, error } = await supabase.from("blog_posts").select("*");
+    console.log("Admin Component Fetch - Data:", data, "Error:", error);
+    setPosts((data as BlogPostRow[]) ?? []);
   };
 
   useEffect(() => {
     if (authenticated) void loadPosts();
   }, [authenticated]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const ok = await verifyAdminPassword(password);
-    if (ok) {
+    if (password === ADMIN_PASSWORD) {
       dismiss();
+      setAdminAuthenticated();
       setAuthenticated(true);
       setPassword("");
     } else {
@@ -93,7 +91,7 @@ const RokofAdmin = () => {
   };
 
   const handleLogout = () => {
-    clearAdminPassword();
+    clearAdminAuthenticated();
     setAuthenticated(false);
     setPassword("");
   };
@@ -120,34 +118,24 @@ const RokofAdmin = () => {
 
     const slug = generateSlug(title);
 
-    const res = await supabase.functions.invoke("admin-blog", {
-      body: {
-        password: getAdminPassword() ?? "",
-        action: "create",
-        post: {
-          slug,
-          title_en: title,
-          title_cs: title,
-          excerpt_en: excerpt,
-          excerpt_cs: excerpt,
-          content_en: content,
-          content_cs: content,
-          category_en: category,
-          category_cs: category,
-          date_en: dateStr,
-          date_cs: dateStr,
-          image_url: imageUrl || null,
-          published: true,
-        },
-      },
+    const { error } = await supabase.from("blog_posts").insert({
+      slug,
+      title_en: title,
+      title_cs: title,
+      excerpt_en: excerpt,
+      excerpt_cs: excerpt,
+      content_en: content,
+      content_cs: content,
+      category_en: category,
+      category_cs: category,
+      date_en: dateStr,
+      date_cs: dateStr,
+      image_url: imageUrl || null,
+      published: true,
     });
 
-    if (res.error || (res.data as { error?: string })?.error) {
-      toast({
-        title: "Failed to create post",
-        description: (res.data as { error?: string })?.error || res.error?.message,
-        variant: "destructive",
-      });
+    if (error) {
+      toast({ title: "Failed to create post", description: error.message, variant: "destructive" });
       return;
     }
 
@@ -163,15 +151,9 @@ const RokofAdmin = () => {
 
   const handleDelete = async (post: BlogPostRow) => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
-    const res = await supabase.functions.invoke("admin-blog", {
-      body: { password: getAdminPassword() ?? "", action: "delete", id: post.id },
-    });
-    if (res.error || (res.data as { error?: string })?.error) {
-      toast({
-        title: "Delete failed",
-        description: (res.data as { error?: string })?.error || res.error?.message,
-        variant: "destructive",
-      });
+    const { error } = await supabase.from("blog_posts").delete().eq("id", post.id);
+    if (error) {
+      toast({ title: "Delete failed", description: error.message, variant: "destructive" });
       return;
     }
     setPosts((prev) => prev.filter((p) => p.id !== post.id));
@@ -180,16 +162,9 @@ const RokofAdmin = () => {
 
   const handleTogglePublished = async (post: BlogPostRow, value: boolean) => {
     setPosts((prev) => prev.map((p) => (p.id === post.id ? { ...p, published: value } : p)));
-    const res = await supabase.functions.invoke("admin-blog", {
-      body: {
-        password: getAdminPassword() ?? "",
-        action: "update",
-        id: post.id,
-        updates: { published: value },
-      },
-    });
-    if (res.error || (res.data as { error?: string })?.error) {
-      toast({ title: "Update failed", variant: "destructive" });
+    const { error } = await supabase.from("blog_posts").update({ published: value }).eq("id", post.id);
+    if (error) {
+      toast({ title: "Update failed", description: error.message, variant: "destructive" });
       await loadPosts();
     }
   };
@@ -198,33 +173,25 @@ const RokofAdmin = () => {
     if (!editingPost) return;
     setSavingEdit(true);
     const { id, slug, published, created_at, ...rest } = editingPost;
-    const res = await supabase.functions.invoke("admin-blog", {
-      body: {
-        password: getAdminPassword() ?? "",
-        action: "update",
-        id,
-        updates: {
-          title_en: rest.title_en,
-          title_cs: rest.title_cs,
-          excerpt_en: rest.excerpt_en,
-          excerpt_cs: rest.excerpt_cs,
-          content_en: rest.content_en,
-          content_cs: rest.content_cs,
-          category_en: rest.category_en,
-          category_cs: rest.category_cs,
-          date_en: rest.date_en,
-          date_cs: rest.date_cs,
-          image_url: rest.image_url,
-        },
-      },
-    });
+    const { error } = await supabase
+      .from("blog_posts")
+      .update({
+        title_en: rest.title_en,
+        title_cs: rest.title_cs,
+        excerpt_en: rest.excerpt_en,
+        excerpt_cs: rest.excerpt_cs,
+        content_en: rest.content_en,
+        content_cs: rest.content_cs,
+        category_en: rest.category_en,
+        category_cs: rest.category_cs,
+        date_en: rest.date_en,
+        date_cs: rest.date_cs,
+        image_url: rest.image_url,
+      })
+      .eq("id", id);
     setSavingEdit(false);
-    if (res.error || (res.data as { error?: string })?.error) {
-      toast({
-        title: "Update failed",
-        description: (res.data as { error?: string })?.error || res.error?.message,
-        variant: "destructive",
-      });
+    if (error) {
+      toast({ title: "Update failed", description: error.message, variant: "destructive" });
       return;
     }
     setEditingPost(null);

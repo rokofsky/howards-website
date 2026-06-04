@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { isAdminAuthenticated, getAdminPassword, verifyAdminPassword } from "@/lib/adminAuth";
+import { ADMIN_PASSWORD, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -129,9 +129,9 @@ export default function AdminWebinars() {
     if (data) setWebinars(data as Webinar[]);
   };
 
-  const handleLogin = async () => {
-    const ok = await verifyAdminPassword(password);
-    if (ok) {
+  const handleLogin = () => {
+    if (password === ADMIN_PASSWORD) {
+      setAdminAuthenticated();
       setAuthenticated(true);
     } else {
       const next = loginAttempts + 1;
@@ -144,7 +144,7 @@ export default function AdminWebinars() {
     }
   };
 
-  const getPassword = () => getAdminPassword() ?? "";
+  const getPassword = () => ADMIN_PASSWORD;
 
   const handleCreate = async () => {
     if (!title.trim()) {
