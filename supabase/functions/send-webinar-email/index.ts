@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
     <p><strong>Webinar:</strong> ${esc(webinar_title) || "—"}</p>
     <p><strong>Chosen date:</strong> ${esc(chosen_date) || "—"}</p>
     ${note ? `<p><strong>Note:</strong> ${esc(note)}</p>` : ""}
-  </div>`, 
+  </div>
 </div></body></html>`;
 
     await sendEmail({
