@@ -97,7 +97,7 @@ export default function AdminSessions() {
     if (editingId) {
       const res = await supabase.functions.invoke("admin-sessions", {
         body: {
-          password: getPassword(),
+          ...getAuth(),
           action: "update",
           id: editingId,
           title: title || null,
@@ -117,7 +117,7 @@ export default function AdminSessions() {
     } else {
       const res = await supabase.functions.invoke("admin-sessions", {
         body: {
-          password: getPassword(),
+          ...getAuth(),
           action: "create",
           title: title || null,
           description: description || null,
@@ -142,7 +142,7 @@ export default function AdminSessions() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this session?")) return;
     const res = await supabase.functions.invoke("admin-sessions", {
-      body: { password: getPassword(), action: "delete", id },
+      body: { ...getAuth(), action: "delete", id },
     });
     if (res.error) {
       toast({ title: "Error deleting", variant: "destructive" });
