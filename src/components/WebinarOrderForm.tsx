@@ -35,9 +35,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   const t = useT();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [selectedSlugs, setSelectedSlugs] = useState<string[]>(
-    initialWebinarSlug ? [initialWebinarSlug] : []
-  );
+  const [selectedSlugs, setSelectedSlugs] = useState<string[]>(initialWebinarSlug ? [initialWebinarSlug] : []);
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [preferredTime, setPreferredTime] = useState("");
   const [undecided, setUndecided] = useState(false);
@@ -51,9 +49,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   }, [open, initialWebinarSlug]);
 
   const toggleSlug = (slug: string) => {
-    setSelectedSlugs((prev) =>
-      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
-    );
+    setSelectedSlugs((prev) => (prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]));
   };
 
   const removeDate = (d: Date) => {
@@ -77,15 +73,10 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
 
     setLoading(true);
 
-    const chosen_dates = undecided
-      ? ["Undecided"]
-      : selectedDates.map((d) => format(d, "yyyy-MM-dd"));
+    const chosen_date = undecided ? ["Undecided"] : selectedDates.map((d) => format(d, "yyyy-MM-dd"));
 
     // Look up DB UUIDs for selected slugs (best effort; may be empty)
-    const { data: dbWebinars } = await supabase
-      .from("webinars")
-      .select("id, slug")
-      .in("slug", selectedSlugs);
+    const { data: dbWebinars } = await supabase.from("webinars").select("id, slug").in("slug", selectedSlugs);
 
     const session_ids = (dbWebinars || []).map((w: { id: string }) => w.id);
 
@@ -94,10 +85,10 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
         customer_name: name,
         customer_email: fixedEmail,
         session_ids: session_ids.length > 0 ? session_ids : null,
-        chosen_dates,
+        chosen_date,
         // legacy fields kept for compatibility
         session_id: session_ids[0] ?? null,
-        chosen_date: [chosen_dates.join(", "), preferredTime ? `Time: ${preferredTime}` : ""]
+        chosen_date: [chosen_date.join(", "), preferredTime ? `Time: ${preferredTime}` : ""]
           .filter(Boolean)
           .join(" | "),
       },
@@ -125,7 +116,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           <DialogDescription>
             {t(
               "Select one or more webinars and date options. No payment required.",
-              "Vyberte jeden nebo více webinářů a termínů. Bez platby."
+              "Vyberte jeden nebo více webinářů a termínů. Bez platby.",
             )}
           </DialogDescription>
         </DialogHeader>
@@ -157,9 +148,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           </div>
 
           <div>
-            <Label className="mb-1 block">
-              {t("Select webinars", "Vyberte webináře")} *
-            </Label>
+            <Label className="mb-1 block">{t("Select webinars", "Vyberte webináře")} *</Label>
             <p className="text-xs text-muted-foreground mb-2">
               {t("Price: CZK 2,500 / €100 for a 90-minute session", "Cena: 2 500 Kč / 100 € za 90minutovou lekci")}
             </p>
@@ -167,14 +156,8 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
               {[...allWebinars]
                 .sort((a, b) => a.title.localeCompare(b.title))
                 .map((w) => (
-                  <label
-                    key={w.slug}
-                    className="flex items-center gap-2 text-sm cursor-pointer hover:opacity-80"
-                  >
-                    <Checkbox
-                      checked={selectedSlugs.includes(w.slug)}
-                      onCheckedChange={() => toggleSlug(w.slug)}
-                    />
+                  <label key={w.slug} className="flex items-center gap-2 text-sm cursor-pointer hover:opacity-80">
+                    <Checkbox checked={selectedSlugs.includes(w.slug)} onCheckedChange={() => toggleSlug(w.slug)} />
                     <span>{w.title}</span>
                   </label>
                 ))}
@@ -192,9 +175,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                   if (v) setSelectedDates([]);
                 }}
               />
-              <span className="font-medium">
-                {t("Undecided (decide later)", "Nerozhodnuto (rozhodnu se později)")}
-              </span>
+              <span className="font-medium">{t("Undecided (decide later)", "Nerozhodnuto (rozhodnu se později)")}</span>
             </label>
 
             <Popover>
@@ -257,13 +238,11 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           </div>
 
           <div className="rounded-md border border-gold/40 bg-gold/5 px-4 py-3 flex items-center justify-between">
-            <span className="text-sm text-muted-foreground font-medium">
-              {t("Subtotal", "Mezisoučet")}
-            </span>
+            <span className="text-sm text-muted-foreground font-medium">{t("Subtotal", "Mezisoučet")}</span>
             <span className="text-lg font-semibold text-gold">
               {t(
                 `CZK ${(selectedSlugs.length * 2500).toLocaleString("en-US")} / €${selectedSlugs.length * 100}`,
-                `${(selectedSlugs.length * 2500).toLocaleString("cs-CZ")} Kč / ${selectedSlugs.length * 100} €`
+                `${(selectedSlugs.length * 2500).toLocaleString("cs-CZ")} Kč / ${selectedSlugs.length * 100} €`,
               )}
             </span>
           </div>
