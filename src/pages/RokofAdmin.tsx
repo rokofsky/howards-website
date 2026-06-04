@@ -24,10 +24,10 @@ import {
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  ADMIN_PASSWORD,
   isAdminAuthenticated,
-  setAdminAuthenticated,
-  clearAdminAuthenticated,
+  getAdminPassword,
+  verifyAdminPassword,
+  clearAdminPassword,
 } from "@/lib/adminAuth";
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
@@ -69,20 +69,22 @@ const RokofAdmin = () => {
   const [savingEdit, setSavingEdit] = useState(false);
 
   const loadPosts = async () => {
-    const { data, error } = await supabase.from("blog_posts").select("*");
-    console.log("Admin Component Fetch - Data:", data, "Error:", error);
-    setPosts((data as BlogPostRow[]) ?? []);
+    const res = await supabase.functions.invoke("admin-blog", {
+      body: { password: getAdminPassword() ?? "", action: "list" },
+    });
+    console.log("Admin Component Fetch - Data:", res.data, "Error:", res.error);
+    if (Array.isArray(res.data)) setPosts(res.data as BlogPostRow[]);
   };
 
   useEffect(() => {
     if (authenticated) void loadPosts();
   }, [authenticated]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
+    const ok = await verifyAdminPassword(password);
+    if (ok) {
       dismiss();
-      setAdminAuthenticated();
       setAuthenticated(true);
       setPassword("");
     } else {
@@ -91,7 +93,7 @@ const RokofAdmin = () => {
   };
 
   const handleLogout = () => {
-    clearAdminAuthenticated();
+    clearAdminPassword();
     setAuthenticated(false);
     setPassword("");
   };
