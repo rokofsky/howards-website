@@ -261,6 +261,19 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             {t("There is no payment now, we will be in touch", "Nyní se neplatí, ozveme se vám")}
           </p>
 
+          <div>
+            <Label htmlFor="order-note" className="mb-2 block">
+              {t("Optional note", "Volitelná poznámka")}
+            </Label>
+            <Textarea
+              id="order-note"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder={t("Any questions or special requests?", "Máte nějaké otázky nebo speciální požadavky?")}
+              className={fieldBorder}
+            />
+          </div>
+
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("Cancel", "Zrušit")}
