@@ -67,7 +67,7 @@ const ServiceDetail = () => {
   useEffect(() => {
     if (slug === "online-webinars") {
       supabase.from("webinars").select("*").order("sort_order", { ascending: true }).then(({ data }) => {
-        if (data) setWebinars(data as DbWebinar[]);
+        if (data) setWebinars(data as unknown as DbWebinar[]);
       });
     }
   }, [slug]);
