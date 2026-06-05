@@ -213,9 +213,14 @@ const RokofAdmin = () => {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-10">
             <h1 className="text-3xl font-bold">Admin Hub</h1>
-            <Button variant="outline" size="sm" onClick={handleLogout}>
-              Logout
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={() => navigate("/")}>
+                Home
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
+                Logout
+              </Button>
+            </div>
           </div>
 
           {/* Admin Tools */}

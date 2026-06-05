@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +28,7 @@ export default function AdminSessions() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -167,7 +169,12 @@ export default function AdminSessions() {
 
   return (
     <div className="min-h-screen bg-background p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-foreground">Manage Storytelling Sessions</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-foreground">Manage Storytelling Sessions</h1>
+        <Button variant="outline" size="sm" onClick={() => navigate("/")}>
+          Home
+        </Button>
+      </div>
 
       <Card className="mb-8">
         <CardHeader>
