@@ -119,7 +119,7 @@ export default function AdminWebinars() {
 
   const fetchWebinars = async () => {
     const { data } = await supabase.from("webinars").select("*").order("sort_order", { ascending: true });
-    if (data) setWebinars(data as Webinar[]);
+    if (data) setWebinars(data as unknown as Webinar[]);
   };
 
   const handleLogin = async () => {
