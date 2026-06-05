@@ -184,7 +184,7 @@ export default function AdminWebinars() {
     setEditLoading(true);
     const { error } = await supabase
       .from("webinars")
-      .update({ title: editTitle, description: editDescription })
+      .update({ title: editTitle, description: editDescription, details: editDetails } as never)
       .eq("id", editId);
     setEditLoading(false);
     if (error) {
