@@ -314,6 +314,8 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             </Button>
           </div>
         </form>
+        </>
+        )}
       </DialogContent>
     </Dialog>
   );
