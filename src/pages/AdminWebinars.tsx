@@ -242,7 +242,12 @@ export default function AdminWebinars() {
 
   return (
     <div className="min-h-screen bg-background p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-foreground">Manage Webinars</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-foreground">Manage Webinars</h1>
+        <Button variant="outline" size="sm" onClick={() => navigate("/")}>
+          Home
+        </Button>
+      </div>
 
       <Card className="mb-8">
         <CardHeader>
