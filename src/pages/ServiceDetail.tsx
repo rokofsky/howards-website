@@ -40,6 +40,7 @@ interface DbWebinar {
   slug: string;
   title: string;
   description: string;
+  details?: string | null;
 }
 
 const ServiceDetail = () => {
