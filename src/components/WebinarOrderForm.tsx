@@ -119,7 +119,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       return;
     }
 
-    onOpenChange(false);
     setName("");
     setEmail("");
     setSelectedDates([]);
