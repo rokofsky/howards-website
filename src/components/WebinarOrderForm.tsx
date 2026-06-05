@@ -142,7 +142,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             <p className="text-lg text-muted-foreground">
               {t(
                 "Howard will be in touch faster than you can say 'synergy'. Check your email tomorrow.",
-                "Howard se ozve rychleji, než řeknete „synergie". Zkontrolujte si zítra e-mail.",
+                'Howard se ozve rychleji, než řeknete "synergie". Zkontrolujte si zítra e-mail.',
               )}
             </p>
             <Button onClick={() => handleOpenChange(false)}>{t("Close", "Zavřít")}</Button>
