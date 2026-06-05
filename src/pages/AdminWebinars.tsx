@@ -275,6 +275,16 @@ export default function AdminWebinars() {
               rows={3}
             />
           </div>
+          <div>
+            <Label htmlFor="details">Details</Label>
+            <Textarea
+              id="details"
+              value={details}
+              onChange={(e) => setDetails(e.target.value)}
+              placeholder="Full details shown in the Details modal (line breaks preserved)"
+              rows={6}
+            />
+          </div>
           <Button onClick={handleCreate} disabled={loading}>
             {loading ? "Creating..." : "Add Webinar"}
           </Button>
