@@ -332,6 +332,16 @@ export default function AdminWebinars() {
                 rows={4}
               />
             </div>
+            <div>
+              <Label htmlFor="edit-details">Details</Label>
+              <Textarea
+                id="edit-details"
+                value={editDetails}
+                onChange={(e) => setEditDetails(e.target.value)}
+                placeholder="Full details shown in the Details modal (line breaks preserved)"
+                rows={8}
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
