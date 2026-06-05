@@ -267,34 +267,33 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             </span>
           </div>
 
+          <div>
+            <Label htmlFor="order-note" className="mb-2 block">
+              {t("Optional note", "Volitelná poznámka")}
+            </Label>
+            <Textarea
+              id="order-note"
+              placeholder={t("Any questions or special requests?", "Máte nějaké otázky nebo speciální požadavky?")}
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className={fieldBorder}
+              rows={3}
+            />
+          </div>
+
           <p className="text-right text-sm font-semibold text-gold">
             {t("There is no payment now, we will be in touch", "Nyní se neplatí, ozveme se vám")}
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-            <div>
-              <Label htmlFor="order-note" className="mb-2 block">
-                {t("Optional note", "Volitelná poznámka")}
-              </Label>
-              <Textarea
-                id="order-note"
-                placeholder={t("Any questions or special requests?", "Máte nějaké otázky nebo speciální požadavky?")}
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                className={fieldBorder}
-                rows={3}
-              />
-            </div>
-            <div className="flex justify-end gap-2 pt-2">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                {t("Cancel", "Zrušit")}
-              </Button>
-              <Button type="submit" disabled={loading}>
-                {loading
-                  ? t("Submitting...", "Odesílám...")
-                  : t("Submit non-binding order", "Odeslat nezávaznou objednávku")}
-              </Button>
-            </div>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              {t("Cancel", "Zrušit")}
+            </Button>
+            <Button type="submit" disabled={loading}>
+              {loading
+                ? t("Submitting...", "Odesílám...")
+                : t("Submit non-binding order", "Odeslat nezávaznou objednávku")}
+            </Button>
           </div>
         </form>
       </DialogContent>
