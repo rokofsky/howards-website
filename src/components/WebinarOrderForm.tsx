@@ -101,7 +101,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       body: {
         customer_name: name,
         customer_email: fixedEmail ?? email,
-        chosen_date: chosenDateStr ?? selectedDates.join(", "),
+        chosen_date: chosen_date.join(", "),
         webinar_title: allWebinars
           .filter((w) => selectedSlugs.includes(w.slug))
           .map((w) => w.title)
