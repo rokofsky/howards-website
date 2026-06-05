@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import { serviceDetails, pickL } from "@/data/serviceDetails";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { WebinarInquiryModal } from "@/components/WebinarInquiryModal";
+import { WebinarDetailsModal } from "@/components/WebinarDetailsModal";
 import { WebinarOrderForm } from "@/components/WebinarOrderForm";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -39,6 +40,7 @@ interface DbWebinar {
   slug: string;
   title: string;
   description: string;
+  details?: string | null;
 }
 
 const ServiceDetail = () => {
@@ -51,6 +53,7 @@ const ServiceDetail = () => {
   const { toast } = useToast();
   const [webinars, setWebinars] = useState<DbWebinar[]>([]);
   const [expandedWebinar, setExpandedWebinar] = useState<string | null>(null);
+  const [detailsWebinar, setDetailsWebinar] = useState<string | null>(null);
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [orderInitialSlug, setOrderInitialSlug] = useState<string | undefined>(undefined);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
@@ -64,7 +67,7 @@ const ServiceDetail = () => {
   useEffect(() => {
     if (slug === "online-webinars") {
       supabase.from("webinars").select("*").order("sort_order", { ascending: true }).then(({ data }) => {
-        if (data) setWebinars(data as DbWebinar[]);
+        if (data) setWebinars(data as unknown as DbWebinar[]);
       });
     }
   }, [slug]);
@@ -178,11 +181,19 @@ const ServiceDetail = () => {
                             <p className="hidden md:block text-foreground/60 text-sm font-normal leading-relaxed">{webinar.description}</p>
                           )}
                         </div>
-                        <div className="mt-4">
+                        <div className="mt-4 flex flex-row gap-3 w-full">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1 text-xs sm:text-sm whitespace-nowrap px-2"
+                            onClick={() => setDetailsWebinar(webinar.id)}
+                          >
+                            {t("Details", "Detaily")}
+                          </Button>
                           <Button
                             variant="glass"
                             size="sm"
-                            className="text-xs md:text-sm"
+                            className="flex-1 text-xs sm:text-sm whitespace-nowrap px-2"
                             onClick={() => setExpandedWebinar(webinar.id)}
                           >
                             {t("Inquire", "Poptat")}
@@ -191,6 +202,17 @@ const ServiceDetail = () => {
                       </div>
                     ))}
                   </div>
+                  <WebinarDetailsModal
+                    open={!!detailsWebinar}
+                    onOpenChange={(open) => { if (!open) setDetailsWebinar(null); }}
+                    title={webinars.find((w) => w.id === detailsWebinar)?.title ?? ""}
+                    details={webinars.find((w) => w.id === detailsWebinar)?.details ?? ""}
+                    onInquire={() => {
+                      const id = detailsWebinar;
+                      setDetailsWebinar(null);
+                      if (id) setExpandedWebinar(id);
+                    }}
+                  />
                   <WebinarInquiryModal
                     open={!!expandedWebinar}
                     onOpenChange={(open) => { if (!open) setExpandedWebinar(null); }}

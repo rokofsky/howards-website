@@ -33,6 +33,7 @@ interface Webinar {
   slug: string;
   title: string;
   description: string;
+  details: string;
   created_at: string;
   sort_order: number;
 }
@@ -98,11 +99,13 @@ export default function AdminWebinars() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [details, setDetails] = useState("");
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
+  const [editDetails, setEditDetails] = useState("");
   const [editLoading, setEditLoading] = useState(false);
 
   const sensors = useSensors(
@@ -116,7 +119,7 @@ export default function AdminWebinars() {
 
   const fetchWebinars = async () => {
     const { data } = await supabase.from("webinars").select("*").order("sort_order", { ascending: true });
-    if (data) setWebinars(data as Webinar[]);
+    if (data) setWebinars(data as unknown as Webinar[]);
   };
 
   const handleLogin = async () => {
@@ -150,7 +153,9 @@ export default function AdminWebinars() {
       "-" +
       Date.now();
     const maxOrder = webinars.length > 0 ? Math.max(...webinars.map((w) => w.sort_order)) + 1 : 0;
-    const { error } = await supabase.from("webinars").insert({ title, description, slug, sort_order: maxOrder });
+    const { error } = await supabase
+      .from("webinars")
+      .insert({ title, description, details, slug, sort_order: maxOrder } as never);
     setLoading(false);
     if (error) {
       toast({ title: "Error creating webinar", description: error.message, variant: "destructive" });
@@ -159,6 +164,7 @@ export default function AdminWebinars() {
     toast({ title: "Webinar created!" });
     setTitle("");
     setDescription("");
+    setDetails("");
     fetchWebinars();
   };
 
@@ -166,6 +172,7 @@ export default function AdminWebinars() {
     setEditId(w.id);
     setEditTitle(w.title);
     setEditDescription(w.description || "");
+    setEditDetails(w.details || "");
     setEditDialogOpen(true);
   };
 
@@ -177,7 +184,7 @@ export default function AdminWebinars() {
     setEditLoading(true);
     const { error } = await supabase
       .from("webinars")
-      .update({ title: editTitle, description: editDescription })
+      .update({ title: editTitle, description: editDescription, details: editDetails } as never)
       .eq("id", editId);
     setEditLoading(false);
     if (error) {
@@ -268,6 +275,16 @@ export default function AdminWebinars() {
               rows={3}
             />
           </div>
+          <div>
+            <Label htmlFor="details">Details</Label>
+            <Textarea
+              id="details"
+              value={details}
+              onChange={(e) => setDetails(e.target.value)}
+              placeholder="Full details shown in the Details modal (line breaks preserved)"
+              rows={6}
+            />
+          </div>
           <Button onClick={handleCreate} disabled={loading}>
             {loading ? "Creating..." : "Add Webinar"}
           </Button>
@@ -313,6 +330,16 @@ export default function AdminWebinars() {
                 onChange={(e) => setEditDescription(e.target.value)}
                 placeholder="Short description (shown smaller on the card)"
                 rows={4}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-details">Details</Label>
+              <Textarea
+                id="edit-details"
+                value={editDetails}
+                onChange={(e) => setEditDetails(e.target.value)}
+                placeholder="Full details shown in the Details modal (line breaks preserved)"
+                rows={8}
               />
             </div>
           </div>
