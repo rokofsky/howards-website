@@ -100,13 +100,14 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
         .filter((w) => selectedSlugs.includes(w.slug))
         .map((w) => w.title)
         .join(", ");
+
       await supabase.functions.invoke("send-webinar-email", {
         body: {
           customer_name: name,
           customer_email: fixedEmail,
           chosen_date: chosenDateStr,
           webinar_title: selectedWebinarTitle,
-          note,
+          note: note,
         },
       });
     }
