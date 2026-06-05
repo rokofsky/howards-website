@@ -140,7 +140,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           <div className="py-10 text-center space-y-6">
             <p className="text-lg font-medium whitespace-pre-line">
               {t(
-                "Thanks for your interest. Howard will be in touch faster than you can say 'synergy'. Check your email tomorrow.",
+                "🌿Thanks for your interest.🌿 \nHoward will be in touch faster than you can say 'synergy'. \nCheck your email tomorrow.",
                 "🌿 Děkujeme za váš zájem 🌿\n\nHoward se vám ozve rychleji, než řeknete 'synergie'. \nZkontrolujte si zítra e-mail.",
               )}
             </p>
