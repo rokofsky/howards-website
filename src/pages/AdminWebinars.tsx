@@ -7,13 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, Pencil, GripVertical } from "lucide-react";
 import {
@@ -52,8 +46,7 @@ function SortableWebinarRow({
   onEdit: (w: Webinar) => void;
   onDelete: (id: string) => void;
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: webinar.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: webinar.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -114,7 +107,7 @@ export default function AdminWebinars() {
 
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
   useEffect(() => {
@@ -122,10 +115,7 @@ export default function AdminWebinars() {
   }, [authenticated]);
 
   const fetchWebinars = async () => {
-    const { data } = await supabase
-      .from("webinars")
-      .select("*")
-      .order("sort_order", { ascending: true });
+    const { data } = await supabase.from("webinars").select("*").order("sort_order", { ascending: true });
     if (data) setWebinars(data as Webinar[]);
   };
 
@@ -151,7 +141,14 @@ export default function AdminWebinars() {
       return;
     }
     setLoading(true);
-    const slug = title.toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-") + "-" + Date.now();
+    const slug =
+      title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .trim()
+        .replace(/\s+/g, "-") +
+      "-" +
+      Date.now();
     const maxOrder = webinars.length > 0 ? Math.max(...webinars.map((w) => w.sort_order)) + 1 : 0;
     const { error } = await supabase.from("webinars").insert({ title, description, slug, sort_order: maxOrder });
     setLoading(false);
@@ -178,7 +175,10 @@ export default function AdminWebinars() {
       return;
     }
     setEditLoading(true);
-    const { error } = await supabase.from("webinars").update({ title: editTitle, description: editDescription }).eq("id", editId);
+    const { error } = await supabase
+      .from("webinars")
+      .update({ title: editTitle, description: editDescription })
+      .eq("id", editId);
     setEditLoading(false);
     if (error) {
       toast({ title: "Error updating", description: error.message, variant: "destructive" });
@@ -190,6 +190,7 @@ export default function AdminWebinars() {
   };
 
   const handleDelete = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this webinar?")) return;
     const { error } = await supabase.from("webinars").delete().eq("id", id);
     if (error) {
       toast({ title: "Error deleting", variant: "destructive" });
@@ -198,7 +199,6 @@ export default function AdminWebinars() {
     toast({ title: "Webinar deleted" });
     fetchWebinars();
   };
-
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -210,14 +210,8 @@ export default function AdminWebinars() {
     setWebinars(reordered);
 
     const items = reordered.map((w, i) => ({ id: w.id, sort_order: i }));
-    await Promise.all(
-  items.map(({ id, sort_order }) =>
-    supabase.from("webinars").update({ sort_order }).eq("id", id)
-  )
-);
+    await Promise.all(items.map(({ id, sort_order }) => supabase.from("webinars").update({ sort_order }).eq("id", id)));
   };
-
-
 
   if (!authenticated) {
     return (
@@ -237,7 +231,9 @@ export default function AdminWebinars() {
                 onKeyDown={(e) => e.key === "Enter" && handleLogin()}
               />
             </div>
-            <Button onClick={handleLogin} className="w-full">Enter</Button>
+            <Button onClick={handleLogin} className="w-full">
+              Enter
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -259,7 +255,13 @@ export default function AdminWebinars() {
           </div>
           <div>
             <Label htmlFor="desc">Description</Label>
-            <Textarea id="desc" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Short description (shown smaller on the card)" rows={3} />
+            <Textarea
+              id="desc"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Short description (shown smaller on the card)"
+              rows={3}
+            />
           </div>
           <Button onClick={handleCreate} disabled={loading}>
             {loading ? "Creating..." : "Add Webinar"}
@@ -279,12 +281,7 @@ export default function AdminWebinars() {
               <SortableContext items={webinars.map((w) => w.id)} strategy={rectSortingStrategy}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {webinars.map((w) => (
-                    <SortableWebinarRow
-                      key={w.id}
-                      webinar={w}
-                      onEdit={handleEditOpen}
-                      onDelete={handleDelete}
-                    />
+                    <SortableWebinarRow key={w.id} webinar={w} onEdit={handleEditOpen} onDelete={handleDelete} />
                   ))}
                 </div>
               </SortableContext>
@@ -305,11 +302,19 @@ export default function AdminWebinars() {
             </div>
             <div>
               <Label htmlFor="edit-desc">Description</Label>
-              <Textarea id="edit-desc" value={editDescription} onChange={(e) => setEditDescription(e.target.value)} placeholder="Short description (shown smaller on the card)" rows={4} />
+              <Textarea
+                id="edit-desc"
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                placeholder="Short description (shown smaller on the card)"
+                rows={4}
+              />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditDialogOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
+              Cancel
+            </Button>
             <Button onClick={handleEditSave} disabled={editLoading}>
               {editLoading ? "Saving..." : "Save Changes"}
             </Button>
