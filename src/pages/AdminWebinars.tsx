@@ -33,6 +33,7 @@ interface Webinar {
   slug: string;
   title: string;
   description: string;
+  details: string;
   created_at: string;
   sort_order: number;
 }
