@@ -153,7 +153,9 @@ export default function AdminWebinars() {
       "-" +
       Date.now();
     const maxOrder = webinars.length > 0 ? Math.max(...webinars.map((w) => w.sort_order)) + 1 : 0;
-    const { error } = await supabase.from("webinars").insert({ title, description, slug, sort_order: maxOrder });
+    const { error } = await supabase
+      .from("webinars")
+      .insert({ title, description, details, slug, sort_order: maxOrder } as never);
     setLoading(false);
     if (error) {
       toast({ title: "Error creating webinar", description: error.message, variant: "destructive" });
@@ -162,6 +164,7 @@ export default function AdminWebinars() {
     toast({ title: "Webinar created!" });
     setTitle("");
     setDescription("");
+    setDetails("");
     fetchWebinars();
   };
 
@@ -169,6 +172,7 @@ export default function AdminWebinars() {
     setEditId(w.id);
     setEditTitle(w.title);
     setEditDescription(w.description || "");
+    setEditDetails(w.details || "");
     setEditDialogOpen(true);
   };
 
