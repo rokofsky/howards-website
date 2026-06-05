@@ -42,6 +42,18 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   const [preferredTime, setPreferredTime] = useState("");
   const [undecided, setUndecided] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const resetForm = () => {
+    setName("");
+    setEmail("");
+    setNote("");
+    setSelectedDates([]);
+    setPreferredTime("");
+    setUndecided(false);
+    setSelectedSlugs(initialWebinarSlug ? [initialWebinarSlug] : []);
+    setSuccess(false);
+  };
 
   React.useEffect(() => {
     if (open && initialWebinarSlug && !selectedSlugs.includes(initialWebinarSlug)) {
