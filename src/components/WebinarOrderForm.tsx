@@ -138,7 +138,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         {success ? (
           <div className="py-16 px-6 text-center space-y-6">
-            <DialogTitle className="text-2xl">{t("Thanks!", "Děkujeme!")}</DialogTitle>
+            <DialogTitle className="text-2xl">{t("🪴  Thanks!  🪴", "🪴  Děkujeme!  🪴")}</DialogTitle>
             <p className="text-lg text-muted-foreground">
               {t(
                 "Howard will be in touch faster than you can say 'synergy'. Check your email tomorrow.",
