@@ -126,7 +126,12 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     setPreferredTime("");
     setUndecided(false);
     setNote("");
-    toast.success(t("Howard will send you an email within 24 hours.", "Howard vám pošle e-mail do 24 hodin."));
+    setSuccess(true);
+  };
+
+  const handleOpenChange = (o: boolean) => {
+    if (!o) setSuccess(false);
+    onOpenChange(o);
   };
 
   return (
