@@ -42,6 +42,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   const [undecided, setUndecided] = useState(false);
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   React.useEffect(() => {
     if (open && initialWebinarSlug && !selectedSlugs.includes(initialWebinarSlug)) {
