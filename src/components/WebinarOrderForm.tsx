@@ -134,8 +134,21 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        {success ? (
+          <div className="py-16 px-6 text-center space-y-6">
+            <DialogTitle className="text-2xl">{t("Thanks!", "Děkujeme!")}</DialogTitle>
+            <p className="text-lg text-muted-foreground">
+              {t(
+                "Howard will be in touch faster than you can say 'synergy'. Check your email tomorrow.",
+                "Howard se ozve rychleji, než řeknete „synergie". Zkontrolujte si zítra e-mail.",
+              )}
+            </p>
+            <Button onClick={() => handleOpenChange(false)}>{t("Close", "Zavřít")}</Button>
+          </div>
+        ) : (
+        <>
         <DialogHeader>
           <DialogTitle>{t("Non-Binding Order", "Nezávazná objednávka")}</DialogTitle>
           <DialogDescription>
