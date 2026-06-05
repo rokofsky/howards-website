@@ -138,6 +138,19 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
           </DialogDescription>
         </DialogHeader>
 
+        {success ? (
+          <div className="py-10 text-center space-y-6">
+            <p className="text-lg font-medium">
+              {t(
+                "Howard will be in touch faster than you can say 'synergy'. Check your email tomorrow.",
+                "Howard se vám ozve rychleji, než řeknete 'synergie'. Zkontrolujte si zítra e-mail.",
+              )}
+            </p>
+            <Button type="button" onClick={resetForm}>
+              {t("Say something more", "Říct ještě něco")}
+            </Button>
+          </div>
+        ) : (
         <form onSubmit={handleSubmit} noValidate className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
