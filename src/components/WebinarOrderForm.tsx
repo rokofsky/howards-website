@@ -10,7 +10,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useT } from "@/hooks/useT";
@@ -35,14 +34,13 @@ const fixCommonEmailTypos = (email: string): string => {
 export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: OrderFormProps) => {
   const t = useT();
   const [name, setName] = useState("");
+  const [note, setNote] = useState("");
   const [email, setEmail] = useState("");
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(initialWebinarSlug ? [initialWebinarSlug] : []);
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [preferredTime, setPreferredTime] = useState("");
   const [undecided, setUndecided] = useState(false);
-  const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   React.useEffect(() => {
     if (open && initialWebinarSlug && !selectedSlugs.includes(initialWebinarSlug)) {
@@ -83,72 +81,46 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
 
     const session_id = (dbWebinars || []).map((w: { id: string }) => w.id);
 
-    const chosenDateStr = [chosen_date.join(", "), preferredTime ? `Time: ${preferredTime}` : ""]
-      .filter(Boolean)
-      .join(" | ");
-
     const { error } = await supabase.from("webinar_orders").insert([
       {
         customer_name: name,
         customer_email: fixedEmail,
         session_id: session_id[0] ?? undefined,
-        chosen_date: chosenDateStr,
+        chosen_date: [chosen_date.join(", "), preferredTime ? `Time: ${preferredTime}` : ""]
+          .filter(Boolean)
+          .join(" | "),
       },
     ]);
-
-    if (!error) {
-      const selectedWebinarTitle = allWebinars
-        .filter((w) => selectedSlugs.includes(w.slug))
-        .map((w) => w.title)
-        .join(", ");
-
-      await supabase.functions.invoke("send-webinar-email", {
-        body: {
-          customer_name: name,
-          customer_email: fixedEmail,
-          chosen_date: chosenDateStr,
-          webinar_title: selectedWebinarTitle,
-          note: note,
-        },
-      });
-    }
 
     setLoading(false);
     if (error) {
       toast.error(t("Order failed: ", "Objednávka selhala: ") + error.message);
       return;
     }
-
+    await supabase.functions.invoke("send-webinar-email", {
+      body: {
+        customer_name: name,
+        customer_email: fixedEmail ?? email,
+        chosen_date: chosenDateStr ?? selectedDates.join(", "),
+        webinar_title: allWebinars
+          .filter((w) => selectedSlugs.includes(w.slug))
+          .map((w) => w.title)
+          .join(", "),
+        note: note ?? "",
+      },
+    });
+    onOpenChange(false);
     setName("");
     setEmail("");
     setSelectedDates([]);
     setPreferredTime("");
     setUndecided(false);
-    setNote("");
-    setSuccess(true);
-  };
-
-  const handleOpenChange = (o: boolean) => {
-    if (!o) setSuccess(false);
-    onOpenChange(o);
+    toast.success(t("Howard will send you an email within 24 hours.", "Howard vám pošle e-mail do 24 hodin."));
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        {success ? (
-          <div className="py-16 px-6 text-center space-y-6">
-            <DialogTitle className="text-2xl">{t("🪴  Thanks!  🪴", "🪴  Děkujeme!  🪴")}</DialogTitle>
-            <p className="text-lg text-muted-foreground">
-              {t(
-                "Howard will be in touch faster than you can say 'synergy'. Check your email tomorrow.",
-                'Howard se ozve rychleji, než řeknete "synergie". Zkontrolujte si zítra e-mail.',
-              )}
-            </p>
-            <Button onClick={() => handleOpenChange(false)}>{t("Close", "Zavřít")}</Button>
-          </div>
-        ) : (
-        <>
         <DialogHeader>
           <DialogTitle>{t("Non-Binding Order", "Nezávazná objednávka")}</DialogTitle>
           <DialogDescription>
@@ -285,20 +257,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             </span>
           </div>
 
-          <div>
-            <Label htmlFor="order-note" className="mb-2 block">
-              {t("Optional note", "Volitelná poznámka")}
-            </Label>
-            <Textarea
-              id="order-note"
-              placeholder={t("Any questions or special requests?", "Máte nějaké otázky nebo speciální požadavky?")}
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              className={fieldBorder}
-              rows={3}
-            />
-          </div>
-
           <p className="text-right text-sm font-semibold text-gold">
             {t("There is no payment now, we will be in touch", "Nyní se neplatí, ozveme se vám")}
           </p>
@@ -314,8 +272,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             </Button>
           </div>
         </form>
-        </>
-        )}
       </DialogContent>
     </Dialog>
   );
