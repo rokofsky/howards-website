@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Pencil, GripVertical } from "lucide-react";
+import { Trash2, Pencil, GripVertical, Loader2, Languages } from "lucide-react";
 import {
   DndContext,
   closestCenter,
