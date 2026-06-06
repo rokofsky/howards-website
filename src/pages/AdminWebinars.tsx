@@ -34,8 +34,43 @@ interface Webinar {
   title: string;
   description: string;
   details: string;
+  title_cs: string;
+  description_cs: string;
+  details_cs: string;
   created_at: string;
   sort_order: number;
+}
+
+type CsField = "title_cs" | "description_cs" | "details_cs";
+
+async function translateToCzech(text: string): Promise<string> {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
+  if (!apiKey) throw new Error("Missing VITE_GEMINI_API_KEY");
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text:
+                  "Translate the following English text into fluent, natural Czech. Preserve line breaks and formatting. Return ONLY the translated text, no commentary:\n\n" +
+                  text,
+              },
+            ],
+          },
+        ],
+      }),
+    },
+  );
+  if (!res.ok) throw new Error(`Gemini API error ${res.status}`);
+  const data = await res.json();
+  const out = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!out || typeof out !== "string") throw new Error("Empty translation response");
+  return out.trim();
 }
 
 function SortableWebinarRow({
