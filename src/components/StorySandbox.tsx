@@ -94,10 +94,10 @@ const STRUCTURES = {
     label: "An adventure",
     helper: "Classic arc: call, journey, return.",
     sections: [
-      { key: "intro", title: "Introduction", hint: "Set the world and the hero." },
-      { key: "escalation", title: "Escalation", hint: "Rising stakes, obstacles, allies." },
-      { key: "denouement", title: "Denouement", hint: "Climax and turning point." },
-      { key: "resolution", title: "Resolution", hint: "What changed? What's the lesson?" },
+      { key: "intro", title: "1. Introduction", hint: "Set the world and the hero." },
+      { key: "escalation", title: "2. Escalation", hint: "Rising stakes, obstacles, allies." },
+      { key: "denouement", title: "3. Denouement", hint: "Climax and turning point." },
+      { key: "resolution", title: "4. Resolution", hint: "What changed? What's the lesson?" },
     ],
   },
 } as const;
@@ -648,7 +648,7 @@ export default function StorySandbox() {
 
       {/* Scratchpad */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold">Scratchpad</h3>
+        <h3 className="text-lg font-semibold">Scratchpad - fill in the main plot points below:</h3>
         <div key={structure} className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
           {sections.map((s) => (
             <div key={s.key} className="space-y-1.5">
