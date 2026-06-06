@@ -215,6 +215,7 @@ function PageRoutes() {
       <Route path="storytelling-workshops" element={<StorytellingWorkshops />} />
       <Route path="story-sandbox" element={<StorySandboxPage />} />
       <Route path="diagnostics" element={<Diagnostics />} />
+      <Route path="services/online-webinars" element={<Navigate to="../services/live-webinars" replace />} />
       <Route path="services/:slug" element={<ServiceDetail />} />
       <Route path="keynote-topics" element={<KeynoteTopics />} />
       <Route path="blog" element={<Blog />} />
