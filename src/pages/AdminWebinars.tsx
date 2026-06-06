@@ -212,7 +212,34 @@ export default function AdminWebinars() {
     setEditTitle(w.title);
     setEditDescription(w.description || "");
     setEditDetails(w.details || "");
+    setEditTitleCs(w.title_cs || "");
+    setEditDescriptionCs(w.description_cs || "");
+    setEditDetailsCs(w.details_cs || "");
     setEditDialogOpen(true);
+  };
+
+  const handleTranslate = async (field: CsField) => {
+    const source =
+      field === "title_cs" ? editTitle : field === "description_cs" ? editDescription : editDetails;
+    if (!source.trim()) {
+      toast({ title: "Nothing to translate", variant: "destructive" });
+      return;
+    }
+    setTranslating(field);
+    try {
+      const out = await translateToCzech(source);
+      if (field === "title_cs") setEditTitleCs(out);
+      else if (field === "description_cs") setEditDescriptionCs(out);
+      else setEditDetailsCs(out);
+    } catch (e) {
+      toast({
+        title: "Translation failed — please translate manually",
+        description: e instanceof Error ? e.message : undefined,
+        variant: "destructive",
+      });
+    } finally {
+      setTranslating(null);
+    }
   };
 
   const handleEditSave = async () => {
@@ -223,7 +250,14 @@ export default function AdminWebinars() {
     setEditLoading(true);
     const { error } = await supabase
       .from("webinars")
-      .update({ title: editTitle, description: editDescription, details: editDetails } as never)
+      .update({
+        title: editTitle,
+        description: editDescription,
+        details: editDetails,
+        title_cs: editTitleCs,
+        description_cs: editDescriptionCs,
+        details_cs: editDetailsCs,
+      } as never)
       .eq("id", editId);
     setEditLoading(false);
     if (error) {
