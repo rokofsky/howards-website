@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Pencil, GripVertical } from "lucide-react";
+import { Trash2, Pencil, GripVertical, Loader2, Languages } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -34,8 +34,43 @@ interface Webinar {
   title: string;
   description: string;
   details: string;
+  title_cs: string;
+  description_cs: string;
+  details_cs: string;
   created_at: string;
   sort_order: number;
+}
+
+type CsField = "title_cs" | "description_cs" | "details_cs";
+
+async function translateToCzech(text: string): Promise<string> {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
+  if (!apiKey) throw new Error("Missing VITE_GEMINI_API_KEY");
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text:
+                  "Translate the following English text into fluent, natural Czech. Preserve line breaks and formatting. Return ONLY the translated text, no commentary:\n\n" +
+                  text,
+              },
+            ],
+          },
+        ],
+      }),
+    },
+  );
+  if (!res.ok) throw new Error(`Gemini API error ${res.status}`);
+  const data = await res.json();
+  const out = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!out || typeof out !== "string") throw new Error("Empty translation response");
+  return out.trim();
 }
 
 function SortableWebinarRow({
@@ -106,6 +141,10 @@ export default function AdminWebinars() {
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editDetails, setEditDetails] = useState("");
+  const [editTitleCs, setEditTitleCs] = useState("");
+  const [editDescriptionCs, setEditDescriptionCs] = useState("");
+  const [editDetailsCs, setEditDetailsCs] = useState("");
+  const [translating, setTranslating] = useState<CsField | null>(null);
   const [editLoading, setEditLoading] = useState(false);
 
   const sensors = useSensors(
@@ -173,7 +212,34 @@ export default function AdminWebinars() {
     setEditTitle(w.title);
     setEditDescription(w.description || "");
     setEditDetails(w.details || "");
+    setEditTitleCs(w.title_cs || "");
+    setEditDescriptionCs(w.description_cs || "");
+    setEditDetailsCs(w.details_cs || "");
     setEditDialogOpen(true);
+  };
+
+  const handleTranslate = async (field: CsField) => {
+    const source =
+      field === "title_cs" ? editTitle : field === "description_cs" ? editDescription : editDetails;
+    if (!source.trim()) {
+      toast({ title: "Nothing to translate", variant: "destructive" });
+      return;
+    }
+    setTranslating(field);
+    try {
+      const out = await translateToCzech(source);
+      if (field === "title_cs") setEditTitleCs(out);
+      else if (field === "description_cs") setEditDescriptionCs(out);
+      else setEditDetailsCs(out);
+    } catch (e) {
+      toast({
+        title: "Translation failed — please translate manually",
+        description: e instanceof Error ? e.message : undefined,
+        variant: "destructive",
+      });
+    } finally {
+      setTranslating(null);
+    }
   };
 
   const handleEditSave = async () => {
@@ -184,7 +250,14 @@ export default function AdminWebinars() {
     setEditLoading(true);
     const { error } = await supabase
       .from("webinars")
-      .update({ title: editTitle, description: editDescription, details: editDetails } as never)
+      .update({
+        title: editTitle,
+        description: editDescription,
+        details: editDetails,
+        title_cs: editTitleCs,
+        description_cs: editDescriptionCs,
+        details_cs: editDetailsCs,
+      } as never)
       .eq("id", editId);
     setEditLoading(false);
     if (error) {
@@ -322,13 +395,34 @@ export default function AdminWebinars() {
           <DialogHeader>
             <DialogTitle>Edit Webinar</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <div className="space-y-4 py-2 max-h-[70vh] overflow-y-auto">
             <div>
-              <Label htmlFor="edit-title">Title</Label>
+              <Label htmlFor="edit-title">Title (EN)</Label>
               <Input id="edit-title" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
             </div>
             <div>
-              <Label htmlFor="edit-desc">Description</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="edit-title-cs">Title (CS)</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs"
+                  disabled={translating === "title_cs"}
+                  onClick={() => handleTranslate("title_cs")}
+                >
+                  {translating === "title_cs" ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Languages className="h-3.5 w-3.5 mr-1" />
+                  )}
+                  {translating === "title_cs" ? "Translating..." : "Translate from EN"}
+                </Button>
+              </div>
+              <Input id="edit-title-cs" value={editTitleCs} onChange={(e) => setEditTitleCs(e.target.value)} />
+            </div>
+            <div>
+              <Label htmlFor="edit-desc">Description (EN)</Label>
               <Textarea
                 id="edit-desc"
                 value={editDescription}
@@ -338,12 +432,64 @@ export default function AdminWebinars() {
               />
             </div>
             <div>
-              <Label htmlFor="edit-details">Details</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="edit-desc-cs">Description (CS)</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs"
+                  disabled={translating === "description_cs"}
+                  onClick={() => handleTranslate("description_cs")}
+                >
+                  {translating === "description_cs" ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Languages className="h-3.5 w-3.5 mr-1" />
+                  )}
+                  {translating === "description_cs" ? "Translating..." : "Translate from EN"}
+                </Button>
+              </div>
+              <Textarea
+                id="edit-desc-cs"
+                value={editDescriptionCs}
+                onChange={(e) => setEditDescriptionCs(e.target.value)}
+                rows={4}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-details">Details (EN)</Label>
               <Textarea
                 id="edit-details"
                 value={editDetails}
                 onChange={(e) => setEditDetails(e.target.value)}
                 placeholder="Full details shown in the Details modal (line breaks preserved)"
+                rows={8}
+              />
+            </div>
+            <div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="edit-details-cs">Details (CS)</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs"
+                  disabled={translating === "details_cs"}
+                  onClick={() => handleTranslate("details_cs")}
+                >
+                  {translating === "details_cs" ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Languages className="h-3.5 w-3.5 mr-1" />
+                  )}
+                  {translating === "details_cs" ? "Translating..." : "Translate from EN"}
+                </Button>
+              </div>
+              <Textarea
+                id="edit-details-cs"
+                value={editDetailsCs}
+                onChange={(e) => setEditDetailsCs(e.target.value)}
                 rows={8}
               />
             </div>

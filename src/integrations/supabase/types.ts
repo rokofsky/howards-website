@@ -345,26 +345,35 @@ export type Database = {
         Row: {
           created_at: string
           description: string
+          description_cs: string
+          details_cs: string
           id: string
           slug: string
           sort_order: number
           title: string
+          title_cs: string
         }
         Insert: {
           created_at?: string
           description?: string
+          description_cs?: string
+          details_cs?: string
           id?: string
           slug: string
           sort_order?: number
           title: string
+          title_cs?: string
         }
         Update: {
           created_at?: string
           description?: string
+          description_cs?: string
+          details_cs?: string
           id?: string
           slug?: string
           sort_order?: number
           title?: string
+          title_cs?: string
         }
         Relationships: []
       }
