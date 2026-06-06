@@ -184,6 +184,34 @@ const RokofAdmin = () => {
     }
   };
 
+  const handleTranslate = async (field: "title_cs" | "excerpt_cs" | "content_cs" | "category_cs") => {
+    if (!editingPost) return;
+    const sourceMap: Record<typeof field, keyof BlogPostRow> = {
+      title_cs: "title_en",
+      excerpt_cs: "excerpt_en",
+      content_cs: "content_en",
+      category_cs: "category_en",
+    };
+    const source = editingPost[sourceMap[field]] as string;
+    if (!source?.trim()) {
+      toast({ title: "Nothing to translate", variant: "destructive" });
+      return;
+    }
+    setTranslating(field);
+    try {
+      const out = await translateToCzech(source);
+      setEditingPost({ ...editingPost, [field]: out });
+    } catch (e) {
+      toast({
+        title: "Translation failed — please translate manually",
+        description: e instanceof Error ? e.message : undefined,
+        variant: "destructive",
+      });
+    } finally {
+      setTranslating(null);
+    }
+  };
+
   const handleSaveEdit = async () => {
     if (!editingPost) return;
     setSavingEdit(true);
@@ -370,37 +398,155 @@ const RokofAdmin = () => {
           </DialogHeader>
           {editingPost && (
             <div className="space-y-4">
-              {(
-                [
-                  ["title_en", "Title (EN)", "input"],
-                  ["title_cs", "Title (CS)", "input"],
-                  ["category_en", "Category (EN)", "input"],
-                  ["category_cs", "Category (CS)", "input"],
-                  ["date_en", "Date (EN)", "input"],
-                  ["date_cs", "Date (CS)", "input"],
-                  ["image_url", "Image URL", "input"],
-                  ["excerpt_en", "Excerpt (EN)", "textarea"],
-                  ["excerpt_cs", "Excerpt (CS)", "textarea"],
-                  ["content_en", "Content (EN)", "textarea"],
-                  ["content_cs", "Content (CS)", "textarea"],
-                ] as const
-              ).map(([key, label, kind]) => (
-                <div key={key}>
-                  <Label>{label}</Label>
-                  {kind === "input" ? (
-                    <Input
-                      value={(editingPost[key] as string) ?? ""}
-                      onChange={(e) => setEditingPost({ ...editingPost, [key]: e.target.value })}
-                    />
-                  ) : (
-                    <Textarea
-                      className="min-h-[140px]"
-                      value={(editingPost[key] as string) ?? ""}
-                      onChange={(e) => setEditingPost({ ...editingPost, [key]: e.target.value })}
-                    />
-                  )}
+              <div>
+                <Label>Title (EN)</Label>
+                <Input
+                  value={editingPost.title_en}
+                  onChange={(e) => setEditingPost({ ...editingPost, title_en: e.target.value })}
+                />
+              </div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <Label>Title (CS)</Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-xs"
+                    disabled={translating === "title_cs"}
+                    onClick={() => handleTranslate("title_cs")}
+                  >
+                    {translating === "title_cs" ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Languages className="h-3.5 w-3.5 mr-1" />
+                    )}
+                    {translating === "title_cs" ? "Translating..." : "Translate from EN"}
+                  </Button>
                 </div>
-              ))}
+                <Input
+                  value={editingPost.title_cs}
+                  onChange={(e) => setEditingPost({ ...editingPost, title_cs: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Category (EN)</Label>
+                <Input
+                  value={editingPost.category_en}
+                  onChange={(e) => setEditingPost({ ...editingPost, category_en: e.target.value })}
+                />
+              </div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <Label>Category (CS)</Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-xs"
+                    disabled={translating === "category_cs"}
+                    onClick={() => handleTranslate("category_cs")}
+                  >
+                    {translating === "category_cs" ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Languages className="h-3.5 w-3.5 mr-1" />
+                    )}
+                    {translating === "category_cs" ? "Translating..." : "Translate from EN"}
+                  </Button>
+                </div>
+                <Input
+                  value={editingPost.category_cs}
+                  onChange={(e) => setEditingPost({ ...editingPost, category_cs: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Date (EN)</Label>
+                <Input
+                  value={editingPost.date_en}
+                  onChange={(e) => setEditingPost({ ...editingPost, date_en: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Date (CS)</Label>
+                <Input
+                  value={editingPost.date_cs}
+                  onChange={(e) => setEditingPost({ ...editingPost, date_cs: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Image URL</Label>
+                <Input
+                  value={editingPost.image_url ?? ""}
+                  onChange={(e) => setEditingPost({ ...editingPost, image_url: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Excerpt (EN)</Label>
+                <Textarea
+                  className="min-h-[140px]"
+                  value={editingPost.excerpt_en}
+                  onChange={(e) => setEditingPost({ ...editingPost, excerpt_en: e.target.value })}
+                />
+              </div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <Label>Excerpt (CS)</Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-xs"
+                    disabled={translating === "excerpt_cs"}
+                    onClick={() => handleTranslate("excerpt_cs")}
+                  >
+                    {translating === "excerpt_cs" ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Languages className="h-3.5 w-3.5 mr-1" />
+                    )}
+                    {translating === "excerpt_cs" ? "Translating..." : "Translate from EN"}
+                  </Button>
+                </div>
+                <Textarea
+                  className="min-h-[140px]"
+                  value={editingPost.excerpt_cs}
+                  onChange={(e) => setEditingPost({ ...editingPost, excerpt_cs: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Content (EN)</Label>
+                <Textarea
+                  className="min-h-[140px]"
+                  value={editingPost.content_en}
+                  onChange={(e) => setEditingPost({ ...editingPost, content_en: e.target.value })}
+                />
+              </div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <Label>Content (CS)</Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-xs"
+                    disabled={translating === "content_cs"}
+                    onClick={() => handleTranslate("content_cs")}
+                  >
+                    {translating === "content_cs" ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Languages className="h-3.5 w-3.5 mr-1" />
+                    )}
+                    {translating === "content_cs" ? "Translating..." : "Translate from EN"}
+                  </Button>
+                </div>
+                <Textarea
+                  className="min-h-[140px]"
+                  value={editingPost.content_cs}
+                  onChange={(e) => setEditingPost({ ...editingPost, content_cs: e.target.value })}
+                />
+              </div>
             </div>
           )}
           <DialogFooter>
