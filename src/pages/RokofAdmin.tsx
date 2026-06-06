@@ -8,12 +8,42 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast, useToast } from "@/hooks/use-toast";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, Loader2, Languages } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { isAdminAuthenticated, setAdminAuthenticated, clearAdminAuthenticated, verifyAdminPassword } from "@/lib/adminAuth";
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
+
+async function translateToCzech(text: string): Promise<string> {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
+  if (!apiKey) throw new Error("Missing VITE_GEMINI_API_KEY");
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text:
+                  "Translate the following English text into fluent, natural Czech. Preserve line breaks and formatting. Return ONLY the translated text, no commentary:\n\n" +
+                  text,
+              },
+            ],
+          },
+        ],
+      }),
+    },
+  );
+  if (!res.ok) throw new Error(`Gemini API error ${res.status}`);
+  const data = await res.json();
+  const out = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!out || typeof out !== "string") throw new Error("Empty translation response");
+  return out.trim();
+}
 
 interface BlogPostRow {
   id: string;
@@ -50,6 +80,7 @@ const RokofAdmin = () => {
   const [posts, setPosts] = useState<BlogPostRow[]>([]);
   const [editingPost, setEditingPost] = useState<BlogPostRow | null>(null);
   const [savingEdit, setSavingEdit] = useState(false);
+  const [translating, setTranslating] = useState<string | null>(null);
 
   const loadPosts = async () => {
     const { data, error } = await supabase.from("blog_posts").select("*");
