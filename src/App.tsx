@@ -253,6 +253,11 @@ const App = () => (
             <Route path="/rokofsky-admin" element={<RokofAdmin />} />
             <Route path="/diagnostics" element={<Diagnostics />} />
 
+            {/* Czech admin routes */}
+            <Route path="/cz/rokofsky-admin" element={<RokofAdmin />} />
+            <Route path="/cz/admin/sessions" element={<AdminSessions />} />
+            <Route path="/cz/admin/webinars" element={<AdminWebinars />} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </LanguageSyncWrapper>
