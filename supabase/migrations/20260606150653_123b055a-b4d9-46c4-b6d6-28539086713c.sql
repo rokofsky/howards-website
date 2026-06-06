@@ -1,0 +1,1 @@
+ALTER TABLE public.webinars ADD COLUMN IF NOT EXISTS title_cs text NOT NULL DEFAULT '', ADD COLUMN IF NOT EXISTS description_cs text NOT NULL DEFAULT '', ADD COLUMN IF NOT EXISTS details_cs text NOT NULL DEFAULT '';
