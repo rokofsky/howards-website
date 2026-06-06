@@ -613,7 +613,7 @@ export default function StorySandbox() {
 
       {/* Structure Selector + Save Story (aligned horizontally) */}
       <section className="space-y-3">
-        <h3 className="text-lg font-semibold">Structure</h3>
+        <h3 className="text-lg font-semibold">Choose from two structures:</h3>
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <ToggleGroup
