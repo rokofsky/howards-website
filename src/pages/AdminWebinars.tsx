@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { verifyAdminPassword, getAdminToken, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
 import { Button } from "@/components/ui/button";
