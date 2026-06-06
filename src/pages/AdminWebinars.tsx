@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { verifyAdminPassword, getAdminToken, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
@@ -144,7 +144,8 @@ export default function AdminWebinars() {
   const [editTitleCs, setEditTitleCs] = useState("");
   const [editDescriptionCs, setEditDescriptionCs] = useState("");
   const [editDetailsCs, setEditDetailsCs] = useState("");
-  const [translating, setTranslating] = useState<CsField | null>(null);
+  const [translating, setTranslating] = useState<Record<string, boolean>>({});
+  const activeTranslations = useRef<Record<string, boolean>>({});
   const [editLoading, setEditLoading] = useState(false);
 
   const sensors = useSensors(
@@ -219,13 +220,16 @@ export default function AdminWebinars() {
   };
 
   const handleTranslate = async (field: CsField) => {
+    if (activeTranslations.current[field]) return;
+
     const source =
       field === "title_cs" ? editTitle : field === "description_cs" ? editDescription : editDetails;
     if (!source.trim()) {
       toast({ title: "Nothing to translate", variant: "destructive" });
       return;
     }
-    setTranslating(field);
+    activeTranslations.current[field] = true;
+    setTranslating((current) => ({ ...current, [field]: true }));
     try {
       const out = await translateToCzech(source);
       if (field === "title_cs") setEditTitleCs(out);
@@ -238,7 +242,8 @@ export default function AdminWebinars() {
         variant: "destructive",
       });
     } finally {
-      setTranslating(null);
+      activeTranslations.current[field] = false;
+      setTranslating((current) => ({ ...current, [field]: false }));
     }
   };
 
@@ -408,15 +413,15 @@ export default function AdminWebinars() {
                   variant="ghost"
                   size="sm"
                   className="h-7 px-2 text-xs"
-                  disabled={translating === "title_cs"}
+                  disabled={translating.title_cs}
                   onClick={() => handleTranslate("title_cs")}
                 >
-                  {translating === "title_cs" ? (
+                  {translating.title_cs ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
                     <Languages className="h-3.5 w-3.5 mr-1" />
                   )}
-                  {translating === "title_cs" ? "Translating..." : "Translate from EN"}
+                  {translating.title_cs ? "Translating..." : "Translate from EN"}
                 </Button>
               </div>
               <Input id="edit-title-cs" value={editTitleCs} onChange={(e) => setEditTitleCs(e.target.value)} />
@@ -439,15 +444,15 @@ export default function AdminWebinars() {
                   variant="ghost"
                   size="sm"
                   className="h-7 px-2 text-xs"
-                  disabled={translating === "description_cs"}
+                  disabled={translating.description_cs}
                   onClick={() => handleTranslate("description_cs")}
                 >
-                  {translating === "description_cs" ? (
+                  {translating.description_cs ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
                     <Languages className="h-3.5 w-3.5 mr-1" />
                   )}
-                  {translating === "description_cs" ? "Translating..." : "Translate from EN"}
+                  {translating.description_cs ? "Translating..." : "Translate from EN"}
                 </Button>
               </div>
               <Textarea
@@ -475,15 +480,15 @@ export default function AdminWebinars() {
                   variant="ghost"
                   size="sm"
                   className="h-7 px-2 text-xs"
-                  disabled={translating === "details_cs"}
+                  disabled={translating.details_cs}
                   onClick={() => handleTranslate("details_cs")}
                 >
-                  {translating === "details_cs" ? (
+                  {translating.details_cs ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
                     <Languages className="h-3.5 w-3.5 mr-1" />
                   )}
-                  {translating === "details_cs" ? "Translating..." : "Translate from EN"}
+                  {translating.details_cs ? "Translating..." : "Translate from EN"}
                 </Button>
               </div>
               <Textarea
