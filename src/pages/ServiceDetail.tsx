@@ -179,12 +179,15 @@ const ServiceDetail = () => {
               {slug === "live-webinars" ? (
                 <>
                   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-                    {webinars.map((webinar) => (
+                    {webinars.map((webinar) => {
+                      const wTitle = pickCs(webinar.title_cs, webinar.title, isCz);
+                      const wDesc = pickCs(webinar.description_cs, webinar.description, isCz);
+                      return (
                       <div key={webinar.id} className="flex flex-col justify-between rounded-lg border border-border bg-card p-2 md:p-5 hover:border-gold/50 transition-colors">
                         <div>
-                          <h3 className="text-xs md:text-base font-semibold text-foreground mb-2">{webinar.title}</h3>
-                          {webinar.description && (
-                            <p className="hidden md:block text-foreground/60 text-sm font-normal leading-relaxed">{webinar.description}</p>
+                          <h3 className="text-xs md:text-base font-semibold text-foreground mb-2">{wTitle}</h3>
+                          {wDesc && (
+                            <p className="hidden md:block text-foreground/60 text-sm font-normal leading-relaxed">{wDesc}</p>
                           )}
                         </div>
                         <div className="mt-4 flex flex-row gap-3 w-full">
@@ -206,13 +209,14 @@ const ServiceDetail = () => {
                           </Button>
                         </div>
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   <WebinarDetailsModal
                     open={!!detailsWebinar}
                     onOpenChange={(open) => { if (!open) setDetailsWebinar(null); }}
-                    title={webinars.find((w) => w.id === detailsWebinar)?.title ?? ""}
-                    details={webinars.find((w) => w.id === detailsWebinar)?.details ?? ""}
+                    title={(() => { const w = webinars.find((x) => x.id === detailsWebinar); return w ? pickCs(w.title_cs, w.title, isCz) : ""; })()}
+                    details={(() => { const w = webinars.find((x) => x.id === detailsWebinar); return w ? pickCs(w.details_cs, w.details, isCz) : ""; })()}
                     onInquire={() => {
                       const id = detailsWebinar;
                       setDetailsWebinar(null);
