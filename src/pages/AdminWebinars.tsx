@@ -395,13 +395,34 @@ export default function AdminWebinars() {
           <DialogHeader>
             <DialogTitle>Edit Webinar</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <div className="space-y-4 py-2 max-h-[70vh] overflow-y-auto">
             <div>
-              <Label htmlFor="edit-title">Title</Label>
+              <Label htmlFor="edit-title">Title (EN)</Label>
               <Input id="edit-title" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
             </div>
             <div>
-              <Label htmlFor="edit-desc">Description</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="edit-title-cs">Title (CS)</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs"
+                  disabled={translating === "title_cs"}
+                  onClick={() => handleTranslate("title_cs")}
+                >
+                  {translating === "title_cs" ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Languages className="h-3.5 w-3.5 mr-1" />
+                  )}
+                  {translating === "title_cs" ? "Translating..." : "Translate from EN"}
+                </Button>
+              </div>
+              <Input id="edit-title-cs" value={editTitleCs} onChange={(e) => setEditTitleCs(e.target.value)} />
+            </div>
+            <div>
+              <Label htmlFor="edit-desc">Description (EN)</Label>
               <Textarea
                 id="edit-desc"
                 value={editDescription}
@@ -411,12 +432,64 @@ export default function AdminWebinars() {
               />
             </div>
             <div>
-              <Label htmlFor="edit-details">Details</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="edit-desc-cs">Description (CS)</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs"
+                  disabled={translating === "description_cs"}
+                  onClick={() => handleTranslate("description_cs")}
+                >
+                  {translating === "description_cs" ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Languages className="h-3.5 w-3.5 mr-1" />
+                  )}
+                  {translating === "description_cs" ? "Translating..." : "Translate from EN"}
+                </Button>
+              </div>
+              <Textarea
+                id="edit-desc-cs"
+                value={editDescriptionCs}
+                onChange={(e) => setEditDescriptionCs(e.target.value)}
+                rows={4}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-details">Details (EN)</Label>
               <Textarea
                 id="edit-details"
                 value={editDetails}
                 onChange={(e) => setEditDetails(e.target.value)}
                 placeholder="Full details shown in the Details modal (line breaks preserved)"
+                rows={8}
+              />
+            </div>
+            <div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="edit-details-cs">Details (CS)</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs"
+                  disabled={translating === "details_cs"}
+                  onClick={() => handleTranslate("details_cs")}
+                >
+                  {translating === "details_cs" ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Languages className="h-3.5 w-3.5 mr-1" />
+                  )}
+                  {translating === "details_cs" ? "Translating..." : "Translate from EN"}
+                </Button>
+              </div>
+              <Textarea
+                id="edit-details-cs"
+                value={editDetailsCs}
+                onChange={(e) => setEditDetailsCs(e.target.value)}
                 rows={8}
               />
             </div>
