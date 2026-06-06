@@ -31,7 +31,7 @@ const PricingSection = () => {
       highlighted: true,
       cta: {
         label: t("Choose a live webinar", "Vyberte si webinář"),
-        to: isCz ? "/cz/services/online-webinars" : "/services/online-webinars",
+        to: isCz ? "/cz/services/live-webinars" : "/services/live-webinars",
       },
     },
     {

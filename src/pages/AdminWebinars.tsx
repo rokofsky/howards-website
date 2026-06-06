@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { verifyAdminPassword, getAdminToken, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
 import { Button } from "@/components/ui/button";
@@ -249,6 +249,11 @@ export default function AdminWebinars() {
 
   return (
     <div className="min-h-screen bg-background p-6 max-w-4xl mx-auto">
+      <nav className="text-xs text-muted-foreground mb-4">
+        <Link to="/rokofsky-admin" className="hover:text-foreground underline-offset-2 hover:underline">Admin</Link>
+        <span className="mx-2">/</span>
+        <span>Webinars</span>
+      </nav>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-foreground">Manage Webinars</h1>
         <Button variant="outline" size="sm" onClick={() => navigate("/")}>
