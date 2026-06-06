@@ -226,7 +226,7 @@ const ServiceDetail = () => {
                   <WebinarInquiryModal
                     open={!!expandedWebinar}
                     onOpenChange={(open) => { if (!open) setExpandedWebinar(null); }}
-                    webinarTitle={webinars.find((w) => w.id === expandedWebinar)?.title ?? ""}
+                    webinarTitle={(() => { const w = webinars.find((x) => x.id === expandedWebinar); return w ? pickCs(w.title_cs, w.title, isCz) : ""; })()}
                     onOrderNow={() => {
                       const w = webinars.find((x) => x.id === expandedWebinar);
                       setOrderInitialSlug(w?.slug);
