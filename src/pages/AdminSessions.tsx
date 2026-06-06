@@ -78,7 +78,9 @@ export default function AdminSessions() {
     setDescription(s.description || "");
     const d = new Date(s.session_date);
     const pad = (n: number) => n.toString().padStart(2, "0");
-    setSessionDate(`${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`);
+    setSessionDate(
+      `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`,
+    );
     setZoomLink(s.zoom_link || "");
     setZoomMeetingId(s.zoom_meeting_id || "");
     setStatus((s.status as "draft" | "published") || "draft");
@@ -102,10 +104,7 @@ export default function AdminSessions() {
     };
 
     if (editingId) {
-      const { error } = await supabase
-        .from("storytelling_sessions")
-        .update(payload)
-        .eq("id", editingId);
+      const { error } = await supabase.from("storytelling_sessions").update(payload).eq("id", editingId);
       setLoading(false);
       if (error) {
         toast({ title: "Error updating session", description: error.message, variant: "destructive" });
@@ -113,9 +112,7 @@ export default function AdminSessions() {
       }
       toast({ title: "Session updated!" });
     } else {
-      const { error } = await supabase
-        .from("storytelling_sessions")
-        .insert(payload);
+      const { error } = await supabase.from("storytelling_sessions").insert(payload);
       setLoading(false);
       if (error) {
         toast({ title: "Error creating session", description: error.message, variant: "destructive" });
@@ -130,10 +127,7 @@ export default function AdminSessions() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this session?")) return;
-    const { error } = await supabase
-      .from("storytelling_sessions")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("storytelling_sessions").delete().eq("id", id);
     if (error) {
       toast({ title: "Error deleting", variant: "destructive" });
       return;
@@ -160,7 +154,9 @@ export default function AdminSessions() {
                 onKeyDown={(e) => e.key === "Enter" && handleLogin()}
               />
             </div>
-            <Button onClick={handleLogin} className="w-full">Enter</Button>
+            <Button onClick={handleLogin} className="w-full">
+              Enter
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -170,7 +166,9 @@ export default function AdminSessions() {
   return (
     <div className="min-h-screen bg-background p-6 max-w-4xl mx-auto">
       <nav className="text-xs text-muted-foreground mb-4">
-        <Link to="/rokofsky-admin" className="hover:text-foreground underline-offset-2 hover:underline">Admin</Link>
+        <Link to="/rokofsky-admin" className="hover:text-foreground underline-offset-2 hover:underline">
+          Admin
+        </Link>
         <span className="mx-2">/</span>
         <span>Storytelling Sessions</span>
       </nav>
@@ -180,7 +178,13 @@ export default function AdminSessions() {
           Home
         </Button>
       </div>
-
+      <div className="mb-4">
+        <Link to="/rokofsky-admin" className="text-sm text-muted-foreground hover:text-foreground">
+          Admin
+        </Link>
+        <span className="text-sm text-muted-foreground mx-1">›</span>
+        <span className="text-sm text-muted-foreground">Storytelling Sessions</span>
+      </div>
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>{editingId ? "Edit Session" : "Add New Session"}</CardTitle>
@@ -189,26 +193,51 @@ export default function AdminSessions() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="title">Title</Label>
-              <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Storytelling Session" />
+              <Input
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Storytelling Session"
+              />
             </div>
             <div>
               <Label htmlFor="date">Date & Time</Label>
-              <Input id="date" type="datetime-local" value={sessionDate} onChange={(e) => setSessionDate(e.target.value)} />
+              <Input
+                id="date"
+                type="datetime-local"
+                value={sessionDate}
+                onChange={(e) => setSessionDate(e.target.value)}
+              />
             </div>
           </div>
           <div>
             <Label htmlFor="desc">Description</Label>
-            <Input id="desc" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Optional description" />
+            <Input
+              id="desc"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Optional description"
+            />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="zoom">Zoom Join Link</Label>
-              <Input id="zoom" value={zoomLink} onChange={(e) => setZoomLink(e.target.value)} placeholder="https://zoom.us/j/..." />
+              <Input
+                id="zoom"
+                value={zoomLink}
+                onChange={(e) => setZoomLink(e.target.value)}
+                placeholder="https://zoom.us/j/..."
+              />
               <p className="text-xs text-muted-foreground mt-1">Paste the Zoom Registration link here</p>
             </div>
             <div>
               <Label htmlFor="mid">Zoom Meeting ID (numeric)</Label>
-              <Input id="mid" value={zoomMeetingId} onChange={(e) => setZoomMeetingId(e.target.value)} placeholder="84146763709" />
+              <Input
+                id="mid"
+                value={zoomMeetingId}
+                onChange={(e) => setZoomMeetingId(e.target.value)}
+                placeholder="84146763709"
+              />
               <p className="text-xs text-muted-foreground mt-1">Digits only — used for API registration</p>
             </div>
           </div>
@@ -226,10 +255,12 @@ export default function AdminSessions() {
           </div>
           <div className="flex gap-2">
             <Button onClick={handleCreateOrUpdate} disabled={loading}>
-              {loading ? (editingId ? "Updating..." : "Creating...") : (editingId ? "Update Session" : "Create Session")}
+              {loading ? (editingId ? "Updating..." : "Creating...") : editingId ? "Update Session" : "Create Session"}
             </Button>
             {editingId && (
-              <Button variant="outline" onClick={clearForm}>Cancel</Button>
+              <Button variant="outline" onClick={clearForm}>
+                Cancel
+              </Button>
             )}
           </div>
         </CardContent>
@@ -259,7 +290,9 @@ export default function AdminSessions() {
                     <TableCell>{s.title || "Untitled"}</TableCell>
                     <TableCell>{new Date(s.session_date).toLocaleString()}</TableCell>
                     <TableCell>
-                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${s.status === "published" ? "bg-green-500/20 text-green-700 dark:text-green-300" : "bg-muted text-muted-foreground"}`}>
+                      <span
+                        className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${s.status === "published" ? "bg-green-500/20 text-green-700 dark:text-green-300" : "bg-muted text-muted-foreground"}`}
+                      >
                         {s.status || "draft"}
                       </span>
                     </TableCell>
