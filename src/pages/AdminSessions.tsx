@@ -165,13 +165,6 @@ export default function AdminSessions() {
 
   return (
     <div className="min-h-screen bg-background p-6 max-w-4xl mx-auto">
-      <nav className="text-xs text-muted-foreground mb-4">
-        <Link to="/rokofsky-admin" className="hover:text-foreground underline-offset-2 hover:underline">
-          Admin
-        </Link>
-        <span className="mx-2">/</span>
-        <span>Storytelling Sessions</span>
-      </nav>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-foreground">Manage Storytelling Sessions</h1>
         <Button variant="outline" size="sm" onClick={() => navigate("/")}>
