@@ -41,7 +41,13 @@ interface DbWebinar {
   title: string;
   description: string;
   details?: string | null;
+  title_cs?: string | null;
+  description_cs?: string | null;
+  details_cs?: string | null;
 }
+
+const pickCs = (cs: string | null | undefined, en: string | null | undefined, useCs: boolean) =>
+  useCs && cs && cs.trim().length > 0 ? cs : en || "";
 
 const ServiceDetail = () => {
   const lp = useLocalizedPath();
