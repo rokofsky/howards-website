@@ -141,6 +141,10 @@ export default function AdminWebinars() {
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editDetails, setEditDetails] = useState("");
+  const [editTitleCs, setEditTitleCs] = useState("");
+  const [editDescriptionCs, setEditDescriptionCs] = useState("");
+  const [editDetailsCs, setEditDetailsCs] = useState("");
+  const [translating, setTranslating] = useState<CsField | null>(null);
   const [editLoading, setEditLoading] = useState(false);
 
   const sensors = useSensors(
