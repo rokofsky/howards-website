@@ -390,7 +390,6 @@ const RokofAdmin = () => {
           </div>
         </div>
       </section>
-      </section>
 
       <Dialog open={!!editingPost} onOpenChange={(open) => !open && setEditingPost(null)}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
