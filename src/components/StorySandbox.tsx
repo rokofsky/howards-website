@@ -193,6 +193,25 @@ export default function StorySandbox() {
   // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
 
+  // --- Admin inline editing ---
+  const isAdmin =
+    typeof window !== "undefined" && localStorage.getItem("admin_authenticated") === "true";
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const [addingNew, setAddingNew] = useState<Record<string, boolean>>({});
+  const [savingField, setSavingField] = useState<Record<string, boolean>>({});
+
+  const PLACEHOLDER_CHAR = "[Pending Admin Character]";
+  const PLACEHOLDER_INC = "[Pending Admin Incident]";
+
+  const isRowValidFor = (row: SandboxRow | PromptRow | null | undefined, cat: string): boolean => {
+    if (!row) return false;
+    const v = getFieldValue(row as unknown as Record<string, unknown>, cat).trim();
+    if (!v) return false;
+    if (v === PLACEHOLDER_CHAR || v === PLACEHOLDER_INC) return false;
+    return true;
+  };
+
+
   // Hydrate persisted UI state
   useEffect(() => {
     try {
@@ -222,10 +241,20 @@ export default function StorySandbox() {
 
         if (sandboxRows.length > 0) {
           setAllSandboxPrompts(sandboxRows);
-          const pick = () => sandboxRows[Math.floor(Math.random() * sandboxRows.length)];
-          const c = pick();
-          const i = pick();
-          const k = pick();
+          const pickFor = (cat: Category) => {
+            let row = sandboxRows[Math.floor(Math.random() * sandboxRows.length)];
+            if (!isAdmin) {
+              let tries = 0;
+              while (row && !isRowValidFor(row, cat) && tries < 50) {
+                row = sandboxRows[Math.floor(Math.random() * sandboxRows.length)];
+                tries++;
+              }
+            }
+            return row;
+          };
+          const c = pickFor("character");
+          const i = pickFor("incident");
+          const k = pickFor("constraint");
           setCardRows({ character: c, incident: i, constraint: k });
           setPrompts((p) => ({
             character: getFieldValue(c as unknown as Record<string, unknown>, "character") || p.character,
@@ -235,8 +264,17 @@ export default function StorySandbox() {
         }
         if (oneLinerRows.length > 0) {
           setAllOneLiners(oneLinerRows);
-          setOneLinerRow(oneLinerRows[Math.floor(Math.random() * oneLinerRows.length)]);
+          let pick = oneLinerRows[Math.floor(Math.random() * oneLinerRows.length)];
+          if (!isAdmin) {
+            let tries = 0;
+            while (pick && !isRowValidFor(pick, "oneLiners") && tries < 50) {
+              pick = oneLinerRows[Math.floor(Math.random() * oneLinerRows.length)];
+              tries++;
+            }
+          }
+          setOneLinerRow(pick);
         }
+
         if (sheet3Rows.length > 0) {
           setAllSheet3Prompts(sheet3Rows);
           setSheet3Row(sheet3Rows[Math.floor(Math.random() * sheet3Rows.length)]);
@@ -313,21 +351,52 @@ export default function StorySandbox() {
   };
 
   // --- Independent shuffle handlers ---
-  const shuffleCard = (cat: Category) => {
-    const row = pickRandom(allSandboxPrompts);
+  const shuffleCard = (cat: Category, poolOverride?: SandboxRow[]) => {
+    const pool = poolOverride ?? allSandboxPrompts;
+    if (!pool.length) return;
+    let row = pickRandom(pool);
+    if (!isAdmin) {
+      let tries = 0;
+      while (row && !isRowValidFor(row, cat) && tries < 50) {
+        row = pickRandom(pool);
+        tries++;
+      }
+    }
     if (!row) return;
-    setCardRows((prev) => ({ ...prev, [cat]: row }));
+    setCardRows((prev) => ({ ...prev, [cat]: row! }));
     const text = getFieldValue(row as unknown as Record<string, unknown>, cat);
     setPrompts((p) => ({ ...p, [cat]: text || p[cat] }));
     setAnimKeys((prev) => ({ ...prev, [cat]: prev[cat] + 1 }));
+    setDrafts((d) => {
+      const n = { ...d };
+      delete n[cat];
+      return n;
+    });
+    setAddingNew((a) => ({ ...a, [cat]: false }));
   };
 
-  const shuffleOneLiner = () => {
-    const row = pickRandom(allOneLiners);
+  const shuffleOneLiner = (poolOverride?: PromptRow[]) => {
+    const pool = poolOverride ?? allOneLiners;
+    if (!pool.length) return;
+    let row = pickRandom(pool);
+    if (!isAdmin) {
+      let tries = 0;
+      while (row && !isRowValidFor(row, "oneLiners") && tries < 50) {
+        row = pickRandom(pool);
+        tries++;
+      }
+    }
     if (!row) return;
     setOneLinerRow(row);
     setOneLinerAnimKey((k) => k + 1);
+    setDrafts((d) => {
+      const n = { ...d };
+      delete n.oneLiner;
+      return n;
+    });
+    setAddingNew((a) => ({ ...a, oneLiner: false }));
   };
+
 
   // --- Voting: instant local state update, then async Supabase upsert ---
   const handleVote = (
@@ -491,6 +560,138 @@ export default function StorySandbox() {
 
   const oneLinerText = getFieldValue(oneLinerRow as unknown as Record<string, unknown>, "oneLiners");
 
+  // --- Admin helpers ---
+  const COLUMN_FOR: Record<string, string> = {
+    character: "character",
+    incident: "incident",
+    oneLiner: "one_liner",
+  };
+
+  const currentValueFor = (slot: "character" | "incident" | "oneLiner"): string => {
+    if (slot === "oneLiner") return oneLinerText;
+    return prompts[slot];
+  };
+
+  const draftValueFor = (slot: "character" | "incident" | "oneLiner"): string => {
+    if (addingNew[slot]) return drafts[slot] ?? "";
+    return drafts[slot] !== undefined ? drafts[slot] : currentValueFor(slot);
+  };
+
+  const isDirty = (slot: "character" | "incident" | "oneLiner"): boolean => {
+    if (addingNew[slot]) return (drafts[slot] ?? "").trim().length > 0;
+    return drafts[slot] !== undefined && drafts[slot] !== currentValueFor(slot);
+  };
+
+  const saveField = async (slot: "character" | "incident" | "oneLiner") => {
+    const value = (drafts[slot] ?? "").trim();
+    if (!value) return;
+    setSavingField((s) => ({ ...s, [slot]: true }));
+    const col = COLUMN_FOR[slot];
+    try {
+      if (addingNew[slot]) {
+        let insertPayload: Record<string, unknown>;
+        if (slot === "character") {
+          insertPayload = { sheet_key: "sandbox", character: value, incident: PLACEHOLDER_INC };
+        } else if (slot === "incident") {
+          insertPayload = { sheet_key: "sandbox", incident: value, character: PLACEHOLDER_CHAR };
+        } else {
+          insertPayload = { sheet_key: "oneLiners", one_liner: value };
+        }
+        const { data, error } = await (supabase.from("prompts") as any)
+          .insert(insertPayload)
+          .select()
+          .single();
+        if (error) {
+          console.error("Insert failed", error);
+          return;
+        }
+        if (slot === "oneLiner") {
+          const newRow = data as unknown as PromptRow;
+          setAllOneLiners((prev) => [...prev, newRow]);
+          setOneLinerRow(newRow);
+          setOneLinerAnimKey((k) => k + 1);
+        } else {
+          const newRow = data as unknown as SandboxRow;
+          setAllSandboxPrompts((prev) => [...prev, newRow]);
+          setCardRows((prev) => ({ ...prev, [slot]: newRow }));
+          setPrompts((p) => ({ ...p, [slot]: value }));
+          setAnimKeys((prev) => ({ ...prev, [slot]: prev[slot] + 1 }));
+        }
+        setAddingNew((a) => ({ ...a, [slot]: false }));
+      } else {
+        const rowId =
+          slot === "oneLiner" ? oneLinerRow?.id : cardRows[slot as Category]?.id;
+        if (!rowId) return;
+        const { error } = await (supabase.from("prompts") as any)
+          .update({ [col]: value })
+          .eq("id", rowId);
+        if (error) {
+          console.error("Update failed", error);
+          return;
+        }
+        if (slot === "oneLiner") {
+          setOneLinerRow((prev) => (prev ? ({ ...prev, [col]: value } as PromptRow) : prev));
+          setAllOneLiners((prev) =>
+            prev.map((r) => (r.id === rowId ? ({ ...r, [col]: value } as PromptRow) : r)),
+          );
+        } else {
+          setCardRows((prev) => ({
+            ...prev,
+            [slot]: prev[slot as Category]
+              ? ({ ...(prev[slot as Category] as SandboxRow), [col]: value } as SandboxRow)
+              : prev[slot as Category],
+          }));
+          setAllSandboxPrompts((prev) =>
+            prev.map((r) => (r.id === rowId ? ({ ...r, [col]: value } as SandboxRow) : r)),
+          );
+          setPrompts((p) => ({ ...p, [slot]: value }));
+        }
+      }
+      setDrafts((d) => {
+        const n = { ...d };
+        delete n[slot];
+        return n;
+      });
+    } finally {
+      setSavingField((s) => ({ ...s, [slot]: false }));
+    }
+  };
+
+  const deleteCurrent = async (slot: "character" | "incident" | "oneLiner") => {
+    if (!window.confirm("Go ahead dude, delete it")) return;
+    const rowId = slot === "oneLiner" ? oneLinerRow?.id : cardRows[slot as Category]?.id;
+    if (!rowId) return;
+    const { error } = await supabase.from("prompts").delete().eq("id", String(rowId));
+    if (error) {
+      console.error("Delete failed", error);
+      return;
+    }
+    if (slot === "oneLiner") {
+      const remaining = allOneLiners.filter((r) => r.id !== rowId);
+      setAllOneLiners(remaining);
+      shuffleOneLiner(remaining);
+    } else {
+      const remaining = allSandboxPrompts.filter((r) => r.id !== rowId);
+      setAllSandboxPrompts(remaining);
+      shuffleCard(slot as Category, remaining);
+    }
+  };
+
+  const startAddNew = (slot: "character" | "incident" | "oneLiner") => {
+    setAddingNew((a) => ({ ...a, [slot]: true }));
+    setDrafts((d) => ({ ...d, [slot]: "" }));
+  };
+
+  const cancelAddNew = (slot: "character" | "incident" | "oneLiner") => {
+    setAddingNew((a) => ({ ...a, [slot]: false }));
+    setDrafts((d) => {
+      const n = { ...d };
+      delete n[slot];
+      return n;
+    });
+  };
+
+
   return (
     <div className="w-full max-w-5xl mx-auto space-y-10">
       {/* Header */}
@@ -552,6 +753,43 @@ export default function StorySandbox() {
                     placeholder="Type your idea here…"
                     className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full flex-1 text-base font-medium leading-snug"
                   />
+                ) : isAdmin ? (
+                  <div className="flex-1 flex flex-col">
+                    <textarea
+                      value={draftValueFor(key as "character" | "incident")}
+                      onChange={(e) =>
+                        setDrafts((d) => ({ ...d, [key]: e.target.value }))
+                      }
+                      placeholder={
+                        addingNew[key]
+                          ? `New ${label.toLowerCase()}…`
+                          : `Edit ${label.toLowerCase()}…`
+                      }
+                      className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full flex-1 text-base font-medium leading-snug p-0"
+                      rows={3}
+                    />
+                    {isDirty(key as "character" | "incident") && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="glass"
+                          onClick={() => saveField(key as "character" | "incident")}
+                          disabled={savingField[key]}
+                        >
+                          {savingField[key] ? "Saving…" : "Save"}
+                        </Button>
+                        {addingNew[key] && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => cancelAddNew(key as "character" | "incident")}
+                          >
+                            Cancel
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 ) : isEditing ? (
                   <div className="space-y-2">
                     <Input
@@ -577,7 +815,29 @@ export default function StorySandbox() {
                 )}
 
                 {!isConstraint && !sandboxLoading && (
-                  <div className="mt-3 flex justify-end">
+                  <div className="mt-3 flex items-center justify-between gap-2">
+                    {isAdmin ? (
+                      <div className="flex items-center gap-3 text-xs">
+                        <button
+                          type="button"
+                          onClick={() => startAddNew(key as "character" | "incident")}
+                          className="text-muted-foreground hover:text-foreground underline underline-offset-2"
+                        >
+                          Add new prompt
+                        </button>
+                        {!addingNew[key] && cardRows[key]?.id && (
+                          <button
+                            type="button"
+                            onClick={() => deleteCurrent(key as "character" | "incident")}
+                            className="text-muted-foreground hover:text-destructive underline underline-offset-2"
+                          >
+                            Delete prompt
+                          </button>
+                        )}
+                      </div>
+                    ) : (
+                      <span />
+                    )}
                     <VoteThumbs sheetKey="sandbox" id={cardRows[key]?.id} box={box} />
                   </div>
                 )}
@@ -587,11 +847,12 @@ export default function StorySandbox() {
         </div>
       </section>
 
+
       {/* One-liner Prompt Generator (Sheet2) */}
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold">One size fits all prompts</h3>
-          <Button variant="glass" size="sm" onClick={shuffleOneLiner} disabled={!allOneLiners.length}>
+          <Button variant="glass" size="sm" onClick={() => shuffleOneLiner()} disabled={!allOneLiners.length}>
             <Shuffle className="h-4 w-4" />
             Shuffle
           </Button>
@@ -602,13 +863,65 @@ export default function StorySandbox() {
         >
           {oneLinersLoading ? (
             <div className="h-4 w-2/3 bg-muted animate-pulse rounded" />
+          ) : isAdmin ? (
+            <div className="w-full flex flex-col items-center gap-2">
+              <textarea
+                value={draftValueFor("oneLiner")}
+                onChange={(e) => setDrafts((d) => ({ ...d, oneLiner: e.target.value }))}
+                placeholder={addingNew.oneLiner ? "New one-liner…" : "Edit one-liner…"}
+                className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full text-base md:text-lg font-medium text-center leading-snug p-0"
+                rows={2}
+              />
+              {isDirty("oneLiner") && (
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="glass"
+                    onClick={() => saveField("oneLiner")}
+                    disabled={savingField.oneLiner}
+                  >
+                    {savingField.oneLiner ? "Saving…" : "Save"}
+                  </Button>
+                  {addingNew.oneLiner && (
+                    <Button size="sm" variant="ghost" onClick={() => cancelAddNew("oneLiner")}>
+                      Cancel
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
           ) : oneLinerText ? (
             <p className="text-base md:text-lg font-medium text-center leading-snug">{oneLinerText}</p>
           ) : (
             <p className="text-base md:text-lg italic text-muted-foreground text-center leading-snug">Coming soon</p>
           )}
-          <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
+          <div className="flex items-center justify-between w-full gap-3">
+            {isAdmin ? (
+              <div className="flex items-center gap-3 text-xs">
+                <button
+                  type="button"
+                  onClick={() => startAddNew("oneLiner")}
+                  className="text-muted-foreground hover:text-foreground underline underline-offset-2"
+                >
+                  Add new prompt
+                </button>
+                {!addingNew.oneLiner && oneLinerRow?.id && (
+                  <button
+                    type="button"
+                    onClick={() => deleteCurrent("oneLiner")}
+                    className="text-muted-foreground hover:text-destructive underline underline-offset-2"
+                  >
+                    Delete prompt
+                  </button>
+                )}
+              </div>
+            ) : (
+              <span />
+            )}
+            <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
+          </div>
         </Card>
+
       </section>
 
       {/* Structure Selector + Save Story (aligned horizontally) */}
