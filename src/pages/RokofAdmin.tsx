@@ -87,104 +87,6 @@ const RokofAdmin = () => {
   const [savingEdit, setSavingEdit] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
 
-  // Prompts management
-  type PromptRow = {
-    id: string;
-    sheet_key: string;
-    character: string | null;
-    incident: string | null;
-    constraint_text: string | null;
-    setting: string | null;
-    prompt: string | null;
-    created_at: string;
-  };
-  const PROMPT_SHEETS: { key: string; label: string }[] = [
-    { key: "sandbox", label: "Story Sandbox" },
-    { key: "oneLiners", label: "One Liners" },
-    { key: "sheet3", label: "Sheet 3" },
-  ];
-  const [prompts, setPrompts] = useState<PromptRow[]>([]);
-  const [editingPrompt, setEditingPrompt] = useState<PromptRow | null>(null);
-  const [savingPrompt, setSavingPrompt] = useState(false);
-  const [newPromptDrafts, setNewPromptDrafts] = useState<
-    Record<string, { character: string; incident: string; prompt: string }>
-  >({
-    sandbox: { character: "", incident: "", prompt: "" },
-    oneLiners: { character: "", incident: "", prompt: "" },
-    sheet3: { character: "", incident: "", prompt: "" },
-  });
-  const [addingPrompt, setAddingPrompt] = useState<string | null>(null);
-
-  const loadPrompts = async () => {
-    const { data, error } = await supabase.from("prompts").select("*");
-    if (error) {
-      toast({ title: "Failed to load prompts", description: error.message, variant: "destructive" });
-      return;
-    }
-    setPrompts((data as PromptRow[]) ?? []);
-  };
-
-  const handleAddPrompt = async (sheetKey: string) => {
-    const draft = newPromptDrafts[sheetKey];
-    let payload: Record<string, unknown> = { sheet_key: sheetKey };
-    if (sheetKey === "sandbox") {
-      if (!draft.character.trim() && !draft.incident.trim()) {
-        toast({ title: "Please fill at least one field", variant: "destructive" });
-        return;
-      }
-      payload.character = draft.character;
-      payload.incident = draft.incident;
-    } else {
-      if (!draft.prompt.trim()) {
-        toast({ title: "Please enter text", variant: "destructive" });
-        return;
-      }
-      payload.prompt = draft.prompt;
-    }
-    setAddingPrompt(sheetKey);
-    const { error } = await supabase.from("prompts").insert(payload as any);
-    setAddingPrompt(null);
-    if (error) {
-      toast({ title: "Failed to add prompt", description: error.message, variant: "destructive" });
-      return;
-    }
-    setNewPromptDrafts((prev) => ({
-      ...prev,
-      [sheetKey]: { character: "", incident: "", prompt: "" },
-    }));
-    toast({ title: "Prompt added" });
-    await loadPrompts();
-  };
-
-  const handleSavePrompt = async () => {
-    if (!editingPrompt) return;
-    setSavingPrompt(true);
-    const update: Record<string, unknown> =
-      editingPrompt.sheet_key === "sandbox"
-        ? { character: editingPrompt.character, incident: editingPrompt.incident }
-        : { prompt: editingPrompt.prompt };
-    const { error } = await supabase.from("prompts").update(update as any).eq("id", editingPrompt.id);
-    setSavingPrompt(false);
-    if (error) {
-      toast({ title: "Update failed", description: error.message, variant: "destructive" });
-      return;
-    }
-    setEditingPrompt(null);
-    toast({ title: "Prompt updated" });
-    await loadPrompts();
-  };
-
-  const handleDeletePrompt = async (prompt: PromptRow) => {
-    if (!window.confirm("Are you sure you want to delete this prompt?")) return;
-    const { error } = await supabase.from("prompts").delete().eq("id", prompt.id);
-    if (error) {
-      toast({ title: "Delete failed", description: error.message, variant: "destructive" });
-      return;
-    }
-    setPrompts((prev) => prev.filter((p) => p.id !== prompt.id));
-    toast({ title: "Prompt deleted" });
-  };
-
   const loadPosts = async () => {
     const { data, error } = await supabase.from("blog_posts").select("*");
     console.log("Admin Component Fetch - Data:", data, "Error:", error);
@@ -192,10 +94,7 @@ const RokofAdmin = () => {
   };
 
   useEffect(() => {
-    if (authenticated) {
-      void loadPosts();
-      void loadPrompts();
-    }
+    if (authenticated) void loadPosts();
   }, [authenticated]);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -432,102 +331,6 @@ const RokofAdmin = () => {
             )}
           </div>
 
-          {/* Manage Prompts */}
-          <div className="glass rounded-xl p-8 mb-14">
-            <h2 className="text-xl font-bold mb-2">Manage Prompts</h2>
-            <p className="text-sm text-muted-foreground mb-6">
-              Create, edit, or delete prompts grouped by sheet.
-            </p>
-            <div className="space-y-8">
-              {PROMPT_SHEETS.map((sheet) => {
-                const rows = prompts.filter((p) => p.sheet_key === sheet.key);
-                const draft = newPromptDrafts[sheet.key];
-                return (
-                  <div key={sheet.key}>
-                    <h3 className="font-bold text-lg mb-3">
-                      {sheet.label} <span className="text-xs text-muted-foreground font-normal">({sheet.key})</span>
-                    </h3>
-                    {rows.length === 0 ? (
-                      <p className="text-sm text-muted-foreground mb-4">No prompts yet.</p>
-                    ) : (
-                      <ul className="divide-y divide-border mb-4">
-                        {rows.map((p) => (
-                          <li key={p.id} className="flex items-start justify-between gap-4 py-3">
-                            <div className="min-w-0 flex-1 text-sm">
-                              {sheet.key === "sandbox" ? (
-                                <div className="space-y-1">
-                                  <p><span className="font-medium">Character:</span> {p.character || <em className="text-muted-foreground">—</em>}</p>
-                                  <p><span className="font-medium">Incident:</span> {p.incident || <em className="text-muted-foreground">—</em>}</p>
-                                </div>
-                              ) : (
-                                <p className="whitespace-pre-wrap break-words">{p.prompt || <em className="text-muted-foreground">—</em>}</p>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2 shrink-0">
-                              <Button variant="outline" size="sm" onClick={() => setEditingPrompt(p)} aria-label="Edit prompt">
-                                <Pencil className="h-4 w-4 mr-1" /> Edit
-                              </Button>
-                              <Button variant="outline" size="sm" onClick={() => handleDeletePrompt(p)} aria-label="Delete prompt">
-                                <Trash2 className="h-4 w-4 mr-1 text-destructive" /> Delete
-                              </Button>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    <div className="rounded-lg border border-border p-4 space-y-3">
-                      <p className="text-sm font-medium">Add Prompt</p>
-                      {sheet.key === "sandbox" ? (
-                        <>
-                          <Input
-                            placeholder="Character"
-                            value={draft.character}
-                            onChange={(e) =>
-                              setNewPromptDrafts((prev) => ({
-                                ...prev,
-                                [sheet.key]: { ...prev[sheet.key], character: e.target.value },
-                              }))
-                            }
-                          />
-                          <Input
-                            placeholder="Incident"
-                            value={draft.incident}
-                            onChange={(e) =>
-                              setNewPromptDrafts((prev) => ({
-                                ...prev,
-                                [sheet.key]: { ...prev[sheet.key], incident: e.target.value },
-                              }))
-                            }
-                          />
-                        </>
-                      ) : (
-                        <Textarea
-                          placeholder={sheet.key === "oneLiners" ? "One liner" : "Text"}
-                          value={draft.prompt}
-                          onChange={(e) =>
-                            setNewPromptDrafts((prev) => ({
-                              ...prev,
-                              [sheet.key]: { ...prev[sheet.key], prompt: e.target.value },
-                            }))
-                          }
-                        />
-                      )}
-                      <Button
-                        variant="cta"
-                        size="sm"
-                        onClick={() => handleAddPrompt(sheet.key)}
-                        disabled={addingPrompt === sheet.key}
-                      >
-                        {addingPrompt === sheet.key ? "Adding..." : "Add Prompt"}
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-
           <div className="glass rounded-xl px-8 py-4 mb-14">
             <p className="text-sm text-muted-foreground">
               <span className="font-bold">Reference Scans (PDF)</span> — upload to GitHub at: src/components/EvaluationsGallery.tsx
@@ -753,53 +556,6 @@ const RokofAdmin = () => {
             </Button>
             <Button variant="cta" onClick={handleSaveEdit} disabled={savingEdit}>
               {savingEdit ? "Saving..." : "Save Changes"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={!!editingPrompt} onOpenChange={(open) => !open && setEditingPrompt(null)}>
-        <DialogContent className="max-w-xl">
-          <DialogHeader>
-            <DialogTitle>Edit Prompt</DialogTitle>
-          </DialogHeader>
-          {editingPrompt && (
-            <div className="space-y-4">
-              {editingPrompt.sheet_key === "sandbox" ? (
-                <>
-                  <div>
-                    <Label>Character</Label>
-                    <Input
-                      value={editingPrompt.character ?? ""}
-                      onChange={(e) => setEditingPrompt({ ...editingPrompt, character: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label>Incident</Label>
-                    <Input
-                      value={editingPrompt.incident ?? ""}
-                      onChange={(e) => setEditingPrompt({ ...editingPrompt, incident: e.target.value })}
-                    />
-                  </div>
-                </>
-              ) : (
-                <div>
-                  <Label>{editingPrompt.sheet_key === "oneLiners" ? "One Liner" : "Text"}</Label>
-                  <Textarea
-                    className="min-h-[140px]"
-                    value={editingPrompt.prompt ?? ""}
-                    onChange={(e) => setEditingPrompt({ ...editingPrompt, prompt: e.target.value })}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingPrompt(null)} disabled={savingPrompt}>
-              Cancel
-            </Button>
-            <Button variant="cta" onClick={handleSavePrompt} disabled={savingPrompt}>
-              {savingPrompt ? "Saving..." : "Save Changes"}
             </Button>
           </DialogFooter>
         </DialogContent>

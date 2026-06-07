@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Pencil, Plus, Save, Shuffle, ThumbsDown, ThumbsUp, Trash2, X } from "lucide-react";
+import { Shuffle, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,8 +9,6 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
-import { isAdminAuthenticated } from "@/lib/adminAuth";
-import { toast } from "@/hooks/use-toast";
 
 const readUserVotes = (): Record<string, "up" | "down"> => {
   try {
@@ -121,28 +119,17 @@ type ElementBox = "character" | "incident" | "constraint" | "untitled" | "generi
 
 type SandboxRow = {
   id?: string | number;
-  sheet_key?: SheetKey;
   character?: string;
   incident?: string;
   constraint?: string;
-  constraint_text?: string;
   setting?: string;
   untitled?: string;
-  prompt?: string;
 };
 type PromptRow = {
   id?: string | number;
-  sheet_key?: SheetKey;
   prompt?: string;
   text?: string;
   oneLiner?: string;
-};
-
-type PromptEditorDraft = {
-  character: string;
-  incident: string;
-  constraint_text: string;
-  prompt: string;
 };
 
 const pickRandom = <T,>(arr: T[]): T | undefined =>
@@ -202,42 +189,9 @@ export default function StorySandbox() {
 
   const [structure, setStructure] = useState<StructureKey>("3-act");
   const [scratch, setScratch] = useState<Record<string, string>>({});
-  const [adminAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
-  const [activePromptSheet, setActivePromptSheet] = useState<SheetKey>("sandbox");
-  const [editingPromptId, setEditingPromptId] = useState<string | number | null>(null);
-  const [promptDraft, setPromptDraft] = useState<PromptEditorDraft>({
-    character: "",
-    incident: "",
-    constraint_text: "",
-    prompt: "",
-  });
-  const [newPromptDraft, setNewPromptDraft] = useState<PromptEditorDraft>({
-    character: "",
-    incident: "",
-    constraint_text: "",
-    prompt: "",
-  });
-  const [savingPromptId, setSavingPromptId] = useState<string | number | "new" | null>(null);
 
   // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
-
-  const applyPromptRows = (rows: Array<SandboxRow | PromptRow>) => {
-    const sandboxRows = rows.filter((r) => r.sheet_key === "sandbox") as SandboxRow[];
-    const oneLinerRows = rows.filter((r) => r.sheet_key === "oneLiners") as PromptRow[];
-    const sheet3Rows = rows.filter((r) => r.sheet_key === "sheet3") as PromptRow[];
-    if (sandboxRows.length > 0) setAllSandboxPrompts(sandboxRows);
-    if (oneLinerRows.length > 0) setAllOneLiners(oneLinerRows);
-    if (sheet3Rows.length > 0) setAllSheet3Prompts(sheet3Rows);
-  };
-
-  const loadPromptRows = async () => {
-    const { data, error } = await supabase.from("prompts").select("*");
-    if (error) throw error;
-    const rows = (data ?? []) as Array<SandboxRow | PromptRow>;
-    applyPromptRows(rows);
-    return rows;
-  };
 
   // Hydrate persisted UI state
   useEffect(() => {
@@ -262,13 +216,12 @@ export default function StorySandbox() {
       if (error) {
         console.error("Failed to load prompts from Supabase, using fallbacks", error);
       } else if (data) {
-        const rows = data as Array<SandboxRow | PromptRow>;
-        applyPromptRows(rows);
-        const sandboxRows = rows.filter((r) => r.sheet_key === "sandbox") as SandboxRow[];
-        const oneLinerRows = rows.filter((r) => r.sheet_key === "oneLiners") as PromptRow[];
-        const sheet3Rows = rows.filter((r) => r.sheet_key === "sheet3") as PromptRow[];
+        const sandboxRows = data.filter((r) => r.sheet_key === "sandbox") as unknown as SandboxRow[];
+        const oneLinerRows = data.filter((r) => r.sheet_key === "oneLiners") as unknown as PromptRow[];
+        const sheet3Rows = data.filter((r) => r.sheet_key === "sheet3") as unknown as PromptRow[];
 
         if (sandboxRows.length > 0) {
+          setAllSandboxPrompts(sandboxRows);
           const pick = () => sandboxRows[Math.floor(Math.random() * sandboxRows.length)];
           const c = pick();
           const i = pick();
@@ -281,9 +234,11 @@ export default function StorySandbox() {
           }));
         }
         if (oneLinerRows.length > 0) {
+          setAllOneLiners(oneLinerRows);
           setOneLinerRow(oneLinerRows[Math.floor(Math.random() * oneLinerRows.length)]);
         }
         if (sheet3Rows.length > 0) {
+          setAllSheet3Prompts(sheet3Rows);
           setSheet3Row(sheet3Rows[Math.floor(Math.random() * sheet3Rows.length)]);
         }
       }
@@ -343,11 +298,11 @@ export default function StorySandbox() {
         break;
       case "oneLiners":
       case "generic":
-        col = "prompt";
+        col = "one_liner";
         break;
       case "sheet3":
       case "text":
-        col = "prompt";
+        col = "text";
         break;
       default:
         return "";
@@ -372,83 +327,6 @@ export default function StorySandbox() {
     if (!row) return;
     setOneLinerRow(row);
     setOneLinerAnimKey((k) => k + 1);
-  };
-
-  const updatePromptDraft = (field: keyof PromptEditorDraft, value: string) => {
-    setPromptDraft((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const startEditingPrompt = (row: SandboxRow | PromptRow) => {
-    setEditingPromptId(row.id ?? null);
-    setPromptDraft({
-      character: "character" in row ? row.character ?? "" : "",
-      incident: "incident" in row ? row.incident ?? "" : "",
-      constraint_text: "constraint_text" in row ? row.constraint_text ?? "" : "",
-      prompt: "prompt" in row ? row.prompt ?? extractText(row as PromptRow) : extractText(row as PromptRow),
-    });
-  };
-
-  const savePromptEdit = async (row: SandboxRow | PromptRow) => {
-    if (!row.id || String(row.id).startsWith("fb-")) return;
-    const sheetKey = (row.sheet_key ?? activePromptSheet) as SheetKey;
-    const payload =
-      sheetKey === "sandbox"
-        ? {
-            character: promptDraft.character,
-            incident: promptDraft.incident,
-            constraint_text: promptDraft.constraint_text,
-          }
-        : { prompt: promptDraft.prompt };
-    setSavingPromptId(row.id);
-    const { error } = await supabase.from("prompts").update(payload as any).eq("id", row.id as any);
-    setSavingPromptId(null);
-    if (error) {
-      toast({ title: "Prompt update failed", description: error.message, variant: "destructive" });
-      return;
-    }
-    setEditingPromptId(null);
-    await loadPromptRows();
-    toast({ title: "Prompt updated" });
-  };
-
-  const addPromptRow = async () => {
-    const payload =
-      activePromptSheet === "sandbox"
-        ? {
-            sheet_key: activePromptSheet,
-            character: newPromptDraft.character,
-            incident: newPromptDraft.incident,
-            constraint_text: newPromptDraft.constraint_text,
-          }
-        : { sheet_key: activePromptSheet, prompt: newPromptDraft.prompt };
-    const hasContent = Object.values(payload).some((value) => typeof value === "string" && value.trim() && value !== activePromptSheet);
-    if (!hasContent) {
-      toast({ title: "Add prompt text first", variant: "destructive" });
-      return;
-    }
-    setSavingPromptId("new");
-    const { error } = await supabase.from("prompts").insert(payload as any);
-    setSavingPromptId(null);
-    if (error) {
-      toast({ title: "Prompt add failed", description: error.message, variant: "destructive" });
-      return;
-    }
-    setNewPromptDraft({ character: "", incident: "", constraint_text: "", prompt: "" });
-    await loadPromptRows();
-    toast({ title: "Prompt added" });
-  };
-
-  const deletePromptRow = async (row: SandboxRow | PromptRow) => {
-    if (!row.id || String(row.id).startsWith("fb-") || !window.confirm("Are you sure you want to delete this prompt?")) return;
-    setSavingPromptId(row.id);
-    const { error } = await supabase.from("prompts").delete().eq("id", row.id as any);
-    setSavingPromptId(null);
-    if (error) {
-      toast({ title: "Prompt delete failed", description: error.message, variant: "destructive" });
-      return;
-    }
-    await loadPromptRows();
-    toast({ title: "Prompt deleted" });
   };
 
   // --- Voting: instant local state update, then async Supabase upsert ---
@@ -612,12 +490,6 @@ export default function StorySandbox() {
   };
 
   const oneLinerText = getFieldValue(oneLinerRow as unknown as Record<string, unknown>, "oneLiners");
-  const adminPromptRows: Array<SandboxRow | PromptRow> =
-    activePromptSheet === "sandbox"
-      ? allSandboxPrompts
-      : activePromptSheet === "oneLiners"
-        ? allOneLiners
-        : allSheet3Prompts;
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-10">
@@ -630,144 +502,6 @@ export default function StorySandbox() {
           Save your story stores only on your computer locally. I don't save anything except the anonymous votes.
         </p>
       </header>
-
-      {adminAuthenticated && (
-        <section className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <h3 className="text-lg font-semibold">Manage Prompts</h3>
-            <div className="flex flex-wrap gap-2">
-              {([
-                ["sandbox", "Sandbox"],
-                ["oneLiners", "One Liners"],
-                ["sheet3", "Sheet 3"],
-              ] as const).map(([key, label]) => (
-                <Button
-                  key={key}
-                  type="button"
-                  variant={activePromptSheet === key ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => {
-                    setActivePromptSheet(key);
-                    setEditingPromptId(null);
-                  }}
-                >
-                  {label}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          <Card className="p-4 space-y-3 border-primary/30 bg-primary/5">
-            <div className={cn("grid gap-3", activePromptSheet === "sandbox" ? "md:grid-cols-3" : "grid-cols-1")}>
-              {activePromptSheet === "sandbox" ? (
-                <>
-                  <Input
-                    value={newPromptDraft.character}
-                    onChange={(e) => setNewPromptDraft((prev) => ({ ...prev, character: e.target.value }))}
-                    placeholder="New character"
-                  />
-                  <Input
-                    value={newPromptDraft.incident}
-                    onChange={(e) => setNewPromptDraft((prev) => ({ ...prev, incident: e.target.value }))}
-                    placeholder="New incident"
-                  />
-                  <Input
-                    value={newPromptDraft.constraint_text}
-                    onChange={(e) => setNewPromptDraft((prev) => ({ ...prev, constraint_text: e.target.value }))}
-                    placeholder="New constraint"
-                  />
-                </>
-              ) : (
-                <Textarea
-                  value={newPromptDraft.prompt}
-                  onChange={(e) => setNewPromptDraft((prev) => ({ ...prev, prompt: e.target.value }))}
-                  placeholder="New prompt text"
-                  rows={3}
-                />
-              )}
-            </div>
-            <Button type="button" size="sm" onClick={addPromptRow} disabled={savingPromptId === "new"}>
-              <Plus className="h-4 w-4" />
-              Add Prompt
-            </Button>
-          </Card>
-
-          <div className="space-y-3">
-            {adminPromptRows.map((row) => {
-              const isEditingRow = editingPromptId === row.id;
-              const isSavingRow = savingPromptId === row.id;
-              return (
-                <Card key={String(row.id)} className="p-4 space-y-3">
-                  {isEditingRow ? (
-                    <div className={cn("grid gap-3", activePromptSheet === "sandbox" ? "md:grid-cols-3" : "grid-cols-1")}>
-                      {activePromptSheet === "sandbox" ? (
-                        <>
-                          <Input
-                            value={promptDraft.character}
-                            onChange={(e) => updatePromptDraft("character", e.target.value)}
-                            placeholder="Character"
-                          />
-                          <Input
-                            value={promptDraft.incident}
-                            onChange={(e) => updatePromptDraft("incident", e.target.value)}
-                            placeholder="Incident"
-                          />
-                          <Input
-                            value={promptDraft.constraint_text}
-                            onChange={(e) => updatePromptDraft("constraint_text", e.target.value)}
-                            placeholder="Constraint"
-                          />
-                        </>
-                      ) : (
-                        <Textarea
-                          value={promptDraft.prompt}
-                          onChange={(e) => updatePromptDraft("prompt", e.target.value)}
-                          placeholder="Prompt text"
-                          rows={3}
-                        />
-                      )}
-                    </div>
-                  ) : activePromptSheet === "sandbox" ? (
-                    <div className="grid gap-2 md:grid-cols-3 text-sm">
-                      <p><span className="font-semibold">Character:</span> {(row as SandboxRow).character || "—"}</p>
-                      <p><span className="font-semibold">Incident:</span> {(row as SandboxRow).incident || "—"}</p>
-                      <p><span className="font-semibold">Constraint:</span> {(row as SandboxRow).constraint_text || "—"}</p>
-                    </div>
-                  ) : (
-                    <p className="text-sm leading-relaxed">{extractText(row as PromptRow) || "—"}</p>
-                  )}
-
-                  <div className="flex flex-wrap justify-end gap-2">
-                    {isEditingRow ? (
-                      <>
-                        <Button type="button" size="sm" onClick={() => savePromptEdit(row)} disabled={isSavingRow}>
-                          <Save className="h-4 w-4" />
-                          Save
-                        </Button>
-                        <Button type="button" variant="outline" size="sm" onClick={() => setEditingPromptId(null)}>
-                          <X className="h-4 w-4" />
-                          Cancel
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button type="button" variant="outline" size="sm" onClick={() => startEditingPrompt(row)}>
-                          <Pencil className="h-4 w-4" />
-                          Edit
-                        </Button>
-                        <Button type="button" variant="outline" size="sm" onClick={() => deletePromptRow(row)} disabled={isSavingRow}>
-                          <Trash2 className="h-4 w-4" />
-                          Delete
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
-        </section>
-      )}
 
       {/* Prompt Generator (Sandbox / Sheet1) */}
       <section className="space-y-4">
