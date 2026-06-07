@@ -18,7 +18,7 @@ const PricingSection = () => {
   const tiers = [
     {
       name: t("Live Webinars", "Živé webináře"),
-      price: t("From CZK 2,500 (€100)", "Od 2 500 Kč (100 €)"),
+      price: t("From CZK 3,000 (€125)", "Od 3 000 Kč (125 €)"),
       description: t(
         "From 2 hours to a full day of interactive team learning.",
         "Od 2 hodin po celý den interaktivního týmového vzdělávání."
