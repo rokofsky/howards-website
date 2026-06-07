@@ -214,7 +214,7 @@ const StorytellingWorkshops = () => {
           {success ? (
             <>
               <DialogHeader>
-                <DialogTitle className="text-xl">{t("🌱 You're signed up! 🌱", "🌱 Jste zaregistrováni! 🌱")}</DialogTitle>
+                <DialogTitle className="text-xl">{t("🌿Thanks for the nudge🌿", "🌿Díky za připomenutí🌿")}</DialogTitle>
                 <DialogDescription className="pt-2 text-base font-medium">
                   {t(
                     "Check your email for the Zoom link, see you there!",
