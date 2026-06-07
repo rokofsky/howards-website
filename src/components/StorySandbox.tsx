@@ -560,6 +560,138 @@ export default function StorySandbox() {
 
   const oneLinerText = getFieldValue(oneLinerRow as unknown as Record<string, unknown>, "oneLiners");
 
+  // --- Admin helpers ---
+  const COLUMN_FOR: Record<string, string> = {
+    character: "character",
+    incident: "incident",
+    oneLiner: "one_liner",
+  };
+
+  const currentValueFor = (slot: "character" | "incident" | "oneLiner"): string => {
+    if (slot === "oneLiner") return oneLinerText;
+    return prompts[slot];
+  };
+
+  const draftValueFor = (slot: "character" | "incident" | "oneLiner"): string => {
+    if (addingNew[slot]) return drafts[slot] ?? "";
+    return drafts[slot] !== undefined ? drafts[slot] : currentValueFor(slot);
+  };
+
+  const isDirty = (slot: "character" | "incident" | "oneLiner"): boolean => {
+    if (addingNew[slot]) return (drafts[slot] ?? "").trim().length > 0;
+    return drafts[slot] !== undefined && drafts[slot] !== currentValueFor(slot);
+  };
+
+  const saveField = async (slot: "character" | "incident" | "oneLiner") => {
+    const value = (drafts[slot] ?? "").trim();
+    if (!value) return;
+    setSavingField((s) => ({ ...s, [slot]: true }));
+    const col = COLUMN_FOR[slot];
+    try {
+      if (addingNew[slot]) {
+        let insertPayload: Record<string, unknown>;
+        if (slot === "character") {
+          insertPayload = { sheet_key: "sandbox", character: value, incident: PLACEHOLDER_INC };
+        } else if (slot === "incident") {
+          insertPayload = { sheet_key: "sandbox", incident: value, character: PLACEHOLDER_CHAR };
+        } else {
+          insertPayload = { sheet_key: "oneLiners", one_liner: value };
+        }
+        const { data, error } = await (supabase.from("prompts") as any)
+          .insert(insertPayload)
+          .select()
+          .single();
+        if (error) {
+          console.error("Insert failed", error);
+          return;
+        }
+        if (slot === "oneLiner") {
+          const newRow = data as unknown as PromptRow;
+          setAllOneLiners((prev) => [...prev, newRow]);
+          setOneLinerRow(newRow);
+          setOneLinerAnimKey((k) => k + 1);
+        } else {
+          const newRow = data as unknown as SandboxRow;
+          setAllSandboxPrompts((prev) => [...prev, newRow]);
+          setCardRows((prev) => ({ ...prev, [slot]: newRow }));
+          setPrompts((p) => ({ ...p, [slot]: value }));
+          setAnimKeys((prev) => ({ ...prev, [slot]: prev[slot] + 1 }));
+        }
+        setAddingNew((a) => ({ ...a, [slot]: false }));
+      } else {
+        const rowId =
+          slot === "oneLiner" ? oneLinerRow?.id : cardRows[slot as Category]?.id;
+        if (!rowId) return;
+        const { error } = await (supabase.from("prompts") as any)
+          .update({ [col]: value })
+          .eq("id", rowId);
+        if (error) {
+          console.error("Update failed", error);
+          return;
+        }
+        if (slot === "oneLiner") {
+          setOneLinerRow((prev) => (prev ? ({ ...prev, [col]: value } as PromptRow) : prev));
+          setAllOneLiners((prev) =>
+            prev.map((r) => (r.id === rowId ? ({ ...r, [col]: value } as PromptRow) : r)),
+          );
+        } else {
+          setCardRows((prev) => ({
+            ...prev,
+            [slot]: prev[slot as Category]
+              ? ({ ...(prev[slot as Category] as SandboxRow), [col]: value } as SandboxRow)
+              : prev[slot as Category],
+          }));
+          setAllSandboxPrompts((prev) =>
+            prev.map((r) => (r.id === rowId ? ({ ...r, [col]: value } as SandboxRow) : r)),
+          );
+          setPrompts((p) => ({ ...p, [slot]: value }));
+        }
+      }
+      setDrafts((d) => {
+        const n = { ...d };
+        delete n[slot];
+        return n;
+      });
+    } finally {
+      setSavingField((s) => ({ ...s, [slot]: false }));
+    }
+  };
+
+  const deleteCurrent = async (slot: "character" | "incident" | "oneLiner") => {
+    if (!window.confirm("Go ahead dude, delete it")) return;
+    const rowId = slot === "oneLiner" ? oneLinerRow?.id : cardRows[slot as Category]?.id;
+    if (!rowId) return;
+    const { error } = await supabase.from("prompts").delete().eq("id", String(rowId));
+    if (error) {
+      console.error("Delete failed", error);
+      return;
+    }
+    if (slot === "oneLiner") {
+      const remaining = allOneLiners.filter((r) => r.id !== rowId);
+      setAllOneLiners(remaining);
+      shuffleOneLiner(remaining);
+    } else {
+      const remaining = allSandboxPrompts.filter((r) => r.id !== rowId);
+      setAllSandboxPrompts(remaining);
+      shuffleCard(slot as Category, remaining);
+    }
+  };
+
+  const startAddNew = (slot: "character" | "incident" | "oneLiner") => {
+    setAddingNew((a) => ({ ...a, [slot]: true }));
+    setDrafts((d) => ({ ...d, [slot]: "" }));
+  };
+
+  const cancelAddNew = (slot: "character" | "incident" | "oneLiner") => {
+    setAddingNew((a) => ({ ...a, [slot]: false }));
+    setDrafts((d) => {
+      const n = { ...d };
+      delete n[slot];
+      return n;
+    });
+  };
+
+
   return (
     <div className="w-full max-w-5xl mx-auto space-y-10">
       {/* Header */}
