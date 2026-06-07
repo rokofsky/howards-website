@@ -261,12 +261,13 @@ export default function StorySandbox() {
       if (error) {
         console.error("Failed to load prompts from Supabase, using fallbacks", error);
       } else if (data) {
-        const sandboxRows = data.filter((r) => r.sheet_key === "sandbox") as unknown as SandboxRow[];
-        const oneLinerRows = data.filter((r) => r.sheet_key === "oneLiners") as unknown as PromptRow[];
-        const sheet3Rows = data.filter((r) => r.sheet_key === "sheet3") as unknown as PromptRow[];
+        const rows = data as Array<SandboxRow | PromptRow>;
+        applyPromptRows(rows);
+        const sandboxRows = rows.filter((r) => r.sheet_key === "sandbox") as SandboxRow[];
+        const oneLinerRows = rows.filter((r) => r.sheet_key === "oneLiners") as PromptRow[];
+        const sheet3Rows = rows.filter((r) => r.sheet_key === "sheet3") as PromptRow[];
 
         if (sandboxRows.length > 0) {
-          setAllSandboxPrompts(sandboxRows);
           const pick = () => sandboxRows[Math.floor(Math.random() * sandboxRows.length)];
           const c = pick();
           const i = pick();
@@ -279,11 +280,9 @@ export default function StorySandbox() {
           }));
         }
         if (oneLinerRows.length > 0) {
-          setAllOneLiners(oneLinerRows);
           setOneLinerRow(oneLinerRows[Math.floor(Math.random() * oneLinerRows.length)]);
         }
         if (sheet3Rows.length > 0) {
-          setAllSheet3Prompts(sheet3Rows);
           setSheet3Row(sheet3Rows[Math.floor(Math.random() * sheet3Rows.length)]);
         }
       }
