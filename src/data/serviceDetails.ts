@@ -91,7 +91,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     ],
   },
   "live-webinars": {
-    pageTitle: { en: "Choose from these interactive webinars or ask a random question", cs: "Vyberte si z těchto interaktivních webinářů nebo položte jakýkoli dotaz" },
+    pageTitle: { en: "Choose from these interactive webinars or ask a random question\nGeneral inquiry", cs: "Vyberte si z těchto interaktivních webinářů nebo položte jakýkoli dotaz\nObecný dotaz" },
     lead: { en: "Turn on your camera and unmute your microphone! Learn all sorts of stuff online in +/- two hours, just about any time of day.", cs: "Zapněte kameru a odhlučněte mikrofon! Online se naučíte spoustu věcí přibližně za dvě hodiny, prakticky kdykoliv během dne." },
     intro: [],
     sections: [],
