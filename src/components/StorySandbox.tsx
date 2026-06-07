@@ -753,6 +753,43 @@ export default function StorySandbox() {
                     placeholder="Type your idea here…"
                     className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full flex-1 text-base font-medium leading-snug"
                   />
+                ) : isAdmin ? (
+                  <div className="flex-1 flex flex-col">
+                    <textarea
+                      value={draftValueFor(key as "character" | "incident")}
+                      onChange={(e) =>
+                        setDrafts((d) => ({ ...d, [key]: e.target.value }))
+                      }
+                      placeholder={
+                        addingNew[key]
+                          ? `New ${label.toLowerCase()}…`
+                          : `Edit ${label.toLowerCase()}…`
+                      }
+                      className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full flex-1 text-base font-medium leading-snug p-0"
+                      rows={3}
+                    />
+                    {isDirty(key as "character" | "incident") && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="glass"
+                          onClick={() => saveField(key as "character" | "incident")}
+                          disabled={savingField[key]}
+                        >
+                          {savingField[key] ? "Saving…" : "Save"}
+                        </Button>
+                        {addingNew[key] && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => cancelAddNew(key as "character" | "incident")}
+                          >
+                            Cancel
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 ) : isEditing ? (
                   <div className="space-y-2">
                     <Input
@@ -778,7 +815,29 @@ export default function StorySandbox() {
                 )}
 
                 {!isConstraint && !sandboxLoading && (
-                  <div className="mt-3 flex justify-end">
+                  <div className="mt-3 flex items-center justify-between gap-2">
+                    {isAdmin ? (
+                      <div className="flex items-center gap-3 text-xs">
+                        <button
+                          type="button"
+                          onClick={() => startAddNew(key as "character" | "incident")}
+                          className="text-muted-foreground hover:text-foreground underline underline-offset-2"
+                        >
+                          Add new prompt
+                        </button>
+                        {!addingNew[key] && cardRows[key]?.id && (
+                          <button
+                            type="button"
+                            onClick={() => deleteCurrent(key as "character" | "incident")}
+                            className="text-muted-foreground hover:text-destructive underline underline-offset-2"
+                          >
+                            Delete prompt
+                          </button>
+                        )}
+                      </div>
+                    ) : (
+                      <span />
+                    )}
                     <VoteThumbs sheetKey="sandbox" id={cardRows[key]?.id} box={box} />
                   </div>
                 )}
@@ -787,6 +846,7 @@ export default function StorySandbox() {
           })}
         </div>
       </section>
+
 
       {/* One-liner Prompt Generator (Sheet2) */}
       <section className="space-y-4">
