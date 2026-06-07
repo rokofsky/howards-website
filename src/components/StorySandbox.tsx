@@ -25,57 +25,15 @@ const readUserVotes = (): Record<string, "up" | "down"> => {
    FALLBACK SEED VOCABULARY (used if remote fetch fails)
    ============================================================ */
 const FALLBACK_SEEDS = {
-  character: [
-    "A retired astronaut",
-    "A small-town librarian",
-    "A street magician",
-    "A burned-out chef",
-    "A lighthouse keeper",
-    "A teenage chess prodigy",
-    "An undercover food critic",
-    "A jaded wedding photographer",
-  ],
-  incident: [
-    "loses their keys at midnight",
-    "receives a letter 40 years late",
-    "finds a stranger asleep on the couch",
-    "is mistaken for a celebrity",
-    "discovers a hidden door at work",
-    "wakes up in the wrong city",
-    "inherits a parrot that quotes Nietzsche",
-    "must give a speech in 10 minutes",
-  ],
-  constraint: [
-    "without speaking a word",
-    "in under five minutes",
-    "while it's pouring rain",
-    "without using their phone",
-    "in front of their ex",
-    "during a power outage",
-    "with only a paper map",
-    "while pretending everything is fine",
-  ],
-  setting: [
-    "in a 24-hour laundromat",
-    "on a delayed night train",
-    "at a quiet beach off-season",
-    "in a half-renovated apartment",
-  ],
+  character: ["A retired astronaut"],
+  incident: [],
+  constraint: ["while pretending everything is fine"],
+  setting: [],
 } as const;
 
-const FALLBACK_ONE_LINERS = [
-  "Write the scene right before everything changes.",
-  "Tell a story using only dialogue from one phone call.",
-  "Describe a goodbye that isn't really goodbye.",
-  "A character lies to protect someone — show the cost.",
-];
+const FALLBACK_ONE_LINERS = ["A character lies to protect someone — show the cost."];
 
-const FALLBACK_SHEET3 = [
-  "Open with a sentence that ends in a question.",
-  "Set the story during a single song.",
-  "Begin and end in the same place — but different.",
-  "Let weather change the meaning halfway through.",
-];
+const FALLBACK_SHEET3 = ["The weather suddenty changes."];
 
 /* ============================================================
    STRUCTURES
