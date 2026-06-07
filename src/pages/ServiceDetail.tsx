@@ -178,6 +178,17 @@ const ServiceDetail = () => {
 
               {slug === "live-webinars" ? (
                 <>
+                  <div className="mb-4">
+                    <Button
+                      variant="cta"
+                      size="sm"
+                      onClick={() => {
+                        document.getElementById("inquiry-form")?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                    >
+                      {t("General Inquiry", "Obecný dotaz")}
+                    </Button>
+                  </div>
                   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                     {webinars.map((webinar) => {
                       const wTitle = pickCs(webinar.title_cs, webinar.title, isCz);

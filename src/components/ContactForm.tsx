@@ -210,7 +210,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
       >
         <div className="text-center mb-4">
           <h3 className="text-2xl font-bold mb-3">
-            {t("Thanks for the nudge", "Díky za připomenutí")}
+            {t("🌿Thanks for the nudge🌿", "🌿Díky za připomenutí🌿")}
           </h3>
           <p className="text-muted-foreground font-normal">
             {t(
