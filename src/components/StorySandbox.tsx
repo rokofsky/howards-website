@@ -194,8 +194,7 @@ export default function StorySandbox() {
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
 
   // --- Admin inline editing ---
-  const isAdmin =
-    typeof window !== "undefined" && localStorage.getItem("admin_authenticated") === "true";
+  const isAdmin = typeof window !== "undefined" && localStorage.getItem("admin_authenticated") === "true";
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [addingNew, setAddingNew] = useState<Record<string, boolean>>({});
   const [savingField, setSavingField] = useState<Record<string, boolean>>({});
@@ -210,7 +209,6 @@ export default function StorySandbox() {
     if (v === PLACEHOLDER_CHAR || v === PLACEHOLDER_INC) return false;
     return true;
   };
-
 
   // Hydrate persisted UI state
   useEffect(() => {
@@ -397,7 +395,6 @@ export default function StorySandbox() {
     setAddingNew((a) => ({ ...a, oneLiner: false }));
   };
 
-
   // --- Voting: instant local state update, then async Supabase upsert ---
   const handleVote = (
     sheetKey: SheetKey,
@@ -405,7 +402,6 @@ export default function StorySandbox() {
     elementBox: ElementBox,
     vote: "up" | "down",
   ) => {
-    
     if (id === undefined || id === null || id === "") return;
 
     const storeKey = `${sheetKey}:${id}:${elementBox}`;
@@ -436,18 +432,20 @@ export default function StorySandbox() {
       p_previous: current ?? null,
     }).then(({ error }: { error: any }) => {
       if (error) return;
-      supabase.from("votes").select("*").then(({ data }) => {
-        if (!data) return;
-        const counts: Record<string, { up: number; down: number }> = {};
-        data.forEach((row) => {
-          const key = `${row.sheet_key}:${row.row_id}:${row.element_box}`;
-          counts[key] = { up: row.up_count, down: row.down_count };
+      supabase
+        .from("votes")
+        .select("*")
+        .then(({ data }) => {
+          if (!data) return;
+          const counts: Record<string, { up: number; down: number }> = {};
+          data.forEach((row) => {
+            const key = `${row.sheet_key}:${row.row_id}:${row.element_box}`;
+            counts[key] = { up: row.up_count, down: row.down_count };
+          });
+          setVoteCounts(counts);
         });
-        setVoteCounts(counts);
-      });
     });
   };
-
 
   const VoteThumbs = ({
     sheetKey,
@@ -597,10 +595,7 @@ export default function StorySandbox() {
         } else {
           insertPayload = { sheet_key: "oneLiners", one_liner: value };
         }
-        const { data, error } = await (supabase.from("prompts") as any)
-          .insert(insertPayload)
-          .select()
-          .single();
+        const { data, error } = await (supabase.from("prompts") as any).insert(insertPayload).select().single();
         if (error) {
           console.error("Insert failed", error);
           return;
@@ -619,21 +614,16 @@ export default function StorySandbox() {
         }
         setAddingNew((a) => ({ ...a, [slot]: false }));
       } else {
-        const rowId =
-          slot === "oneLiner" ? oneLinerRow?.id : cardRows[slot as Category]?.id;
+        const rowId = slot === "oneLiner" ? oneLinerRow?.id : cardRows[slot as Category]?.id;
         if (!rowId) return;
-        const { error } = await (supabase.from("prompts") as any)
-          .update({ [col]: value })
-          .eq("id", rowId);
+        const { error } = await (supabase.from("prompts") as any).update({ [col]: value }).eq("id", rowId);
         if (error) {
           console.error("Update failed", error);
           return;
         }
         if (slot === "oneLiner") {
           setOneLinerRow((prev) => (prev ? ({ ...prev, [col]: value } as PromptRow) : prev));
-          setAllOneLiners((prev) =>
-            prev.map((r) => (r.id === rowId ? ({ ...r, [col]: value } as PromptRow) : r)),
-          );
+          setAllOneLiners((prev) => prev.map((r) => (r.id === rowId ? ({ ...r, [col]: value } as PromptRow) : r)));
         } else {
           setCardRows((prev) => ({
             ...prev,
@@ -690,7 +680,6 @@ export default function StorySandbox() {
       return n;
     });
   };
-
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-10">
@@ -757,35 +746,27 @@ export default function StorySandbox() {
                   <div className="flex-1 flex flex-col">
                     <textarea
                       value={draftValueFor(key as "character" | "incident")}
-                      onChange={(e) =>
-                        setDrafts((d) => ({ ...d, [key]: e.target.value }))
-                      }
-                      placeholder={
-                        addingNew[key]
-                          ? `New ${label.toLowerCase()}…`
-                          : `Edit ${label.toLowerCase()}…`
-                      }
+                      onChange={(e) => setDrafts((d) => ({ ...d, [key]: e.target.value }))}
+                      placeholder={addingNew[key] ? `New ${label.toLowerCase()}…` : `Edit ${label.toLowerCase()}…`}
                       className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full flex-1 text-base font-medium leading-snug p-0"
                       rows={3}
                     />
                     {isDirty(key as "character" | "incident") && (
                       <div className="mt-2 flex items-center gap-2">
-                        <Button
-                          size="sm"
-                          variant="glass"
+                        <button
                           onClick={() => saveField(key as "character" | "incident")}
                           disabled={savingField[key]}
+                          className="text-sm text-primary hover:underline disabled:opacity-50"
                         >
                           {savingField[key] ? "Saving…" : "Save"}
-                        </Button>
+                        </button>
                         {addingNew[key] && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
+                          <button
                             onClick={() => cancelAddNew(key as "character" | "incident")}
+                            className="text-sm text-muted-foreground hover:underline ml-2"
                           >
                             Cancel
-                          </Button>
+                          </button>
                         )}
                       </div>
                     )}
@@ -846,7 +827,6 @@ export default function StorySandbox() {
           })}
         </div>
       </section>
-
 
       {/* One-liner Prompt Generator (Sheet2) */}
       <section className="space-y-4">
@@ -921,7 +901,6 @@ export default function StorySandbox() {
             <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
           </div>
         </Card>
-
       </section>
 
       {/* Structure Selector + Save Story (aligned horizontally) */}
