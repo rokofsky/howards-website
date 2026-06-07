@@ -863,13 +863,65 @@ export default function StorySandbox() {
         >
           {oneLinersLoading ? (
             <div className="h-4 w-2/3 bg-muted animate-pulse rounded" />
+          ) : isAdmin ? (
+            <div className="w-full flex flex-col items-center gap-2">
+              <textarea
+                value={draftValueFor("oneLiner")}
+                onChange={(e) => setDrafts((d) => ({ ...d, oneLiner: e.target.value }))}
+                placeholder={addingNew.oneLiner ? "New one-liner…" : "Edit one-liner…"}
+                className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full text-base md:text-lg font-medium text-center leading-snug p-0"
+                rows={2}
+              />
+              {isDirty("oneLiner") && (
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="glass"
+                    onClick={() => saveField("oneLiner")}
+                    disabled={savingField.oneLiner}
+                  >
+                    {savingField.oneLiner ? "Saving…" : "Save"}
+                  </Button>
+                  {addingNew.oneLiner && (
+                    <Button size="sm" variant="ghost" onClick={() => cancelAddNew("oneLiner")}>
+                      Cancel
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
           ) : oneLinerText ? (
             <p className="text-base md:text-lg font-medium text-center leading-snug">{oneLinerText}</p>
           ) : (
             <p className="text-base md:text-lg italic text-muted-foreground text-center leading-snug">Coming soon</p>
           )}
-          <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
+          <div className="flex items-center justify-between w-full gap-3">
+            {isAdmin ? (
+              <div className="flex items-center gap-3 text-xs">
+                <button
+                  type="button"
+                  onClick={() => startAddNew("oneLiner")}
+                  className="text-muted-foreground hover:text-foreground underline underline-offset-2"
+                >
+                  Add new prompt
+                </button>
+                {!addingNew.oneLiner && oneLinerRow?.id && (
+                  <button
+                    type="button"
+                    onClick={() => deleteCurrent("oneLiner")}
+                    className="text-muted-foreground hover:text-destructive underline underline-offset-2"
+                  >
+                    Delete prompt
+                  </button>
+                )}
+              </div>
+            ) : (
+              <span />
+            )}
+            <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
+          </div>
         </Card>
+
       </section>
 
       {/* Structure Selector + Save Story (aligned horizontally) */}
