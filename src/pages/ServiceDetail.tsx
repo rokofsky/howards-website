@@ -173,22 +173,36 @@ const ServiceDetail = () => {
 
             <div className={`rounded-lg p-8 mb-12 mt-6 ${detail?.tone === "executive" ? "border border-gold/40 bg-card shadow-[0_20px_60px_-30px_hsl(var(--foreground)/0.55)]" : "glass"}`}>
               <h2 className="text-xl md:text-2xl font-semibold mb-6">
-                {detail?.pageTitle ? pickL(detail.pageTitle, lang) : t("About This Service", "O této službě")}
+                {slug === "live-webinars" && detail?.pageTitle ? (() => {
+                  const titleText = pickL(detail.pageTitle, lang);
+                  const anchor = isCz ? "otázku" : "question";
+                  const idx = titleText.toLowerCase().indexOf(anchor.toLowerCase());
+                  const inquiryBtn = (
+                    <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                      {idx >= 0 ? titleText.substr(idx, anchor.length) : ""}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="rounded-full text-xs px-3 py-1 h-auto"
+                        onClick={() => {
+                          document.getElementById("inquiry-form")?.scrollIntoView({ behavior: "smooth" });
+                        }}
+                      >
+                        {t("General inquiry", "Obecný dotaz")}
+                      </Button>
+                    </span>
+                  );
+                  if (idx < 0) {
+                    return (<>{titleText} {inquiryBtn}</>);
+                  }
+                  const before = titleText.slice(0, idx);
+                  const after = titleText.slice(idx + anchor.length);
+                  return (<>{before}{inquiryBtn}{after}</>);
+                })() : (detail?.pageTitle ? pickL(detail.pageTitle, lang) : t("About This Service", "O této službě"))}
               </h2>
 
               {slug === "live-webinars" ? (
                 <>
-                  <div className="mb-4">
-                    <Button
-                      variant="cta"
-                      size="sm"
-                      onClick={() => {
-                        document.getElementById("inquiry-form")?.scrollIntoView({ behavior: "smooth" });
-                      }}
-                    >
-                      {t("General Inquiry", "Obecný dotaz")}
-                    </Button>
-                  </div>
                   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                     {webinars.map((webinar) => {
                       const wTitle = pickCs(webinar.title_cs, webinar.title, isCz);
