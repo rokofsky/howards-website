@@ -62,7 +62,7 @@ const STRUCTURES = {
 type StructureKey = keyof typeof STRUCTURES;
 const STORAGE_KEY = "story-sandbox:v1";
 
-type Category = "character" | "incident";
+type Category = "character" | "incident" | "constraint";
 type Prompts = Record<Category, string>;
 
 const CATEGORY_META: { key: Category; label: string; tone: string; box: ElementBox }[] = [
@@ -206,7 +206,7 @@ export default function StorySandbox() {
           };
           const c = pickFor("character");
           const i = pickFor("incident");
-          setCardRows({ character: c, incident: i });
+          setCardRows({ character: c, incident: i, constraint: undefined });
           setPrompts((p) => ({
             character: getFieldValue(c as unknown as Record<string, unknown>, "character") || p.character,
             incident: getFieldValue(i as unknown as Record<string, unknown>, "incident") || p.incident,
@@ -730,7 +730,7 @@ export default function StorySandbox() {
                   <p className="text-base italic text-muted-foreground leading-snug">Coming soon</p>
                 )}
 
-                {!sandboxLoading && (
+                {!isConstraint && !sandboxLoading && (
                   <div className="mt-3 flex items-center justify-between gap-2">
                     {isAdmin ? (
                       <div className="flex items-center gap-3 text-xs">
