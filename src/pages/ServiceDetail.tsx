@@ -205,7 +205,7 @@ const ServiceDetail = () => {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="rounded-full text-[10px] px-2 py-0.5 min-h-0 leading-tight h-auto"
+                            className="rounded-full text-xs px-3 py-1 min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90"
                             onClick={() => {
                               document.getElementById("inquiry-form")?.scrollIntoView({ behavior: "smooth" });
                             }}
