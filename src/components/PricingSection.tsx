@@ -121,7 +121,7 @@ const PricingSection = () => {
               {tier.features.map((f, j) => (
                 <li key={j} className={`text-sm text-foreground/80 flex items-start gap-2 font-normal ${f.trim() === '' ? 'opacity-0 h-0 overflow-hidden' : ''}`}>
                   <span className="text-gold mt-0.5">✓</span>
-                  <span>{f}</span>
+                  <span className="whitespace-pre-line">{f}</span>
                 </li>
               ))}
             </ul>
