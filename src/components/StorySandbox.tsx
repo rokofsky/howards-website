@@ -853,18 +853,20 @@ export default function StorySandbox() {
               />
               {isDirty("oneLiner") && (
                 <div className="flex items-center gap-2">
-                  <Button
-                    size="sm"
-                    variant="glass"
+                  <button
                     onClick={() => saveField("oneLiner")}
                     disabled={savingField.oneLiner}
+                    className="text-sm text-primary hover:underline disabled:opacity-50"
                   >
                     {savingField.oneLiner ? "Saving…" : "Save"}
-                  </Button>
+                  </button>
                   {addingNew.oneLiner && (
-                    <Button size="sm" variant="ghost" onClick={() => cancelAddNew("oneLiner")}>
+                    <button
+                      onClick={() => cancelAddNew("oneLiner")}
+                      className="text-sm text-muted-foreground hover:underline ml-2"
+                    >
                       Cancel
-                    </Button>
+                    </button>
                   )}
                 </div>
               )}
