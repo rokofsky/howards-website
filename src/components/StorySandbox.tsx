@@ -181,7 +181,7 @@ export default function StorySandbox() {
   const [prompts, setPrompts] = useState<Prompts>(() => ({
     character: initialSandbox[0]?.character ?? "",
     incident: initialSandbox[0]?.incident ?? "",
-    constraint: initialSandbox[0]?.constraint ?? "",
+    constraint: "",
   }));
   const [editing, setEditing] = useState<Category | null>(null);
   const [animKeys, setAnimKeys] = useState<Record<Category, number>>({ character: 0, incident: 0, constraint: 0 });
