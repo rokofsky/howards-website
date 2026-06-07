@@ -241,10 +241,20 @@ export default function StorySandbox() {
 
         if (sandboxRows.length > 0) {
           setAllSandboxPrompts(sandboxRows);
-          const pick = () => sandboxRows[Math.floor(Math.random() * sandboxRows.length)];
-          const c = pick();
-          const i = pick();
-          const k = pick();
+          const pickFor = (cat: Category) => {
+            let row = sandboxRows[Math.floor(Math.random() * sandboxRows.length)];
+            if (!isAdmin) {
+              let tries = 0;
+              while (row && !isRowValidFor(row, cat) && tries < 50) {
+                row = sandboxRows[Math.floor(Math.random() * sandboxRows.length)];
+                tries++;
+              }
+            }
+            return row;
+          };
+          const c = pickFor("character");
+          const i = pickFor("incident");
+          const k = pickFor("constraint");
           setCardRows({ character: c, incident: i, constraint: k });
           setPrompts((p) => ({
             character: getFieldValue(c as unknown as Record<string, unknown>, "character") || p.character,
@@ -254,8 +264,17 @@ export default function StorySandbox() {
         }
         if (oneLinerRows.length > 0) {
           setAllOneLiners(oneLinerRows);
-          setOneLinerRow(oneLinerRows[Math.floor(Math.random() * oneLinerRows.length)]);
+          let pick = oneLinerRows[Math.floor(Math.random() * oneLinerRows.length)];
+          if (!isAdmin) {
+            let tries = 0;
+            while (pick && !isRowValidFor(pick, "oneLiners") && tries < 50) {
+              pick = oneLinerRows[Math.floor(Math.random() * oneLinerRows.length)];
+              tries++;
+            }
+          }
+          setOneLinerRow(pick);
         }
+
         if (sheet3Rows.length > 0) {
           setAllSheet3Prompts(sheet3Rows);
           setSheet3Row(sheet3Rows[Math.floor(Math.random() * sheet3Rows.length)]);
