@@ -72,9 +72,13 @@ const ServiceDetail = () => {
 
   useEffect(() => {
     if (slug === "live-webinars") {
-      supabase.from("webinars").select("*").order("sort_order", { ascending: true }).then(({ data }) => {
-        if (data) setWebinars(data as unknown as DbWebinar[]);
-      });
+      supabase
+        .from("webinars")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .then(({ data }) => {
+          if (data) setWebinars(data as unknown as DbWebinar[]);
+        });
     }
   }, [slug]);
 
@@ -119,16 +123,21 @@ const ServiceDetail = () => {
 
   const serviceTitle = pickL(service.title, lang);
   const serviceHook = pickL(service.hook, lang);
-  const inquiryTitle = slug === "conflict-resolution"
-    ? t("Conflict mediation/resolution", "Mediace / řešení konfliktů")
-    : slug === "meetings-moderation"
-    ? t("The Six Hats Method for Meetings", "Metoda Šesti klobouků pro porady")
-    : slug === "live-webinars"
-    ? t("Live Webinars", "Online webináře")
-    : serviceTitle;
+  const inquiryTitle =
+    slug === "conflict-resolution"
+      ? t("Conflict mediation/resolution", "Mediace / řešení konfliktů")
+      : slug === "meetings-moderation"
+        ? t("The Six Hats Method for Meetings", "Metoda Šesti klobouků pro porady")
+        : slug === "live-webinars"
+          ? t("Live Webinars", "Online webináře")
+          : serviceTitle;
 
   const subtitle = pickL(service.subtitle, lang);
-  const seoDescRaw = (detail?.lead ? pickL(detail.lead, lang) : "") || subtitle || serviceHook || `${serviceTitle} — Rokofsky Communication`;
+  const seoDescRaw =
+    (detail?.lead ? pickL(detail.lead, lang) : "") ||
+    subtitle ||
+    serviceHook ||
+    `${serviceTitle} — Rokofsky Communication`;
   const seoDesc = (seoDescRaw.replace(/\s+/g, " ").trim().slice(0, 157) + (seoDescRaw.length > 157 ? "…" : "")).trim();
   const canonical = `https://howards-website.lovable.app${isCz ? "/cz" : ""}/services/${slug}`;
   const fullTitle = `${serviceTitle} | Rokofsky`;
@@ -149,7 +158,11 @@ const ServiceDetail = () => {
             "@type": "Service",
             name: serviceTitle,
             description: seoDesc,
-            provider: { "@type": "Organization", name: "Rokofsky Communication", url: "https://howards-website.lovable.app/" },
+            provider: {
+              "@type": "Organization",
+              name: "Rokofsky Communication",
+              url: "https://howards-website.lovable.app/",
+            },
             areaServed: "Prague, Czech Republic",
             url: canonical,
           })}
@@ -162,43 +175,65 @@ const ServiceDetail = () => {
 
             {detail?.taglines ? (
               detail.taglines.map((line, idx) => (
-                <p key={idx} className="text-xl text-muted-foreground font-light italic mb-2">{pickL(line, lang)}</p>
+                <p key={idx} className="text-xl text-muted-foreground font-light italic mb-2">
+                  {pickL(line, lang)}
+                </p>
               ))
             ) : (
               <>
                 {serviceHook && <p className="text-xl text-muted-foreground italic mb-3 font-normal">{serviceHook}</p>}
-                {detail?.lead && <p className="text-lg text-foreground/80 leading-relaxed mb-8 font-normal">{pickL(detail.lead, lang)}</p>}
+                {detail?.lead && (
+                  <p className="text-lg text-foreground/80 leading-relaxed mb-8 font-normal">
+                    {pickL(detail.lead, lang)}
+                  </p>
+                )}
               </>
             )}
 
-            <div className={`rounded-lg p-8 mb-12 mt-6 ${detail?.tone === "executive" ? "border border-gold/40 bg-card shadow-[0_20px_60px_-30px_hsl(var(--foreground)/0.55)]" : "glass"}`}>
-              <h2 className={`${slug === "live-webinars" ? "text-base sm:text-lg" : "text-xl md:text-2xl"} font-semibold mb-6`}>
-                {slug === "live-webinars" && detail?.pageTitle ? (() => {
-                  const titleText = pickL(detail.pageTitle, lang);
-                  const anchor = isCz ? "otázku" : "question";
-                  const idx = titleText.toLowerCase().indexOf(anchor.toLowerCase());
-                  const inquiryBtn = (
-                    <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
-                      {idx >= 0 ? titleText.substr(idx, anchor.length) : ""}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-[10px] md:text-xs px-2 py-0.5 rounded-full h-auto"
-                        onClick={() => {
-                          document.getElementById("inquiry-form")?.scrollIntoView({ behavior: "smooth" });
-                        }}
-                      >
-                        {t("General inquiry", "Obecný dotaz")}
-                      </Button>
-                    </span>
-                  );
-                  if (idx < 0) {
-                    return (<>{titleText} {inquiryBtn}</>);
-                  }
-                  const before = titleText.slice(0, idx);
-                  const after = titleText.slice(idx + anchor.length);
-                  return (<>{before}{inquiryBtn}{after}</>);
-                })() : (detail?.pageTitle ? pickL(detail.pageTitle, lang) : t("About This Service", "O této službě"))}
+            <div
+              className={`rounded-lg p-8 mb-12 mt-6 ${detail?.tone === "executive" ? "border border-gold/40 bg-card shadow-[0_20px_60px_-30px_hsl(var(--foreground)/0.55)]" : "glass"}`}
+            >
+              <h2 className="text-xl md:text-2xl font-semibold mb-6">
+                {slug === "live-webinars" && detail?.pageTitle
+                  ? (() => {
+                      const titleText = pickL(detail.pageTitle, lang);
+                      const anchor = isCz ? "otázku" : "question";
+                      const idx = titleText.toLowerCase().indexOf(anchor.toLowerCase());
+                      const inquiryBtn = (
+                        <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                          {idx >= 0 ? titleText.substr(idx, anchor.length) : ""}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="rounded-full text-[10px] px-2 py-0.5 h-auto"
+                            onClick={() => {
+                              document.getElementById("inquiry-form")?.scrollIntoView({ behavior: "smooth" });
+                            }}
+                          >
+                            {t("General inquiry", "Obecný dotaz")}
+                          </Button>
+                        </span>
+                      );
+                      if (idx < 0) {
+                        return (
+                          <>
+                            {titleText} {inquiryBtn}
+                          </>
+                        );
+                      }
+                      const before = titleText.slice(0, idx);
+                      const after = titleText.slice(idx + anchor.length);
+                      return (
+                        <>
+                          {before}
+                          {inquiryBtn}
+                          {after}
+                        </>
+                      );
+                    })()
+                  : detail?.pageTitle
+                    ? pickL(detail.pageTitle, lang)
+                    : t("About This Service", "O této službě")}
               </h2>
 
               {slug === "live-webinars" ? (
@@ -208,40 +243,53 @@ const ServiceDetail = () => {
                       const wTitle = pickCs(webinar.title_cs, webinar.title, isCz);
                       const wDesc = pickCs(webinar.description_cs, webinar.description, isCz);
                       return (
-                      <div key={webinar.id} className="flex flex-col justify-between rounded-lg border border-border bg-card p-2 md:p-5 hover:border-gold/50 transition-colors">
-                        <div>
-                          <h3 className="text-xs md:text-base font-semibold text-foreground mb-2">{wTitle}</h3>
-                          {wDesc && (
-                            <p className="hidden md:block text-foreground/60 text-sm font-normal leading-relaxed">{wDesc}</p>
-                          )}
+                        <div
+                          key={webinar.id}
+                          className="flex flex-col justify-between rounded-lg border border-border bg-card p-2 md:p-5 hover:border-gold/50 transition-colors"
+                        >
+                          <div>
+                            <h3 className="text-xs md:text-base font-semibold text-foreground mb-2">{wTitle}</h3>
+                            {wDesc && (
+                              <p className="hidden md:block text-foreground/60 text-sm font-normal leading-relaxed">
+                                {wDesc}
+                              </p>
+                            )}
+                          </div>
+                          <div className="mt-4 flex flex-row gap-3 w-full">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="flex-1 text-xs sm:text-sm whitespace-nowrap px-2"
+                              onClick={() => setDetailsWebinar(webinar.id)}
+                            >
+                              {t("Details", "Detaily")}
+                            </Button>
+                            <Button
+                              variant="glass"
+                              size="sm"
+                              className="flex-1 text-xs sm:text-sm whitespace-nowrap px-2"
+                              onClick={() => setExpandedWebinar(webinar.id)}
+                            >
+                              {t("Inquire", "Poptat")}
+                            </Button>
+                          </div>
                         </div>
-                        <div className="mt-4 flex flex-row gap-3 w-full">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="flex-1 text-xs sm:text-sm whitespace-nowrap px-2"
-                            onClick={() => setDetailsWebinar(webinar.id)}
-                          >
-                            {t("Details", "Detaily")}
-                          </Button>
-                          <Button
-                            variant="glass"
-                            size="sm"
-                            className="flex-1 text-xs sm:text-sm whitespace-nowrap px-2"
-                            onClick={() => setExpandedWebinar(webinar.id)}
-                          >
-                            {t("Inquire", "Poptat")}
-                          </Button>
-                        </div>
-                      </div>
                       );
                     })}
                   </div>
                   <WebinarDetailsModal
                     open={!!detailsWebinar}
-                    onOpenChange={(open) => { if (!open) setDetailsWebinar(null); }}
-                    title={(() => { const w = webinars.find((x) => x.id === detailsWebinar); return w ? pickCs(w.title_cs, w.title, isCz) : ""; })()}
-                    details={(() => { const w = webinars.find((x) => x.id === detailsWebinar); return w ? pickCs(w.details_cs, w.details, isCz) : ""; })()}
+                    onOpenChange={(open) => {
+                      if (!open) setDetailsWebinar(null);
+                    }}
+                    title={(() => {
+                      const w = webinars.find((x) => x.id === detailsWebinar);
+                      return w ? pickCs(w.title_cs, w.title, isCz) : "";
+                    })()}
+                    details={(() => {
+                      const w = webinars.find((x) => x.id === detailsWebinar);
+                      return w ? pickCs(w.details_cs, w.details, isCz) : "";
+                    })()}
                     onInquire={() => {
                       const id = detailsWebinar;
                       setDetailsWebinar(null);
@@ -250,8 +298,13 @@ const ServiceDetail = () => {
                   />
                   <WebinarInquiryModal
                     open={!!expandedWebinar}
-                    onOpenChange={(open) => { if (!open) setExpandedWebinar(null); }}
-                    webinarTitle={(() => { const w = webinars.find((x) => x.id === expandedWebinar); return w ? pickCs(w.title_cs, w.title, isCz) : ""; })()}
+                    onOpenChange={(open) => {
+                      if (!open) setExpandedWebinar(null);
+                    }}
+                    webinarTitle={(() => {
+                      const w = webinars.find((x) => x.id === expandedWebinar);
+                      return w ? pickCs(w.title_cs, w.title, isCz) : "";
+                    })()}
                     onOrderNow={() => {
                       const w = webinars.find((x) => x.id === expandedWebinar);
                       setOrderInitialSlug(w?.slug);
@@ -291,11 +344,11 @@ const ServiceDetail = () => {
                       : [
                           t(
                             "Howard brings his signature blend of storytelling, practical frameworks, and just enough humor to keep everyone awake. This service is tailored to your team's specific needs, challenges, and goals.",
-                            "Howard přináší svou typickou kombinaci vyprávění, praktických rámců a tak akorát humoru, aby všechny udržel vzhůru. Tato služba je šitá na míru konkrétním potřebám, výzvám a cílům vašeho týmu."
+                            "Howard přináší svou typickou kombinaci vyprávění, praktických rámců a tak akorát humoru, aby všechny udržel vzhůru. Tato služba je šitá na míru konkrétním potřebám, výzvám a cílům vašeho týmu.",
                           ),
                           t(
                             "Every engagement starts with a brief discovery call to understand your context. From there, Howard designs a custom experience that delivers measurable improvements in how your team communicates, collaborates, and leads.",
-                            "Každá spolupráce začíná krátkým úvodním hovorem, abychom porozuměli vašemu kontextu. Na jeho základě Howard navrhne na míru řešení, které přinese měřitelná zlepšení v tom, jak váš tým komunikuje, spolupracuje a vede."
+                            "Každá spolupráce začíná krátkým úvodním hovorem, abychom porozuměli vašemu kontextu. Na jeho základě Howard navrhne na míru řešení, které přinese měřitelná zlepšení v tom, jak váš tým komunikuje, spolupracuje a vede.",
                           ),
                         ]
                   }
@@ -314,13 +367,16 @@ const ServiceDetail = () => {
             {detail?.sections.map((section, sectionIndex) => {
               const sectionTitle = pickL(section.title, lang);
               return (
-                <div key={sectionIndex} className={`${slug === "meetings-moderation" && sectionIndex === detail.sections.length - 1 ? "mb-4" : "mb-10"}`}>
+                <div
+                  key={sectionIndex}
+                  className={`${slug === "meetings-moderation" && sectionIndex === detail.sections.length - 1 ? "mb-4" : "mb-10"}`}
+                >
                   {detail?.tone !== "executive" && sectionTitle.trim().length > 0 && (
                     <h3 className="text-2xl font-semibold mb-2 whitespace-pre-line">{sectionTitle}</h3>
                   )}
 
-                  {section.paragraphs && (
-                    detail?.tone === "executive" ? (
+                  {section.paragraphs &&
+                    (detail?.tone === "executive" ? (
                       <div className="rounded-lg border border-gold/40 bg-card px-6 py-5 shadow-[0_24px_60px_-36px_hsl(var(--foreground)/0.7)]">
                         <h3 className="text-lg font-semibold mb-2">{sectionTitle}</h3>
                         <MobileTruncatedText
@@ -333,13 +389,14 @@ const ServiceDetail = () => {
                         paragraphs={section.paragraphs.map((p) => pickL(p, lang))}
                         className="text-foreground/80 leading-relaxed mb-4 last:mb-0 whitespace-pre-line font-normal"
                       />
-                    )
-                  )}
+                    ))}
 
                   {section.numbered && (
                     <ol className="space-y-1.5 list-decimal pl-5 text-foreground/80 font-light leading-relaxed">
                       {section.numbered.map((item, i) => (
-                        <li key={i} className="font-normal">{pickL(item, lang)}</li>
+                        <li key={i} className="font-normal">
+                          {pickL(item, lang)}
+                        </li>
                       ))}
                     </ol>
                   )}
@@ -356,8 +413,15 @@ const ServiceDetail = () => {
                               className="w-14 h-14 object-contain shrink-0"
                             />
                             <div>
-                              <h4 className="text-sm mb-1 font-extrabold" style={{ color: hat.color === "#FFFFFF" ? "hsl(var(--foreground))" : hat.color }}>{hatLabel}</h4>
-                              <p className="text-foreground/70 font-light text-sm leading-relaxed">{pickL(hat.description, lang)}</p>
+                              <h4
+                                className="text-sm mb-1 font-extrabold"
+                                style={{ color: hat.color === "#FFFFFF" ? "hsl(var(--foreground))" : hat.color }}
+                              >
+                                {hatLabel}
+                              </h4>
+                              <p className="text-foreground/70 font-light text-sm leading-relaxed">
+                                {pickL(hat.description, lang)}
+                              </p>
                             </div>
                           </div>
                         );
@@ -366,11 +430,14 @@ const ServiceDetail = () => {
                   )}
 
                   {section.bullets && (
-                    <ul className={`grid ${slug === "storytelling" ? "gap-0.5" : "gap-0.5"} text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line ${slug === "meetings-moderation" && (section.title.en || "").includes("People who are comfortable") ? "mt-1" : ""}`}>
+                    <ul
+                      className={`grid ${slug === "storytelling" ? "gap-0.5" : "gap-0.5"} text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line ${slug === "meetings-moderation" && (section.title.en || "").includes("People who are comfortable") ? "mt-1" : ""}`}
+                    >
                       {section.bullets.map((item, i) => {
                         const text = pickL(item, lang);
                         if (!text.trim()) return null;
-                        const isKeynoteLaughLine = slug === "keynote-speaking" && (item.en || "").includes("Still, you'll probably laugh");
+                        const isKeynoteLaughLine =
+                          slug === "keynote-speaking" && (item.en || "").includes("Still, you'll probably laugh");
                         return (
                           <li key={i} className="flex gap-3">
                             <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
@@ -379,8 +446,14 @@ const ServiceDetail = () => {
                               {isKeynoteLaughLine && (
                                 <>
                                   {" "}
-                                  <Link to={lp("/keynote-topics")} className="text-gold hover:text-gold/80 underline underline-offset-2 transition-colors">
-                                    {t("Click to see some of the topics you can choose from", "Klikněte a podívejte se na témata, ze kterých si můžete vybrat")}
+                                  <Link
+                                    to={lp("/keynote-topics")}
+                                    className="text-gold hover:text-gold/80 underline underline-offset-2 transition-colors"
+                                  >
+                                    {t(
+                                      "Click to see some of the topics you can choose from",
+                                      "Klikněte a podívejte se na témata, ze kterých si můžete vybrat",
+                                    )}
                                   </Link>
                                 </>
                               )}
@@ -407,12 +480,21 @@ const ServiceDetail = () => {
                 <div className="overflow-hidden rounded-lg border border-border bg-card">
                   <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1.5fr] border-b border-border bg-muted/30 text-sm font-medium text-foreground/80">
                     <div className="px-5 py-4">{t("Phase", "Fáze")}</div>
-                    <div className="px-5 py-4 border-t md:border-t-0 md:border-l border-border">{t("What We Do", "Co děláme")}</div>
-                    <div className="px-5 py-4 border-t md:border-t-0 md:border-l border-border">{t("The Outcome", "Výsledek")}</div>
+                    <div className="px-5 py-4 border-t md:border-t-0 md:border-l border-border">
+                      {t("What We Do", "Co děláme")}
+                    </div>
+                    <div className="px-5 py-4 border-t md:border-t-0 md:border-l border-border">
+                      {t("The Outcome", "Výsledek")}
+                    </div>
                   </div>
                   {detail.tableRows.map((row, i) => (
-                    <div key={i} className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1.5fr] text-sm text-foreground/80 font-light">
-                      <div className="px-5 py-4 border-b border-border font-medium text-foreground">{pickL(row.phase, lang)}</div>
+                    <div
+                      key={i}
+                      className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1.5fr] text-sm text-foreground/80 font-light"
+                    >
+                      <div className="px-5 py-4 border-b border-border font-medium text-foreground">
+                        {pickL(row.phase, lang)}
+                      </div>
                       <div className="px-5 py-4 border-b border-border md:border-l">{pickL(row.action, lang)}</div>
                       <div className="px-5 py-4 border-b border-border md:border-l">{pickL(row.outcome, lang)}</div>
                     </div>
@@ -429,7 +511,7 @@ const ServiceDetail = () => {
             <p className="text-muted-foreground text-center mb-8 font-normal">
               {t(
                 "Fill in some stuff below (mostly optional) and I'll get back to you by tomorrow.",
-                "Vyplňte níže pár údajů (většinou nepovinných) a ozvu se Vám do zítřka."
+                "Vyplňte níže pár údajů (většinou nepovinných) a ozvu se Vám do zítřka.",
               )}
             </p>
             <ContactForm serviceName={serviceTitle} showServiceFields />
