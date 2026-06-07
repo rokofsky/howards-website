@@ -382,15 +382,12 @@ const RokofAdmin = () => {
                 )}
               </div>
             </div>
-            </div>
           </div>
           <div className="glass rounded-xl px-8 py-4 mb-14">
             <p className="text-sm text-muted-foreground">
               <span className="font-bold">Reference Scans (PDF)</span> — upload to GitHub at: src/components/EvaluationsGallery.tsx
             </p>
           </div>
-        </div>
-      </section>
         </div>
       </section>
 
