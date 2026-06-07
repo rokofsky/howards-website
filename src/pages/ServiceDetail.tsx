@@ -193,14 +193,14 @@ const ServiceDetail = () => {
             <div
               className={`rounded-lg p-8 mb-12 mt-6 ${detail?.tone === "executive" ? "border border-gold/40 bg-card shadow-[0_20px_60px_-30px_hsl(var(--foreground)/0.55)]" : "glass"}`}
             >
-              <h2 className={slug === "live-webinars" ? "text-base sm:text-lg font-semibold mb-6 w-full" : "text-2xl md:text-3xl font-semibold mb-6 w-full"}>
+              className="text-2xl md:text-3xl font-semibold mb-6 w-full"
                 {slug === "live-webinars" && detail?.pageTitle
                   ? (() => {
                       const titleText = pickL(detail.pageTitle, lang);
                       const anchor = isCz ? "otázku" : "question";
                       const idx = titleText.toLowerCase().indexOf(anchor.toLowerCase());
                       const inquiryBtn = (
-                        <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                        <span className="inline-flex items-center gap-3 whitespace-nowrap ml-2">
                           {idx >= 0 ? titleText.substr(idx, anchor.length) : ""}
                           <Button
                             variant="outline"
