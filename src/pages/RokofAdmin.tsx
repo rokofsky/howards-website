@@ -299,7 +299,7 @@ const RokofAdmin = () => {
             <h2 className="text-xl font-bold mb-2">Reference Scans (PDF)</h2>
             <div className="rounded-lg border border-border bg-muted/40 p-4">
               <p className="text-sm text-muted-foreground">
-                Reference Scans (PDF) — upload to GitHub at: src/components/EvaluationsGallery.tsx
+                pload to GitHub at: src/components/EvaluationsGallery.tsx
               </p>
             </div>
           </div>
