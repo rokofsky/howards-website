@@ -319,7 +319,7 @@ const ServiceDetail = () => {
                   />
                   <div className="mt-6">
                     {showPasswordPrompt ? (
-                      <div className="flex gap-2 items-center max-w-sm">
+                      <div className="flex gap-2 items-center">
                         <Input
                           type="password"
                           placeholder={t("Admin password", "Admin heslo")}
