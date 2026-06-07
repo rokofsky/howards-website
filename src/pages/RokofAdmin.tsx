@@ -192,7 +192,10 @@ const RokofAdmin = () => {
   };
 
   useEffect(() => {
-    if (authenticated) void loadPosts();
+    if (authenticated) {
+      void loadPosts();
+      void loadPrompts();
+    }
   }, [authenticated]);
 
   const handleLogin = async (e: React.FormEvent) => {
