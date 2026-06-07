@@ -62,7 +62,7 @@ const STRUCTURES = {
 type StructureKey = keyof typeof STRUCTURES;
 const STORAGE_KEY = "story-sandbox:v1";
 
-type Category = "character" | "incident" | "constraint";
+type Category = "character" | "incident";
 type Prompts = Record<Category, string>;
 
 const CATEGORY_META: { key: Category; label: string; tone: string; box: ElementBox }[] = [
