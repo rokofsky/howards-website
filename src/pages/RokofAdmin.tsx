@@ -291,11 +291,11 @@ const RokofAdmin = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-14">
             <Link to="/admin/sessions" className="glass rounded-xl p-6 text-center hover:shadow-lg transition-shadow">
               <h3 className="font-bold text-lg mb-1">Manage Storytelling Sessions</h3>
-              <p className="text-sm text-muted-foreground">Create and manage sessions</p>
+              <p className="text-sm text-muted-foreground font-semibold">Create and manage sessions</p>
             </Link>
             <Link to="/admin/webinars" className="glass rounded-xl p-6 text-center hover:shadow-lg transition-shadow">
               <h3 className="font-bold text-lg mb-1">Manage Webinars</h3>
-              <p className="text-sm text-muted-foreground">Create and manage webinars</p>
+              <p className="text-sm text-muted-foreground font-semibold">Create and manage webinars</p>
             </Link>
           </div>
 
