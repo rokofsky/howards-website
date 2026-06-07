@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { verifyAdminPassword, getAdminToken, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
@@ -47,7 +47,7 @@ async function translateToCzech(text: string): Promise<string> {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
   if (!apiKey) throw new Error("Missing VITE_GEMINI_API_KEY");
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -144,8 +144,7 @@ export default function AdminWebinars() {
   const [editTitleCs, setEditTitleCs] = useState("");
   const [editDescriptionCs, setEditDescriptionCs] = useState("");
   const [editDetailsCs, setEditDetailsCs] = useState("");
-  const [translating, setTranslating] = useState<Record<string, boolean>>({});
-  const activeTranslations = useRef<Record<string, boolean>>({});
+  const [translating, setTranslating] = useState<CsField | null>(null);
   const [editLoading, setEditLoading] = useState(false);
 
   const sensors = useSensors(
@@ -220,16 +219,12 @@ export default function AdminWebinars() {
   };
 
   const handleTranslate = async (field: CsField) => {
-    if (activeTranslations.current[field]) return;
-
-    const source =
-      field === "title_cs" ? editTitle : field === "description_cs" ? editDescription : editDetails;
+    const source = field === "title_cs" ? editTitle : field === "description_cs" ? editDescription : editDetails;
     if (!source.trim()) {
       toast({ title: "Nothing to translate", variant: "destructive" });
       return;
     }
-    activeTranslations.current[field] = true;
-    setTranslating((current) => ({ ...current, [field]: true }));
+    setTranslating(field);
     try {
       const out = await translateToCzech(source);
       if (field === "title_cs") setEditTitleCs(out);
@@ -242,8 +237,7 @@ export default function AdminWebinars() {
         variant: "destructive",
       });
     } finally {
-      activeTranslations.current[field] = false;
-      setTranslating((current) => ({ ...current, [field]: false }));
+      setTranslating(null);
     }
   };
 
@@ -328,7 +322,9 @@ export default function AdminWebinars() {
   return (
     <div className="min-h-screen bg-background p-6 max-w-4xl mx-auto">
       <nav className="text-xs text-muted-foreground mb-4">
-        <Link to="/rokofsky-admin" className="hover:text-foreground underline-offset-2 hover:underline">Admin</Link>
+        <Link to="/rokofsky-admin" className="hover:text-foreground underline-offset-2 hover:underline">
+          Admin
+        </Link>
         <span className="mx-2">/</span>
         <span>Webinars</span>
       </nav>
@@ -413,15 +409,15 @@ export default function AdminWebinars() {
                   variant="ghost"
                   size="sm"
                   className="h-7 px-2 text-xs"
-                  disabled={translating.title_cs}
+                  disabled={translating === "title_cs"}
                   onClick={() => handleTranslate("title_cs")}
                 >
-                  {translating.title_cs ? (
+                  {translating === "title_cs" ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
                     <Languages className="h-3.5 w-3.5 mr-1" />
                   )}
-                  {translating.title_cs ? "Translating..." : "Translate from EN"}
+                  {translating === "title_cs" ? "Translating..." : "Translate from EN"}
                 </Button>
               </div>
               <Input id="edit-title-cs" value={editTitleCs} onChange={(e) => setEditTitleCs(e.target.value)} />
@@ -444,15 +440,15 @@ export default function AdminWebinars() {
                   variant="ghost"
                   size="sm"
                   className="h-7 px-2 text-xs"
-                  disabled={translating.description_cs}
+                  disabled={translating === "description_cs"}
                   onClick={() => handleTranslate("description_cs")}
                 >
-                  {translating.description_cs ? (
+                  {translating === "description_cs" ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
                     <Languages className="h-3.5 w-3.5 mr-1" />
                   )}
-                  {translating.description_cs ? "Translating..." : "Translate from EN"}
+                  {translating === "description_cs" ? "Translating..." : "Translate from EN"}
                 </Button>
               </div>
               <Textarea
@@ -480,15 +476,15 @@ export default function AdminWebinars() {
                   variant="ghost"
                   size="sm"
                   className="h-7 px-2 text-xs"
-                  disabled={translating.details_cs}
+                  disabled={translating === "details_cs"}
                   onClick={() => handleTranslate("details_cs")}
                 >
-                  {translating.details_cs ? (
+                  {translating === "details_cs" ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
                     <Languages className="h-3.5 w-3.5 mr-1" />
                   )}
-                  {translating.details_cs ? "Translating..." : "Translate from EN"}
+                  {translating === "details_cs" ? "Translating..." : "Translate from EN"}
                 </Button>
               </div>
               <Textarea
