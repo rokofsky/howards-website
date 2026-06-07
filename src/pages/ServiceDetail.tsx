@@ -213,7 +213,11 @@ const ServiceDetail = () => {
                             size="sm"
                             className="text-[10px] md:text-xs px-2 py-0.5 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90"
                             onClick={() => {
-                              document.getElementById("inquiry-form")?.scrollIntoView({ behavior: "smooth" });
+                              const el = document.getElementById("inquiry-form");
+                              if (el) {
+                                const top = el.getBoundingClientRect().top + window.scrollY - 80;
+                                window.scrollTo({ top, behavior: "smooth" });
+                              }
                             }}
                           >
                             {t("General inquiry", "Obecný dotaz")}
