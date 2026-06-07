@@ -193,7 +193,7 @@ const ServiceDetail = () => {
             <div
               className={`rounded-lg p-8 mb-12 mt-6 ${detail?.tone === "executive" ? "border border-gold/40 bg-card shadow-[0_20px_60px_-30px_hsl(var(--foreground)/0.55)]" : "glass"}`}
             >
-              <h2 className="text-xl md:text-2xl font-semibold mb-6">
+              className="text-xl md:text-2xl font-semibold mb-6 w-full"
                 {slug === "live-webinars" && detail?.pageTitle
                   ? (() => {
                       const titleText = pickL(detail.pageTitle, lang);
