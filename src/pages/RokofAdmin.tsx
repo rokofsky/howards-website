@@ -330,7 +330,7 @@ const RokofAdmin = () => {
               </ul>
             )}
           </div>
-</div>
+
           <div className="glass rounded-xl px-8 py-4 mb-14">
             <p className="text-sm text-muted-foreground">
               <span className="font-bold">Reference Scans (PDF)</span> — upload to GitHub at: src/components/EvaluationsGallery.tsx
@@ -387,12 +387,10 @@ const RokofAdmin = () => {
                 )}
               </div>
             </div>
-            </div>
           </div>
-               </div>
-      </section>
         </div>
       </section>
+
 
       <Dialog open={!!editingPost} onOpenChange={(open) => !open && setEditingPost(null)}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
