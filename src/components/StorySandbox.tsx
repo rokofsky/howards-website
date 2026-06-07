@@ -660,7 +660,7 @@ export default function StorySandbox() {
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold">One size fits all prompts</h3>
-          <Button variant="glass" size="sm" onClick={shuffleOneLiner} disabled={!allOneLiners.length}>
+          <Button variant="glass" size="sm" onClick={() => shuffleOneLiner()} disabled={!allOneLiners.length}>
             <Shuffle className="h-4 w-4" />
             Shuffle
           </Button>
