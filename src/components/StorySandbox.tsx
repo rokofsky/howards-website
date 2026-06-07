@@ -612,6 +612,12 @@ export default function StorySandbox() {
   };
 
   const oneLinerText = getFieldValue(oneLinerRow as unknown as Record<string, unknown>, "oneLiners");
+  const adminPromptRows: Array<SandboxRow | PromptRow> =
+    activePromptSheet === "sandbox"
+      ? allSandboxPrompts
+      : activePromptSheet === "oneLiners"
+        ? allOneLiners
+        : allSheet3Prompts;
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-10">
@@ -624,6 +630,144 @@ export default function StorySandbox() {
           Save your story stores only on your computer locally. I don't save anything except the anonymous votes.
         </p>
       </header>
+
+      {adminAuthenticated && (
+        <section className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h3 className="text-lg font-semibold">Manage Prompts</h3>
+            <div className="flex flex-wrap gap-2">
+              {([
+                ["sandbox", "Sandbox"],
+                ["oneLiners", "One Liners"],
+                ["sheet3", "Sheet 3"],
+              ] as const).map(([key, label]) => (
+                <Button
+                  key={key}
+                  type="button"
+                  variant={activePromptSheet === key ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => {
+                    setActivePromptSheet(key);
+                    setEditingPromptId(null);
+                  }}
+                >
+                  {label}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <Card className="p-4 space-y-3 border-primary/30 bg-primary/5">
+            <div className={cn("grid gap-3", activePromptSheet === "sandbox" ? "md:grid-cols-3" : "grid-cols-1")}>
+              {activePromptSheet === "sandbox" ? (
+                <>
+                  <Input
+                    value={newPromptDraft.character}
+                    onChange={(e) => setNewPromptDraft((prev) => ({ ...prev, character: e.target.value }))}
+                    placeholder="New character"
+                  />
+                  <Input
+                    value={newPromptDraft.incident}
+                    onChange={(e) => setNewPromptDraft((prev) => ({ ...prev, incident: e.target.value }))}
+                    placeholder="New incident"
+                  />
+                  <Input
+                    value={newPromptDraft.constraint_text}
+                    onChange={(e) => setNewPromptDraft((prev) => ({ ...prev, constraint_text: e.target.value }))}
+                    placeholder="New constraint"
+                  />
+                </>
+              ) : (
+                <Textarea
+                  value={newPromptDraft.prompt}
+                  onChange={(e) => setNewPromptDraft((prev) => ({ ...prev, prompt: e.target.value }))}
+                  placeholder="New prompt text"
+                  rows={3}
+                />
+              )}
+            </div>
+            <Button type="button" size="sm" onClick={addPromptRow} disabled={savingPromptId === "new"}>
+              <Plus className="h-4 w-4" />
+              Add Prompt
+            </Button>
+          </Card>
+
+          <div className="space-y-3">
+            {adminPromptRows.map((row) => {
+              const isEditingRow = editingPromptId === row.id;
+              const isSavingRow = savingPromptId === row.id;
+              return (
+                <Card key={String(row.id)} className="p-4 space-y-3">
+                  {isEditingRow ? (
+                    <div className={cn("grid gap-3", activePromptSheet === "sandbox" ? "md:grid-cols-3" : "grid-cols-1")}>
+                      {activePromptSheet === "sandbox" ? (
+                        <>
+                          <Input
+                            value={promptDraft.character}
+                            onChange={(e) => updatePromptDraft("character", e.target.value)}
+                            placeholder="Character"
+                          />
+                          <Input
+                            value={promptDraft.incident}
+                            onChange={(e) => updatePromptDraft("incident", e.target.value)}
+                            placeholder="Incident"
+                          />
+                          <Input
+                            value={promptDraft.constraint_text}
+                            onChange={(e) => updatePromptDraft("constraint_text", e.target.value)}
+                            placeholder="Constraint"
+                          />
+                        </>
+                      ) : (
+                        <Textarea
+                          value={promptDraft.prompt}
+                          onChange={(e) => updatePromptDraft("prompt", e.target.value)}
+                          placeholder="Prompt text"
+                          rows={3}
+                        />
+                      )}
+                    </div>
+                  ) : activePromptSheet === "sandbox" ? (
+                    <div className="grid gap-2 md:grid-cols-3 text-sm">
+                      <p><span className="font-semibold">Character:</span> {(row as SandboxRow).character || "—"}</p>
+                      <p><span className="font-semibold">Incident:</span> {(row as SandboxRow).incident || "—"}</p>
+                      <p><span className="font-semibold">Constraint:</span> {(row as SandboxRow).constraint_text || "—"}</p>
+                    </div>
+                  ) : (
+                    <p className="text-sm leading-relaxed">{extractText(row as PromptRow) || "—"}</p>
+                  )}
+
+                  <div className="flex flex-wrap justify-end gap-2">
+                    {isEditingRow ? (
+                      <>
+                        <Button type="button" size="sm" onClick={() => savePromptEdit(row)} disabled={isSavingRow}>
+                          <Save className="h-4 w-4" />
+                          Save
+                        </Button>
+                        <Button type="button" variant="outline" size="sm" onClick={() => setEditingPromptId(null)}>
+                          <X className="h-4 w-4" />
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button type="button" variant="outline" size="sm" onClick={() => startEditingPrompt(row)}>
+                          <Pencil className="h-4 w-4" />
+                          Edit
+                        </Button>
+                        <Button type="button" variant="outline" size="sm" onClick={() => deletePromptRow(row)} disabled={isSavingRow}>
+                          <Trash2 className="h-4 w-4" />
+                          Delete
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Prompt Generator (Sandbox / Sheet1) */}
       <section className="space-y-4">
