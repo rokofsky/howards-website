@@ -800,22 +800,6 @@ export default function StorySandbox() {
                       <div className="flex items-center gap-3 text-xs">
                         <button
                           type="button"
-                          onClick={() => setDrafts((d) => ({ ...d, oneLiner: currentValueFor("oneLiner") }))}
-                          className="text-muted-foreground hover:text-foreground underline underline-offset-2"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setDrafts((d) => ({ ...d, [key]: currentValueFor(key as "character" | "incident") }))
-                          }
-                          className="text-muted-foreground hover:text-foreground underline underline-offset-2"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          type="button"
                           onClick={() => startAddNew(key as "character" | "incident")}
                           className="text-muted-foreground hover:text-foreground underline underline-offset-2"
                         >
