@@ -738,7 +738,7 @@ export default function StorySandbox() {
                         target.scrollIntoView({ behavior: "smooth", block: "center" });
                       }, 300);
                     }}
-                    placeholder="Type your idea here…"
+                    placeholder="Whatever tickles your fancy…"
                     className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full flex-1 text-base font-medium leading-snug"
                   />
                 ) : isAdmin ? (
