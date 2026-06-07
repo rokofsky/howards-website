@@ -193,6 +193,25 @@ export default function StorySandbox() {
   // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
 
+  // --- Admin inline editing ---
+  const isAdmin =
+    typeof window !== "undefined" && localStorage.getItem("admin_authenticated") === "true";
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const [addingNew, setAddingNew] = useState<Record<string, boolean>>({});
+  const [savingField, setSavingField] = useState<Record<string, boolean>>({});
+
+  const PLACEHOLDER_CHAR = "[Pending Admin Character]";
+  const PLACEHOLDER_INC = "[Pending Admin Incident]";
+
+  const isRowValidFor = (row: SandboxRow | PromptRow | null | undefined, cat: string): boolean => {
+    if (!row) return false;
+    const v = getFieldValue(row as unknown as Record<string, unknown>, cat).trim();
+    if (!v) return false;
+    if (v === PLACEHOLDER_CHAR || v === PLACEHOLDER_INC) return false;
+    return true;
+  };
+
+
   // Hydrate persisted UI state
   useEffect(() => {
     try {
