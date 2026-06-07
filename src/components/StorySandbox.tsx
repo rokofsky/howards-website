@@ -811,7 +811,7 @@ export default function StorySandbox() {
                             onClick={() => deleteCurrent(key as "character" | "incident")}
                             className="text-muted-foreground hover:text-destructive underline underline-offset-2"
                           >
-                            Delete prompt
+                            Delete
                           </button>
                         )}
                       </div>
@@ -892,7 +892,7 @@ export default function StorySandbox() {
                     onClick={() => deleteCurrent("oneLiner")}
                     className="text-muted-foreground hover:text-destructive underline underline-offset-2"
                   >
-                    Delete prompt
+                    Delete
                   </button>
                 )}
               </div>
