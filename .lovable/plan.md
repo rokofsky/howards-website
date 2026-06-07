@@ -1,18 +1,9 @@
-## Plan
+The prompt edit UI was added to `src/pages/RokofAdmin.tsx`, which only renders on `/rokofsky-admin` — not on `/story-sandbox` where you are currently. Nothing is broken in code; you just need to open the admin route.
 
-1. **Make editing obvious in the admin UI**
-   - In `src/pages/RokofAdmin.tsx`, replace the icon-only prompt edit control with a clearly labeled **Edit** button next to **Delete**.
-   - Keep the existing edit dialog, but ensure it opens reliably for each prompt row.
+To confirm and remove the confusion, the plan:
 
-2. **Improve prompt save behavior**
-   - Keep edits local while the dialog is open.
-   - On save, optimistically update the displayed prompt after a successful database response so the change is immediately visible.
-   - Show a clear error toast if saving fails.
+1. Open `/rokofsky-admin` (or `/cz/rokofsky-admin`), log in with the admin password, scroll to the "Manage Prompts" section — the Edit/Delete buttons are already there on each row.
+2. To make the section easier to find, move "Manage Prompts" above "Manage Blog Posts" in `src/pages/RokofAdmin.tsx` so it is the first content block after the header.
+3. No changes to `StorySandbox` and no other files touched.
 
-3. **Fix the real CRUD blocker**
-   - The database currently only allows reading `prompts`; INSERT/UPDATE/DELETE are blocked by row-level permissions.
-   - Add policies/grants so logged-in/admin-authenticated users can create, update, and delete prompts.
-
-4. **Validate**
-   - Confirm the edit button is visible in the Manage Prompts section.
-   - Confirm the edit dialog saves updates without permission errors.
+If you instead want editing surfaced inside the Story Sandbox page itself (gated by admin login), say the word and I’ll plan that instead.
