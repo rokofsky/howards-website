@@ -757,6 +757,53 @@ const RokofAdmin = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!editingPrompt} onOpenChange={(open) => !open && setEditingPrompt(null)}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Edit Prompt</DialogTitle>
+          </DialogHeader>
+          {editingPrompt && (
+            <div className="space-y-4">
+              {editingPrompt.sheet_key === "sandbox" ? (
+                <>
+                  <div>
+                    <Label>Character</Label>
+                    <Input
+                      value={editingPrompt.character ?? ""}
+                      onChange={(e) => setEditingPrompt({ ...editingPrompt, character: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label>Incident</Label>
+                    <Input
+                      value={editingPrompt.incident ?? ""}
+                      onChange={(e) => setEditingPrompt({ ...editingPrompt, incident: e.target.value })}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div>
+                  <Label>{editingPrompt.sheet_key === "oneLiners" ? "One Liner" : "Text"}</Label>
+                  <Textarea
+                    className="min-h-[140px]"
+                    value={editingPrompt.prompt ?? ""}
+                    onChange={(e) => setEditingPrompt({ ...editingPrompt, prompt: e.target.value })}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingPrompt(null)} disabled={savingPrompt}>
+              Cancel
+            </Button>
+            <Button variant="cta" onClick={handleSavePrompt} disabled={savingPrompt}>
+              {savingPrompt ? "Saving..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
