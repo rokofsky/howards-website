@@ -351,21 +351,52 @@ export default function StorySandbox() {
   };
 
   // --- Independent shuffle handlers ---
-  const shuffleCard = (cat: Category) => {
-    const row = pickRandom(allSandboxPrompts);
+  const shuffleCard = (cat: Category, poolOverride?: SandboxRow[]) => {
+    const pool = poolOverride ?? allSandboxPrompts;
+    if (!pool.length) return;
+    let row = pickRandom(pool);
+    if (!isAdmin) {
+      let tries = 0;
+      while (row && !isRowValidFor(row, cat) && tries < 50) {
+        row = pickRandom(pool);
+        tries++;
+      }
+    }
     if (!row) return;
-    setCardRows((prev) => ({ ...prev, [cat]: row }));
+    setCardRows((prev) => ({ ...prev, [cat]: row! }));
     const text = getFieldValue(row as unknown as Record<string, unknown>, cat);
     setPrompts((p) => ({ ...p, [cat]: text || p[cat] }));
     setAnimKeys((prev) => ({ ...prev, [cat]: prev[cat] + 1 }));
+    setDrafts((d) => {
+      const n = { ...d };
+      delete n[cat];
+      return n;
+    });
+    setAddingNew((a) => ({ ...a, [cat]: false }));
   };
 
-  const shuffleOneLiner = () => {
-    const row = pickRandom(allOneLiners);
+  const shuffleOneLiner = (poolOverride?: PromptRow[]) => {
+    const pool = poolOverride ?? allOneLiners;
+    if (!pool.length) return;
+    let row = pickRandom(pool);
+    if (!isAdmin) {
+      let tries = 0;
+      while (row && !isRowValidFor(row, "oneLiners") && tries < 50) {
+        row = pickRandom(pool);
+        tries++;
+      }
+    }
     if (!row) return;
     setOneLinerRow(row);
     setOneLinerAnimKey((k) => k + 1);
+    setDrafts((d) => {
+      const n = { ...d };
+      delete n.oneLiner;
+      return n;
+    });
+    setAddingNew((a) => ({ ...a, oneLiner: false }));
   };
+
 
   // --- Voting: instant local state update, then async Supabase upsert ---
   const handleVote = (
