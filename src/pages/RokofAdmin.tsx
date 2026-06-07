@@ -87,6 +87,104 @@ const RokofAdmin = () => {
   const [savingEdit, setSavingEdit] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
 
+  // Prompts management
+  type PromptRow = {
+    id: string;
+    sheet_key: string;
+    character: string | null;
+    incident: string | null;
+    constraint_text: string | null;
+    setting: string | null;
+    prompt: string | null;
+    created_at: string;
+  };
+  const PROMPT_SHEETS: { key: string; label: string }[] = [
+    { key: "sandbox", label: "Story Sandbox" },
+    { key: "oneLiners", label: "One Liners" },
+    { key: "sheet3", label: "Sheet 3" },
+  ];
+  const [prompts, setPrompts] = useState<PromptRow[]>([]);
+  const [editingPrompt, setEditingPrompt] = useState<PromptRow | null>(null);
+  const [savingPrompt, setSavingPrompt] = useState(false);
+  const [newPromptDrafts, setNewPromptDrafts] = useState<
+    Record<string, { character: string; incident: string; prompt: string }>
+  >({
+    sandbox: { character: "", incident: "", prompt: "" },
+    oneLiners: { character: "", incident: "", prompt: "" },
+    sheet3: { character: "", incident: "", prompt: "" },
+  });
+  const [addingPrompt, setAddingPrompt] = useState<string | null>(null);
+
+  const loadPrompts = async () => {
+    const { data, error } = await supabase.from("prompts").select("*");
+    if (error) {
+      toast({ title: "Failed to load prompts", description: error.message, variant: "destructive" });
+      return;
+    }
+    setPrompts((data as PromptRow[]) ?? []);
+  };
+
+  const handleAddPrompt = async (sheetKey: string) => {
+    const draft = newPromptDrafts[sheetKey];
+    let payload: Record<string, unknown> = { sheet_key: sheetKey };
+    if (sheetKey === "sandbox") {
+      if (!draft.character.trim() && !draft.incident.trim()) {
+        toast({ title: "Please fill at least one field", variant: "destructive" });
+        return;
+      }
+      payload.character = draft.character;
+      payload.incident = draft.incident;
+    } else {
+      if (!draft.prompt.trim()) {
+        toast({ title: "Please enter text", variant: "destructive" });
+        return;
+      }
+      payload.prompt = draft.prompt;
+    }
+    setAddingPrompt(sheetKey);
+    const { error } = await supabase.from("prompts").insert(payload as any);
+    setAddingPrompt(null);
+    if (error) {
+      toast({ title: "Failed to add prompt", description: error.message, variant: "destructive" });
+      return;
+    }
+    setNewPromptDrafts((prev) => ({
+      ...prev,
+      [sheetKey]: { character: "", incident: "", prompt: "" },
+    }));
+    toast({ title: "Prompt added" });
+    await loadPrompts();
+  };
+
+  const handleSavePrompt = async () => {
+    if (!editingPrompt) return;
+    setSavingPrompt(true);
+    const update: Record<string, unknown> =
+      editingPrompt.sheet_key === "sandbox"
+        ? { character: editingPrompt.character, incident: editingPrompt.incident }
+        : { prompt: editingPrompt.prompt };
+    const { error } = await supabase.from("prompts").update(update as any).eq("id", editingPrompt.id);
+    setSavingPrompt(false);
+    if (error) {
+      toast({ title: "Update failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    setEditingPrompt(null);
+    toast({ title: "Prompt updated" });
+    await loadPrompts();
+  };
+
+  const handleDeletePrompt = async (prompt: PromptRow) => {
+    if (!window.confirm("Are you sure you want to delete this prompt?")) return;
+    const { error } = await supabase.from("prompts").delete().eq("id", prompt.id);
+    if (error) {
+      toast({ title: "Delete failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    setPrompts((prev) => prev.filter((p) => p.id !== prompt.id));
+    toast({ title: "Prompt deleted" });
+  };
+
   const loadPosts = async () => {
     const { data, error } = await supabase.from("blog_posts").select("*");
     console.log("Admin Component Fetch - Data:", data, "Error:", error);
