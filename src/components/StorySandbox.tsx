@@ -26,8 +26,7 @@ const readUserVotes = (): Record<string, "up" | "down"> => {
    ============================================================ */
 const FALLBACK_SEEDS = {
   character: ["A retired astronaut"],
-  incident: [],
-  constraint: ["while pretending everything is fine"],
+  incident: ["while pretending everything is fine"],
   setting: [],
 } as const;
 
@@ -63,23 +62,21 @@ const STRUCTURES = {
 type StructureKey = keyof typeof STRUCTURES;
 const STORAGE_KEY = "story-sandbox:v1";
 
-type Category = "character" | "incident" | "constraint";
+type Category = "character" | "incident";
 type Prompts = Record<Category, string>;
 
 const CATEGORY_META: { key: Category; label: string; tone: string; box: ElementBox }[] = [
   { key: "character", label: "Character", tone: "from-petrol/20 to-petrol/5 border-petrol/30", box: "character" },
   { key: "incident", label: "By the way", tone: "from-gold/25 to-gold/5 border-gold/40", box: "incident" },
-  { key: "constraint", label: "Add here", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
 ];
 
 type SheetKey = "sandbox" | "oneLiners" | "sheet3";
-type ElementBox = "character" | "incident" | "constraint" | "untitled" | "generic";
+type ElementBox = "character" | "incident" | "untitled" | "generic";
 
 type SandboxRow = {
   id?: string | number;
   character?: string;
   incident?: string;
-  constraint?: string;
   setting?: string;
   untitled?: string;
 };
@@ -108,7 +105,6 @@ const buildFallbackSandbox = (): SandboxRow[] =>
     id: `fb-${i}`,
     character: c,
     incident: FALLBACK_SEEDS.incident[i % FALLBACK_SEEDS.incident.length],
-    constraint: FALLBACK_SEEDS.constraint[i % FALLBACK_SEEDS.constraint.length],
     setting: FALLBACK_SEEDS.setting[i % FALLBACK_SEEDS.setting.length],
   }));
 
@@ -132,17 +128,15 @@ export default function StorySandbox() {
   const [cardRows, setCardRows] = useState<Record<Category, SandboxRow | null>>({
     character: initialSandbox[0] ?? null,
     incident: initialSandbox[0] ?? null,
-    constraint: null,
   });
   const [oneLinerRow, setOneLinerRow] = useState<PromptRow | null>(null);
 
   const [prompts, setPrompts] = useState<Prompts>(() => ({
     character: initialSandbox[0]?.character ?? "",
     incident: initialSandbox[0]?.incident ?? "",
-    constraint: "",
   }));
   const [editing, setEditing] = useState<Category | null>(null);
-  const [animKeys, setAnimKeys] = useState<Record<Category, number>>({ character: 0, incident: 0, constraint: 0 });
+  const [animKeys, setAnimKeys] = useState<Record<Category, number>>({ character: 0, incident: 0 });
   const [oneLinerAnimKey, setOneLinerAnimKey] = useState(0);
 
   const [structure, setStructure] = useState<StructureKey>("3-act");
@@ -212,11 +206,10 @@ export default function StorySandbox() {
           };
           const c = pickFor("character");
           const i = pickFor("incident");
-          setCardRows({ character: c, incident: i, constraint: undefined });
+          setCardRows({ character: c, incident: i });
           setPrompts((p) => ({
             character: getFieldValue(c as unknown as Record<string, unknown>, "character") || p.character,
             incident: getFieldValue(i as unknown as Record<string, unknown>, "incident") || p.incident,
-            constraint: p.constraint,
           }));
         }
         if (oneLinerRows.length > 0) {
@@ -287,9 +280,6 @@ export default function StorySandbox() {
         break;
       case "incident":
         col = "incident";
-        break;
-      case "constraint":
-        col = "constraint_text";
         break;
       case "oneLiners":
       case "generic":
@@ -662,7 +652,6 @@ export default function StorySandbox() {
           {CATEGORY_META.map(({ key, label, tone, box }) => {
             const value = prompts[key];
             const isEditing = editing === key;
-            const isConstraint = key === "constraint";
             const showShuffle = key === "character" || key === "incident";
             return (
               <Card
@@ -688,20 +677,7 @@ export default function StorySandbox() {
                   </div>
                 </div>
 
-                {isConstraint ? (
-                  <textarea
-                    value={scratch["sandbox:constraint"] ?? ""}
-                    onChange={(e) => setScratch((prev) => ({ ...prev, "sandbox:constraint": e.target.value }))}
-                    onFocus={(e) => {
-                      const target = e.target;
-                      setTimeout(() => {
-                        target.scrollIntoView({ behavior: "smooth", block: "center" });
-                      }, 300);
-                    }}
-                    placeholder="Whatever tickles your fancy…"
-                    className="border-none focus:ring-0 focus:outline-none resize-none bg-transparent w-full flex-1 text-base font-medium leading-snug"
-                  />
-                ) : isAdmin ? (
+                {isAdmin ? (
                   <div className="flex-1 flex flex-col">
                     <textarea
                       value={draftValueFor(key as "character" | "incident")}
