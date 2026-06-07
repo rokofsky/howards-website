@@ -463,12 +463,12 @@ const RokofAdmin = () => {
                                 <p className="whitespace-pre-wrap break-words">{p.prompt || <em className="text-muted-foreground">—</em>}</p>
                               )}
                             </div>
-                            <div className="flex items-center gap-1 shrink-0">
-                              <Button variant="ghost" size="icon" onClick={() => setEditingPrompt(p)} aria-label="Edit prompt">
-                                <Pencil className="h-4 w-4" />
+                            <div className="flex items-center gap-2 shrink-0">
+                              <Button variant="outline" size="sm" onClick={() => setEditingPrompt(p)} aria-label="Edit prompt">
+                                <Pencil className="h-4 w-4 mr-1" /> Edit
                               </Button>
-                              <Button variant="ghost" size="icon" onClick={() => handleDeletePrompt(p)} aria-label="Delete prompt">
-                                <Trash2 className="h-4 w-4 text-destructive" />
+                              <Button variant="outline" size="sm" onClick={() => handleDeletePrompt(p)} aria-label="Delete prompt">
+                                <Trash2 className="h-4 w-4 mr-1 text-destructive" /> Delete
                               </Button>
                             </div>
                           </li>
