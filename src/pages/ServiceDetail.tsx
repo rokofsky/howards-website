@@ -321,7 +321,9 @@ const ServiceDetail = () => {
                     open={showOrderForm}
                     onOpenChange={setShowOrderForm}
                     initialWebinarSlug={orderInitialSlug}
-                    />
+                  />
+                </>
+              ) : (
                 <MobileTruncatedText
                   paragraphs={
                     detail?.intro && detail.intro.length > 0
