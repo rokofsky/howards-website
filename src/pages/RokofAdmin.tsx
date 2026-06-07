@@ -11,7 +11,12 @@ import { toast, useToast } from "@/hooks/use-toast";
 import { Trash2, Pencil, Loader2, Languages } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
-import { isAdminAuthenticated, setAdminAuthenticated, clearAdminAuthenticated, verifyAdminPassword } from "@/lib/adminAuth";
+import {
+  isAdminAuthenticated,
+  setAdminAuthenticated,
+  clearAdminAuthenticated,
+  verifyAdminPassword,
+} from "@/lib/adminAuth";
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
@@ -295,13 +300,11 @@ const RokofAdmin = () => {
           </div>
 
           {/* Reference Scans Manager */}
-          <div className="glass rounded-xl p-8 mb-14">
-            <h2 className="text-xl font-bold mb-2">Reference Scans (PDF)</h2>
-            <div className="rounded-lg border border-border bg-muted/40 p-4">
-              <p className="text-sm text-muted-foreground">
-                pload to GitHub at: src/components/EvaluationsGallery.tsx
-              </p>
-            </div>
+          <div className="glass rounded-xl px-8 py-4 mb-14">
+            <p className="text-sm text-muted-foreground">
+              <span className="font-bold">Reference Scans (PDF)</span> — upload to GitHub at:
+              src/components/EvaluationsGallery.tsx
+            </p>
           </div>
 
           {/* Manage Blog Posts */}
