@@ -187,7 +187,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             <div>
               <Label className="mb-1 block">{t("Select webinars", "Vyberte webináře")} *</Label>
               <p className="text-xs text-muted-foreground mb-2">
-                {t("Price: CZK 2,500 / €100 for a 90-minute session", "Cena: 2 500 Kč / 100 € za 90minutovou lekci")}
+                {t("Price: CZK 3,000 / €125 for a 90-minute session", "Cena: 3 000 Kč / 125 € za 90minutovou lekci")}
               </p>
               <div className="max-h-48 overflow-y-auto rounded-md border border-gold/40 p-3 space-y-2">
                 {[...allWebinars]
@@ -283,8 +283,8 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
               <span className="text-sm text-muted-foreground font-medium">{t("Subtotal", "Mezisoučet")}</span>
               <span className="text-lg font-semibold text-gold">
                 {t(
-                  `CZK ${(selectedSlugs.length * 2500).toLocaleString("en-US")} / €${selectedSlugs.length * 100}`,
-                  `${(selectedSlugs.length * 2500).toLocaleString("cs-CZ")} Kč / ${selectedSlugs.length * 100} €`,
+                  `CZK ${(selectedSlugs.length * 3000).toLocaleString("en-US")} / €${selectedSlugs.length * 125}`,
+                  `${(selectedSlugs.length * 3000).toLocaleString("cs-CZ")} Kč / ${selectedSlugs.length * 125} €`,
                 )}
               </span>
             </div>
