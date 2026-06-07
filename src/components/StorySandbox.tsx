@@ -730,7 +730,7 @@ export default function StorySandbox() {
                   <p className="text-base italic text-muted-foreground leading-snug">Coming soon</p>
                 )}
 
-                {key !== "constraint" && !sandboxLoading && (
+                {!isConstraint && !sandboxLoading && (
                   <div className="mt-3 flex items-center justify-between gap-2">
                     {isAdmin ? (
                       <div className="flex items-center gap-3 text-xs">
