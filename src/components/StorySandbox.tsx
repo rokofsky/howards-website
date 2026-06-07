@@ -194,7 +194,9 @@ export default function StorySandbox() {
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
 
   // --- Admin inline editing ---
-  const isAdmin = typeof window !== "undefined" && localStorage.getItem("admin_authenticated") === "true";
+  const [isAdmin, setIsAdmin] = useState<boolean>(
+    typeof window !== "undefined" && localStorage.getItem("admin_authenticated") === "true",
+  );
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [addingNew, setAddingNew] = useState<Record<string, boolean>>({});
   const [savingField, setSavingField] = useState<Record<string, boolean>>({});
@@ -800,10 +802,26 @@ export default function StorySandbox() {
                       <div className="flex items-center gap-3 text-xs">
                         <button
                           type="button"
+                          onClick={() => setDrafts((d) => ({ ...d, oneLiner: currentValueFor("oneLiner") }))}
+                          className="text-muted-foreground hover:text-foreground underline underline-offset-2"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setDrafts((d) => ({ ...d, [key]: currentValueFor(key as "character" | "incident") }))
+                          }
+                          className="text-muted-foreground hover:text-foreground underline underline-offset-2"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
                           onClick={() => startAddNew(key as "character" | "incident")}
                           className="text-muted-foreground hover:text-foreground underline underline-offset-2"
                         >
-                          Add new prompt
+                          Add new
                         </button>
                         {!addingNew[key] && cardRows[key]?.id && (
                           <button
@@ -811,7 +829,7 @@ export default function StorySandbox() {
                             onClick={() => deleteCurrent(key as "character" | "incident")}
                             className="text-muted-foreground hover:text-destructive underline underline-offset-2"
                           >
-                            Delete prompt
+                            Delete
                           </button>
                         )}
                       </div>
@@ -884,7 +902,7 @@ export default function StorySandbox() {
                   onClick={() => startAddNew("oneLiner")}
                   className="text-muted-foreground hover:text-foreground underline underline-offset-2"
                 >
-                  Add new prompt
+                  Add new
                 </button>
                 {!addingNew.oneLiner && oneLinerRow?.id && (
                   <button
@@ -892,7 +910,7 @@ export default function StorySandbox() {
                     onClick={() => deleteCurrent("oneLiner")}
                     className="text-muted-foreground hover:text-destructive underline underline-offset-2"
                   >
-                    Delete prompt
+                    Delete
                   </button>
                 )}
               </div>
