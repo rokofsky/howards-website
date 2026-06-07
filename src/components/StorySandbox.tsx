@@ -343,11 +343,11 @@ export default function StorySandbox() {
         break;
       case "oneLiners":
       case "generic":
-        col = "one_liner";
+        col = "prompt";
         break;
       case "sheet3":
       case "text":
-        col = "text";
+        col = "prompt";
         break;
       default:
         return "";
@@ -372,6 +372,83 @@ export default function StorySandbox() {
     if (!row) return;
     setOneLinerRow(row);
     setOneLinerAnimKey((k) => k + 1);
+  };
+
+  const updatePromptDraft = (field: keyof PromptEditorDraft, value: string) => {
+    setPromptDraft((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const startEditingPrompt = (row: SandboxRow | PromptRow) => {
+    setEditingPromptId(row.id ?? null);
+    setPromptDraft({
+      character: "character" in row ? row.character ?? "" : "",
+      incident: "incident" in row ? row.incident ?? "" : "",
+      constraint_text: "constraint_text" in row ? row.constraint_text ?? "" : "",
+      prompt: "prompt" in row ? row.prompt ?? extractText(row as PromptRow) : extractText(row as PromptRow),
+    });
+  };
+
+  const savePromptEdit = async (row: SandboxRow | PromptRow) => {
+    if (!row.id || String(row.id).startsWith("fb-")) return;
+    const sheetKey = (row.sheet_key ?? activePromptSheet) as SheetKey;
+    const payload =
+      sheetKey === "sandbox"
+        ? {
+            character: promptDraft.character,
+            incident: promptDraft.incident,
+            constraint_text: promptDraft.constraint_text,
+          }
+        : { prompt: promptDraft.prompt };
+    setSavingPromptId(row.id);
+    const { error } = await supabase.from("prompts").update(payload as any).eq("id", row.id as any);
+    setSavingPromptId(null);
+    if (error) {
+      toast({ title: "Prompt update failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    setEditingPromptId(null);
+    await loadPromptRows();
+    toast({ title: "Prompt updated" });
+  };
+
+  const addPromptRow = async () => {
+    const payload =
+      activePromptSheet === "sandbox"
+        ? {
+            sheet_key: activePromptSheet,
+            character: newPromptDraft.character,
+            incident: newPromptDraft.incident,
+            constraint_text: newPromptDraft.constraint_text,
+          }
+        : { sheet_key: activePromptSheet, prompt: newPromptDraft.prompt };
+    const hasContent = Object.values(payload).some((value) => typeof value === "string" && value.trim() && value !== activePromptSheet);
+    if (!hasContent) {
+      toast({ title: "Add prompt text first", variant: "destructive" });
+      return;
+    }
+    setSavingPromptId("new");
+    const { error } = await supabase.from("prompts").insert(payload as any);
+    setSavingPromptId(null);
+    if (error) {
+      toast({ title: "Prompt add failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    setNewPromptDraft({ character: "", incident: "", constraint_text: "", prompt: "" });
+    await loadPromptRows();
+    toast({ title: "Prompt added" });
+  };
+
+  const deletePromptRow = async (row: SandboxRow | PromptRow) => {
+    if (!row.id || String(row.id).startsWith("fb-") || !window.confirm("Are you sure you want to delete this prompt?")) return;
+    setSavingPromptId(row.id);
+    const { error } = await supabase.from("prompts").delete().eq("id", row.id as any);
+    setSavingPromptId(null);
+    if (error) {
+      toast({ title: "Prompt delete failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    await loadPromptRows();
+    toast({ title: "Prompt deleted" });
   };
 
   // --- Voting: instant local state update, then async Supabase upsert ---
