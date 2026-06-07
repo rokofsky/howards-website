@@ -301,7 +301,7 @@ const RokofAdmin = () => {
 
           {/* Reference Scans Manager */}
           <div className="glass rounded-xl px-8 py-4 mb-14">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground font-medium">
               <span className="font-bold">Reference Scans (PDF)</span> — upload to GitHub at:
               src/components/EvaluationsGallery.tsx
             </p>
