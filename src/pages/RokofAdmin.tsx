@@ -382,7 +382,6 @@ const RokofAdmin = () => {
                 )}
               </div>
             </div>
-            </div>
           </div>
           <div className="glass rounded-xl px-8 py-4 mb-14">
             <p className="text-sm text-muted-foreground">
@@ -391,8 +390,7 @@ const RokofAdmin = () => {
           </div>
         </div>
       </section>
-        </div>
-      </section>
+    </Layout>
 
       <Dialog open={!!editingPost} onOpenChange={(open) => !open && setEditingPost(null)}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
