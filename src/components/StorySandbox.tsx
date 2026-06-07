@@ -174,7 +174,7 @@ export default function StorySandbox() {
   const [cardRows, setCardRows] = useState<Record<Category, SandboxRow | null>>({
     character: initialSandbox[0] ?? null,
     incident: initialSandbox[0] ?? null,
-    constraint: initialSandbox[0] ?? null,
+    constraint: null,
   });
   const [oneLinerRow, setOneLinerRow] = useState<PromptRow | null>(null);
 
