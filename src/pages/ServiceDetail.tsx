@@ -172,7 +172,7 @@ const ServiceDetail = () => {
             )}
 
             <div className={`rounded-lg p-8 mb-12 mt-6 ${detail?.tone === "executive" ? "border border-gold/40 bg-card shadow-[0_20px_60px_-30px_hsl(var(--foreground)/0.55)]" : "glass"}`}>
-              <h2 className="text-xl md:text-2xl font-semibold mb-6">
+              <h2 className={`${slug === "live-webinars" ? "text-sm sm:text-base lg:text-lg" : "text-xl md:text-2xl"} font-semibold mb-6`}>
                 {slug === "live-webinars" && detail?.pageTitle ? (() => {
                   const titleText = pickL(detail.pageTitle, lang);
                   const anchor = isCz ? "otázku" : "question";
@@ -183,7 +183,7 @@ const ServiceDetail = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="rounded-full text-xs px-3 py-1 h-auto"
+                        className="text-[10px] md:text-xs px-2 py-0.5 rounded-full h-auto"
                         onClick={() => {
                           document.getElementById("inquiry-form")?.scrollIntoView({ behavior: "smooth" });
                         }}
