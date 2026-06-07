@@ -803,7 +803,7 @@ export default function StorySandbox() {
                           onClick={() => startAddNew(key as "character" | "incident")}
                           className="text-muted-foreground hover:text-foreground underline underline-offset-2"
                         >
-                          Add new
+                          Add new prompt
                         </button>
                         {!addingNew[key] && cardRows[key]?.id && (
                           <button
@@ -811,7 +811,7 @@ export default function StorySandbox() {
                             onClick={() => deleteCurrent(key as "character" | "incident")}
                             className="text-muted-foreground hover:text-destructive underline underline-offset-2"
                           >
-                            Delete
+                            Delete prompt
                           </button>
                         )}
                       </div>
@@ -853,20 +853,18 @@ export default function StorySandbox() {
               />
               {isDirty("oneLiner") && (
                 <div className="flex items-center gap-2">
-                  <button
+                  <Button
+                    size="sm"
+                    variant="glass"
                     onClick={() => saveField("oneLiner")}
                     disabled={savingField.oneLiner}
-                    className="text-sm text-primary hover:underline disabled:opacity-50"
                   >
                     {savingField.oneLiner ? "Saving…" : "Save"}
-                  </button>
+                  </Button>
                   {addingNew.oneLiner && (
-                    <button
-                      onClick={() => cancelAddNew("oneLiner")}
-                      className="text-sm text-muted-foreground hover:underline ml-2"
-                    >
+                    <Button size="sm" variant="ghost" onClick={() => cancelAddNew("oneLiner")}>
                       Cancel
-                    </button>
+                    </Button>
                   )}
                 </div>
               )}
@@ -884,7 +882,7 @@ export default function StorySandbox() {
                   onClick={() => startAddNew("oneLiner")}
                   className="text-muted-foreground hover:text-foreground underline underline-offset-2"
                 >
-                  Add new
+                  Add new prompt
                 </button>
                 {!addingNew.oneLiner && oneLinerRow?.id && (
                   <button
@@ -892,7 +890,7 @@ export default function StorySandbox() {
                     onClick={() => deleteCurrent("oneLiner")}
                     className="text-muted-foreground hover:text-destructive underline underline-offset-2"
                   >
-                    Delete
+                    Delete prompt
                   </button>
                 )}
               </div>
