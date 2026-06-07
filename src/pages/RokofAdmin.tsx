@@ -432,6 +432,102 @@ const RokofAdmin = () => {
             )}
           </div>
 
+          {/* Manage Prompts */}
+          <div className="glass rounded-xl p-8 mb-14">
+            <h2 className="text-xl font-bold mb-2">Manage Prompts</h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              Create, edit, or delete prompts grouped by sheet.
+            </p>
+            <div className="space-y-8">
+              {PROMPT_SHEETS.map((sheet) => {
+                const rows = prompts.filter((p) => p.sheet_key === sheet.key);
+                const draft = newPromptDrafts[sheet.key];
+                return (
+                  <div key={sheet.key}>
+                    <h3 className="font-bold text-lg mb-3">
+                      {sheet.label} <span className="text-xs text-muted-foreground font-normal">({sheet.key})</span>
+                    </h3>
+                    {rows.length === 0 ? (
+                      <p className="text-sm text-muted-foreground mb-4">No prompts yet.</p>
+                    ) : (
+                      <ul className="divide-y divide-border mb-4">
+                        {rows.map((p) => (
+                          <li key={p.id} className="flex items-start justify-between gap-4 py-3">
+                            <div className="min-w-0 flex-1 text-sm">
+                              {sheet.key === "sandbox" ? (
+                                <div className="space-y-1">
+                                  <p><span className="font-medium">Character:</span> {p.character || <em className="text-muted-foreground">—</em>}</p>
+                                  <p><span className="font-medium">Incident:</span> {p.incident || <em className="text-muted-foreground">—</em>}</p>
+                                </div>
+                              ) : (
+                                <p className="whitespace-pre-wrap break-words">{p.prompt || <em className="text-muted-foreground">—</em>}</p>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1 shrink-0">
+                              <Button variant="ghost" size="icon" onClick={() => setEditingPrompt(p)} aria-label="Edit prompt">
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" onClick={() => handleDeletePrompt(p)} aria-label="Delete prompt">
+                                <Trash2 className="h-4 w-4 text-destructive" />
+                              </Button>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div className="rounded-lg border border-border p-4 space-y-3">
+                      <p className="text-sm font-medium">Add Prompt</p>
+                      {sheet.key === "sandbox" ? (
+                        <>
+                          <Input
+                            placeholder="Character"
+                            value={draft.character}
+                            onChange={(e) =>
+                              setNewPromptDrafts((prev) => ({
+                                ...prev,
+                                [sheet.key]: { ...prev[sheet.key], character: e.target.value },
+                              }))
+                            }
+                          />
+                          <Input
+                            placeholder="Incident"
+                            value={draft.incident}
+                            onChange={(e) =>
+                              setNewPromptDrafts((prev) => ({
+                                ...prev,
+                                [sheet.key]: { ...prev[sheet.key], incident: e.target.value },
+                              }))
+                            }
+                          />
+                        </>
+                      ) : (
+                        <Textarea
+                          placeholder={sheet.key === "oneLiners" ? "One liner" : "Text"}
+                          value={draft.prompt}
+                          onChange={(e) =>
+                            setNewPromptDrafts((prev) => ({
+                              ...prev,
+                              [sheet.key]: { ...prev[sheet.key], prompt: e.target.value },
+                            }))
+                          }
+                        />
+                      )}
+                      <Button
+                        variant="cta"
+                        size="sm"
+                        onClick={() => handleAddPrompt(sheet.key)}
+                        disabled={addingPrompt === sheet.key}
+                      >
+                        {addingPrompt === sheet.key ? "Adding..." : "Add Prompt"}
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+
           <div className="glass rounded-xl px-8 py-4 mb-14">
             <p className="text-sm text-muted-foreground">
               <span className="font-bold">Reference Scans (PDF)</span> — upload to GitHub at: src/components/EvaluationsGallery.tsx
