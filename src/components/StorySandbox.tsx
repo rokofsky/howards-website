@@ -646,10 +646,10 @@ export default function StorySandbox() {
       <header className="text-center space-y-2">
         <h2 className="text-3xl md:text-4xl font-bold">Story Sandbox</h2>
         <p className="text-muted-foreground max-w-xl mx-auto whitespace-pre-line">
-          Create your own story! Shuffle the prompts to find one you want, or scroll below and pick a structure and fill in the boxes - it's as easy as that.{"\n"}
+          Create your own story! Shuffle the prompts to find one you want, or scroll below and pick a structure and fill
+          in the boxes - it's as easy as that.{"\n"}
           You can vote up👍 or down👎 as you shuffle.{"\n"}
-          Save your story on your computer.{" "}
-          I don't keep any data except the anonymous votes.
+          Save your story on your computer. I don't keep any data except the anonymous votes.
         </p>
       </header>
 
@@ -799,7 +799,7 @@ export default function StorySandbox() {
         </div>
         <Card
           key={`oneliner-${oneLinerAnimKey}`}
-          className="relative p-4 min-h-[140px] flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-gold/20 to-petrol/10 border border-gold/30 animate-fade-in-up"
+          className="relative p-4 min-h-[140px] flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30 animate-fade-in-up"
         >
           {oneLinersLoading ? (
             <div className="h-4 w-2/3 bg-muted animate-pulse rounded" />
