@@ -201,9 +201,42 @@ export default function StorySandbox() {
 
   const [structure, setStructure] = useState<StructureKey>("3-act");
   const [scratch, setScratch] = useState<Record<string, string>>({});
+  const [adminAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
+  const [activePromptSheet, setActivePromptSheet] = useState<SheetKey>("sandbox");
+  const [editingPromptId, setEditingPromptId] = useState<string | number | null>(null);
+  const [promptDraft, setPromptDraft] = useState<PromptEditorDraft>({
+    character: "",
+    incident: "",
+    constraint_text: "",
+    prompt: "",
+  });
+  const [newPromptDraft, setNewPromptDraft] = useState<PromptEditorDraft>({
+    character: "",
+    incident: "",
+    constraint_text: "",
+    prompt: "",
+  });
+  const [savingPromptId, setSavingPromptId] = useState<string | number | "new" | null>(null);
 
   // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
+
+  const applyPromptRows = (rows: Array<SandboxRow | PromptRow>) => {
+    const sandboxRows = rows.filter((r) => r.sheet_key === "sandbox") as SandboxRow[];
+    const oneLinerRows = rows.filter((r) => r.sheet_key === "oneLiners") as PromptRow[];
+    const sheet3Rows = rows.filter((r) => r.sheet_key === "sheet3") as PromptRow[];
+    if (sandboxRows.length > 0) setAllSandboxPrompts(sandboxRows);
+    if (oneLinerRows.length > 0) setAllOneLiners(oneLinerRows);
+    if (sheet3Rows.length > 0) setAllSheet3Prompts(sheet3Rows);
+  };
+
+  const loadPromptRows = async () => {
+    const { data, error } = await supabase.from("prompts").select("*");
+    if (error) throw error;
+    const rows = (data ?? []) as Array<SandboxRow | PromptRow>;
+    applyPromptRows(rows);
+    return rows;
+  };
 
   // Hydrate persisted UI state
   useEffect(() => {
