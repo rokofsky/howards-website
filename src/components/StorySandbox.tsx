@@ -67,8 +67,8 @@ type Category = "character" | "incident" | "constraint";
 type Prompts = Record<Category, string>;
 
 const CATEGORY_META: { key: Category; label: string; tone: string; box: ElementBox }[] = [
-  { key: "character", label: "Character", tone: "from-petrol/20 to-petrol/5 border-petrol/30", box: "character" },
-  { key: "incident", label: "By the way", tone: "from-gold/25 to-gold/5 border-gold/40", box: "incident" },
+  { key: "character", label: "Character", tone: "from-primary/20 to-primary/5 border-primary/30", box: "character" },
+  { key: "incident", label: "By the way", tone: "from-primary/20 to-primary/5 border-primary/30", box: "incident" },
   { key: "constraint", label: "Add here", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
 ];
 
