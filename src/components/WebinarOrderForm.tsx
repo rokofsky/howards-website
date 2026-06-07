@@ -113,6 +113,18 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       toast.error(t("Order failed: ", "Objednávka selhala: ") + error.message);
       return;
     }
+    console.log("selectedSlugs:", selectedSlugs);
+    console.log(
+      "allWebinars:",
+      allWebinars.map((w) => w.slug),
+    );
+    console.log(
+      "webinar_title:",
+      allWebinars
+        .filter((w) => selectedSlugs.includes(w.slug))
+        .map((w) => w.title)
+        .join(", "),
+    );
     await supabase.functions.invoke("send-webinar-email", {
       body: {
         customer_name: name,
