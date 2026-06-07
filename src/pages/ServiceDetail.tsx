@@ -321,27 +321,7 @@ const ServiceDetail = () => {
                     open={showOrderForm}
                     onOpenChange={setShowOrderForm}
                     initialWebinarSlug={orderInitialSlug}
-                  />
-                  <div className="mt-6">
-                    {showPasswordPrompt ? (
-                      <div className="flex gap-2 items-center">
-                        <Input
-                          type="password"
-                          placeholder={t("Admin password", "Admin heslo")}
-                          value={adminPassword}
-                          onChange={(e) => setAdminPassword(e.target.value)}
-                          onKeyDown={(e) => e.key === "Enter" && handleAddWebinarAuth()}
-                        />
-                        <Button onClick={handleAddWebinarAuth}>Go</Button>
-                      </div>
-                    ) : (
-                      <Button variant="outline" onClick={handleAddWebinarClick}>
-                        {t("Add Webinar", "Přidat webinář")}
-                      </Button>
-                    )}
-                  </div>
-                </>
-              ) : (
+                    />
                 <MobileTruncatedText
                   paragraphs={
                     detail?.intro && detail.intro.length > 0
