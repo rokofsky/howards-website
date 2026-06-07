@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Shuffle, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Pencil, Plus, Save, Shuffle, ThumbsDown, ThumbsUp, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminAuthenticated } from "@/lib/adminAuth";
 
 const readUserVotes = (): Record<string, "up" | "down"> => {
   try {
@@ -119,17 +120,28 @@ type ElementBox = "character" | "incident" | "constraint" | "untitled" | "generi
 
 type SandboxRow = {
   id?: string | number;
+  sheet_key?: SheetKey;
   character?: string;
   incident?: string;
   constraint?: string;
+  constraint_text?: string;
   setting?: string;
   untitled?: string;
+  prompt?: string;
 };
 type PromptRow = {
   id?: string | number;
+  sheet_key?: SheetKey;
   prompt?: string;
   text?: string;
   oneLiner?: string;
+};
+
+type PromptEditorDraft = {
+  character: string;
+  incident: string;
+  constraint_text: string;
+  prompt: string;
 };
 
 const pickRandom = <T,>(arr: T[]): T | undefined =>
