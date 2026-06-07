@@ -257,7 +257,7 @@ export default function StorySandbox() {
           setPrompts((p) => ({
             character: getFieldValue(c as unknown as Record<string, unknown>, "character") || p.character,
             incident: getFieldValue(i as unknown as Record<string, unknown>, "incident") || p.incident,
-            constraint: getFieldValue(k as unknown as Record<string, unknown>, "constraint") || p.constraint,
+            constraint: p.constraint,
           }));
         }
         if (oneLinerRows.length > 0) {
