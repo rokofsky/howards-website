@@ -803,7 +803,7 @@ export default function StorySandbox() {
                           onClick={() => startAddNew(key as "character" | "incident")}
                           className="text-muted-foreground hover:text-foreground underline underline-offset-2"
                         >
-                          Add new prompt
+                          Add new
                         </button>
                         {!addingNew[key] && cardRows[key]?.id && (
                           <button
@@ -884,7 +884,7 @@ export default function StorySandbox() {
                   onClick={() => startAddNew("oneLiner")}
                   className="text-muted-foreground hover:text-foreground underline underline-offset-2"
                 >
-                  Add new prompt
+                  Add new
                 </button>
                 {!addingNew.oneLiner && oneLinerRow?.id && (
                   <button
