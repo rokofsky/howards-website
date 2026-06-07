@@ -40,10 +40,10 @@ const PricingSection = () => {
       description: t("Training teams to present and represent.", "Školení pro týmy."),
       features: [
         t("1-3 days", "1-3 dny"),
-        t("Custom exercises ", "Cvičení na míru"),
-        t("Modules combineable", "Moduly jsou kombinovatelné"),
-        t("Follow-up resources", "Navazující materiály"),
-        t("Follow-up  contact", "Následný kontakt"),
+        t("Long-tested techniques & exercises", "Dlouhodobě testované techniky a cvičení"),
+        t("Combineable modules ", "Kombinovatelné moduly "),
+        t("\nFollow-up resources", "\nNásledné materiály"),
+        t("\n", "\n"),
       ],
       inquireInhouse: true,
     },
@@ -56,8 +56,8 @@ const PricingSection = () => {
       ),
       features: [
         t("60–90 minute session", "Vystoupení v délce 60–90 minut"),
-        t("Custom topic & storytelling", "Téma a vyprávění na míru"),
-        t("Q&A session", "Diskuse s publikem"),
+        t("Custom topic(s) & storytelling", "Témata a vyprávění na míru"),
+        t("\nQ&A session + after", "\nDiskuse s publikem + následně"),
         t("Recording rights available", "Možnost práv k záznamu"),
       ],
       inquire: true,
@@ -65,15 +65,15 @@ const PricingSection = () => {
     {
       name: t("Individual sessions", "Individuální lekce"),
       price: t("From CZK 1,500 (€60)", "Od 1 500 Kč (60 €)"),
-      priceSuffix: t("per hour", "za hodinu"),
+      priceSuffix: t("50 minutes", "50 minut"),
       description: t(
         "Satisfaction guaranteed or no need to pay",
         "Spokojenost zaručena, nebo neplatíte"
       ),
       features: [
         t("Discretion guaranteed", "Diskrétnost zaručena"),
-        t("Out-of-the-box thinking", "Roky tvrdých zkušeností"),
-        t("Wide knowledge of many branches", "Široké znalosti mnoha oborů"),
+        t("\nOut-of-the-box thinking", "\nInovativní myšlení"),
+        t("Communication issues are my specialty", "Komunikační problémy jsou moje specialita"),
         t("Couples therapy", "Terapie pro páry"),
       ] as string[],
       inquireIndividual: true,
@@ -119,8 +119,8 @@ const PricingSection = () => {
             <p className="text-sm text-muted-foreground mb-6 font-normal">{tier.description}</p>
             <ul className="space-y-2 mb-6">
               {tier.features.map((f, j) => (
-                <li key={j} className="text-sm text-foreground/80 flex items-start gap-2 font-normal">
-                  <span className="text-gold mt-0.5">✓</span>
+                <li key={j} className={`text-sm text-foreground/80 flex items-start gap-2 font-normal ${f.startsWith('\n') ? 'opacity-0 h-0 overflow-hidden' : ''}`}>
+                  <span className="text-gold mt-0.5">{f.includes('\n') ? '✓' : '✓'}</span>
                   <span>{f}</span>
                 </li>
               ))}
