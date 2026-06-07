@@ -291,23 +291,15 @@ const RokofAdmin = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-14">
             <Link to="/admin/sessions" className="glass rounded-xl p-6 text-center hover:shadow-lg transition-shadow">
               <h3 className="font-bold text-lg mb-1">Manage Storytelling Sessions</h3>
-              <p className="text-sm text-muted-foreground font-semibold">Create and manage sessions</p>
+              <p className="text-sm text-muted-foreground">Create and manage sessions</p>
             </Link>
             <Link to="/admin/webinars" className="glass rounded-xl p-6 text-center hover:shadow-lg transition-shadow">
               <h3 className="font-bold text-lg mb-1">Manage Webinars</h3>
-              <p className="text-sm text-muted-foreground font-semibold">Create and manage webinars</p>
+              <p className="text-sm text-muted-foreground">Create and manage webinars</p>
             </Link>
           </div>
 
-          {/* Reference Scans Manager */}
-          <div className="glass rounded-xl px-8 py-4 mb-14">
-            <p className="text-sm text-muted-foreground font-medium">
-              <span className="font-bold">Reference Scans (PDF)</span> — upload to GitHub at:
-              src/components/EvaluationsGallery.tsx
-            </p>
-          </div>
-
-          {/* Manage Blog Posts */}
+                  {/* Manage Blog Posts */}
           <div className="glass rounded-xl p-8 mb-14">
             <h2 className="text-xl font-bold mb-2">Manage Blog Posts</h2>
             <p className="text-sm text-muted-foreground mb-6">
@@ -390,7 +382,15 @@ const RokofAdmin = () => {
                 )}
               </div>
             </div>
+            </div>
           </div>
+          <div className="glass rounded-xl px-8 py-4 mb-14">
+            <p className="text-sm text-muted-foreground">
+              <span className="font-bold">Reference Scans (PDF)</span> — upload to GitHub at: src/components/EvaluationsGallery.tsx
+            </p>
+          </div>
+        </div>
+      </section>
         </div>
       </section>
 
