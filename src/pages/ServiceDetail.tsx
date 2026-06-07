@@ -193,35 +193,48 @@ const ServiceDetail = () => {
             <div
               className={`rounded-lg p-8 mb-12 mt-6 ${detail?.tone === "executive" ? "border border-gold/40 bg-card shadow-[0_20px_60px_-30px_hsl(var(--foreground)/0.55)]" : "glass"}`}
             >
-              <h2 className={slug === "live-webinars" ? "text-base font-semibold mb-6 w-full sm:text-2xl" : "text-2xl md:text-3xl font-semibold mb-6 w-full"}>
+              className="text-3xl md:text-4xl font-semibold mb-6 w-full"
                 {slug === "live-webinars" && detail?.pageTitle
                   ? (() => {
                       const titleText = pickL(detail.pageTitle, lang);
-                      const parts = titleText.split('\n');
-                      const mainTitle = parts[0];
-                      const inquiryLabel = parts[1] || t("General inquiry", "Obecný dotaz");
-                      
-                      return (
-                        <div className="flex flex-col gap-2">
-                          <span className="whitespace-pre-line">{mainTitle}</span>
+                      const anchor = isCz ? "otázku" : "question";
+                      const idx = titleText.toLowerCase().indexOf(anchor.toLowerCase());
+                      const inquiryBtn = (
+                        <span className="inline-flex items-center gap-3 whitespace-nowrap ml-2">
+                          {idx >= 0 ? titleText.substr(idx, anchor.length) : ""}
                           <Button
                             variant="outline"
                             size="sm"
-                            className="rounded-full text-[10px] md:text-xs px-2 py-0.5 min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90 w-fit"
+                            className="rounded-full text-xs px-3 py-1 min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90"
                             onClick={() => {
                               document.getElementById("inquiry-form")?.scrollIntoView({ behavior: "smooth" });
                             }}
                           >
-                            {inquiryLabel}
+                            {t("General inquiry", "Obecný dotaz")}
                           </Button>
-                        </div>
+                        </span>
+                      );
+                      if (idx < 0) {
+                        return (
+                          <>
+                            {titleText} {inquiryBtn}
+                          </>
+                        );
+                      }
+                      const before = titleText.slice(0, idx);
+                      const after = titleText.slice(idx + anchor.length);
+                      return (
+                        <>
+                          {before}
+                          {inquiryBtn}
+                          {after}
+                        </>
                       );
                     })()
                   : detail?.pageTitle
                     ? pickL(detail.pageTitle, lang)
                     : t("About This Service", "O této službě")}
               </h2>
-
 
               {slug === "live-webinars" ? (
                 <>
