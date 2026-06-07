@@ -206,7 +206,7 @@ export default function StorySandbox() {
           };
           const c = pickFor("character");
           const i = pickFor("incident");
-          setCardRows({ character: c, incident: i, constraint: undefined });
+          setCardRows({ character: c, incident: i });
           setPrompts((p) => ({
             character: getFieldValue(c as unknown as Record<string, unknown>, "character") || p.character,
             incident: getFieldValue(i as unknown as Record<string, unknown>, "incident") || p.incident,
