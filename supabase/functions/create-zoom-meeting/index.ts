@@ -58,18 +58,19 @@ Deno.serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            topic: title || "Storytelling Session",
-            type: 2,
-            start_time: session_date,
-            duration: 60,
-          settings: {
-  host_video: true,
-  participant_video: true,
-  join_before_host: false,
-  mute_upon_entry: false
-  approval_type: 0,      // <--- ADD THIS (0 forces registration)
-  registration_type: 1   // <--- ADD THIS (1 means register once)
-}
+            topic: title,
+            type: 2, // Scheduled meeting
+            start_time: date,
+            agenda: description,
+            settings: {
+              host_video: true,
+              participant_video: true,
+              join_before_host: false,
+              mute_upon_entry: true,
+              use_pmi: false, // <--- CRITICAL: Add this line! If true, Zoom blocks registration.
+              approval_type: 0, // Automatically Approve Registration
+              registration_type: 1, // Attendees register once
+            },
           }),
         });
         const meetingData = await meetingRes.json();
