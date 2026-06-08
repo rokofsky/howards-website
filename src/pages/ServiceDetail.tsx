@@ -278,7 +278,7 @@ const ServiceDetail = () => {
                                 backgroundColor: "#b8845a",
                                 color: "#3d2010",
                                 border: "none",
-                                borderRadius: "6px",
+                                borderRadius: "12px",
                                 padding: "6px 12px",
                                 cursor: "pointer",
                                 fontSize: "13px",
