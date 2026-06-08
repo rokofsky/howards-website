@@ -59,26 +59,56 @@ Deno.serve(async (req) => {
           },
           body: JSON.stringify({
             topic: title,
-            type: 2, // Scheduled meeting
-            start_time: date,
+            type: 2, // 2 = Scheduled meeting
+            // Forces the date variable into the strict UTC ISO format Zoom demands
+            start_time: new Date(date).toISOString(), 
             agenda: description,
             settings: {
               host_video: true,
               participant_video: true,
               join_before_host: false,
               mute_upon_entry: true,
-              use_pmi: false, // <--- CRITICAL: Add this line! If true, Zoom blocks registration.
-              approval_type: 0, // Automatically Approve Registration
+              use_pmi: false, 
+              approval_type: 0, // Forces Zoom to require registration
               registration_type: 1, // Attendees register once
             },
           }),
         });
+
+        const meetingData = await meetingRes.json();
+        
+        // Log the response data to your Supabase console to verify success
+        console.log("Zoom API Server Response:", meetingData);
+
+        zoomLink = meetingData.registration_url;
+        zoomMeetingId = String(meetingData.id);
         const meetingData = await meetingRes.json();
         zoomLink = meetingData.registration_url;
         zoomMeetingId = String(meetingData.id);
+        return new Response(
+          JSON.stringify({ 
+            zoom_link: zoomLink || meetingData.join_url, 
+            zoom_meeting_id: zoomMeetingId 
+          }), 
+          { 
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            status: 200 
+          }
+        );
+      } else {
+        return new Response(JSON.stringify({ error: "Failed to obtain Zoom access token" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        });
       }
+    } catch (err) {
+      return new Response(JSON.stringify({ error: "An internal error occurred" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      });
     }
-
+  });
+   
     // Store session in database
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
