@@ -507,7 +507,12 @@ const ServiceDetail = () => {
             </p>
             <ContactForm serviceName={serviceTitle} showServiceFields />
             <div className="text-center mt-8">
-              <Button variant="glassPetrol" size="lg" onClick={openCalendly}>
+              <Button
+                variant="glassPetrol"
+                size="sm"
+                className="rounded-full text-sm px-4 py-1.5 h-auto whitespace-nowrap"
+                onClick={openCalendly}
+              >
                 {t("Skip the email, book a call now", "Zapomeňte na e-mail, rovnou si domluvte hovor")}
               </Button>
             </div>
