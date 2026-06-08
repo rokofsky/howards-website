@@ -914,7 +914,6 @@ const IsolatedView = ({
                     } catch {}
                   }}
                 />
-                />
                 <span
                   style={{
                     position: "absolute",
