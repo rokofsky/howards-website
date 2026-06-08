@@ -839,8 +839,7 @@ const IsolatedView = ({
                 onClick={
                   isNeighbor
                     ? () => {
-                        if (isPrev) emblaApi?.scrollPrev();
-                        else emblaApi?.scrollNext();
+                        setSelectedIdx(idx);
                       }
                     : undefined
                 }
