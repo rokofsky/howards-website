@@ -77,19 +77,15 @@ Deno.serve(async (req) => {
           }),
         });
 
-        const meetingData = await meetingRes.json();
-        
-        // Log the response data to your Supabase console to verify success
+       const meetingData = await meetingRes.json();
         console.log("Zoom API Server Response:", meetingData);
 
         zoomLink = meetingData.registration_url;
         zoomMeetingId = String(meetingData.id);
-        const meetingData = await meetingRes.json();
-        zoomLink = meetingData.registration_url;
-        zoomMeetingId = String(meetingData.id);
+
         return new Response(
           JSON.stringify({ 
-            zoom_link: zoomLink || meetingData.join_url, 
+            zoom_link: zoomLink || meetingData.join_url,
             zoom_meeting_id: zoomMeetingId 
           }), 
           { 
