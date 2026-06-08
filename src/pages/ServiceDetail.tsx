@@ -282,6 +282,7 @@ const ServiceDetail = () => {
                                 padding: "6px 12px",
                                 cursor: "pointer",
                                 fontSize: "13px",
+                                fontWeight: "500",
                                 flex: 1,
                                 whiteSpace: "nowrap",
                               }}
