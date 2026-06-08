@@ -23,33 +23,8 @@ import { useT } from "@/hooks/useT";
             </p>
           </motion.div>
 
-          {/* Testimonials */}
-          <div className="space-y-6 mb-8">
-            {visibleTestimonials.map((t, i) => (
-              <motion.blockquote
-                key={i}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="glass rounded-lg p-8"
-              >
-                <p className="text-foreground/80 font-light leading-relaxed italic mb-4">"{t.text}"</p>
-                <cite className="text-sm text-muted-foreground font-medium not-italic">— {t.name}</cite>
-              </motion.blockquote>
-            ))}
-          </div>
-
-          {!showAllTestimonials && (
-            <div className="text-center mb-12">
-              <Button variant="glass" size="lg" onClick={() => setShowAllTestimonials(true)}>
-                {t(
-                  "More testimonials from clients and participants",
-                  "Více ohlasů od klientů a účastníků"
-                )}
-              </Button>
-            </div>
-          )}
-
+          {/* I removed the Testimonials */}
+        
           {/* Evaluation Forms Link - always visible */}
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
