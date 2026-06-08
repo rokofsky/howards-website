@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { session_date, password } = body ?? {};
+    const { session_date, password, title, description } = body ?? {};
 
     const adminPassword = Deno.env.get("ADMIN_PASSWORD");
     if (!adminPassword || password !== adminPassword) {
