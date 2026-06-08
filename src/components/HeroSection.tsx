@@ -13,7 +13,16 @@ import hero7 from "@/assets/hero-7.jpg";
 import hero8 from "@/assets/hero-8.jpg";
 import hero9b from "@/assets/hero-9b.png";
 
-const slides = [hero9b, hero5, hero2, hero6, hero3, hero4, hero7, hero8];
+const slides = [
+  { src: hero9b, caption: "Placeholder Caption for Image 1" },
+  { src: hero5, caption: "" },
+  { src: hero2, caption: "" },
+  { src: hero6, caption: "" },
+  { src: hero3, caption: "" },
+  { src: hero4, caption: "" },
+  { src: hero7, caption: "" },
+  { src: hero8, caption: "" },
+];
 
 // Per-slide object-position overrides (default is "center center")
 const slidePositions: Record<number, string> = {
