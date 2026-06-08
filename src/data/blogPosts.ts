@@ -150,8 +150,8 @@ Podle textů je cílem být si Hary vědom 24 hodin denně, ale to je pro jogín
   {
     slug: "my-secret-cv",
     title: {
-      en: "12 jobs you won't find on my CV",
-      cs: "12 prací, které v mém životopise nenajdete",
+      en: "13 jobs you won't find on my CV",
+      cs: "13 prací, které v mém životopise nenajdete",
     },
     excerpt: {
       en: "Former jobs that led me to where I am today",
