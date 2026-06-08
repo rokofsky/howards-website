@@ -506,7 +506,7 @@ const ServiceDetail = () => {
             )}
           </motion.div>
 
-          <div id="inquiry-form" className="relative">
+          <div id="inquiry-form">
             <h2 className="text-2xl font-bold text-center mb-2">
               {t("Inquire about", "Poptávka:")} {inquiryTitle}
             </h2>
@@ -516,16 +516,18 @@ const ServiceDetail = () => {
                 "Vyplňte níže pár údajů (většinou nepovinných) a ozvu se Vám do zítřka.",
               )}
             </p>
-            <ContactForm serviceName={serviceTitle} showServiceFields />
-            <div className="absolute -top-1 right-0">
-              <Button
-                variant="glassPetrol"
-                size="sm"
-                className="rounded-full text-sm px-4 py-1.5 h-auto whitespace-nowrap"
-                onClick={openCalendly}
-              >
-                {t("Skip the email, book a call now", "Zapomeňte na e-mail, rovnou si domluvte hovor")}
-              </Button>
+            <div className="relative max-w-2xl mx-auto">
+              <div className="absolute top-2 left-0 right-0 z-10 flex justify-center">
+                <Button
+                  variant="glassPetrol"
+                  size="sm"
+                  className="rounded-full text-sm px-4 py-1.5 h-auto whitespace-nowrap"
+                  onClick={openCalendly}
+                >
+                  {t("Skip the email, book a call now", "Zapomeňte na e-mail, rovnou si domluvte hovor")}
+                </Button>
+              </div>
+              <ContactForm serviceName={serviceTitle} showServiceFields />
             </div>
           </div>
         </div>
