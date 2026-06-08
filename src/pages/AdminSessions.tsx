@@ -112,12 +112,6 @@ export default function AdminSessions() {
     } finally {
       setZoomCreating(false);
     }
-      toast({ title: "Zoom meeting created", description: "Review fields and click Save." });
-    } catch (err) {
-      toast({ title: "Failed to create Zoom meeting", variant: "destructive" });
-    } finally {
-      setZoomCreating(false);
-    }
   };
 
   const handleCreateOrUpdate = async () => {
