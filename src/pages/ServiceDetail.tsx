@@ -273,14 +273,22 @@ const ServiceDetail = () => {
                             >
                               {t("Details", "Detaily")}
                             </Button>
-                            <Button
-                              variant="glass"
-                              size="sm"
-                              className="flex-1 text-xs sm:text-sm whitespace-nowrap px-2"
+                            <button
+                              style={{
+                                backgroundColor: "#d4a882",
+                                color: "#3d2010",
+                                border: "none",
+                                borderRadius: "6px",
+                                padding: "6px 12px",
+                                cursor: "pointer",
+                                fontSize: "13px",
+                                flex: 1,
+                                whiteSpace: "nowrap",
+                              }}
                               onClick={() => setExpandedWebinar(webinar.id)}
                             >
                               {t("Inquire", "Poptat")}
-                            </Button>
+                            </button>
                           </div>
                         </div>
                       );
