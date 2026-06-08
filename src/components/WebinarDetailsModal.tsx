@@ -22,9 +22,20 @@ export const WebinarDetailsModal = ({ open, onOpenChange, title, details, onInqu
           {details || t("No additional details yet.", "Zatím žádné další podrobnosti.")}
         </div>
         <div className="flex justify-end pt-2">
-          <Button className="!bg-[#d4a882] !text-[#3d2010] hover:!bg-[#c99870] !border-0" onClick={onInquire}>
+          <button
+            onClick={onInquire}
+            style={{
+              backgroundColor: "#d4a882",
+              color: "#3d2010",
+              border: "none",
+              borderRadius: "6px",
+              padding: "8px 16px",
+              cursor: "pointer",
+              fontSize: "14px",
+            }}
+          >
             {t("Inquire", "Poptat")}
-          </Button>
+          </button>
         </div>
       </DialogContent>
     </Dialog>
