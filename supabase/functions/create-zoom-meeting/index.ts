@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { session_date, password, title, description } = body ?? {};
+    const { session_date, password } = body ?? {};
 
     const adminPassword = Deno.env.get("ADMIN_PASSWORD");
     if (!adminPassword || password !== adminPassword) {
@@ -62,12 +62,12 @@ Deno.serve(async (req) => {
             type: 2,
             start_time: session_date,
             duration: 60,
+            registration_type: 1,
             settings: {
               join_before_host: true,
               waiting_room: false,
               registrants_email_notification: true,
               approval_type: 0,
-              registration_type: 1,
             },
           }),
         });
