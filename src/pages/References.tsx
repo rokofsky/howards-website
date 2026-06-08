@@ -27,12 +27,12 @@ import { useT } from "@/hooks/useT";
        
           {/* Evaluation Forms Link - always visible */}
           <div className="mb-12">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-2">
               <h2 className="text-2xl font-bold">
                 {t("Evaluation forms from participants", "Hodnotící formuláře od účastníků")}
               </h2>
             </div>
-            <p className="text-muted-foreground font-light mb-8">
+            <p className="text-muted-foreground font-light mb-2">
               {t(
                 "Complete, unabridged evaluation sheet scans from past workshops. Click to view full size, and zoom in for detail!",
                 "Kompletní, nezkrácené skeny hodnotících formulářů z minulých workshopů. Kliknutím zobrazíte v plné velikosti a můžete si přiblížit detaily!"
