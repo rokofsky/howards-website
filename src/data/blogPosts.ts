@@ -155,7 +155,7 @@ Podle textů je cílem být si Hary vědom 24 hodin denně, ale to je pro jogín
     },
     excerpt: {
       en: "Former jobs that led me to where I am today",
-      cs: "Dřívější zaměstnání, která mě dovedla tam, kde jsem dnes",
+      cs: "Dřívější zaměstnání, která mě dovedla tam, kde jsem dnes.",
     },
     date: { en: "Mar 15, 2026", cs: "15. března 2026" },
     category: { en: "Personal", cs: "Osobní" },
