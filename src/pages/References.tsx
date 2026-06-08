@@ -6,19 +6,6 @@ import ClientLogosStrip from "@/components/ClientLogosStrip";
 import EvaluationsGallery, { ASSET_VERSION } from "@/components/EvaluationsGallery";
 import { useT } from "@/hooks/useT";
 
-const testimonials = [
-  { name: "Sarah K., VP People, TechCorp", text: "Howard completely transformed how our leadership team communicates. The storytelling framework he taught us is now embedded in our culture." },
-  { name: "Marcus T., CEO, BrightPath", text: "I was skeptical about 'soft skills training' until Howard made our entire C-suite laugh, cry, and rethink everything in four hours." },
-  { name: "Dr. Lena W., University of Munich", text: "Howard's approach to conflict resolution is unlike anything I've seen in 20 years of organizational psychology. Practical, humane, and surprisingly funny." },
-  { name: "Anja R., Head of HR, Siemens Energy", text: "We've brought Howard back three times now. Each session builds on the last, and the team keeps asking for more." },
-  { name: "Thomas B., Managing Director, Kiefel GmbH", text: "Howard's negotiation workshop saved us more in one quarter than we spent on the entire training program. No exaggeration." },
-  { name: "Lisa M., L&D Manager, Allianz", text: "The brainstorming session Howard facilitated produced more actionable ideas in three hours than our team had generated in six months." },
-];
-const References = () => {
-  const t = useT();
-  const [showAllTestimonials, setShowAllTestimonials] = useState(false);
-  const visibleTestimonials = showAllTestimonials ? testimonials : testimonials.slice(0, 3);
-
   return (
     <Layout>
       <ClientLogosStrip />
