@@ -812,7 +812,7 @@ const IsolatedView = ({
             return (
               <div
                 key={it.key}
-                className="relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-4"
+                className="relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1"
                 style={{
                   overflow: "visible",
                   pointerEvents: "none",
