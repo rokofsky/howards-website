@@ -62,12 +62,13 @@ Deno.serve(async (req) => {
             type: 2,
             start_time: session_date,
             duration: 60,
-            registration_type: 1,
             settings: {
               join_before_host: true,
               waiting_room: false,
               registrants_email_notification: true,
               approval_type: 0,
+              registration_type: 1,
+              registrants_confirmation_email: true,
             },
           }),
         });
