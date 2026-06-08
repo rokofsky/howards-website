@@ -21,7 +21,7 @@ const slides = [
   { src: hero3, caption: "" },
   { src: hero4, caption: "" },
   { src: hero7, caption: "" },
-  { src: hero8, caption: "" },
+  { src: hero8, caption: "So happy to be home" },
 ];
 
 // Per-slide object-position overrides (default is "center center")
@@ -55,12 +55,7 @@ const HeroSection = () => {
     <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
       <Link to={lp("/bio")} className="block w-full h-full relative">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={current}
-            className="absolute inset-0"
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.2 }}
-          >
+          <motion.div key={current} className="absolute inset-0" exit={{ opacity: 0 }} transition={{ duration: 1.2 }}>
             <motion.img
               src={slides[current].src}
               alt="Howard - Soft Skills Consultant"
@@ -86,12 +81,17 @@ const HeroSection = () => {
         </AnimatePresence>
 
         {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/20 to-transparent">{"\n"}</div>
+        <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/20 to-transparent">
+          {"\n"}
+        </div>
       </Link>
 
       {/* Navigation arrows */}
       <button
-        onClick={(e) => { e.preventDefault(); prev(); }}
+        onClick={(e) => {
+          e.preventDefault();
+          prev();
+        }}
         className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-background/30 hover:bg-background/50 backdrop-blur-sm rounded-full p-3 transition-all shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/50"
         aria-label="Previous slide"
       >
@@ -99,7 +99,10 @@ const HeroSection = () => {
         <span className="sr-only">Previous slide</span>
       </button>
       <button
-        onClick={(e) => { e.preventDefault(); next(); }}
+        onClick={(e) => {
+          e.preventDefault();
+          next();
+        }}
         className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/30 hover:bg-background/50 backdrop-blur-sm rounded-full p-3 transition-all shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/50"
         aria-label="Next slide"
       >
@@ -125,15 +128,10 @@ const HeroSection = () => {
         >
           {t("Soft skills trainer & storytelling maestro", "Trenér měkkých dovedností a mistr vyprávění příběhů")}
         </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
           {/* CTA button lives in SubHeroNav below the hero */}
         </motion.div>
       </div>
-
     </section>
   );
 };
