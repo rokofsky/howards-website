@@ -823,27 +823,16 @@ const IsolatedView = ({
         <div className="flex h-full" style={{ overflow: "visible" }}>
           {items.map((it, idx) => {
             const isCurrent = idx === current;
-            const isPrev = idx === current - 1;
-            const isNext = idx === current + 1;
-            const isNeighbor = isPrev || isNext;
             return (
               <div
                 key={it.key}
-                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""}`}
+                className="relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1"
                 style={{
                   overflow: "visible",
-                  pointerEvents: isCurrent || isNeighbor ? "auto" : "none",
+                  pointerEvents: "none",
                   zIndex: isCurrent ? 2 : 1,
                   visibility: !isCurrent && scale > 1 ? "hidden" : "visible",
                 }}
-                onClick={
-                  isNeighbor
-                    ? () => {
-                        if (isPrev) emblaApi?.scrollPrev();
-                        else emblaApi?.scrollNext();
-                      }
-                    : undefined
-                }
               >
                 <img
                   src={`${it.src}?v=${ASSET_VERSION}`}
@@ -855,14 +844,12 @@ const IsolatedView = ({
                     }
                   }}
                   style={{
-                    pointerEvents: isCurrent ? "auto" : "none",
+                    pointerEvents: "auto",
                     width: "100%",
                     height: "100%",
                     objectFit: "contain",
                     touchAction: "none",
-                    transform: isCurrent
-                      ? `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`
-                      : undefined,
+                    transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
                     transformOrigin: "center",
                     transition: isPanning.current ? "none" : "transform 0.1s ease",
                   }}
