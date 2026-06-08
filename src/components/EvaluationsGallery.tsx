@@ -866,8 +866,9 @@ const IsolatedView = ({
                     transformOrigin: "center",
                     transition: isPanning.current ? "none" : "transform 0.1s ease",
                   }}
-
+                  className="select-none"
                   onPointerDown={(e) => {
+
                     if (scale <= 1) return;
 
                     const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
