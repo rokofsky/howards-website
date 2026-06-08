@@ -914,12 +914,25 @@ const IsolatedView = ({
                     } catch {}
                   }}
                 />
+                />
                 <span
-                  className="text-xs font-medium px-2 py-0.5 rounded bg-background/80 backdrop-blur-sm text-foreground/90 pointer-events-none"
-                  style={{ position: "absolute", bottom: "12px", left: "12px", zIndex: 10 }}
+                  style={{
+                    position: "absolute",
+                    bottom: "8px",
+                    left: "8px",
+                    fontSize: "11px",
+                    fontWeight: 500,
+                    padding: "2px 6px",
+                    borderRadius: "4px",
+                    background: "rgba(255,255,255,0.8)",
+                    color: "#333",
+                    pointerEvents: "none",
+                    zIndex: 10,
+                  }}
                 >
                   #{it.num}
                 </span>
+              </div>
               </div>
             );
           })}
