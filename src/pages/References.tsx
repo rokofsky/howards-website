@@ -6,9 +6,6 @@ import ClientLogosStrip from "@/components/ClientLogosStrip";
 import EvaluationsGallery, { ASSET_VERSION } from "@/components/EvaluationsGallery";
 import { useT } from "@/hooks/useT";
 
-const References = () => {
-  const t = useT();
-
   return (
     <Layout>
       <ClientLogosStrip />
@@ -27,12 +24,7 @@ const References = () => {
           </motion.div>
 
           {/* I removed the Testimonials */}
-        <div className="glass rounded-lg p-8 mb-4">
-  <p className="text-muted-foreground italic">Testimonial coming soon...</p>
-</div>
-<div className="glass rounded-lg p-8 mb-8">
-  <p className="text-muted-foreground italic">Testimonial coming soon...</p>
-</div>
+       
           {/* Evaluation Forms Link - always visible */}
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
@@ -42,7 +34,7 @@ const References = () => {
             </div>
             <p className="text-muted-foreground font-light mb-8">
               {t(
-                "Complete, unabridged evaluation sheet scans from past workshops. Click to view full size, and zoom in for detail!\nNo form was excluded, discarded, thrown out or otherwise rejected. This is all of them, except for some courses the agency wouldn't let me keep or copy them.",
+                "Complete, unabridged evaluation sheet scans from past workshops. Click to view full size, and zoom in for detail!",
                 "Kompletní, nezkrácené skeny hodnotících formulářů z minulých workshopů. Kliknutím zobrazíte v plné velikosti a můžete si přiblížit detaily!"
               )}
             </p>
