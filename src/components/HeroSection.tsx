@@ -15,11 +15,11 @@ import hero9b from "@/assets/hero-9b.png";
 
 const slides = [
   { src: hero9b, caption: "Placeholder Caption for Image 1" },
-  { src: hero5, caption: "" },
+  { src: hero5, caption: "this is too close" },
   { src: hero2, caption: "" },
   { src: hero6, caption: "" },
   { src: hero3, caption: "" },
-  { src: hero4, caption: "" },
+  { src: hero4, caption: "move back will ya" },
   { src: hero7, caption: "" },
   { src: hero8, caption: "So happy to be home" },
 ];
