@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
        const meetingData = await meetingRes.json();
         console.log("Zoom API Server Response:", meetingData);
 
-        zoomLink = meetingData.registration_url;
+        zoomLink = meetingData.registration_url ?? meetingData.join_url;
         zoomMeetingId = String(meetingData.id);
 
         return new Response(
