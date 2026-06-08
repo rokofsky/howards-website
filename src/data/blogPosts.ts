@@ -161,7 +161,7 @@ Podle textů je cílem být si Hary vědom 24 hodin denně, ale to je pro jogín
     category: { en: "Personal", cs: "Osobní" },
     imageUrl: cvImg,
     content: {
-      en: `**Newspaper carrier**: from the ages of 13 to 16, I delivered the daily paper "Newsday" on a route of 30+ homes in Plainview, NY (it took about 2 hours a day, longer if I took my baby brother or the dog). In addition, I had to collect the weekly fees and tips from each customer on the route. There were always people who were hard to reach, or just didn't like to pay. Looking back, it was an unlikely livelihood but what else could I do at that age? This opened up for me the worlds of responsibility, independence and perseverance.
+      en: `**Newspaper carrier**: from the ages of 13 to 16, I delivered the daily paper "Newsday".
 
 **Babysitter**: for about 4 teenage years, while my friends were out drinking and gallivanting, I regularly babysat for 6 families in Long Island, NY. Yeah, even on New Years Eve.
 
