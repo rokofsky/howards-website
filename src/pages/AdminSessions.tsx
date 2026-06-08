@@ -38,7 +38,7 @@ export default function AdminSessions() {
   const [status, setStatus] = useState<"draft" | "published">("draft");
 
   const [editingId, setEditingId] = useState<string | null>(null);
-
+  const [zoomCreating, setZoomCreating] = useState(false);
   useEffect(() => {
     if (authenticated) fetchSessions();
   }, [authenticated]);
@@ -84,6 +84,21 @@ export default function AdminSessions() {
     setZoomLink(s.zoom_link || "");
     setZoomMeetingId(s.zoom_meeting_id || "");
     setStatus((s.status as "draft" | "published") || "draft");
+  };
+  const handleCreateZoomMeeting = async () => {
+    setZoomCreating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-zoom-meeting", {
+        body: { title, date: sessionDate, description },
+      });
+      if (error) throw error;
+      if (data?.meetingUrl) setZoomLink(data.meetingUrl);
+      if (data?.meetingId) setZoomMeetingId(String(data.meetingId));
+    } catch (err) {
+      toast({ title: "Failed to create Zoom meeting", variant: "destructive" });
+    } finally {
+      setZoomCreating(false);
+    }
   };
 
   const handleCreateOrUpdate = async () => {
@@ -222,6 +237,23 @@ export default function AdminSessions() {
                 placeholder="https://zoom.us/j/..."
               />
               <p className="text-xs text-muted-foreground mt-1">Paste the Zoom Registration link here</p>
+              <button
+                type="button"
+                onClick={handleCreateZoomMeeting}
+                disabled={zoomCreating}
+                style={{
+                  marginTop: "8px",
+                  padding: "6px 12px",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  background: "#b8845a",
+                  color: "#000",
+                  border: "none",
+                  fontWeight: "500",
+                }}
+              >
+                {zoomCreating ? "Creating..." : "Create Zoom Meeting"}
+              </button>
             </div>
             <div>
               <Label htmlFor="mid">Zoom Meeting ID (numeric)</Label>
