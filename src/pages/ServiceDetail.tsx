@@ -276,7 +276,7 @@ const ServiceDetail = () => {
                             <button
                               style={{
                                 backgroundColor: "#b8845a",
-                                color: "#3d2010",
+                                color: "#ffffff",
                                 border: "none",
                                 borderRadius: "12px",
                                 padding: "6px 12px",
