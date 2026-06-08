@@ -274,10 +274,10 @@ const ServiceDetail = () => {
                               {t("Details", "Detaily")}
                             </Button>
                             <button
+                              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#a07040")}
+                              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#b8845a")}
+                              onClick={() => setExpandedWebinar(webinar.id)}
                               style={{
-                                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#a07040")}
-onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#b8845a")}
-onClick={() => setExpandedWebinar(webinar.id)}
                                 backgroundColor: "#b8845a",
                                 color: "#000000",
                                 border: "none",
@@ -285,11 +285,10 @@ onClick={() => setExpandedWebinar(webinar.id)}
                                 padding: "6px 12px",
                                 cursor: "pointer",
                                 fontSize: "13px",
-                                fontWeight: "500",
+                                fontWeight: 500,
                                 flex: 1,
                                 whiteSpace: "nowrap",
                               }}
-                              onClick={() => setExpandedWebinar(webinar.id)}
                             >
                               {t("Inquire", "Poptat")}
                             </button>
