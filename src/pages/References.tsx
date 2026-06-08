@@ -24,7 +24,12 @@ import { useT } from "@/hooks/useT";
           </motion.div>
 
           {/* I removed the Testimonials */}
-        
+        <div className="glass rounded-lg p-8 mb-4">
+  <p className="text-muted-foreground italic">Testimonial coming soon...</p>
+</div>
+<div className="glass rounded-lg p-8 mb-8">
+  <p className="text-muted-foreground italic">Testimonial coming soon...</p>
+</div>
           {/* Evaluation Forms Link - always visible */}
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
