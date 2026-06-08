@@ -60,23 +60,21 @@ Deno.serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            topic: title,
-            type: 2, // 2 = Scheduled meeting
-            // Forces the date variable into the strict UTC ISO format Zoom demands
-            start_time: new Date(date).toISOString(), 
-            agenda: description,
-        settings: {
-              host_video: true,
-              participant_video: true,
-              join_before_host: false,
-              mute_upon_entry: true,
-              use_pmi: false, 
-              approval_type: 0,      // Forces Zoom to require registration
-              registration_type: 1,  // Attendees register once
-              waiting_room: true,    // CRITICAL: Zoom often requires a waiting room or passcode to validate API registration
-              req_password: true,    // CRITICAL: Forces a secure passcode to generate alongside registration
-            },
-          }),
+  topic: title,
+  type: 2,
+  start_time: date,
+  agenda: description,
+  settings: {
+    host_video: true,
+    participant_video: true,
+    join_before_host: false,
+    mute_upon_entry: true,
+    use_pmi: false,
+    approval_type: 0,
+    registration_type: 1,
+    waiting_room: false,
+  },
+})
         });
 
        const meetingData = await meetingRes.json();
