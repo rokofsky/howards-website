@@ -63,14 +63,16 @@ Deno.serve(async (req) => {
             // Forces the date variable into the strict UTC ISO format Zoom demands
             start_time: new Date(date).toISOString(), 
             agenda: description,
-            settings: {
+        settings: {
               host_video: true,
               participant_video: true,
               join_before_host: false,
               mute_upon_entry: true,
               use_pmi: false, 
-              approval_type: 0, // Forces Zoom to require registration
-              registration_type: 1, // Attendees register once
+              approval_type: 0,      // Forces Zoom to require registration
+              registration_type: 1,  // Attendees register once
+              waiting_room: true,    // CRITICAL: Zoom often requires a waiting room or passcode to validate API registration
+              req_password: true,    // CRITICAL: Forces a secure passcode to generate alongside registration
             },
           }),
         });
