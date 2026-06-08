@@ -496,9 +496,25 @@ const ServiceDetail = () => {
           </motion.div>
 
           <div id="inquiry-form">
-            <h2 className="text-2xl font-bold text-center mb-2">
-              {t("Inquire about", "Poptávka:")} {inquiryTitle}
-            </h2>
+            {slug === "live-webinars" ? (
+              <div className="flex items-center justify-center gap-6 md:gap-12 mb-2 flex-wrap">
+                <h2 className="text-2xl font-bold">
+                  {t("Inquire about", "Poptávka:")} {inquiryTitle}
+                </h2>
+                <Button
+                  variant="glassPetrol"
+                  size="sm"
+                  className="rounded-full text-sm px-4 py-1.5 h-auto whitespace-nowrap"
+                  onClick={openCalendly}
+                >
+                  {t("Skip the email, book a call now", "Zapomeňte na e-mail, rovnou si domluvte hovor")}
+                </Button>
+              </div>
+            ) : (
+              <h2 className="text-2xl font-bold text-center mb-2">
+                {t("Inquire about", "Poptávka:")} {inquiryTitle}
+              </h2>
+            )}
             <p className="text-muted-foreground text-center mb-8 font-normal">
               {t(
                 "Fill in some stuff below (mostly optional) and I'll get back to you by tomorrow.",
@@ -506,16 +522,18 @@ const ServiceDetail = () => {
               )}
             </p>
             <ContactForm serviceName={serviceTitle} showServiceFields />
-            <div className="text-center mt-8">
-              <Button
-                variant="glassPetrol"
-                size="sm"
-                className="rounded-full text-sm px-4 py-1.5 h-auto whitespace-nowrap"
-                onClick={openCalendly}
-              >
-                {t("Skip the email, book a call now", "Zapomeňte na e-mail, rovnou si domluvte hovor")}
-              </Button>
-            </div>
+            {slug !== "live-webinars" && (
+              <div className="text-center mt-8">
+                <Button
+                  variant="glassPetrol"
+                  size="sm"
+                  className="rounded-full text-sm px-4 py-1.5 h-auto whitespace-nowrap"
+                  onClick={openCalendly}
+                >
+                  {t("Skip the email, book a call now", "Zapomeňte na e-mail, rovnou si domluvte hovor")}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </section>
