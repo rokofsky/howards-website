@@ -36,40 +36,8 @@ export default function AdminSessions() {
   const [zoomLink, setZoomLink] = useState("");
   const [zoomMeetingId, setZoomMeetingId] = useState("");
   const [status, setStatus] = useState<"draft" | "published">("draft");
-  const [creatingZoom, setCreatingZoom] = useState(false);
 
   const [editingId, setEditingId] = useState<string | null>(null);
-
-  const handleCreateZoomMeeting = async () => {
-    if (!sessionDate) {
-      toast({ title: "Set the date & time first", variant: "destructive" });
-      return;
-    }
-    const pwd = window.prompt("Re-enter admin password to create Zoom meeting:");
-    if (!pwd) return;
-    setCreatingZoom(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("create-zoom-meeting", {
-        body: {
-          session_date: new Date(sessionDate).toISOString(),
-          title: title || undefined,
-          description: description || undefined,
-          password: pwd,
-        },
-      });
-      if (error) throw error;
-      const payload = data as { zoom_link?: string; zoom_meeting_id?: string | number; error?: string } | null;
-      if (!payload || payload.error) throw new Error(payload?.error || "Failed to create Zoom meeting");
-      if (payload.zoom_link) setZoomLink(payload.zoom_link);
-      if (payload.zoom_meeting_id) setZoomMeetingId(String(payload.zoom_meeting_id));
-      toast({ title: "Zoom meeting created", description: "Review fields and click Save to commit." });
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Unknown error";
-      toast({ title: "Could not create Zoom meeting", description: msg, variant: "destructive" });
-    } finally {
-      setCreatingZoom(false);
-    }
-  };
 
   useEffect(() => {
     if (authenticated) fetchSessions();
@@ -253,18 +221,7 @@ export default function AdminSessions() {
                 onChange={(e) => setZoomLink(e.target.value)}
                 placeholder="https://zoom.us/j/..."
               />
-              <div className="flex items-center justify-between mt-1 gap-2">
-                <p className="text-xs text-muted-foreground">Paste the Zoom Registration link here</p>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={handleCreateZoomMeeting}
-                  disabled={creatingZoom}
-                >
-                  {creatingZoom ? "Creating Meeting..." : "Create Zoom Meeting"}
-                </Button>
-              </div>
+              <p className="text-xs text-muted-foreground mt-1">Paste the Zoom Registration link here</p>
             </div>
             <div>
               <Label htmlFor="mid">Zoom Meeting ID (numeric)</Label>

@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
             Authorization: `Basic ${btoa(`${zoomClientId}:${zoomClientSecret}`)}`,
             "Content-Type": "application/x-www-form-urlencoded",
           },
-        }
+        },
       );
       const tokenData = await tokenRes.json();
 
@@ -58,27 +58,27 @@ Deno.serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            topic: "Storytelling Session",
-            type: 2, // Scheduled meeting
+            topic: title || "Storytelling Session",
+            type: 2,
             start_time: session_date,
             duration: 60,
             settings: {
               join_before_host: true,
               waiting_room: false,
+              registrants_email_notification: true,
+              approval_type: 0,
+              registration_type: 1,
             },
           }),
         });
         const meetingData = await meetingRes.json();
-        zoomLink = meetingData.join_url;
+        zoomLink = meetingData.registration_url;
         zoomMeetingId = String(meetingData.id);
       }
     }
 
     // Store session in database
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
     const { data, error } = await supabase
       .from("storytelling_sessions")
