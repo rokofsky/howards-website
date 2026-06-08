@@ -55,19 +55,34 @@ const HeroSection = () => {
     <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
       <Link to={lp("/bio")} className="block w-full h-full relative">
         <AnimatePresence mode="wait">
-          <motion.img
+          <motion.div
             key={current}
-            src={slides[current]}
-            alt="Howard - Soft Skills Consultant"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: slidePositions[current] ?? "center center" }}
-            initial={{ opacity: 0, scale: 1.25 }}
-            animate={{ opacity: 1, scale: 1 }}
+            className="absolute inset-0"
             exit={{ opacity: 0 }}
             transition={{ duration: 1.2 }}
-            width={1920}
-            height={1080}
-          />
+          >
+            <motion.img
+              src={slides[current].src}
+              alt="Howard - Soft Skills Consultant"
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ objectPosition: slidePositions[current] ?? "center center" }}
+              initial={{ opacity: 0, scale: 1.25 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.2 }}
+              width={1920}
+              height={1080}
+            />
+            {slides[current].caption && slides[current].caption.trim() !== "" && (
+              <motion.div
+                className="absolute bottom-4 left-4 bg-black/60 text-white px-3 py-1.5 rounded-md text-sm backdrop-blur-sm z-10"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                {slides[current].caption}
+              </motion.div>
+            )}
+          </motion.div>
         </AnimatePresence>
 
         {/* Overlay */}
