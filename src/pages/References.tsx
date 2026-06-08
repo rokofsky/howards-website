@@ -6,7 +6,7 @@ import ClientLogosStrip from "@/components/ClientLogosStrip";
 import EvaluationsGallery, { ASSET_VERSION } from "@/components/EvaluationsGallery";
 import { useT } from "@/hooks/useT";
 const References = () => {
-  const { t } = useT();
+  const t = useT();
 
   return (
     <Layout>
