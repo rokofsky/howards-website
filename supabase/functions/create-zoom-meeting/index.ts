@@ -62,14 +62,14 @@ Deno.serve(async (req) => {
             type: 2,
             start_time: session_date,
             duration: 60,
-            settings: {
-              join_before_host: true,
-              waiting_room: false,
-              registrants_email_notification: true,
-              approval_type: 0,
-              registration_type: 1,
-              registrants_confirmation_email: true,
-            },
+          settings: {
+  host_video: true,
+  participant_video: true,
+  join_before_host: false,
+  mute_upon_entry: false
+  approval_type: 0,      // <--- ADD THIS (0 forces registration)
+  registration_type: 1   // <--- ADD THIS (1 means register once)
+}
           }),
         });
         const meetingData = await meetingRes.json();
