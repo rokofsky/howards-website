@@ -932,7 +932,6 @@ const IsolatedView = ({
                   #{it.num}
                 </span>
               </div>
-              </div>
             );
           })}
         </div>
