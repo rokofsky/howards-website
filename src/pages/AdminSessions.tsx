@@ -253,7 +253,18 @@ export default function AdminSessions() {
                 onChange={(e) => setZoomLink(e.target.value)}
                 placeholder="https://zoom.us/j/..."
               />
-              <p className="text-xs text-muted-foreground mt-1">Paste the Zoom Registration link here</p>
+              <div className="flex items-center justify-between mt-1 gap-2">
+                <p className="text-xs text-muted-foreground">Paste the Zoom Registration link here</p>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={handleCreateZoomMeeting}
+                  disabled={creatingZoom}
+                >
+                  {creatingZoom ? "Creating Meeting..." : "Create Zoom Meeting"}
+                </Button>
+              </div>
             </div>
             <div>
               <Label htmlFor="mid">Zoom Meeting ID (numeric)</Label>
