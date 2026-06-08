@@ -90,32 +90,22 @@ export default function AdminSessions() {
       toast({ title: "Date is required first", variant: "destructive" });
       return;
     }
+    const pwd = window.prompt("Enter admin password:");
+    if (!pwd) return;
     setZoomCreating(true);
     try {
       const { data, error } = await supabase.functions.invoke("create-zoom-meeting", {
         body: {
+          session_date: new Date(sessionDate).toISOString(),
           title,
-          date: new Date(sessionDate).toISOString(),
           description,
+          password: pwd,
         },
       });
       if (error) throw error;
-
-      const url: string | undefined =
-        data?.registration_url ?? data?.meetingUrl ?? data?.join_url ?? data?.zoom_link;
-      const meetingId = data?.id ?? data?.meetingId ?? data?.zoom_meeting_id;
-
-      if (url) setZoomLink(url);
-      if (meetingId) setZoomMeetingId(String(meetingId));
-
-      if (url && !url.toLowerCase().includes("register")) {
-        toast({
-          title: "Meeting created but registration link not available — check Zoom account settings.",
-          variant: "destructive",
-        });
-      } else {
-        toast({ title: "Zoom meeting created", description: "Review fields and click Save." });
-      }
+      if (data?.zoom_link) setZoomLink(data.zoom_link);
+      if (data?.zoom_meeting_id) setZoomMeetingId(String(data.zoom_meeting_id));
+      toast({ title: "Zoom meeting created", description: "Review fields and click Save." });
     } catch (err) {
       toast({ title: "Failed to create Zoom meeting", variant: "destructive" });
     } finally {
