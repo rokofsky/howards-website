@@ -809,13 +809,20 @@ const IsolatedView = ({
         <div className="flex h-full" style={{ overflow: "visible" }}>
           {items.map((it, idx) => {
             const isCurrent = idx === current;
+            const lastIdx = items.length - 1;
+            const isNeighbor =
+              !isCurrent &&
+              (idx === current - 1 ||
+                idx === current + 1 ||
+                (current === 0 && idx === lastIdx) ||
+                (current === lastIdx && idx === 0));
             return (
               <div
                 key={it.key}
                 className="relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1"
                 style={{
                   overflow: "visible",
-                  pointerEvents: "none",
+                  pointerEvents: isNeighbor ? "auto" : "none",
                   zIndex: isCurrent ? 2 : 1,
                   visibility: !isCurrent && scale > 1 ? "hidden" : "visible",
                 }}
@@ -830,7 +837,7 @@ const IsolatedView = ({
                     }
                   }}
                   style={{
-                    pointerEvents: "auto",
+                    pointerEvents: isCurrent || isNeighbor ? "auto" : "none",
                     width: "100%",
                     height: "100%",
                     objectFit: "contain",
@@ -839,8 +846,12 @@ const IsolatedView = ({
                     transformOrigin: "center",
                     transition: isPanning.current ? "none" : "transform 0.1s ease",
                   }}
-                  className="select-none"
+                  className={`select-none ${isNeighbor ? "cursor-pointer transition-transform hover:scale-[1.01]" : ""}`}
                   onPointerDown={(e) => {
+                    if (isNeighbor) {
+                      pointerDownPos.current = { x: e.clientX, y: e.clientY };
+                      return;
+                    }
                     if (scale <= 1) return;
 
                     const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
@@ -864,6 +875,14 @@ const IsolatedView = ({
                     };
                     imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
                     isPanning.current = true;
+                  }}
+                  onClick={(e) => {
+                    if (!isNeighbor) return;
+                    const dx = Math.abs(e.clientX - pointerDownPos.current.x);
+                    const dy = Math.abs(e.clientY - pointerDownPos.current.y);
+                    if (dx > 8 || dy > 8) return; // swipe, not a click
+                    e.stopPropagation();
+                    emblaApi?.scrollTo(idx);
                   }}
                   onPointerMove={(e) => {
                     if (!isPanning.current) return;
