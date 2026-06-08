@@ -51,7 +51,9 @@ Deno.serve(async (req) => {
 
       if (tokenData.access_token) {
         // Create Zoom meeting
-        const meetingRes = await fetch("https://api.zoom.us/v2/users/me/meetings", {
+       const ZOOM_HOST_EMAIL = "howeroko@yahoo.com"; 
+
+        const meetingRes = await fetch(`https://api.zoom.us/v2/users/${ZOOM_HOST_EMAIL}/meetings`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${tokenData.access_token}`,
