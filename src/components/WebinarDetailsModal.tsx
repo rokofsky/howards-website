@@ -22,7 +22,7 @@ export const WebinarDetailsModal = ({ open, onOpenChange, title, details, onInqu
           {details || t("No additional details yet.", "Zatím žádné další podrobnosti.")}
         </div>
         <div className="flex justify-end pt-2">
-          <Button variant="outline" onClick={onInquire}>
+          <Button className="bg-primary/40 text-primary-foreground hover:bg-primary/50 border-0" onClick={onInquire}>
             {t("Inquire", "Poptat")}
           </Button>
         </div>
