@@ -103,9 +103,8 @@ export default function AdminSessions() {
         },
       });
       if (error) throw error;
-    const registrationLink = data?.zoom_link || data?.registration_url;
-      if (registrationLink) setZoomLink(registrationLink);
-            if (data?.zoom_meeting_id) setZoomMeetingId(String(data.zoom_meeting_id));
+      if (data?.zoom_link) setZoomLink(data.zoom_link);
+      if (data?.zoom_meeting_id) setZoomMeetingId(String(data.zoom_meeting_id));
       toast({ title: "Zoom meeting created", description: "Review fields and click Save." });
     } catch (err) {
       toast({ title: "Failed to create Zoom meeting", variant: "destructive" });
