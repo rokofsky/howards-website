@@ -594,6 +594,8 @@ const IsolatedView = ({
       const idx = emblaApi.selectedScrollSnap();
       onIndexChange(idx);
       setSelectedIdx(idx);
+      // Swipe/scroll keeps focus in sync with the centered card.
+      setFocusIdx(idx);
       setScale(1);
       setOffset({ x: 0, y: 0 });
     };
@@ -603,7 +605,7 @@ const IsolatedView = ({
     };
   }, [emblaApi, onIndexChange]);
 
-  // Wheel zoom — attached to the active image only, with { passive: false }
+  // Wheel zoom — attached to the focused image only, with { passive: false }
   useEffect(() => {
     const img = activeImgRef.current;
     if (!img) return;
