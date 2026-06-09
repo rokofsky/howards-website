@@ -153,25 +153,14 @@ export default function AdminSessions() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this session?")) return;
-    console.log("Deleting session id:", id);
-
-    const { data, error: invokeError } = await supabase.functions.invoke("admin-sessions", {
-      body: { action: "delete", id, token: getAdminToken() },
-    });
-    console.log("Delete result:", invokeError, "data:", data);
-    if (invokeError || (data && data.error)) {
-      toast({
-        title: "Error deleting",
-        description: data?.error || invokeError?.message || "An unexpected error occurred",
-        variant: "destructive",
-      });
+    if (!window.confirm("Delete this session?")) return;
+    const { error } = await supabase.from("storytelling_sessions").delete().eq("id", id);
+    if (error) {
+      toast({ title: "Error deleting", description: error.message, variant: "destructive" });
       return;
     }
-
-    toast({ title: "Session deleted" });
     setSessions((prev) => prev.filter((s) => s.id !== id));
-    fetchSessions();
+    toast({ title: "Session deleted" });
   };
 
   if (!authenticated) {
