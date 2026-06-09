@@ -96,7 +96,8 @@ const Index = () => {
       <ServicesGrid />
       <FAQSection />
 
-      <section id="references" className="section-padding">
+      {/* NOTE: Reduced pt-8 (was section-padding) to tighten gap after FAQ */}
+      <section id="references" className="pb-16 md:pb-24 px-4 md:px-6 pt-8">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("References", "Reference")}</h2>
