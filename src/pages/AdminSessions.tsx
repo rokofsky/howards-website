@@ -156,7 +156,7 @@ export default function AdminSessions() {
     if (!confirm("Delete this session?")) return;
     const { error } = await supabase.from("storytelling_sessions").delete().eq("id", id);
     if (error) {
-      toast({ title: "Error deleting", variant: "destructive" });
+      toast({ title: "Error deleting", description: error.message, variant: "destructive" });
       return;
     }
     toast({ title: "Session deleted" });
