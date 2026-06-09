@@ -36,6 +36,7 @@ const Index = () => {
       if (hash.includes("contact")) next = `${isCz ? "Kontakt" : "Contact"}${suffix}`;
       else if (hash.includes("services")) next = `${isCz ? "Služby" : "Services"}${suffix}`;
       else if (hash.includes("faq")) next = `FAQ${suffix}`;
+      else if (hash.includes("references")) next = `${isCz ? "Reference" : "References"}${suffix}`;
       else if (hash.includes("pricing")) next = `${isCz ? "Ceník" : "Pricing"}${suffix}`;
       return next;
     };
