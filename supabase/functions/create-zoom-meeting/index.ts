@@ -77,6 +77,12 @@ Deno.serve(async (req) => {
     });
 
     const meetingData = await meetingRes.json();
+    console.log(
+  "AUDIT LOG - Response Fields:",
+  JSON.stringify(meetingData, null, 2)
+      console.log("join_url:", meetingData.join_url);
+console.log("registration_url:", meetingData.registration_url);
+console.log("id:", meetingData.id);
     console.log("meetingData:", JSON.stringify(meetingData));
 
     const meetingUrl = meetingData.registration_url ?? meetingData.join_url;
