@@ -4,8 +4,8 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  console.log("Function called, method:", req.method);
   if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
@@ -118,8 +118,8 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("create-zoom-meeting error:", String(err));
-    return new Response(JSON.stringify({ error: String(err) }), {
+    console.error("create-zoom-meeting error:", err);
+    return new Response(JSON.stringify({ error: "An internal error occurred" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

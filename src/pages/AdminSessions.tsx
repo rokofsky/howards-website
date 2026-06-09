@@ -90,18 +90,21 @@ export default function AdminSessions() {
       toast({ title: "Date is required first", variant: "destructive" });
       return;
     }
+    const pwd = window.prompt("Enter admin password:");
+    if (!pwd) return;
     setZoomCreating(true);
     try {
       const { data, error } = await supabase.functions.invoke("create-zoom-meeting", {
         body: {
-          date: new Date(sessionDate).toISOString(),
+          session_date: new Date(sessionDate).toISOString(),
           title,
           description,
+          password: pwd,
         },
       });
       if (error) throw error;
-      if (data?.meetingUrl) setZoomLink(data?.meetingUrl);
-      if (data?.meetingId) setZoomMeetingId(String(data?.meetingId));
+      if (data?.zoom_link) setZoomLink(data.zoom_link);
+      if (data?.zoom_meeting_id) setZoomMeetingId(String(data.zoom_meeting_id));
       toast({ title: "Zoom meeting created", description: "Review fields and click Save." });
     } catch (err) {
       toast({ title: "Failed to create Zoom meeting", variant: "destructive" });
