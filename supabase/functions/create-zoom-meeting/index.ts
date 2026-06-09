@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
     const zoomAccountId = Deno.env.get("ZOOM_ACCOUNT_ID");
     const zoomClientId = Deno.env.get("ZOOM_CLIENT_ID");
     const zoomClientSecret = Deno.env.get("ZOOM_CLIENT_SECRET");
-const ZOOM_HOST_EMAIL = "howeroko@yahoo.com";
+
     if (!zoomAccountId || !zoomClientId || !zoomClientSecret) {
       return new Response(JSON.stringify({ error: "Zoom credentials not configured" }), {
         status: 500,
@@ -30,7 +30,7 @@ const ZOOM_HOST_EMAIL = "howeroko@yahoo.com";
       });
     }
 
-    // Get Zoom access token
+    // Step 1: Get Zoom access token
     const tokenRes = await fetch(
       `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${zoomAccountId}`,
       {
@@ -50,11 +50,13 @@ const ZOOM_HOST_EMAIL = "howeroko@yahoo.com";
       });
     }
 
-    // Create Zoom meeting
-    const meetingRes = await fetch(`https://api.zoom.us/v2/users/${howeroko@yahoo.com}/meetings`, {
+    const authHeader = `Bearer ${tokenData.access_token}`;
+
+    // Step 2: Create Zoom meeting (basic)
+    const meetingRes = await fetch("https://api.zoom.us/v2/users/me/meetings", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${tokenData.access_token}`,
+        Authorization: authHeader,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -63,65 +65,53 @@ const ZOOM_HOST_EMAIL = "howeroko@yahoo.com";
         start_time: date,
         agenda: description || "",
         duration: 60,
-       settings: {
-  host_video: true,
-  participant_video: true,
-  join_before_host: false,
-
-  mute_upon_entry: true,
-  use_pmi: false,
-
-  // IMPORTANT: must be 0 or 1 depending on flow
-  approval_type: 1,  // 👈 key fix (manual approval enables registration flow reliably)
-
-  registration_type: 1,
-
-  registrants_email_notification: true,
-  close_registration: false,
-
-  waiting_room: true
-}
+        settings: {
+          host_video: true,
+          participant_video: true,
+          join_before_host: false,
+          mute_upon_entry: true,
+          use_pmi: false,
+          waiting_room: false,
+        },
       }),
     });
 
     const meetingData = await meetingRes.json();
+    console.log("Step 2 - Created meeting:", JSON.stringify(meetingData));
 
-console.log("Zoom meeting response:", meetingData);
+    if (!meetingData.id) {
+      return new Response(JSON.stringify({ error: "Failed to create meeting", detail: meetingData }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
-if (!meetingRes.ok) {
-  throw new Error("Zoom meeting creation failed");
-}
-    await fetch(`https://api.zoom.us/v2/meetings/${meetingData.id}`, {
-  method: "PATCH",
-  headers: {
-    Authorization: `Bearer ${tokenData.access_token}`,
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    settings: {
-      approval_type: 1,
-      registration_type: 1,
-      registrants_email_notification: true,
-      close_registration: false,
-    },
-  }),
-});
-    console.log(
-  "AUDIT LOG - Response Fields:",
-  JSON.stringify(meetingData, null, 2)
-);
-
-console.log("join_url:", meetingData.join_url);
-console.log("registration_url:", meetingData.registration_url);
-console.log("id:", meetingData.id);
-
-console.log("meetingData:", JSON.stringify(meetingData));
-console.log("registration_url:", meetingData.registration_url);
-console.log("id:", meetingData.id);
-    console.log("meetingData:", JSON.stringify(meetingData));
-
-    const meetingUrl = meetingData.registration_url ?? meetingData.join_url;
     const meetingId = String(meetingData.id);
+
+    // Step 3: PATCH meeting to enable registration
+    const patchRes = await fetch(`https://api.zoom.us/v2/meetings/${meetingId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: authHeader,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        settings: {
+          approval_type: 0,
+          registration_type: 1,
+        },
+      }),
+    });
+    console.log("Step 3 - PATCH status:", patchRes.status);
+
+    // Step 4: Fetch meeting again to get registration_url
+    const getRes = await fetch(`https://api.zoom.us/v2/meetings/${meetingId}`, {
+      headers: { Authorization: authHeader },
+    });
+    const updatedMeeting = await getRes.json();
+    console.log("Step 4 - Updated meeting:", JSON.stringify(updatedMeeting));
+
+    const meetingUrl = updatedMeeting.registration_url ?? updatedMeeting.join_url ?? meetingData.join_url;
 
     return new Response(JSON.stringify({ meetingUrl, meetingId }), {
       status: 200,
