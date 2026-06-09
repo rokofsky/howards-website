@@ -63,24 +63,59 @@ const ZOOM_HOST_EMAIL = "howeroko@yahoo.com";
         start_time: date,
         agenda: description || "",
         duration: 60,
-        settings: {
-          host_video: true,
-          participant_video: true,
-          join_before_host: false,
-          mute_upon_entry: true,
-          use_pmi: false,
-          approval_type: 0,
-          registration_type: 1,
-          waiting_room: false,
-        },
+       settings: {
+  host_video: true,
+  participant_video: true,
+  join_before_host: false,
+
+  mute_upon_entry: true,
+  use_pmi: false,
+
+  // IMPORTANT: must be 0 or 1 depending on flow
+  approval_type: 1,  // 👈 key fix (manual approval enables registration flow reliably)
+
+  registration_type: 1,
+
+  registrants_email_notification: true,
+  close_registration: false,
+
+  waiting_room: true
+}
       }),
     });
 
     const meetingData = await meetingRes.json();
+
+console.log("Zoom meeting response:", meetingData);
+
+if (!meetingRes.ok) {
+  throw new Error("Zoom meeting creation failed");
+}
+    await fetch(`https://api.zoom.us/v2/meetings/${meetingData.id}`, {
+  method: "PATCH",
+  headers: {
+    Authorization: `Bearer ${tokenData.access_token}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    settings: {
+      approval_type: 1,
+      registration_type: 1,
+      registrants_email_notification: true,
+      close_registration: false,
+    },
+  }),
+});
     console.log(
   "AUDIT LOG - Response Fields:",
   JSON.stringify(meetingData, null, 2)
-      console.log("join_url:", meetingData.join_url);
+);
+
+console.log("join_url:", meetingData.join_url);
+console.log("registration_url:", meetingData.registration_url);
+console.log("id:", meetingData.id);
+
+console.log("meetingData:", JSON.stringify(meetingData));
 console.log("registration_url:", meetingData.registration_url);
 console.log("id:", meetingData.id);
     console.log("meetingData:", JSON.stringify(meetingData));
