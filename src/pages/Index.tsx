@@ -96,7 +96,8 @@ const Index = () => {
       <ServicesGrid />
       <FAQSection />
 
-             <div className="max-w-4xl mx-auto">
+      <section id="references" className="section-padding">
+        <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("References", "Reference")}</h2>
             <p className="text-muted-foreground font-light mb-12 max-w-2xl">
@@ -124,6 +125,7 @@ const Index = () => {
         </div>
         <p className="text-center text-[10px] text-muted-foreground/40 font-light mt-8">v{ASSET_VERSION}</p>
       </section>
+
 
       <PricingSection />
       
