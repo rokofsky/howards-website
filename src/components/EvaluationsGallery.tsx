@@ -846,16 +846,15 @@ const IsolatedView = ({
                 className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""} ${isFocusedSide ? "ring-2 ring-white/60 shadow-xl" : ""} transition-all`}
                 style={{
                   overflow: "visible",
-                  pointerEvents: isFocused || isNeighbor ? "auto" : "none",
+                  pointerEvents: "auto",
                   zIndex: isFocused ? (scale > 1 ? 10 : 2) : 1,
                   visibility: !isFocused && scale > 1 ? "hidden" : "visible",
                   transform: centerShiftPct ? `translateX(${centerShiftPct}%)` : undefined,
                   transition: isPanning.current ? "none" : "transform 0.2s ease",
                 }}
                 onClick={
-                  isNeighbor
+                  !isFocused
                     ? () => {
-                        // Shift focus WITHOUT moving the carousel track.
                         setScale(1);
                         setOffset({ x: 0, y: 0 });
                         setFocusIdx(idx);
