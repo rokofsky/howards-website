@@ -9,7 +9,7 @@ import ContactForm from "@/components/ContactForm";
 import BookingSection from "@/components/BookingSection";
 import FAQSection from "@/components/FAQSection";
 import PricingSection from "@/components/PricingSection";
-import ClientLogosStrip from "@/components/ClientLogosStrip";
+
 import EvaluationsGallery, { ASSET_VERSION } from "@/components/EvaluationsGallery";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -98,7 +98,7 @@ const Index = () => {
 
       {/* References Section */}
       <section id="references" className="section-padding pt-8">
-        <ClientLogosStrip />
+        
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("References", "Reference")}</h2>
