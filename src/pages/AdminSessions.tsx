@@ -325,10 +325,7 @@ export default function AdminSessions() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-             {sessions.map((s) => {
-  console.log("session id:", s.id);
-  return (
-    <TableRow key={s.id}>
+                {sessions.map((s) => (
                   <TableRow key={s.id}>
                     <TableCell>{s.title || "Untitled"}</TableCell>
                     <TableCell>{new Date(s.session_date).toLocaleString()}</TableCell>
