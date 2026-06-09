@@ -829,7 +829,6 @@ const IsolatedView = ({
       >
         <div className="flex h-full" style={{ overflow: "visible" }}>
           {items.map((it, idx) => {
-          {items.map((it, idx) => {
             const isCurrent = idx === current;
             const isFocused = idx === focused;
             // Neighbors are relative to the FOCUSED card, not the embla current.
