@@ -118,8 +118,8 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("create-zoom-meeting error:", err);
-    return new Response(JSON.stringify({ error: "An internal error occurred" }), {
+    console.error("create-zoom-meeting error:", String(err));
+    return new Response(JSON.stringify({ error: String(err) }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
