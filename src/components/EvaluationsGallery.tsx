@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202606091101";
+export const ASSET_VERSION = "202606091352";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -389,8 +389,10 @@ const EvaluationsGallery = () => {
   }, []);
 
   return (
-    <div className="mb-12">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+      // NOTE: Reduced mb-8 (was mb-12) to tighten gallery outer spacing
+      <div className="mb-8">
+        // NOTE: Reduced mb-2 (was mb-4) to tighten search-controls-to-gallery spacing
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-2">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -445,7 +447,8 @@ const EvaluationsGallery = () => {
           </button>
           <div
             ref={stripRef}
-            className="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto snap-x snap-proximity py-12 px-[40%] sm:px-[35%] lg:px-[30%] no-scrollbar cursor-grab select-none"
+            // NOTE: Reduced py-6 (was py-12) to tighten controls-to-images spacing
+            className="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto snap-x snap-proximity py-6 px-[40%] sm:px-[35%] lg:px-[30%] no-scrollbar cursor-grab select-none"
             style={{ scrollbarWidth: "none" }}
           >
             {filtered.map((item, i) => {

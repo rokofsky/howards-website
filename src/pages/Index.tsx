@@ -96,11 +96,13 @@ const Index = () => {
       <ServicesGrid />
       <FAQSection />
 
-      <section id="references" className="section-padding">
+      {/* NOTE: Reduced pt-8 (was section-padding) to tighten gap after FAQ */}
+      <section id="references" className="pb-16 md:pb-24 px-4 md:px-6 pt-8">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("References", "Reference")}</h2>
-            <p className="text-muted-foreground font-light mb-12 max-w-2xl">
+            {/* NOTE: Reduced mb-6 (was mb-12) to tighten headline-to-subheading spacing */}
+            <p className="text-muted-foreground font-light mb-6 max-w-2xl">
               {t(
                 "Don't take Howard's word for it. Here's what people say when he's not looking.",
                 "Nemusíte věřit jen Howardovi. Zde je, co o něm říkají lidé, když se nedívá.",
@@ -108,7 +110,8 @@ const Index = () => {
             </p>
           </motion.div>
 
-          <div className="mb-12">
+          {/* NOTE: Reduced mb-6 (was mb-12) to tighten subheading-to-gallery spacing */}
+          <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-2xl font-bold">
                 {t("Evaluation forms from participants", "Hodnotící formuláře od účastníků")}
