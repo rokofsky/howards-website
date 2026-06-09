@@ -171,6 +171,7 @@ export default function AdminSessions() {
 
     toast({ title: "Session deleted" });
     setSessions((prev) => prev.filter((s) => s.id !== id));
+    fetchSessions();
   };
 
   if (!authenticated) {
