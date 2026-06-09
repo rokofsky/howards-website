@@ -447,7 +447,8 @@ const EvaluationsGallery = () => {
           </button>
           <div
             ref={stripRef}
-            className="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto snap-x snap-proximity py-12 px-[40%] sm:px-[35%] lg:px-[30%] no-scrollbar cursor-grab select-none"
+            // NOTE: Reduced py-6 (was py-12) to tighten controls-to-images spacing
+            className="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto snap-x snap-proximity py-6 px-[40%] sm:px-[35%] lg:px-[30%] no-scrollbar cursor-grab select-none"
             style={{ scrollbarWidth: "none" }}
           >
             {filtered.map((item, i) => {
