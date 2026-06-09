@@ -155,6 +155,7 @@ export default function AdminSessions() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this session?")) return;
     console.log("Deleting session id:", id);
+    console.log("Delete result:", error, "data:", data);
 
     const { data, error: invokeError } = await supabase.functions.invoke("admin-sessions", {
       body: { action: "delete", id, token: getAdminToken() },
