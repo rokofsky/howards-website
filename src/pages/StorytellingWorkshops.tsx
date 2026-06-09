@@ -214,11 +214,11 @@ const StorytellingWorkshops = () => {
           {success ? (
             <>
               <DialogHeader>
-                <DialogTitle className="text-xl">{t("🌿Thanks for the nudge🌿", "🌿Díky za připomenutí🌿")}</DialogTitle>
+                <DialogTitle className="text-xl">{t("🌿Thanks for signing up🌿", "🌿Díky za přihlášení🌿")}</DialogTitle>
                 <DialogDescription className="pt-2 text-base font-medium">
                   {t(
-                    "Check your email for the Zoom link, see you there!",
-                    "Zkontrolujte si e-mail, kde najdete odkaz na Zoom, a uvidíme se tam!"
+                    "Check your email for the Zoom link, no need to install or setup anything. See you there!",
+                    "Zkontrolujte si e-mail, kde najdete odkaz na Zoom, nemusíte nic instalovat ani nastavovat. Uvidíme se tam!"
                   )}
                   <br />
                   /HR
