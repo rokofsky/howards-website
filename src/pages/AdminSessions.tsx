@@ -325,10 +325,7 @@ export default function AdminSessions() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-             {sessions.map((s) => {
-  console.log("session id:", s.id);
-  return (
-    <TableRow key={s.id}>
+                {sessions.map((s) => (
                   <TableRow key={s.id}>
                     <TableCell>{s.title || "Untitled"}</TableCell>
                     <TableCell>{new Date(s.session_date).toLocaleString()}</TableCell>
@@ -343,7 +340,6 @@ export default function AdminSessions() {
                     <TableCell className="flex gap-1">
                       <Button variant="ghost" size="icon" onClick={() => handleEdit(s)}>
                         <Pencil className="h-4 w-4 text-muted-foreground" />
-                        {console.log("session id:", s.id)}
                       </Button>
                       <Button variant="ghost" size="icon" onClick={() => handleDelete(s.id)}>
                         <Trash2 className="h-4 w-4 text-destructive" />
