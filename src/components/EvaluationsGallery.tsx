@@ -540,6 +540,9 @@ const IsolatedView = ({
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [selectedIdx, setSelectedIdx] = useState(startIndex);
+  // Focus index — the zoom/pan target, decoupled from Embla position.
+  // Neighbor clicks shift this without moving the carousel.
+  const [focusIdx, setFocusIdx] = useState(startIndex);
 
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
@@ -591,6 +594,8 @@ const IsolatedView = ({
       const idx = emblaApi.selectedScrollSnap();
       onIndexChange(idx);
       setSelectedIdx(idx);
+      // Swipe/scroll keeps focus in sync with the centered card.
+      setFocusIdx(idx);
       setScale(1);
       setOffset({ x: 0, y: 0 });
     };
@@ -600,7 +605,7 @@ const IsolatedView = ({
     };
   }, [emblaApi, onIndexChange]);
 
-  // Wheel zoom — attached to the active image only, with { passive: false }
+  // Wheel zoom — attached to the focused image only, with { passive: false }
   useEffect(() => {
     const img = activeImgRef.current;
     if (!img) return;
@@ -621,7 +626,7 @@ const IsolatedView = ({
     };
     img.addEventListener("wheel", onWheel, { passive: false });
     return () => img.removeEventListener("wheel", onWheel);
-  }, [selectedIdx, emblaApi]);
+  }, [focusIdx, emblaApi]);
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
@@ -769,6 +774,8 @@ const IsolatedView = ({
   }, [scale, emblaApi]);
 
   const current = selectedIdx;
+  // Zoom/pan target — independent of carousel position.
+  const focused = focusIdx;
 
   const btnStyle: React.CSSProperties = {
     position: "fixed",
@@ -823,8 +830,10 @@ const IsolatedView = ({
         <div className="flex h-full" style={{ overflow: "visible" }}>
           {items.map((it, idx) => {
             const isCurrent = idx === current;
-            const isPrev = idx === current - 1;
-            const isNext = idx === current + 1;
+            const isFocused = idx === focused;
+            // Neighbors are relative to the FOCUSED card, not the embla current.
+            const isPrev = idx === focused - 1;
+            const isNext = idx === focused + 1;
             const isNeighbor = isPrev || isNext;
             return (
               <div
@@ -832,15 +841,17 @@ const IsolatedView = ({
                 className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""}`}
                 style={{
                   overflow: "visible",
-                  pointerEvents: isCurrent || isNeighbor ? "auto" : "none",
-                  zIndex: isCurrent ? 2 : 1,
-                  visibility: !isCurrent && scale > 1 ? "hidden" : "visible",
+                  pointerEvents: isFocused || isNeighbor ? "auto" : "none",
+                  zIndex: isFocused ? 2 : 1,
+                  visibility: !isFocused && scale > 1 ? "hidden" : "visible",
                 }}
                 onClick={
                   isNeighbor
                     ? () => {
-                        if (isPrev) emblaApi?.scrollPrev();
-                        else emblaApi?.scrollNext();
+                        // Shift focus WITHOUT moving the carousel track.
+                        setScale(1);
+                        setOffset({ x: 0, y: 0 });
+                        setFocusIdx(idx);
                       }
                     : undefined
                 }
@@ -850,17 +861,18 @@ const IsolatedView = ({
                   alt={`${alt} #${it.num}`}
                   draggable={false}
                   ref={(el) => {
-                    if (it.key === items[current]?.key) {
+                    // activeImgRef tracks the FOCUSED image (zoom/pan target).
+                    if (idx === focused) {
                       activeImgRef.current = el;
                     }
                   }}
                   style={{
-                    pointerEvents: isCurrent ? "auto" : "none",
+                    pointerEvents: isFocused ? "auto" : "none",
                     width: "100%",
                     height: "100%",
                     objectFit: "contain",
                     touchAction: "none",
-                    transform: isCurrent
+                    transform: isFocused
                       ? `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`
                       : undefined,
                     transformOrigin: "center",
