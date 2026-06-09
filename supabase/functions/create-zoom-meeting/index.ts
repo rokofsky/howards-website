@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
     const zoomAccountId = Deno.env.get("ZOOM_ACCOUNT_ID");
     const zoomClientId = Deno.env.get("ZOOM_CLIENT_ID");
     const zoomClientSecret = Deno.env.get("ZOOM_CLIENT_SECRET");
-
+const ZOOM_HOST_EMAIL = "howeroko@yahoo.com";
     if (!zoomAccountId || !zoomClientId || !zoomClientSecret) {
       return new Response(JSON.stringify({ error: "Zoom credentials not configured" }), {
         status: 500,
@@ -51,7 +51,7 @@ Deno.serve(async (req) => {
     }
 
     // Create Zoom meeting
-    const meetingRes = await fetch("https://api.zoom.us/v2/users/me/meetings", {
+    const meetingRes = await fetch(`https://api.zoom.us/v2/users/${howeroko@yahoo.com}/meetings`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${tokenData.access_token}`,
