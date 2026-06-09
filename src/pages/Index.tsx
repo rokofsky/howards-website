@@ -9,6 +9,9 @@ import ContactForm from "@/components/ContactForm";
 import BookingSection from "@/components/BookingSection";
 import FAQSection from "@/components/FAQSection";
 import PricingSection from "@/components/PricingSection";
+import ClientLogosStrip from "@/components/ClientLogosStrip";
+import EvaluationsGallery, { ASSET_VERSION } from "@/components/EvaluationsGallery";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { openCalendly } from "@/lib/calendly";
 import { useT } from "@/hooks/useT";
@@ -33,6 +36,7 @@ const Index = () => {
       if (hash.includes("contact")) next = `${isCz ? "Kontakt" : "Contact"}${suffix}`;
       else if (hash.includes("services")) next = `${isCz ? "Služby" : "Services"}${suffix}`;
       else if (hash.includes("faq")) next = `FAQ${suffix}`;
+      else if (hash.includes("references")) next = `${isCz ? "Reference" : "References"}${suffix}`;
       else if (hash.includes("pricing")) next = `${isCz ? "Ceník" : "Pricing"}${suffix}`;
       return next;
     };
@@ -91,6 +95,39 @@ const Index = () => {
       <SubHeroNav />
       <ServicesGrid />
       <FAQSection />
+
+      {/* References Section */}
+      <section id="references" className="section-padding pt-8">
+        <ClientLogosStrip />
+        <div className="max-w-4xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("References", "Reference")}</h2>
+            <p className="text-muted-foreground font-light mb-12 max-w-2xl">
+              {t(
+                "Don't take Howard's word for it. Here's what people say when he's not looking.",
+                "Nemusíte věřit jen Howardovi. Zde je, co o něm říkají lidé, když se nedívá.",
+              )}
+            </p>
+          </motion.div>
+
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-2xl font-bold">
+                {t("Evaluation forms from participants", "Hodnotící formuláře od účastníků")}
+              </h3>
+            </div>
+            <p className="text-muted-foreground font-light mb-2">
+              {t(
+                "Complete, unabridged evaluation sheet scans from past workshops. Click to view full size, and zoom in for detail!\nNo form was excluded, destroyed or thrown out. This is all of them, except a few courses when the agency wouldn't give me a copy of them.",
+                "Kompletní, nezkrácené skeny hodnotících formulářů z minulých workshopů. Kliknutím zobrazíte v plné velikosti a můžete si přiblížit detaily!\nŽádný formulář nebyl vyřazen, zničen ani vyhozen. Toto jsou všechny, s výjimkou několika kurzů, kdy mi agentura neposkytla jejich kopii.",
+              )}
+            </p>
+            <EvaluationsGallery />
+          </div>
+        </div>
+        <p className="text-center text-[10px] text-muted-foreground/40 font-light mt-8">v{ASSET_VERSION}</p>
+      </section>
+
       <PricingSection />
       
       <VideoShowcase />

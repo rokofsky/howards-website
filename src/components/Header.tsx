@@ -24,7 +24,7 @@ const Header = () => {
   const homeHref = isCz ? "/cz" : "/";
 
   const homeLink = { kind: "plain" as const, label: t("Home", "Domů"), href: homeHref };
-  const referencesLink = { kind: "plain" as const, label: t("References", "Reference"), href: lp("/references") };
+  const referencesLink = { kind: "hash" as const, label: t("References", "Reference"), href: lp("/#references"), id: "references" };
   const blogLink = { kind: "plain" as const, label: t("Blog", "Blog"), href: lp("/blog") };
   const storySandboxLink = {
     kind: "plain" as const,
