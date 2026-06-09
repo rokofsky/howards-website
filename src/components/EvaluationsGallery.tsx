@@ -774,6 +774,8 @@ const IsolatedView = ({
   }, [scale, emblaApi]);
 
   const current = selectedIdx;
+  // Zoom/pan target — independent of carousel position.
+  const focused = focusIdx;
 
   const btnStyle: React.CSSProperties = {
     position: "fixed",
