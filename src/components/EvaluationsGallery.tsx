@@ -540,6 +540,9 @@ const IsolatedView = ({
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [selectedIdx, setSelectedIdx] = useState(startIndex);
+  // Focus index — the zoom/pan target, decoupled from Embla position.
+  // Neighbor clicks shift this without moving the carousel.
+  const [focusIdx, setFocusIdx] = useState(startIndex);
 
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
