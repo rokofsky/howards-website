@@ -829,9 +829,12 @@ const IsolatedView = ({
       >
         <div className="flex h-full" style={{ overflow: "visible" }}>
           {items.map((it, idx) => {
+          {items.map((it, idx) => {
             const isCurrent = idx === current;
-            const isPrev = idx === current - 1;
-            const isNext = idx === current + 1;
+            const isFocused = idx === focused;
+            // Neighbors are relative to the FOCUSED card, not the embla current.
+            const isPrev = idx === focused - 1;
+            const isNext = idx === focused + 1;
             const isNeighbor = isPrev || isNext;
             return (
               <div
@@ -839,15 +842,17 @@ const IsolatedView = ({
                 className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""}`}
                 style={{
                   overflow: "visible",
-                  pointerEvents: isCurrent || isNeighbor ? "auto" : "none",
-                  zIndex: isCurrent ? 2 : 1,
-                  visibility: !isCurrent && scale > 1 ? "hidden" : "visible",
+                  pointerEvents: isFocused || isNeighbor ? "auto" : "none",
+                  zIndex: isFocused ? 2 : 1,
+                  visibility: !isFocused && scale > 1 ? "hidden" : "visible",
                 }}
                 onClick={
                   isNeighbor
                     ? () => {
-                        if (isPrev) emblaApi?.scrollPrev();
-                        else emblaApi?.scrollNext();
+                        // Shift focus WITHOUT moving the carousel track.
+                        setScale(1);
+                        setOffset({ x: 0, y: 0 });
+                        setFocusIdx(idx);
                       }
                     : undefined
                 }
@@ -857,7 +862,8 @@ const IsolatedView = ({
                   alt={`${alt} #${it.num}`}
                   draggable={false}
                   ref={(el) => {
-                    if (it.key === items[current]?.key) {
+                    // activeImgRef tracks the FOCUSED image (zoom/pan target).
+                    if (idx === focused) {
                       activeImgRef.current = el;
                     }
                   }}
