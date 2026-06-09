@@ -626,7 +626,7 @@ const IsolatedView = ({
     };
     img.addEventListener("wheel", onWheel, { passive: false });
     return () => img.removeEventListener("wheel", onWheel);
-  }, [selectedIdx, emblaApi]);
+  }, [focusIdx, emblaApi]);
 
   // Keyboard nav + lock body scroll
   useEffect(() => {
