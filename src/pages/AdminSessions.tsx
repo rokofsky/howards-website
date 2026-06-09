@@ -154,6 +154,9 @@ export default function AdminSessions() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this session?")) return;
+    console.log("Deleting session id:", id);
+    const { error } = await supabase.from("storytelling_sessions").delete().eq("id", id);
+    console.log("Delete result:", error);
     const { error } = await supabase.from("storytelling_sessions").delete().eq("id", id);
     if (error) {
       toast({ title: "Error deleting", description: error.message, variant: "destructive" });
