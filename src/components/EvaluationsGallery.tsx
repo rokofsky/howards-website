@@ -867,12 +867,12 @@ const IsolatedView = ({
                     }
                   }}
                   style={{
-                    pointerEvents: isCurrent ? "auto" : "none",
+                    pointerEvents: isFocused ? "auto" : "none",
                     width: "100%",
                     height: "100%",
                     objectFit: "contain",
                     touchAction: "none",
-                    transform: isCurrent
+                    transform: isFocused
                       ? `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`
                       : undefined,
                     transformOrigin: "center",
