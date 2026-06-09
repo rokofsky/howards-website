@@ -835,15 +835,22 @@ const IsolatedView = ({
             const isPrev = idx === focused - 1;
             const isNext = idx === focused + 1;
             const isNeighbor = isPrev || isNext;
+            // Outline focused side-card (focused but not the embla-current slide)
+            const isFocusedSide = isFocused && !isCurrent;
+            // Isolated centering shift: when zoomed, translate the focused
+            // slide wrapper toward viewport center without touching the track.
+            const centerShiftPct = isFocused && scale > 1 ? -(focused - current) * 100 : 0;
             return (
               <div
                 key={it.key}
-                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""}`}
+                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""} ${isFocusedSide ? "ring-2 ring-white/60 shadow-xl" : ""} transition-all`}
                 style={{
                   overflow: "visible",
                   pointerEvents: isFocused || isNeighbor ? "auto" : "none",
-                  zIndex: isFocused ? 2 : 1,
+                  zIndex: isFocused ? (scale > 1 ? 10 : 2) : 1,
                   visibility: !isFocused && scale > 1 ? "hidden" : "visible",
+                  transform: centerShiftPct ? `translateX(${centerShiftPct}%)` : undefined,
+                  transition: isPanning.current ? "none" : "transform 0.2s ease",
                 }}
                 onClick={
                   isNeighbor
