@@ -562,9 +562,18 @@ const IsolatedView = ({
   const activeImgRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
+    // While the user is actively panning, leave the shift untouched so we
+    // don't fight their gesture; panReleaseTick re-runs this on release.
     if (isPanning.current) return;
+    // Short-circuit when not zoomed — prevents stale shift bleed-through.
+    if (scale <= 1) {
+      setCenterShiftPct(0);
+      return;
+    }
     const raf = requestAnimationFrame(() => {
-      setCenterShiftPct(scale > 1 ? (selectedIdx - focusIdx) * 100 : 0);
+      // current === selectedIdx; (current - focusIdx) * 100 centers both
+      // left (focusIdx < current → +100%) and right (focusIdx > current → -100%).
+      setCenterShiftPct((selectedIdx - focusIdx) * 100);
     });
     return () => cancelAnimationFrame(raf);
   }, [focusIdx, scale, selectedIdx, panReleaseTick]);
@@ -732,7 +741,10 @@ const IsolatedView = ({
       panStartY.current = touch.clientY;
 
       setOffset((o) => {
-        const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
+        // Use the larger of image or container width so narrow (tall) images
+        // still get a non-zero horizontal pan range when zoomed in.
+        const effWidth = Math.max(imageBounds.current.width, containerBounds.current.width);
+        const maxX = Math.max(0, (effWidth * scale - containerBounds.current.width) / 2);
         const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
         // Multiply by scale because offset is applied as translate(offset/scale)
         // so raw offset must be scale times larger than visual pixel distance
@@ -760,6 +772,10 @@ const IsolatedView = ({
       const velocityX = Math.abs(dx) / dt; // px/ms
 
       const isFastSwipe = velocityX > 0.3 && Math.abs(dx) > 40 && Math.abs(dx) > dy;
+      // When zoomed, suppress swipe-to-navigate unless an edge-handoff condition is met.
+      // Placeholder flag — a follow-up prompt will replace this with real edge logic.
+      const isEdgeHandoff = false;
+      if (scale > 1 && !isEdgeHandoff) return;
       if (isFastSwipe) {
         setScale(1);
         setOffset({ x: 0, y: 0 });
@@ -830,11 +846,13 @@ const IsolatedView = ({
           overflow: scale > 1 ? "visible" : "hidden",
         }}
         onTouchStart={(e) => {
-          if (scale > 1) return;
+          const isEdgeHandoff = false;
+          if (scale > 1 && !isEdgeHandoff) return;
           (e.currentTarget as any)._touchStartX = e.touches[0].clientX;
         }}
         onTouchEnd={(e) => {
-          if (scale > 1) return;
+          const isEdgeHandoff = false;
+          if (scale > 1 && !isEdgeHandoff) return;
           const startX = (e.currentTarget as any)._touchStartX;
           if (startX === undefined) return;
           const diff = startX - e.changedTouches[0].clientX;
@@ -934,7 +952,8 @@ const IsolatedView = ({
                     panStartX.current = e.clientX;
                     panStartY.current = e.clientY;
                     setOffset((o) => {
-                      const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
+                      const effWidth = Math.max(imageBounds.current.width, containerBounds.current.width);
+                      const maxX = Math.max(0, (effWidth * scale - containerBounds.current.width) / 2);
                       const maxY = Math.max(
                         0,
                         (imageBounds.current.height * scale - containerBounds.current.height) / 2,
