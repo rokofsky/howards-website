@@ -100,7 +100,7 @@ const FAQSection = () => {
                 +
               </span>
             </summary>
-            <div className="px-6 pb-2 text-sm text-muted-foreground leading-relaxed font-medium">
+            <div className="px-6 pb-2 text-sm text-muted-foreground leading-relaxed font-medium whitespace-pre-line">
               {faq.aElement ?? faq.a}
             </div>
           </motion.details>
