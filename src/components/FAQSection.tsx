@@ -68,7 +68,7 @@ const FAQSection = () => {
   };
 
   return (
-    <section id="faq" className="section-padding">
+    <section id="faq" className="section-padding pt-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
