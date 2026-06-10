@@ -1016,7 +1016,7 @@ const IsolatedView = ({
             type="button"
             aria-label={nextLabel}
             onClick={() => emblaApi?.scrollNext()}
-            style={{ ...btnStyle, top: "52px", right: "8px", pointerEvents: "auto" }}
+            style={{ ...btnStyle, top: "50%", right: "8px", transform: "translateY(-50%)", pointerEvents: "auto" }}
             className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronRight className="h-7 w-7" />
