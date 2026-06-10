@@ -68,6 +68,7 @@ const FAQSection = () => {
   };
 
   return (
+    // lower number = more padding between service boxes and FAQ
     <section id="faq" className="section-padding pt-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <motion.div
