@@ -848,14 +848,17 @@ const IsolatedView = ({
             return (
               <div
                 key={it.key}
-                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""} ${isFocusedSide ? "ring-2 ring-white/60 shadow-xl" : ""} transition-all`}
+                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""} transition-all`}
                 style={{
                   overflow: "visible",
                   pointerEvents: "auto",
                   zIndex: isFocused ? (scale > 1 ? 10 : 2) : 1,
                   visibility: !isFocused && scale > 1 ? "hidden" : "visible",
                   transform: centerShiftPct ? `translateX(${centerShiftPct}%)` : undefined,
-                  transition: isPanning.current ? "none" : "transform 0.2s ease",
+                  transition: isPanning.current ? "none" : "transform 0.25s ease",
+                  outline: isFocusedSide ? "2px solid rgba(255,255,255,0.6)" : undefined,
+                  outlineOffset: isFocusedSide ? "-6px" : undefined,
+                  borderRadius: "8px",
                 }}
                 onClick={
                   !isFocused
