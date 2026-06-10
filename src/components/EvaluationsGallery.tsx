@@ -503,7 +503,7 @@ const EvaluationsGallery = () => {
           onIndexChange={setLightboxIndex}
           onClose={() => {
             setLightboxIndex(null);
-            window.scrollTo(0, scrollPosRef.current - 300);
+            window.scrollTo(0, scrollPosRef.current - 330);
           }}
           alt={t("Evaluation form scan", "Sken hodnotícího formuláře")}
           prevLabel={t("Previous", "Předchozí")}
