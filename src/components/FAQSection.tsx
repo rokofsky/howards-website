@@ -9,7 +9,7 @@ const FAQSection = () => {
     {
       q: t("What makes Howard different from other consultants?", "Čím se Howard liší od ostatních konzultantů?"),
       a: t(
-        "He simply does things differently — and you’ll notice it from day one. His radically transparent communication, standard of professional ethics and uncommon humor might be unsettling at first, but his adaptability will seamlessly grow on you.\n\nHoward focuses strictly on clarity, an open-minded approach, and uncovering new strategic options you didn't even know were on the table. There is no room for fluff, buzzwords, or hidden fine print. Because he believes in having skin in the game, he offers success-fee structures for most projects. It keeps him sharp, your risk low, and ensures everyone is pulling in the exact same direction.",
+        "He simply does things differently — and you’ll notice it from day one. From an uncommon standard of professional ethics and transparent communication to generous project outputs, there is no room for fluff. Howard focuses strictly on clarity, an open-minded approach, and uncovering new strategic options. Because he believes in having skin in the game, he offers success-fee structures for select projects. It keeps him sharp, and you certain.",
         "Jednoduše dělá věci jinak — bude to patrné od samého začátku, od neobvyklé profesní etiky přes transparentní komunikaci až po štědré výstupy. Okamžitě si všimnete absence (a netolerance) prázdných řečí a důrazu na jasnost, otevřenost a nové možnosti. Protože věří v osobní zaangažovanost, nabízí u některých aktivit honorář vázaný na úspěch. Jeho to udržuje ve střehu a Vás v jistotě.",
       ),
     },
@@ -94,13 +94,13 @@ const FAQSection = () => {
             transition={{ delay: i * 0.05 }}
             className="glass rounded-lg group"
           >
-            <summary className="cursor-pointer p-6 text-base font-medium list-none flex justify-between items-center">
+            <summary className="cursor-pointer px-6 py-4 text-base font-medium list-none flex justify-between items-center">
               {faq.q}
               <span className="text-muted-foreground transition-transform duration-200 group-open:rotate-45 text-xl ml-4">
                 +
               </span>
             </summary>
-            <div className="px-6 pb-6 text-sm text-muted-foreground leading-relaxed font-medium whitespace-pre-line">
+            <div className="px-6 pb-3 text-sm text-muted-foreground leading-relaxed font-medium">
               {faq.aElement ?? faq.a}
             </div>
           </motion.details>
