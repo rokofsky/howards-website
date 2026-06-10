@@ -583,6 +583,14 @@ const IsolatedView = ({
     if (scale === 1) setOffset({ x: 0, y: 0 });
   }, [scale]);
 
+  // Save scroll position when lightbox opens, restore on close (unmount)
+  useEffect(() => {
+    savedScrollY.current = window.scrollY;
+    return () => {
+      window.scrollTo(0, savedScrollY.current);
+    };
+  }, []);
+
   useEffect(() => {
     if (!emblaApi) return;
     emblaApi.scrollTo(startIndex, true);
