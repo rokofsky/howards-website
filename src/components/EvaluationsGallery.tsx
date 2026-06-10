@@ -952,7 +952,8 @@ const IsolatedView = ({
                     panStartX.current = e.clientX;
                     panStartY.current = e.clientY;
                     setOffset((o) => {
-                      const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
+                      const effWidth = Math.max(imageBounds.current.width, containerBounds.current.width);
+                      const maxX = Math.max(0, (effWidth * scale - containerBounds.current.width) / 2);
                       const maxY = Math.max(
                         0,
                         (imageBounds.current.height * scale - containerBounds.current.height) / 2,
