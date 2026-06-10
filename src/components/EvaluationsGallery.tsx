@@ -543,6 +543,9 @@ const IsolatedView = ({
   // Focus index — the zoom/pan target, decoupled from Embla position.
   // Neighbor clicks shift this without moving the carousel.
   const [focusIdx, setFocusIdx] = useState(startIndex);
+  // Centering shift (%) applied to the focused slide wrapper when zoomed.
+  // Computed in a dedicated rAF-deferred effect to avoid stale layout reads.
+  const [centerShiftPct, setCenterShiftPct] = useState(0);
 
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
@@ -782,9 +785,19 @@ const IsolatedView = ({
   // Zoom/pan target — independent of carousel position.
   const focused = focusIdx;
 
+  // Dynamically recompute centering shift any time focus, scale, or the
+  // embla-selected slide changes. Defer one frame so DOM has settled.
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      const shift = scale > 1 ? -(focusIdx - selectedIdx) * 100 : 0;
+      setCenterShiftPct(shift);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [focusIdx, scale, selectedIdx]);
+
   const btnStyle: React.CSSProperties = {
     position: "fixed",
-    zIndex: 99999,
+    zIndex: 45,
     background: "rgba(10,25,47,0.7)",
     backdropFilter: "blur(12px)",
     WebkitBackdropFilter: "blur(12px)",
@@ -794,7 +807,7 @@ const IsolatedView = ({
   };
 
   return (
-    <div className="fixed inset-0 z-30 bg-background/95">
+    <div className="fixed inset-0 z-40 bg-background/95">
       {/* BACKDROP: catches taps on orange padding to close */}
       <div
         className="absolute inset-0 z-0"
@@ -842,9 +855,9 @@ const IsolatedView = ({
             const isNeighbor = isPrev || isNext;
             // Outline focused side-card (focused but not the embla-current slide)
             const isFocusedSide = isFocused && !isCurrent;
-            // Isolated centering shift: when zoomed, translate the focused
-            // slide wrapper toward viewport center without touching the track.
-            const centerShiftPct = isFocused && scale > 1 ? -(focused - current) * 100 : 0;
+            // Isolated centering shift: applied only to the focused slide,
+            // driven by the rAF-deferred effect above.
+            const slideShiftPct = isFocused ? centerShiftPct : 0;
             return (
               <div
                 key={it.key}
@@ -854,7 +867,7 @@ const IsolatedView = ({
                   pointerEvents: "auto",
                   zIndex: isFocused ? (scale > 1 ? 10 : 2) : 1,
                   visibility: !isFocused && scale > 1 ? "hidden" : "visible",
-                  transform: centerShiftPct ? `translateX(${centerShiftPct}%)` : undefined,
+                  transform: slideShiftPct ? `translateX(${slideShiftPct}%)` : undefined,
                   transition: isPanning.current ? "none" : "transform 0.25s ease",
                   outline: isFocusedSide ? "2px solid rgba(255,255,255,0.6)" : undefined,
                   outlineOffset: isFocusedSide ? "-6px" : undefined,
