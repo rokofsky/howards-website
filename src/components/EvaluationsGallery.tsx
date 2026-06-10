@@ -744,6 +744,7 @@ const IsolatedView = ({
       pinchStartDist.current = null;
 
       isPanning.current = false;
+      setPanReleaseTick((t) => t + 1);
 
       // Detect fast horizontal swipe → navigate to next/prev and reset zoom
       const dt = performance.now() - swipeStartTime.val;
