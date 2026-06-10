@@ -543,9 +543,6 @@ const IsolatedView = ({
   // Focus index — the zoom/pan target, decoupled from Embla position.
   // Neighbor clicks shift this without moving the carousel.
   const [focusIdx, setFocusIdx] = useState(startIndex);
-  // Deferred centering offset (%) applied to the focused slide so it visually
-  // sits at viewport center after a zoom or focus switch settles.
-  const [centerShift, setCenterShift] = useState(0);
 
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
@@ -584,29 +581,6 @@ const IsolatedView = ({
   useEffect(() => {
     if (scale === 1) setOffset({ x: 0, y: 0 });
   }, [scale]);
-
-  // Lock body scroll while the lightbox is mounted.
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, []);
-
-  // Deferred centering transform — runs after focus/scale/selected settles,
-  // bails out while the user is actively swiping/panning/pinching so it
-  // never fights live gesture state.
-  useEffect(() => {
-    if (isPanning.current || pinchStartDist.current !== null) return;
-    const raf = requestAnimationFrame(() => {
-      if (isPanning.current || pinchStartDist.current !== null) return;
-      const shift = focusIdx !== selectedIdx && scale > 1 ? -(focusIdx - selectedIdx) * 100 : 0;
-      setCenterShift(shift);
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [focusIdx, scale, selectedIdx]);
-
-
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -805,7 +779,7 @@ const IsolatedView = ({
 
   const btnStyle: React.CSSProperties = {
     position: "fixed",
-    zIndex: 45,
+    zIndex: 99999,
     background: "rgba(10,25,47,0.7)",
     backdropFilter: "blur(12px)",
     WebkitBackdropFilter: "blur(12px)",
@@ -815,10 +789,10 @@ const IsolatedView = ({
   };
 
   return (
-    <div className="fixed inset-0 z-30 bg-background/95 pointer-events-none">
+    <div className="fixed inset-0 z-30 bg-background/95">
       {/* BACKDROP: catches taps on orange padding to close */}
       <div
-        className="absolute inset-0 z-0 pointer-events-auto"
+        className="absolute inset-0 z-0"
         onPointerDown={(e) => {
           pointerStartX.current = e.clientX;
           pointerStartY.current = e.clientY;
@@ -832,7 +806,7 @@ const IsolatedView = ({
 
       {/* EMBLA CAROUSEL */}
       <div
-        className="absolute inset-0 z-10 pointer-events-auto"
+        className="absolute inset-0 z-10"
         ref={emblaRef}
         style={{
           touchAction: "none",
@@ -865,7 +839,7 @@ const IsolatedView = ({
             const isFocusedSide = isFocused && !isCurrent;
             // Isolated centering shift: when zoomed, translate the focused
             // slide wrapper toward viewport center without touching the track.
-            const centerShiftPct = isFocused && scale > 1 ? centerShift : 0;
+            const centerShiftPct = isFocused && scale > 1 ? -(focused - current) * 100 : 0;
             return (
               <div
                 key={it.key}
@@ -1010,7 +984,7 @@ const IsolatedView = ({
         aria-label={closeLabel}
         onClick={onClose}
         style={{ ...btnStyle, top: "52px", right: "8px" }}
-        className="pointer-events-auto inline-flex items-center justify-center w-12 h-12 rounded-full text-white"
+        className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white"
       >
         <X className="h-6 w-6" />
       </button>
@@ -1023,7 +997,7 @@ const IsolatedView = ({
             aria-label={prevLabel}
             onClick={() => emblaApi?.scrollPrev()}
             style={{ ...btnStyle, top: "50%", left: "8px", transform: "translateY(-50%)" }}
-            className="pointer-events-auto inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
+            className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronLeft className="h-7 w-7" />
           </button>
@@ -1032,7 +1006,7 @@ const IsolatedView = ({
             aria-label={nextLabel}
             onClick={() => emblaApi?.scrollNext()}
             style={{ ...btnStyle, top: "50%", right: "8px", transform: "translateY(-50%)" }}
-            className="pointer-events-auto inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
+            className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronRight className="h-7 w-7" />
           </button>
