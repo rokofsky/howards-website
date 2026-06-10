@@ -540,7 +540,7 @@ const IsolatedView = ({
     loop: true,
     startIndex,
     dragFree: false,
-    containScroll: false,
+    containScroll: "keepSnaps",
   });
 
   const [scale, setScale] = useState(1);
