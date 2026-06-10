@@ -741,7 +741,10 @@ const IsolatedView = ({
       panStartY.current = touch.clientY;
 
       setOffset((o) => {
-        const maxX = Math.max(0, (imageBounds.current.width * scale - containerBounds.current.width) / 2);
+        // Use the larger of image or container width so narrow (tall) images
+        // still get a non-zero horizontal pan range when zoomed in.
+        const effWidth = Math.max(imageBounds.current.width, containerBounds.current.width);
+        const maxX = Math.max(0, (effWidth * scale - containerBounds.current.width) / 2);
         const maxY = Math.max(0, (imageBounds.current.height * scale - containerBounds.current.height) / 2);
         // Multiply by scale because offset is applied as translate(offset/scale)
         // so raw offset must be scale times larger than visual pixel distance
