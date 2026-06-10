@@ -77,7 +77,7 @@ const ServiceCard = ({
 const ServicesGrid = () => {
   const t = useT();
   return (
-    <section id="services" className="section-padding">
+    <section id="services" className="section-padding pb-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -90,7 +90,7 @@ const ServicesGrid = () => {
         <p className="max-w-md mx-auto whitespace-pre-line text-primary font-semibold">
           {t(
             "Nine practical tools to immediately improve how\nyou and your team functions",
-            "Devět praktických nástrojů, které okamžitě zlepší,\njak fungujete Vy i Váš tým"
+            "Devět praktických nástrojů, které okamžitě zlepší,\njak fungujete Vy i Váš tým",
           )}
         </p>
       </motion.div>
@@ -121,4 +121,3 @@ const ServiceGridInner = () => {
 };
 
 export default ServicesGrid;
-
