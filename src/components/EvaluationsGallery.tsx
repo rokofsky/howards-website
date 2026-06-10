@@ -585,6 +585,29 @@ const IsolatedView = ({
     if (scale === 1) setOffset({ x: 0, y: 0 });
   }, [scale]);
 
+  // Lock body scroll while the lightbox is mounted.
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  // Deferred centering transform — runs after focus/scale/selected settles,
+  // bails out while the user is actively swiping/panning/pinching so it
+  // never fights live gesture state.
+  useEffect(() => {
+    if (isPanning.current || pinchStartDist.current !== null) return;
+    const raf = requestAnimationFrame(() => {
+      if (isPanning.current || pinchStartDist.current !== null) return;
+      const shift = focusIdx !== selectedIdx && scale > 1 ? -(focusIdx - selectedIdx) * 100 : 0;
+      setCenterShift(shift);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [focusIdx, scale, selectedIdx]);
+
+
+
   useEffect(() => {
     if (!emblaApi) return;
     emblaApi.scrollTo(startIndex, true);
