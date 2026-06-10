@@ -23,7 +23,10 @@ const BRAND = "Rokofsky Communication";
 const Index = () => {
   const t = useT();
   const isCz = useIsCzech();
-
+useEffect(() => {
+  window.history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
+}, []);
 useEffect(() => {
   window.scrollTo(0, 0);
 }, []);
