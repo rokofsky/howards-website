@@ -25,9 +25,7 @@ const Index = () => {
   const isCz = useIsCzech();
 
   useEffect(() => {
-    const homeTitle = isCz
-      ? `${BRAND} | Trénink a koučink`
-      : `${BRAND} | Training & Coaching`;
+    const homeTitle = isCz ? `${BRAND} | Trénink a koučink` : `${BRAND} | Training & Coaching`;
 
     const compute = () => {
       const hash = window.location.hash.toLowerCase();
@@ -97,7 +95,7 @@ const Index = () => {
       <FAQSection />
 
       {/* NOTE: Reduced pt-8 (was section-padding) to tighten gap after FAQ */}
-      <section id="references" className="pb-16 md:pb-24 px-4 md:px-6 pt-8">
+      <section id="eval-section" className="pb-16 md:pb-24 px-4 md:px-6 pt-8">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("References", "Reference")}</h2>
@@ -129,28 +127,32 @@ const Index = () => {
         <p className="text-center text-[10px] text-muted-foreground/40 font-light mt-8">v{ASSET_VERSION}</p>
       </section>
 
-
       <PricingSection />
-      
+
       <VideoShowcase />
       <BookingSection />
 
       {/* Contact Section */}
       <section id="contact" className="section-padding">
         <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">
-            {t("Email Howard", "Napište Howardovi")}
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("Email Howard", "Napište Howardovi")}</h2>
           <p className="max-w-md mx-auto font-medium text-primary">
             {t(
               "Whether you have a quick question or grand plan, I read and reply to every personal message by next day.",
-              "Ať už máte rychlý dotaz nebo velkolepý plán, každou osobní zprávu si přečtu a odpovím na ni nejpozději druhý den."
+              "Ať už máte rychlý dotaz nebo velkolepý plán, každou osobní zprávu si přečtu a odpovím na ni nejpozději druhý den.",
             )}
           </p>
         </div>
         <ContactForm />
         <div className="text-center mt-8">
-          <Button variant="glassPetrol" size="lg" onClick={() => { trackCTA("book_call_contact_section"); openCalendly(); }}>
+          <Button
+            variant="glassPetrol"
+            size="lg"
+            onClick={() => {
+              trackCTA("book_call_contact_section");
+              openCalendly();
+            }}
+          >
             {t("Skip the email, book a call now", "Zapomeňte na e-mail – rovnou si domluvte hovor")}
           </Button>
         </div>
