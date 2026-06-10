@@ -855,9 +855,9 @@ const IsolatedView = ({
             const isNeighbor = isPrev || isNext;
             // Outline focused side-card (focused but not the embla-current slide)
             const isFocusedSide = isFocused && !isCurrent;
-            // Isolated centering shift: when zoomed, translate the focused
-            // slide wrapper toward viewport center without touching the track.
-            const centerShiftPct = isFocused && scale > 1 ? -(focused - current) * 100 : 0;
+            // Isolated centering shift: applied only to the focused slide,
+            // driven by the rAF-deferred effect above.
+            const slideShiftPct = isFocused ? centerShiftPct : 0;
             return (
               <div
                 key={it.key}
