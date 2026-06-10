@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         topic: title || "Storytelling Session",
-        type: 2,
+        type: 3,
         start_time: date,
         agenda: description || "",
         duration: 60,
