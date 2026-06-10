@@ -769,6 +769,10 @@ const IsolatedView = ({
       const velocityX = Math.abs(dx) / dt; // px/ms
 
       const isFastSwipe = velocityX > 0.3 && Math.abs(dx) > 40 && Math.abs(dx) > dy;
+      // When zoomed, suppress swipe-to-navigate unless an edge-handoff condition is met.
+      // Placeholder flag — a follow-up prompt will replace this with real edge logic.
+      const isEdgeHandoff = false;
+      if (scale > 1 && !isEdgeHandoff) return;
       if (isFastSwipe) {
         setScale(1);
         setOffset({ x: 0, y: 0 });
