@@ -562,9 +562,18 @@ const IsolatedView = ({
   const activeImgRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
+    // While the user is actively panning, leave the shift untouched so we
+    // don't fight their gesture; panReleaseTick re-runs this on release.
     if (isPanning.current) return;
+    // Short-circuit when not zoomed — prevents stale shift bleed-through.
+    if (scale <= 1) {
+      setCenterShiftPct(0);
+      return;
+    }
     const raf = requestAnimationFrame(() => {
-      setCenterShiftPct(scale > 1 ? (selectedIdx - focusIdx) * 100 : 0);
+      // current === selectedIdx; (current - focusIdx) * 100 centers both
+      // left (focusIdx < current → +100%) and right (focusIdx > current → -100%).
+      setCenterShiftPct((selectedIdx - focusIdx) * 100);
     });
     return () => cancelAnimationFrame(raf);
   }, [focusIdx, scale, selectedIdx, panReleaseTick]);
