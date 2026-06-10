@@ -248,7 +248,9 @@ const EvaluationsGallery = () => {
     if (el) el.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
   }, [query, sort, filtered]);
 
+  const scrollPosRef = useRef(0);
   const openLightbox = (item: Item) => {
+    scrollPosRef.current = window.scrollY;
     const idx = allSorted.indexOf(item);
     setLightboxIndex(idx);
     trackEvent("evaluation_open", { evaluation_number: item.num });
@@ -499,7 +501,10 @@ const EvaluationsGallery = () => {
           items={allSorted}
           startIndex={lightboxIndex}
           onIndexChange={setLightboxIndex}
-          onClose={() => setLightboxIndex(null)}
+          onClose={() => {
+            setLightboxIndex(null);
+            window.scrollTo(0, scrollPosRef.current);
+          }}
           alt={t("Evaluation form scan", "Sken hodnotícího formuláře")}
           prevLabel={t("Previous", "Předchozí")}
           nextLabel={t("Next", "Další")}
