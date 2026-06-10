@@ -628,7 +628,7 @@ const IsolatedView = ({
     return () => img.removeEventListener("wheel", onWheel);
   }, [focusIdx, emblaApi]);
 
-  // Keyboard nav + lock body scroll
+  // Keyboard nav
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -636,13 +636,18 @@ const IsolatedView = ({
       else if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
     };
     window.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "clip";
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
     };
   }, [emblaApi, onClose]);
+
+  // Strict body scroll lock — set hidden on mount, fully clear on unmount.
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
 
   // Disable Embla's drag/swipe when zoomed in so pan gestures don't get hijacked.
   useEffect(() => {
@@ -779,7 +784,7 @@ const IsolatedView = ({
 
   const btnStyle: React.CSSProperties = {
     position: "fixed",
-    zIndex: 45,
+    zIndex: 99999,
     background: "rgba(10,25,47,0.7)",
     backdropFilter: "blur(12px)",
     WebkitBackdropFilter: "blur(12px)",
@@ -843,14 +848,17 @@ const IsolatedView = ({
             return (
               <div
                 key={it.key}
-                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""} ${isFocusedSide ? "ring-2 ring-white/60 shadow-xl" : ""} transition-all`}
+                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""} transition-all`}
                 style={{
                   overflow: "visible",
                   pointerEvents: "auto",
                   zIndex: isFocused ? (scale > 1 ? 10 : 2) : 1,
                   visibility: !isFocused && scale > 1 ? "hidden" : "visible",
                   transform: centerShiftPct ? `translateX(${centerShiftPct}%)` : undefined,
-                  transition: isPanning.current ? "none" : "transform 0.2s ease",
+                  transition: isPanning.current ? "none" : "transform 0.25s ease",
+                  outline: isFocusedSide ? "2px solid rgba(255,255,255,0.6)" : undefined,
+                  outlineOffset: isFocusedSide ? "-6px" : undefined,
+                  borderRadius: "8px",
                 }}
                 onClick={
                   !isFocused
