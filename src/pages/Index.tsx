@@ -23,16 +23,6 @@ const BRAND = "Rokofsky Communication";
 const Index = () => {
   const t = useT();
   const isCz = useIsCzech();
-useEffect(() => {
-  window.history.scrollRestoration = "manual";
-  window.scrollTo(0, 0);
-}, []);
-useEffect(() => {
-  window.scrollTo(0, 0);
-}, []);
-
-useEffect(() => {
-  const homeTitle = isCz
 
   useEffect(() => {
     const homeTitle = isCz
@@ -107,7 +97,7 @@ useEffect(() => {
       <FAQSection />
 
       {/* NOTE: Reduced pt-8 (was section-padding) to tighten gap after FAQ */}
-      <section id="eval-section" className="pb-16 md:pb-24 px-4 md:px-6 pt-8">
+      <section id="references" className="pb-16 md:pb-24 px-4 md:px-6 pt-8">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("References", "Reference")}</h2>
