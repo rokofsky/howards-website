@@ -97,7 +97,7 @@ const Index = () => {
       <FAQSection />
 
       {/* NOTE: Reduced pt-8 (was section-padding) to tighten gap after FAQ */}
-      <section id="references" className="pb-16 md:pb-24 px-4 md:px-6 pt-8">
+      <section id="references" className="pb-8 md:pb-12 px-4 md:px-6 pt-8"> // EDIT VALUE HERE: reduce bottom padding to shorten darker orange background closure
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("References", "Reference")}</h2>
@@ -111,7 +111,7 @@ const Index = () => {
           </motion.div>
 
           {/* NOTE: Reduced mb-6 (was mb-12) to tighten subheading-to-gallery spacing */}
-          <div className="mb-6">
+          <div className="mb-3"> // EDIT VALUE HERE: reduce margin below gallery to shift everything higher
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-2xl font-bold">
                 {t("Evaluation forms from participants", "Hodnotící formuláře od účastníků")}
@@ -126,7 +126,7 @@ const Index = () => {
             <EvaluationsGallery />
           </div>
         </div>
-        <p className="text-center text-[10px] text-muted-foreground/40 font-light mt-8">v{ASSET_VERSION}</p>
+        <p className="text-center text-[10px] text-muted-foreground/40 font-light mt-3">v{ASSET_VERSION}</p> // EDIT VALUE HERE: reduce margin above version stamp to sit tighter with gallery
       </section>
 
 
