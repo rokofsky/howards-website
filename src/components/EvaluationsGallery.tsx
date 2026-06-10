@@ -543,9 +543,6 @@ const IsolatedView = ({
   // Focus index — the zoom/pan target, decoupled from Embla position.
   // Neighbor clicks shift this without moving the carousel.
   const [focusIdx, setFocusIdx] = useState(startIndex);
-  // Centering shift (%) applied to the focused slide wrapper when zoomed.
-  // Computed in a dedicated rAF-deferred effect to avoid stale layout reads.
-  const [centerShiftPct, setCenterShiftPct] = useState(0);
 
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
@@ -631,7 +628,7 @@ const IsolatedView = ({
     return () => img.removeEventListener("wheel", onWheel);
   }, [focusIdx, emblaApi]);
 
-  // Keyboard nav
+  // Keyboard nav + lock body scroll
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -639,18 +636,13 @@ const IsolatedView = ({
       else if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
     };
     window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "clip";
     return () => {
       window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
     };
   }, [emblaApi, onClose]);
-
-  // Strict body scroll lock — set hidden on mount, fully clear on unmount.
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, []);
 
   // Disable Embla's drag/swipe when zoomed in so pan gestures don't get hijacked.
   useEffect(() => {
@@ -785,16 +777,6 @@ const IsolatedView = ({
   // Zoom/pan target — independent of carousel position.
   const focused = focusIdx;
 
-  // Dynamically recompute centering shift any time focus, scale, or the
-  // embla-selected slide changes. Defer one frame so DOM has settled.
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      const shift = scale > 1 ? -(focusIdx - selectedIdx) * 100 : 0;
-      setCenterShiftPct(shift);
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [focusIdx, scale, selectedIdx]);
-
   const btnStyle: React.CSSProperties = {
     position: "fixed",
     zIndex: 45,
@@ -807,10 +789,11 @@ const IsolatedView = ({
   };
 
   return (
-    <div className="fixed inset-0 z-40 bg-background/95">
+    <div className="fixed inset-0 z-40 bg-background/95" style={{ pointerEvents: "none" }}>
       {/* BACKDROP: catches taps on orange padding to close */}
       <div
         className="absolute inset-0 z-0"
+        style={{ pointerEvents: "auto" }}
         onPointerDown={(e) => {
           pointerStartX.current = e.clientX;
           pointerStartY.current = e.clientY;
@@ -855,23 +838,20 @@ const IsolatedView = ({
             const isNeighbor = isPrev || isNext;
             // Outline focused side-card (focused but not the embla-current slide)
             const isFocusedSide = isFocused && !isCurrent;
-            // Isolated centering shift: applied only to the focused slide,
-            // driven by the rAF-deferred effect above.
-            const slideShiftPct = isFocused ? centerShiftPct : 0;
+            // Isolated centering shift: when zoomed, translate the focused
+            // slide wrapper toward viewport center without touching the track.
+            const centerShiftPct = isFocused && scale > 1 ? -(focused - current) * 100 : 0;
             return (
               <div
                 key={it.key}
-                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""} transition-all`}
+                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""} ${isFocusedSide ? "ring-2 ring-white/60 shadow-xl" : ""} transition-all`}
                 style={{
                   overflow: "visible",
                   pointerEvents: "auto",
                   zIndex: isFocused ? (scale > 1 ? 10 : 2) : 1,
                   visibility: !isFocused && scale > 1 ? "hidden" : "visible",
-                  transform: slideShiftPct ? `translateX(${slideShiftPct}%)` : undefined,
-                  transition: isPanning.current ? "none" : "transform 0.25s ease",
-                  outline: isFocusedSide ? "2px solid rgba(255,255,255,0.6)" : undefined,
-                  outlineOffset: isFocusedSide ? "-6px" : undefined,
-                  borderRadius: "8px",
+                  transform: centerShiftPct ? `translateX(${centerShiftPct}%)` : undefined,
+                  transition: isPanning.current ? "none" : "transform 0.2s ease",
                 }}
                 onClick={
                   !isFocused
