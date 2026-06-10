@@ -994,7 +994,7 @@ const IsolatedView = ({
         type="button"
         aria-label={closeLabel}
         onClick={onClose}
-        style={{ ...btnStyle, top: "52px", right: "8px" }}
+        style={{ ...btnStyle, top: "52px", right: "8px", pointerEvents: "auto" }}
         className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white"
       >
         <X className="h-6 w-6" />
