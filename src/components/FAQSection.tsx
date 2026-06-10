@@ -94,13 +94,13 @@ const FAQSection = () => {
             transition={{ delay: i * 0.05 }}
             className="glass rounded-lg group"
           >
-            <summary className="cursor-pointer px-6 py-3 text-base font-medium list-none flex justify-between items-center">
+            <summary className="cursor-pointer px-6 py-4 text-base font-medium list-none flex justify-between items-center">
               {faq.q}
               <span className="text-muted-foreground transition-transform duration-200 group-open:rotate-45 text-xl ml-4">
                 +
               </span>
             </summary>
-            <div className="px-6 pb-2 text-sm text-muted-foreground leading-relaxed font-medium">
+            <div className="px-6 pb-3 text-sm text-muted-foreground leading-relaxed font-medium">
               {faq.aElement ?? faq.a}
             </div>
           </motion.details>
