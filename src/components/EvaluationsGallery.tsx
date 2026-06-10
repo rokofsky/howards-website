@@ -545,17 +545,7 @@ const IsolatedView = ({
   // Neighbor clicks shift this without moving the carousel.
   const [focusIdx, setFocusIdx] = useState(startIndex);
   const [centerShiftPct, setCenterShiftPct] = useState(0);
-
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      if (scale > 1) {
-        setCenterShiftPct((selectedIdx - focusIdx) * 100);
-      } else {
-        setCenterShiftPct(0);
-      }
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [focusIdx, scale, selectedIdx]);
+  const [panReleaseTick, setPanReleaseTick] = useState(0);
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
   const pointerDownPos = useRef({ x: 0, y: 0 });
@@ -565,6 +555,14 @@ const IsolatedView = ({
   const imageBounds = useRef({ width: 0, height: 0 });
   const containerBounds = useRef({ width: 0, height: 0 });
   const activeImgRef = useRef<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    if (isPanning.current) return;
+    const raf = requestAnimationFrame(() => {
+      setCenterShiftPct(scale > 1 ? (selectedIdx - focusIdx) * 100 : 0);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [focusIdx, scale, selectedIdx, panReleaseTick]);
 
   // Pinch gesture refs
   const pinchStartDist = useRef<number | null>(null);
@@ -746,6 +744,7 @@ const IsolatedView = ({
       pinchStartDist.current = null;
 
       isPanning.current = false;
+      setPanReleaseTick((t) => t + 1);
 
       // Detect fast horizontal swipe → navigate to next/prev and reset zoom
       const dt = performance.now() - swipeStartTime.val;
