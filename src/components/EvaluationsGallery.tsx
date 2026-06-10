@@ -867,7 +867,7 @@ const IsolatedView = ({
                   pointerEvents: "auto",
                   zIndex: isFocused ? (scale > 1 ? 10 : 2) : 1,
                   visibility: !isFocused && scale > 1 ? "hidden" : "visible",
-                  transform: centerShiftPct ? `translateX(${centerShiftPct}%)` : undefined,
+                  transform: slideShiftPct ? `translateX(${slideShiftPct}%)` : undefined,
                   transition: isPanning.current ? "none" : "transform 0.25s ease",
                   outline: isFocusedSide ? "2px solid rgba(255,255,255,0.6)" : undefined,
                   outlineOffset: isFocusedSide ? "-6px" : undefined,
