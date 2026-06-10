@@ -843,11 +843,13 @@ const IsolatedView = ({
           overflow: scale > 1 ? "visible" : "hidden",
         }}
         onTouchStart={(e) => {
-          if (scale > 1) return;
+          const isEdgeHandoff = false;
+          if (scale > 1 && !isEdgeHandoff) return;
           (e.currentTarget as any)._touchStartX = e.touches[0].clientX;
         }}
         onTouchEnd={(e) => {
-          if (scale > 1) return;
+          const isEdgeHandoff = false;
+          if (scale > 1 && !isEdgeHandoff) return;
           const startX = (e.currentTarget as any)._touchStartX;
           if (startX === undefined) return;
           const diff = startX - e.changedTouches[0].clientX;
