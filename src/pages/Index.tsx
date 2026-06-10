@@ -124,7 +124,7 @@ const Index = () => {
             <EvaluationsGallery />
           </div>
         </div>
-        <p className="text-center text-[10px] text-muted-foreground/40 font-light mt-3">v{ASSET_VERSION}</p>
+        <p className="text-center text-[10px] text-muted-foreground/40 font-light mt-1">v{ASSET_VERSION}</p>
       </section>
 
       <PricingSection />
