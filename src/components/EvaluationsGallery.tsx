@@ -628,7 +628,7 @@ const IsolatedView = ({
     return () => img.removeEventListener("wheel", onWheel);
   }, [focusIdx, emblaApi]);
 
-  // Keyboard nav + lock body scroll
+  // Keyboard nav
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -636,13 +636,18 @@ const IsolatedView = ({
       else if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
     };
     window.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "clip";
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
     };
   }, [emblaApi, onClose]);
+
+  // Strict body scroll lock — set hidden on mount, fully clear on unmount.
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
 
   // Disable Embla's drag/swipe when zoomed in so pan gestures don't get hijacked.
   useEffect(() => {
