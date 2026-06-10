@@ -543,6 +543,9 @@ const IsolatedView = ({
   // Focus index — the zoom/pan target, decoupled from Embla position.
   // Neighbor clicks shift this without moving the carousel.
   const [focusIdx, setFocusIdx] = useState(startIndex);
+  // Centering shift (%) applied to the focused slide wrapper when zoomed.
+  // Computed in a dedicated rAF-deferred effect to avoid stale layout reads.
+  const [centerShiftPct, setCenterShiftPct] = useState(0);
 
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
