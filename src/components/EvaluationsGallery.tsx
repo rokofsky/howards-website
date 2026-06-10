@@ -785,9 +785,19 @@ const IsolatedView = ({
   // Zoom/pan target — independent of carousel position.
   const focused = focusIdx;
 
+  // Dynamically recompute centering shift any time focus, scale, or the
+  // embla-selected slide changes. Defer one frame so DOM has settled.
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      const shift = scale > 1 ? -(focusIdx - selectedIdx) * 100 : 0;
+      setCenterShiftPct(shift);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [focusIdx, scale, selectedIdx]);
+
   const btnStyle: React.CSSProperties = {
     position: "fixed",
-    zIndex: 99999,
+    zIndex: 45,
     background: "rgba(10,25,47,0.7)",
     backdropFilter: "blur(12px)",
     WebkitBackdropFilter: "blur(12px)",
@@ -797,7 +807,7 @@ const IsolatedView = ({
   };
 
   return (
-    <div className="fixed inset-0 z-30 bg-background/95">
+    <div className="fixed inset-0 z-40 bg-background/95">
       {/* BACKDROP: catches taps on orange padding to close */}
       <div
         className="absolute inset-0 z-0"
