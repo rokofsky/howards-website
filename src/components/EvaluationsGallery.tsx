@@ -545,17 +545,15 @@ const IsolatedView = ({
   // Neighbor clicks shift this without moving the carousel.
   const [focusIdx, setFocusIdx] = useState(startIndex);
   const [centerShiftPct, setCenterShiftPct] = useState(0);
+  const [panReleaseTick, setPanReleaseTick] = useState(0);
 
   useEffect(() => {
+    if (isPanning.current) return;
     const raf = requestAnimationFrame(() => {
-      if (scale > 1) {
-        setCenterShiftPct((selectedIdx - focusIdx) * 100);
-      } else {
-        setCenterShiftPct(0);
-      }
+      setCenterShiftPct(scale > 1 ? (selectedIdx - focusIdx) * 100 : 0);
     });
     return () => cancelAnimationFrame(raf);
-  }, [focusIdx, scale, selectedIdx]);
+  }, [focusIdx, scale, selectedIdx, panReleaseTick]);
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
   const pointerDownPos = useRef({ x: 0, y: 0 });
