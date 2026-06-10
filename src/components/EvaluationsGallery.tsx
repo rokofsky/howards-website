@@ -779,7 +779,7 @@ const IsolatedView = ({
 
   const btnStyle: React.CSSProperties = {
     position: "fixed",
-    zIndex: 45,
+    zIndex: 99999,
     background: "rgba(10,25,47,0.7)",
     backdropFilter: "blur(12px)",
     WebkitBackdropFilter: "blur(12px)",
@@ -789,11 +789,10 @@ const IsolatedView = ({
   };
 
   return (
-    <div className="fixed inset-0 z-40 bg-background/95" style={{ pointerEvents: "none" }}>
+    <div className="fixed inset-0 z-30 bg-background/95">
       {/* BACKDROP: catches taps on orange padding to close */}
       <div
         className="absolute inset-0 z-0"
-        style={{ pointerEvents: "auto" }}
         onPointerDown={(e) => {
           pointerStartX.current = e.clientX;
           pointerStartY.current = e.clientY;
