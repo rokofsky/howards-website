@@ -392,7 +392,7 @@ const EvaluationsGallery = () => {
   }, []);
 
   return (
-    <div className="mb-12">
+    <div className="mb-2">
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
