@@ -815,7 +815,7 @@ const IsolatedView = ({
   };
 
   return (
-    <div className="fixed inset-0 z-30 bg-background/95">
+    <div className="fixed inset-0 z-30 bg-background/95 pointer-events-none">
       {/* BACKDROP: catches taps on orange padding to close */}
       <div
         className="absolute inset-0 z-0"
