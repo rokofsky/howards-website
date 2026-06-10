@@ -865,7 +865,7 @@ const IsolatedView = ({
             const isFocusedSide = isFocused && !isCurrent;
             // Isolated centering shift: when zoomed, translate the focused
             // slide wrapper toward viewport center without touching the track.
-            const centerShiftPct = isFocused && scale > 1 ? -(focused - current) * 100 : 0;
+            const centerShiftPct = isFocused && scale > 1 ? centerShift : 0;
             return (
               <div
                 key={it.key}
