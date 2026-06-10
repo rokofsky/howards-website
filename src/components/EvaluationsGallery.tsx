@@ -544,19 +544,18 @@ const IsolatedView = ({
   // Focus index — the zoom/pan target, decoupled from Embla position.
   // Neighbor clicks shift this without moving the carousel.
   const [focusIdx, setFocusIdx] = useState(startIndex);
-  const [focusIdx, setFocusIdx] = useState(startIndex);
   const [centerShiftPct, setCenterShiftPct] = useState(0);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
       if (scale > 1) {
-        setCenterShiftPct((current - focusIdx) * 100);
+        setCenterShiftPct((selectedIdx - focusIdx) * 100);
       } else {
         setCenterShiftPct(0);
       }
     });
     return () => cancelAnimationFrame(raf);
-  }, [focusIdx, scale, current]);
+  }, [focusIdx, scale, selectedIdx]);
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
   const pointerDownPos = useRef({ x: 0, y: 0 });
