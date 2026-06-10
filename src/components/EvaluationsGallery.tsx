@@ -553,6 +553,7 @@ const IsolatedView = ({
   const imageBounds = useRef({ width: 0, height: 0 });
   const containerBounds = useRef({ width: 0, height: 0 });
   const activeImgRef = useRef<HTMLImageElement | null>(null);
+  const savedScrollY = useRef(0);
 
   // Pinch gesture refs
   const pinchStartDist = useRef<number | null>(null);
@@ -581,6 +582,14 @@ const IsolatedView = ({
   useEffect(() => {
     if (scale === 1) setOffset({ x: 0, y: 0 });
   }, [scale]);
+
+  // Save scroll position when lightbox opens, restore on close (unmount)
+  useEffect(() => {
+    savedScrollY.current = window.scrollY;
+    return () => {
+      window.scrollTo(0, savedScrollY.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (!emblaApi) return;
