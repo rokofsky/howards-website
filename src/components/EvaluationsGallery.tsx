@@ -818,7 +818,7 @@ const IsolatedView = ({
     <div className="fixed inset-0 z-30 bg-background/95 pointer-events-none">
       {/* BACKDROP: catches taps on orange padding to close */}
       <div
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 pointer-events-auto"
         onPointerDown={(e) => {
           pointerStartX.current = e.clientX;
           pointerStartY.current = e.clientY;
