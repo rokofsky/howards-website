@@ -1023,7 +1023,7 @@ const IsolatedView = ({
             aria-label={prevLabel}
             onClick={() => emblaApi?.scrollPrev()}
             style={{ ...btnStyle, top: "50%", left: "8px", transform: "translateY(-50%)" }}
-            className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
+            className="pointer-events-auto inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronLeft className="h-7 w-7" />
           </button>
@@ -1032,7 +1032,7 @@ const IsolatedView = ({
             aria-label={nextLabel}
             onClick={() => emblaApi?.scrollNext()}
             style={{ ...btnStyle, top: "50%", right: "8px", transform: "translateY(-50%)" }}
-            className="inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
+            className="pointer-events-auto inline-flex items-center justify-center w-14 h-14 rounded-full text-white portrait:scale-[1.3] landscape:scale-[1.7]"
           >
             <ChevronRight className="h-7 w-7" />
           </button>
