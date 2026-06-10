@@ -544,7 +544,19 @@ const IsolatedView = ({
   // Focus index — the zoom/pan target, decoupled from Embla position.
   // Neighbor clicks shift this without moving the carousel.
   const [focusIdx, setFocusIdx] = useState(startIndex);
+  const [focusIdx, setFocusIdx] = useState(startIndex);
+  const [centerShiftPct, setCenterShiftPct] = useState(0);
 
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      if (scale > 1) {
+        setCenterShiftPct((current - focusIdx) * 100);
+      } else {
+        setCenterShiftPct(0);
+      }
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [focusIdx, scale, current]);
   const pointerStartX = useRef<number>(0);
   const pointerStartY = useRef<number>(0);
   const pointerDownPos = useRef({ x: 0, y: 0 });
@@ -841,7 +853,6 @@ const IsolatedView = ({
             const isFocusedSide = isFocused && !isCurrent;
             // Isolated centering shift: when zoomed, translate the focused
             // slide wrapper toward viewport center without touching the track.
-            const centerShiftPct = isFocused && scale > 1 ? (current - focused) * 100 : 0;
             return (
               <div
                 key={it.key}
