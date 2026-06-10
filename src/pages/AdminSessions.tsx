@@ -191,6 +191,9 @@ export default function AdminSessions() {
     <div className="min-h-screen bg-background p-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-foreground">Manage Storytelling Sessions</h1>
+        <Button variant="outline" size="sm" onClick={() => navigate("/rokofsky-admin")}>
+          ← Admin
+        </Button>
         <Button variant="outline" size="sm" onClick={() => navigate("/")}>
           Home
         </Button>
