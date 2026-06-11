@@ -31,7 +31,7 @@ const Header = () => {
     label: t("Story Sandbox", "Story Sandbox"),
     href: lp("/story-sandbox"),
   };
-  
+  const cvLink = { kind: "plain" as const, label: "CV", href: lp("/cv") };
   const bookLink = {
     kind: "external" as const,
     label: t("My Book", "Moje kniha"),
@@ -56,6 +56,7 @@ const Header = () => {
     hashLinks[2],
     referencesLink,
     bookLink,
+    cvLink,
     blogLink,
     storySandboxLink,
     hashLinks[3],
@@ -242,7 +243,7 @@ const Header = () => {
           <Button
             variant="cta"
             asChild
-            className="rounded-full py-0 px-2.5 text-xs h-6 min-h-0 whitespace-nowrap max-lg:landscape:text-xs max-lg:landscape:px-2 max-lg:landscape:py-0"
+            className="rounded-2xl py-0 px-2.5 text-xs h-5 min-h-0 whitespace-nowrap max-lg:landscape:text-xs max-lg:landscape:px-2 max-lg:landscape:py-0"
           >
             <Link to={lp("/storytelling-sessions")}>
               {t("Free Storytelling Sessions!", "Bezplatná sezení Storytellingu!")}
