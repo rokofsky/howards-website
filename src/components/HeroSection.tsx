@@ -53,7 +53,7 @@ const HeroSection = () => {
 
   return (
     <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
-      <Link to={lp("/bio")} className="block w-full h-full relative">
+      <div className="block w-full h-full relative">
         <AnimatePresence mode="wait">
           <motion.div key={current} className="absolute inset-0" exit={{ opacity: 0 }} transition={{ duration: 1.2 }}>
             <motion.img
@@ -84,7 +84,7 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/20 to-transparent">
           {"\n"}
         </div>
-      </Link>
+      </div>
 
       {/* Navigation arrows */}
       <button
