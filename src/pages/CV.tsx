@@ -51,7 +51,7 @@ const CV = () => {
 
               <div>
                 <p className="font-medium"><strong>{t("2020 – pres:", "2020 – dosud: ")}</strong> <em>{t("Online Webinars and Storytelling Sessions", "Online webináře a sezení zaměřená na vyprávění příběhů")}</em></p>
-                <p>{t(">150 webinars and sessions for ±6-96 participants including Effective Feedback, EQ, NLP, Cultural Intelligence, Storytelling Skills, Six Hats Thinking Meetings, Multiple Intelligences, Zazen Meditation, Image-streaming, Behavioral Economics.", "Více než 150 webinářů a setkání pro přibližně 6 až 96 účastníků, včetně témat jako efektivní zpětná vazba, emoční inteligence, NLP, kulturní inteligence, storytelling, setkání metodou Šesti klobouků, teorie mnoha inteligencí, meditace zazen, image-streaming a behaviorální ekonomie.")}</p>
+                <p>{t(">150 webinars and sessions for ±6-96 participants (see the Live Webinars page for a taste. In addition to those, I also did \"Sit-down Comedy\", Improv, and debate events.", "Více než 150 webinářů a setkání pro přibližně 6 až 96 účastníků (ochutnávku najdete na stránce Živé webináře. Kromě nich jsem dělal také \"Sit-down Comedy\", improvizaci a debatní akce.")}</p>
               </div>
 
               <div>
