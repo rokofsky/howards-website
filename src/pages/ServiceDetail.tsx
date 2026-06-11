@@ -211,7 +211,7 @@ const ServiceDetail = () => {
                           <Button
                             variant="outline"
                             size="default"
-                            className="text-sm md:text-base px-2 py-1 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90"
+                            className="text-sm md:text-base px-3 py-1 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90 whitespace-nowrap"
                             onClick={() => {
                               const el = document.getElementById("inquiry-form");
                               if (el) {
@@ -227,7 +227,8 @@ const ServiceDetail = () => {
                       if (idx < 0) {
                         return (
                           <>
-                            {titleText} {inquiryBtn}
+                            {titleText}
+                            <div className="mt-2">{inquiryBtn}</div>
                           </>
                         );
                       }
