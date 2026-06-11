@@ -282,19 +282,20 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
               />
             </div>
 
-            <div className="rounded-md border border-gold/40 bg-gold/5 px-4 py-3 flex items-center justify-between">
-              <span className="text-sm text-muted-foreground font-medium">{t("Subtotal", "Mezisoučet")}</span>
-              <span className="text-lg font-semibold text-gold">
-                {t(
-                  `CZK ${(selectedSlugs.length * 3000).toLocaleString("en-US")} / €${selectedSlugs.length * 125}`,
-                  `${(selectedSlugs.length * 3000).toLocaleString("cs-CZ")} Kč / ${selectedSlugs.length * 125} €`,
-                )}
-              </span>
+            <div className="space-y-1">
+              <div className="rounded-md border border-gold/40 bg-gold/5 px-4 py-3 flex items-center justify-between">
+                <span className="text-sm text-muted-foreground font-medium">{t("Subtotal", "Mezisoučet")}</span>
+                <span className="text-lg font-semibold text-gold">
+                  {t(
+                    `CZK ${(selectedSlugs.length * 3000).toLocaleString("en-US")} / €${selectedSlugs.length * 125}`,
+                    `${(selectedSlugs.length * 3000).toLocaleString("cs-CZ")} Kč / ${selectedSlugs.length * 125} €`,
+                  )}
+                </span>
+              </div>
+              <p className="text-right text-sm font-semibold text-gold">
+                {t("There is no payment now, we will be in touch", "Nyní se neplatí, ozveme se vám")}
+              </p>
             </div>
-
-            <p className="text-right text-sm font-semibold text-gold">
-              {t("There is no payment now, we will be in touch", "Nyní se neplatí, ozveme se vám")}
-            </p>
 
             <div>
               <Label htmlFor="order-note" className="mb-2 block">
