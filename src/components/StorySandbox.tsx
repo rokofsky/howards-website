@@ -334,21 +334,63 @@ export default function StorySandbox() {
     setHasPrev((p) => ({ ...p, [cat]: false }));
   };
 
+  // --- Shuffled queues (Fisher-Yates playlist style) ---
+  // Stores indices into the source pool, plus the current pointer.
+  type QueueState = { indices: number[]; idx: number; lastId: string | number | null };
+  const characterQueueRef = useRef<QueueState>({ indices: [], idx: 0, lastId: null });
+  const incidentQueueRef = useRef<QueueState>({ indices: [], idx: 0, lastId: null });
+  const oneLinerQueueRef = useRef<QueueState>({ indices: [], idx: 0, lastId: null });
+
+  const queueRefForCat = (cat: Category) =>
+    cat === "character" ? characterQueueRef : cat === "incident" ? incidentQueueRef : characterQueueRef;
+
+  // Build a Fisher-Yates queue of valid indices for the given pool/category.
+  // Ensures the first item is not the same as `lastId` (no consecutive dup) when possible.
+  const buildQueue = (
+    pool: Array<SandboxRow | PromptRow>,
+    cat: string,
+    lastId: string | number | null,
+  ): number[] => {
+    const valid: number[] = [];
+    for (let i = 0; i < pool.length; i++) {
+      if (isAdmin || isRowValidFor(pool[i], cat)) valid.push(i);
+    }
+    if (valid.length === 0) return [];
+    const shuffled = fisherYates(valid);
+    if (shuffled.length > 1 && lastId != null && pool[shuffled[0]]?.id === lastId) {
+      [shuffled[0], shuffled[1]] = [shuffled[1], shuffled[0]];
+    }
+    return shuffled;
+  };
+
+  // Reset queues whenever the underlying pools change.
+  useEffect(() => {
+    characterQueueRef.current = { indices: [], idx: 0, lastId: characterQueueRef.current.lastId };
+    incidentQueueRef.current = { indices: [], idx: 0, lastId: incidentQueueRef.current.lastId };
+  }, [allSandboxPrompts]);
+  useEffect(() => {
+    oneLinerQueueRef.current = { indices: [], idx: 0, lastId: oneLinerQueueRef.current.lastId };
+  }, [allOneLiners]);
+
   const shuffleCard = (cat: Category, poolOverride?: SandboxRow[]) => {
     const pool = poolOverride ?? allSandboxPrompts;
     if (!pool.length) return;
-    let row = pickRandom(pool);
-    if (!isAdmin) {
-      let tries = 0;
-      while (row && !isRowValidFor(row, cat) && tries < 50) {
-        row = pickRandom(pool);
-        tries++;
-      }
+    const qRef = queueRefForCat(cat);
+    let q = qRef.current;
+    // (Re)build queue if empty, exhausted, or pool override provided
+    if (poolOverride || q.indices.length === 0 || q.idx >= q.indices.length) {
+      const indices = buildQueue(pool, cat, q.lastId);
+      if (indices.length === 0) return;
+      q = { indices, idx: 0, lastId: q.lastId };
     }
+    const rowIdx = q.indices[q.idx];
+    const row = pool[rowIdx];
     if (!row) return;
+    qRef.current = { indices: q.indices, idx: q.idx + 1, lastId: row.id ?? null };
+
     prevPrompts.current[cat] = { row: cardRows[cat]!, text: prompts[cat] };
     setHasPrev((p) => ({ ...p, [cat]: true }));
-    setCardRows((prev) => ({ ...prev, [cat]: row! }));
+    setCardRows((prev) => ({ ...prev, [cat]: row }));
     const text = getFieldValue(row as unknown as Record<string, unknown>, cat);
     setPrompts((p) => ({ ...p, [cat]: text || p[cat] }));
     setAnimKeys((prev) => ({ ...prev, [cat]: prev[cat] + 1 }));
@@ -363,15 +405,16 @@ export default function StorySandbox() {
   const shuffleOneLiner = (poolOverride?: PromptRow[]) => {
     const pool = poolOverride ?? allOneLiners;
     if (!pool.length) return;
-    let row = pickRandom(pool);
-    if (!isAdmin) {
-      let tries = 0;
-      while (row && !isRowValidFor(row, "oneLiners") && tries < 50) {
-        row = pickRandom(pool);
-        tries++;
-      }
+    let q = oneLinerQueueRef.current;
+    if (poolOverride || q.indices.length === 0 || q.idx >= q.indices.length) {
+      const indices = buildQueue(pool, "oneLiners", q.lastId);
+      if (indices.length === 0) return;
+      q = { indices, idx: 0, lastId: q.lastId };
     }
+    const row = pool[q.indices[q.idx]];
     if (!row) return;
+    oneLinerQueueRef.current = { indices: q.indices, idx: q.idx + 1, lastId: row.id ?? null };
+
     setOneLinerRow(row);
     setOneLinerAnimKey((k) => k + 1);
     setDrafts((d) => {
