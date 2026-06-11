@@ -32,6 +32,7 @@ export const WebinarDetailsModal = ({ open, onOpenChange, title, details, onInqu
               padding: "16px 28px",
               cursor: "pointer",
               fontSize: "18px",
+              minWidth: "200px",
             }}
           >
             {t("Inquire", "Poptat")}
