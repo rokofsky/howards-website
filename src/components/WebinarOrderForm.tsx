@@ -298,7 +298,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-              <div>
+              <div className="-mt-2">
                 <Label htmlFor="order-note" className="mb-2 block">
                   {t("Optional note", "Volitelná poznámka")}
                 </Label>
