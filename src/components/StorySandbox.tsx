@@ -159,7 +159,6 @@ export default function StorySandbox() {
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [addingNew, setAddingNew] = useState<Record<string, boolean>>({});
   const [savingField, setSavingField] = useState<Record<string, boolean>>({});
-  const [hasPrev, setHasPrev] = useState<Record<Category, boolean>>({ character: false, incident: false, constraint: false });
 
   const PLACEHOLDER_CHAR = "[Pending Admin Character]";
   const PLACEHOLDER_INC = "[Pending Admin Incident]";
@@ -815,10 +814,6 @@ export default function StorySandbox() {
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold">One size fits all prompts</h3>
-          <Button variant="glass" size="sm" onClick={() => shuffleOneLiner()} disabled={!allOneLiners.length}>
-            <Shuffle className="h-4 w-4" />
-            Shuffle
-          </Button>
         </div>
         <Card
           key={`oneliner-${oneLinerAnimKey}`}
@@ -884,6 +879,17 @@ export default function StorySandbox() {
               <span />
             )}
             <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
+          </div>
+          <div className="flex justify-center mt-2">
+            <button
+              type="button"
+              onClick={() => shuffleOneLiner()}
+              disabled={!allOneLiners.length}
+              className="text-foreground hover:opacity-70 transition-opacity"
+              aria-label="Shuffle one-liner"
+            >
+              <Shuffle className="h-5 w-5" strokeWidth={2.5} />
+            </button>
           </div>
         </Card>
       </section>
