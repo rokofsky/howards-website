@@ -29,9 +29,9 @@ export const WebinarDetailsModal = ({ open, onOpenChange, title, details, onInqu
               color: "#3d2010",
               border: "none",
               borderRadius: "6px",
-              padding: "8px 16px",
+              padding: "12px 24px",
               cursor: "pointer",
-              fontSize: "14px",
+              fontSize: "16px",
             }}
           >
             {t("Inquire", "Poptat")}
