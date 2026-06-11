@@ -243,7 +243,7 @@ const Header = () => {
           <Button
             variant="cta"
             asChild
-            className="rounded-full py-1 px-3.5 text-sm h-auto whitespace-nowrap max-lg:landscape:text-xs max-lg:landscape:px-2 max-lg:landscape:py-0.5"
+            className="rounded-full py-0.5 px-3.5 text-sm h-auto whitespace-nowrap max-lg:landscape:text-xs max-lg:landscape:px-2 max-lg:landscape:py-0.5"
           >
             <Link to={lp("/storytelling-sessions")}>
               {t("Free Storytelling Sessions!", "Bezplatná sezení Storytellingu!")}
