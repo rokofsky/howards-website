@@ -254,10 +254,6 @@ const ServiceDetail = () => {
     </div>
   </>
 );
-                            {before}
-                            {inquiryBtn}
-                          </>
-                        );
                       })()
                     : detail?.pageTitle
                       ? pickL(detail.pageTitle, lang)
