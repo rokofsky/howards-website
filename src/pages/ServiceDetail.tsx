@@ -210,8 +210,8 @@ const ServiceDetail = () => {
                           {idx >= 0 ? titleText.substr(idx, anchor.length) : ""}
                           <Button
                             variant="outline"
-                            size="sm"
-                            className="text-[10px] md:text-xs px-2 py-0.5 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90"
+                            size="default"
+                            className="text-sm md:text-base px-4 py-2 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90"
                             onClick={() => {
                               const el = document.getElementById("inquiry-form");
                               if (el) {
