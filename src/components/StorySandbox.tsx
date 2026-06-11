@@ -761,7 +761,6 @@ export default function StorySandbox() {
                         <Shuffle className="h-5 w-5" strokeWidth={2.5} />
                       </button>
                     )}
-                    <VoteThumbs sheetKey="sandbox" id={cardRows[key]?.id} box={box} />
                     {showShuffle && hasPrev[key as Category] && (
                       <button
                         type="button"
@@ -864,6 +863,7 @@ export default function StorySandbox() {
                     ) : (
                       <span />
                     )}
+                    <VoteThumbs sheetKey="sandbox" id={cardRows[key]?.id} box={box} />
                   </div>
                 )}
               </Card>
