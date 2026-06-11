@@ -308,7 +308,7 @@ export default function StorySandbox() {
     return "";
   };
 
-// --- Independent shuffle handlers ---
+  // --- Independent shuffle handlers ---
   const undoShuffle = (cat: Category) => {
     const prev = prevPrompts.current[cat];
     if (!prev) return;
@@ -316,6 +316,7 @@ export default function StorySandbox() {
     setPrompts((p) => ({ ...p, [cat]: prev.text }));
     setAnimKeys((k) => ({ ...k, [cat]: k[cat] + 1 }));
     delete prevPrompts.current[cat];
+    setHasPrev((p) => ({ ...p, [cat]: false }));
   };
 
   const shuffleCard = (cat: Category, poolOverride?: SandboxRow[]) => {
@@ -331,6 +332,7 @@ export default function StorySandbox() {
     }
     if (!row) return;
     prevPrompts.current[cat] = { row: cardRows[cat]!, text: prompts[cat] };
+    setHasPrev((p) => ({ ...p, [cat]: true }));
     setCardRows((prev) => ({ ...prev, [cat]: row! }));
     const text = getFieldValue(row as unknown as Record<string, unknown>, cat);
     setPrompts((p) => ({ ...p, [cat]: text || p[cat] }));
@@ -687,26 +689,26 @@ export default function StorySandbox() {
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">{label}</span>
                   <div className="flex items-center gap-2">
-  {showShuffle && (
-    <button
-      type="button"
-      onClick={() => shuffleCard(key)}
-      className="text-foreground hover:opacity-70 transition-opacity"
-      aria-label={`Shuffle ${label}`}
-    >
-      <Shuffle className="h-5 w-5" strokeWidth={2.5} />
-    </button>
-  )}
-  {showShuffle && prevPrompts.current[key as Category] && (
-    <button
-      type="button"
-      onClick={() => undoShuffle(key as Category)}
-      className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2"
-    >
-      ↩
-    </button>
-  )}
-</div>
+                    {showShuffle && (
+                      <button
+                        type="button"
+                        onClick={() => shuffleCard(key)}
+                        className="text-foreground hover:opacity-70 transition-opacity"
+                        aria-label={`Shuffle ${label}`}
+                      >
+                        <Shuffle className="h-5 w-5" strokeWidth={2.5} />
+                      </button>
+                    )}
+                    {showShuffle && hasPrev[key as Category] && (
+                      <button
+                        type="button"
+                        onClick={() => undoShuffle(key as Category)}
+                        className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2"
+                      >
+                        ↩
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {isConstraint ? (
