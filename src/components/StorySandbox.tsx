@@ -944,18 +944,24 @@ export default function StorySandbox() {
                     className="text-muted-foreground hover:text-destructive underline underline-offset-2"
                   >
                     Delete
-                  <div className="flex items-center gap-2 mx-auto">
-  <button
-    type="button"
-    onClick={() => shuffleOneLiner()}
-    disabled={!allOneLiners.length}
-    className="text-foreground hover:opacity-70 transition-opacity"
-    aria-label="Shuffle one-liner"
-  >
-    <Shuffle className="h-5 w-5" strokeWidth={2.5} />
-  </button>
-  <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
-</div>
+                  </button>
+                )}
+              </div>
+            ) : (
+              <span />
+            )}
+            <div className="flex items-center gap-2 mx-auto">
+              <button
+                type="button"
+                onClick={() => shuffleOneLiner()}
+                disabled={!allOneLiners.length}
+                className="text-foreground hover:opacity-70 transition-opacity"
+                aria-label="Shuffle one-liner"
+              >
+                <Shuffle className="h-5 w-5" strokeWidth={2.5} />
+              </button>
+              <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
+            </div>
           </div>
         </Card>
       </section>
