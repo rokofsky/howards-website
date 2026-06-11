@@ -211,7 +211,7 @@ const ServiceDetail = () => {
                           <Button
                             variant="outline"
                             size="default"
-                            className="text-sm md:text-base px-4 py-2 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90"
+                            className="text-sm md:text-base px-3 py-1 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90"
                             onClick={() => {
                               const el = document.getElementById("inquiry-form");
                               if (el) {
