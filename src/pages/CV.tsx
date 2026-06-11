@@ -56,7 +56,7 @@ const CV = () => {
 
               <div>
                 <p className="font-medium"><strong>2018 – 2022:</strong> <em>{t("English teacher: Trojské Gymnázium, Euroškola, Prague, CZ", "Učitel angličtiny: Trojské gymnázium, Euroškola, Praha, CZ")}</em></p>
-                <p>{t("After an injury and – due to long-term crutches – the inability to resume corporate training, I took the opportunity to teach children fulltime at a local prep school.", "Po úrazu a kvůli dlouhodobému používání berlí, které mi znemožnilo návrat ke korporátním školením, jsem využil příležitosti učit děti na plný úvazek na místní gymnázium.")}</p>
+                <p>{t("After an injury and – due to long-term injury recovery – the inability to resume corporate training, I took the opportunity to teach children fulltime at a local prep school. My biggest fear was one of the kids bumping into a crutch.", "Po úrazu a kvůli dlouhé rekonvalescenci, která mi znemožnila návrat ke korporátním školením, jsem využil příležitosti učit děti na plný úvazek na místním gymnáziu. Mým největším strachem bylo, že do mě některé z dětí vrazí a porazí mi berle.")}</p>
               </div>
 
               <div>
