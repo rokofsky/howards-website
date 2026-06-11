@@ -126,16 +126,18 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
         .join(", "),
     );
     console.log("DEBUG note value:", note, "length:", note.length);
+    console.log("INVOKE BODY note:", String(note), "preferredTime:", String(preferredTime));
     await supabase.functions.invoke("send-webinar-email", {
       body: {
         customer_name: name,
         customer_email: fixedEmail ?? email,
         chosen_date: chosen_date.join(", "),
+        preferred_time: preferredTime,
         webinar_title: allWebinars
           .filter((w) => selectedSlugs.includes(w.slug))
           .map((w) => w.title)
           .join(", "),
-        note: note ?? "",
+        note: String(note),
       },
     });
     setSuccess(true);
