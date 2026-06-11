@@ -159,6 +159,7 @@ export default function StorySandbox() {
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [addingNew, setAddingNew] = useState<Record<string, boolean>>({});
   const [savingField, setSavingField] = useState<Record<string, boolean>>({});
+  const [hasPrev, setHasPrev] = useState<Record<Category, boolean>>({ character: false, incident: false, constraint: false });
 
   const PLACEHOLDER_CHAR = "[Pending Admin Character]";
   const PLACEHOLDER_INC = "[Pending Admin Incident]";
