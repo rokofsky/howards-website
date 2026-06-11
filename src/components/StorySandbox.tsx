@@ -324,18 +324,33 @@ export default function StorySandbox() {
     setHasPrev((p) => ({ ...p, [cat]: false }));
   };
 
+  const sameRow = (a: unknown, b: unknown) => {
+    if (!a || !b) return false;
+    const ra = a as Record<string, unknown>;
+    const rb = b as Record<string, unknown>;
+    if (ra.id !== undefined && rb.id !== undefined) return ra.id === rb.id;
+    return ra === rb;
+  };
+
   const shuffleCard = (cat: Category, poolOverride?: SandboxRow[]) => {
     const pool = poolOverride ?? allSandboxPrompts;
     if (!pool.length) return;
+    const current = cardRows[cat];
+    const isValid = (r: SandboxRow | undefined) =>
+      !!r && (isAdmin || isRowValidFor(r, cat));
     let row = pickRandom(pool);
-    if (!isAdmin) {
-      let tries = 0;
-      while (row && !isRowValidFor(row, cat) && tries < 50) {
-        row = pickRandom(pool);
-        tries++;
-      }
+    let tries = 0;
+    // Re-roll if invalid OR identical to the currently shown card (when pool has alternatives)
+    while (
+      row &&
+      tries < 100 &&
+      (!isValid(row) || (pool.length > 1 && sameRow(row, current)))
+    ) {
+      row = pickRandom(pool);
+      tries++;
     }
-    if (!row) return;
+    if (!row || !isValid(row)) return;
+    if (pool.length > 1 && sameRow(row, current)) return;
     prevPrompts.current[cat] = { row: cardRows[cat]!, text: prompts[cat] };
     setHasPrev((p) => ({ ...p, [cat]: true }));
     setCardRows((prev) => ({ ...prev, [cat]: row! }));
@@ -353,15 +368,21 @@ export default function StorySandbox() {
   const shuffleOneLiner = (poolOverride?: PromptRow[]) => {
     const pool = poolOverride ?? allOneLiners;
     if (!pool.length) return;
+    const current = oneLinerRow;
+    const isValid = (r: PromptRow | undefined) =>
+      !!r && (isAdmin || isRowValidFor(r, "oneLiners"));
     let row = pickRandom(pool);
-    if (!isAdmin) {
-      let tries = 0;
-      while (row && !isRowValidFor(row, "oneLiners") && tries < 50) {
-        row = pickRandom(pool);
-        tries++;
-      }
+    let tries = 0;
+    while (
+      row &&
+      tries < 100 &&
+      (!isValid(row) || (pool.length > 1 && sameRow(row, current)))
+    ) {
+      row = pickRandom(pool);
+      tries++;
     }
-    if (!row) return;
+    if (!row || !isValid(row)) return;
+    if (pool.length > 1 && sameRow(row, current)) return;
     setOneLinerRow(row);
     setOneLinerAnimKey((k) => k + 1);
     setDrafts((d) => {
