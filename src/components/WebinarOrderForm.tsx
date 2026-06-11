@@ -200,7 +200,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             </div>
 
             <div>
-              <Label className="mb-2 block">{t("Preferred dates", "Preferované termíny")} *</Label>
+              <Label className="mb-2 block">{t("Preferred dates", "Preferované termíny")}</Label>
 
               <label className="flex items-center gap-2 mb-3 text-sm cursor-pointer">
                 <Checkbox
