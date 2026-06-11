@@ -318,7 +318,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                 <Button type="submit" disabled={loading}>
                   {loading
                     ? t("Submitting...", "Odesílám...")
-                    : t("Submit non-binding order", "Odeslat nezávaznou objednávku")}
+                    : t("Submit non-binding order", "Odeslat nez. objednávku")}
                 </Button>
               </div>
             </div>
