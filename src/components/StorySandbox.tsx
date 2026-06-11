@@ -339,7 +339,6 @@ export default function StorySandbox() {
       delete n[cat];
       return n;
     });
-  };
     setAddingNew((a) => ({ ...a, [cat]: false }));
   };
 
