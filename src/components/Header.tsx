@@ -31,7 +31,7 @@ const Header = () => {
     label: t("Story Sandbox", "Story Sandbox"),
     href: lp("/story-sandbox"),
   };
-  const cvLink = { kind: "plain" as const, label: "CV", href: lp("/cv") };
+  
   const bookLink = {
     kind: "external" as const,
     label: t("My Book", "Moje kniha"),
@@ -56,7 +56,6 @@ const Header = () => {
     hashLinks[2],
     referencesLink,
     bookLink,
-    cvLink,
     blogLink,
     storySandboxLink,
     hashLinks[3],
