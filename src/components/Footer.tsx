@@ -50,6 +50,9 @@ const Footer = () => {
               <Link to={lp("/blog")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">
                 {t("Blog", "Blog")}
               </Link>
+              <Link to={lp("/cv")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">
+                {t("CV", "CV")}
+              </Link>
               <Link to={lp("/#contact-area")} className="text-sm font-light text-primary-foreground/60 hover:text-primary-foreground transition-colors">
                 {t("Contact", "Kontakt")}
               </Link>

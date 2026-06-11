@@ -1,16 +1,18 @@
 
+import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import hero9b from "@/assets/hero-9b.png";
 import { openCalendly } from "@/lib/calendly";
 import { useT } from "@/hooks/useT";
-import { useIsCzech } from "@/hooks/useLanguageRouting";
+import { useIsCzech, useLocalizedPath } from "@/hooks/useLanguageRouting";
 // SEO managed centrally by GlobalSeoSync in App.tsx
 
 const Bio = () => {
   const t = useT();
   const isCz = useIsCzech();
+  const lp = useLocalizedPath();
 
 
   return (
@@ -30,6 +32,11 @@ const Bio = () => {
               />
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">{t("Who is Howard", "Kdo je Howard")}</h1>
               <p className="mb-4 text-lg font-semibold">{t("No excuses!", "Žádné výmluvy!")}</p>
+              <p className="mb-4">
+                <Link to={lp("/cv")} className="underline hover:text-foreground transition-colors">
+                  {t("My CV", "Můj CV")}
+                </Link>
+              </p>
               <p className="mb-4">
                 {t(
                   "I'm Howard, a trainer/consultant with 24 years of experience focusing on practical productivity and interpersonal communication. I don't teach theory — I teach techniques and systems that immediately improve how you work, and how people work together.",
