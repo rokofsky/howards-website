@@ -46,7 +46,7 @@ const CV = () => {
             <div className="space-y-6">
               <div>
                 <p className="font-normal text-base"><strong>{t("2002 – pres:", "2002 – dosud: ")}</strong> <em>{t("Seminar Trainer: Rokofsky Communication Training", "Lektor seminářů: Rokofsky Communication Training")}</em></p>
-                <p className="text-base">{t("Programs: Presentations, Negotiations, Assertiveness, Stress/Conflict Mgmt, Persuasion, NLP, Intercultural Communication, Business Writing, Storytelling", "Programy: Prezentační dovednosti, Vyjednávací dovednosti, Asertivita, Zvládání stresu a konfliktů, Přesvědčování, NLP, Mezikulturní komunikace, Obchodní korespondence, Storytelling.")}</p>
+                <p className="text-base">{t("Programs: Presentations, Negotiations, Assertiveness, Stress/Conflict Mgmt, Persuasion, NLP, Intercultural Communication, Business Writing, Storytelling, et al.", "Programy: Prezentační dovednosti, Vyjednávací dovednosti, Asertivita, Zvládání stresu a konfliktů, Přesvědčování, NLP, Mezikulturní komunikace, Obchodní korespondence, Storytelling a další.")}</p>
               </div>
 
               <div>
@@ -61,32 +61,32 @@ const CV = () => {
 
               <div>
                 <p className="font-medium"><strong>2012 – 2014:</strong> <em>{t("Lecturer: Clinical Empathy, Charles University, First Medical Faculty, Prague, CZ", "Přednášející: „Klinická empatie“, Univerzita Karlova, První lékařská fakulta, Praha, CZ")}</em></p>
-                <p>{t("Training communication skills and 'bedside manner' to medical students.", "Výuka komunikačních dovedností a „přístupu k pacientům“ pro studenty medicíny.")}</p>
+                <p>{t("Training communication skills and 'bedside manner' to medical students. As it was a voluntary course, the students who enrolled were not really the ones who needed it the most. ", "Výuka komunikačních dovedností a „přístupu k pacientům“ pro studenty medicíny. Protože se jednalo o dobrovolný kurz, studenti, kteří se přihlásili, nebyli vždy ti, kteří to nejvíce potřebovali.")}</p>
               </div>
 
               <div>
-                <p className="font-medium"><strong>2008 – 2009:</strong> <em>{t("Intensive English course: University of Aerospace and Aeronautics, Nanjing, China", "Intenzivní kurz angličtiny: University of Aerospace and Aeronautics, Nanking, Čína")}</em></p>
-                <p>{t("Two 9-week intensive courses for Juneyao pilots. IELTS exam success rate was 93%.", "Dva devítitýdenní intenzivní kurzy pro piloty společnosti Juneyao Airlines. Úspěšnost u zkoušky IELTS dosáhla 93%.")}</p>
+                <p className="font-medium"><strong>2008 – 2009:</strong> <em>{t("Intensive English: University of Aerospace and Aeronautics, Nanjing, China", "Intenzivní angličtina: University of Aerospace and Aeronautics, Nanking, Čína")}</em></p>
+                <p>{t("Two 9-week intensive courses for Juneyao pilot candidates. IELTS exam success rate was 93%.", "Dva devítitýdenní intenzivní kurzy pro kandidáty na piloty společnosti Juneyao Airlines. Úspěšnost u zkoušky IELTS dosáhla 93%.")}</p>
               </div>
 
               <div>
                 <p className="font-medium"><strong>2002 & 2006:</strong> <em>{t("Suggestopedic English Instructor: Provincial Gov't Planning Dept., Hainan, China", "Lektor sugestopedické angličtiny: Provincial Government Planning Department, Hainan, Čína")}</em></p>
-                <p>{t("Led three 8-week intensive Suggestopedic English language courses, and assisted Lonny Gold in two others.", "Vedl tři osmítýdenní intenzivní kurzy sugestopedické výuky angličtiny a ve dvou dalších asistoval Lonnymu Goldovi.")}</p>
+                <p>{t("Led three 8-week intensive Suggestopedic English language courses, and assisted Lonny Gold in two others. Possibly the best decision I ever made. ", "Vedl tři osmítýdenní intenzivní kurzy sugestopedické výuky angličtiny a ve dvou dalších asistoval Lonnymu Goldovi. Bylo to pravděpodobně nejlepší rozhodnutí, které jsem kdy udělal.")}</p>
               </div>
 
               <div>
-                <p className="font-medium"><strong>1999 – 2002:</strong> <em>{t("English Language Instructor Prague, CZ", "Lektor anglického jazyka, Praha, ČR")}</em></p>
-                <p>{t("Specialized English: Legal, Business, Financial, Medical, Technical, exam preparation. Small, international, and state-owned enterprises; references upon request.", "Odborná angličtina: právní, obchodní, finanční, lékařská, technická, příprava na zkoušky.\nMalé, mezinárodní i státní podniky.")}</p>
+                <p className="font-medium"><strong>1999 – 2018:</strong> <em>{t("English Language Instructor Prague, CZ", "Lektor anglického jazyka, Praha, ČR")}</em></p>
+                <p>{t("Specialized English: Legal, Business, Financial, Medical, Technical, exam preparation. Small, international, and state-owned enterprises.", "Odborná angličtina: právní, obchodní, finanční, lékařská, technická, příprava na zkoušky.\nMalé, mezinárodní i státní podniky.")}</p>
               </div>
 
               <div>
                 <p className="font-medium"><strong>1996 – 1998:</strong> <em>{t("College English Instructor, Amsterdam Academy for Banking and Finance, NL", "Vysokoškolský lektor angličtiny, Amsterdam Academy for Banking and Finance, Nizozemsko")}</em></p>
-                <p>{t("Polytechnic and University students at this institute for finance. Courses: Presentation & Negotiation Skills, English for Banking and Finance.", "Výuka studentů polytechniky a univerzity na institutu zaměřeném na finance. Kurzy: prezentační a vyjednávací dovednosti, angličtina pro bankovnictví a finance.")}</p>
+                <p>{t("Taught English for Banking and Finance, and Presentation & Negotiation Skills at this polytechnic institute for finance. I did not understand some of the stuff I was teaching, like leasing and buying back a company's IP. Or SPVs. I still don't. ", "Na tomto polytechnickém institutu zaměřeném na finance jsem vyučoval angličtinu pro bankovnictví a finance a prezentační a vyjednávací dovednosti. Některým věcem, které jsem učil, jsem vůbec nerozuměl, jako například leasingu a zpětnému odkupu duševního vlastnictví společnosti. Nebo SPV. Stále jim nerozumím.")}</p>
               </div>
 
               <div>
                 <p className="font-medium"><strong>1996 – 1998:</strong> <em>{t("College English Instructor, Hogeschool (Polytechnic) Holland, Amsterdam, NL", "Vysokoškolský lektor angličtiny, Hogeschool Holland, Amsterdam, Nizozemsko")}</em></p>
-                <p>{t("Substituted whole semesters including Tourism, Literature, Education, Writing, Translation, Government, English for older adults, Rhetoric, Public Speaking.", "Zastupoval celé semestry ve výuce předmětů jako cestovní ruch, literatura, pedagogika, psaní, překlad, veřejná správa, angličtina pro starší dospělé, rétorika a veřejné vystupování.")}</p>
+                <p>{t("Substituted whole semesters including Tourism, Literature, Education, Writing, Translation, Government, English for older adults, Rhetoric, Public Speaking. I was the \"utility man\" for the faculty. Any teacher that was out on sabbatical or maternity, I taught their course. ", "Zastupoval celé semestry ve výuce předmětů jako cestovní ruch, literatura, pedagogika, psaní, překlad, veřejná správa, angličtina pro starší dospělé, rétorika a veřejné vystupování. Byl jsem takový „univerzální voják“ fakulty. Učil jsem kurzy za každého vyučujícího, který byl na tvůrčím volnu nebo na mateřské.")}</p>
               </div>
             </div>
           </section>
@@ -96,12 +96,11 @@ const CV = () => {
             <div className="space-y-4">
               <div>
                 <p><strong>SUNY-Binghamton, Binghamton, New York, USA</strong></p>
-                <p><em>{t("Bachelor's program: Literature/Rhetoric, 1984-1989", "BA: literatura / rétorika, 1984-1989")}</em></p>
-                <p>{t("Minor in Philosophy", "Vedlejší obor: filozofie")}</p>
+                <p><em>{t("Bachelor's program: Literature/Rhetoric, Minor in Philosophy 1984-1989", "BA: literatura / rétorika, vedlejší obor: filozofie, 1984-1989")}</em></p>
               </div>
               <div>
                 <p><strong>{t("University of Amsterdam, Amsterdam, NL", "Universiteit van Amsterdam (UvA), Amsterdam, Nizozemsko")}</strong></p>
-                <p><em>{t("Master's program: English Literature, 1990-1993", "Magisterský program: anglická literatura, 1990-1993")}</em></p>
+                <p><em>{t("Master's program: English Language Literature, 1990-1993", "Magisterský program: anglická a jazyková literatura, 1990-1993")}</em></p>
               </div>
             </div>
           </section>
