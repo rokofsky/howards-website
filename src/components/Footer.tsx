@@ -93,8 +93,8 @@ const Footer = () => {
           </div>
           <p className="text-xs text-primary-foreground/30 font-light italic">
             {t(
-              "\"Quote here.\" — Howard",
-              "„Sem vložte citát.“ — Howard"
+              "\"I'll send you my book for free if you mention this quote\" — Howard",
+              "„Když zmíníte tento citát, pošlu vám svou knihu zdarma“ — Howard"
             )}
           </p>
         </div>
