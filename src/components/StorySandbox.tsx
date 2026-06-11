@@ -346,11 +346,7 @@ export default function StorySandbox() {
 
   // Build a Fisher-Yates queue of valid indices for the given pool/category.
   // Ensures the first item is not the same as `lastId` (no consecutive dup) when possible.
-  const buildQueue = (
-    pool: Array<SandboxRow | PromptRow>,
-    cat: string,
-    lastId: string | number | null,
-  ): number[] => {
+  const buildQueue = (pool: Array<SandboxRow | PromptRow>, cat: string, lastId: string | number | null): number[] => {
     const valid: number[] = [];
     for (let i = 0; i < pool.length; i++) {
       if (isAdmin || isRowValidFor(pool[i], cat)) valid.push(i);
@@ -765,6 +761,7 @@ export default function StorySandbox() {
                         <Shuffle className="h-5 w-5" strokeWidth={2.5} />
                       </button>
                     )}
+                    <VoteThumbs sheetKey="sandbox" id={cardRows[key]?.id} box={box} />
                     {showShuffle && hasPrev[key as Category] && (
                       <button
                         type="button"
@@ -881,7 +878,9 @@ export default function StorySandbox() {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-semibold">
-              <span className="inline-block w-[280px]">{/* ADJUST WIDTH HERE TO ALIGN HINTS */}One size fits all prompts</span>
+              <span className="inline-block w-[280px]">
+                {/* ADJUST WIDTH HERE TO ALIGN HINTS */}One size fits all prompts
+              </span>
             </h3>
             <span className="text-lg font-semibold flex items-center gap-1">
               <Shuffle className="w-4 h-4" style={{ pointerEvents: "none" }} />
