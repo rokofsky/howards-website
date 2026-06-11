@@ -864,7 +864,6 @@ export default function StorySandbox() {
                     ) : (
                       <span />
                     )}
-                    <VoteThumbs sheetKey="sandbox" id={cardRows[key]?.id} box={box} />
                   </div>
                 )}
               </Card>
