@@ -79,11 +79,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       toast.error(t("Please select at least one webinar.", "Vyberte prosím alespoň jeden webinář."));
       return;
     }
-    if (!undecided && selectedDates.length === 0) {
-      toast.error(t("Please select a date or choose Undecided.", "Vyberte prosím datum nebo zvolte Nerozhodnuto."));
-      return;
-    }
-
     // Lenient email fix for common mobile typos
     const fixedEmail = fixCommonEmailTypos(email.trim());
     if (fixedEmail !== email) setEmail(fixedEmail);
