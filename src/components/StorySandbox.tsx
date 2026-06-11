@@ -307,7 +307,16 @@ export default function StorySandbox() {
     return "";
   };
 
-  // --- Independent shuffle handlers ---
+// --- Independent shuffle handlers ---
+  const undoShuffle = (cat: Category) => {
+    const prev = prevPrompts.current[cat];
+    if (!prev) return;
+    setCardRows((p) => ({ ...p, [cat]: prev.row }));
+    setPrompts((p) => ({ ...p, [cat]: prev.text }));
+    setAnimKeys((k) => ({ ...k, [cat]: k[cat] + 1 }));
+    delete prevPrompts.current[cat];
+  };
+
   const shuffleCard = (cat: Category, poolOverride?: SandboxRow[]) => {
     const pool = poolOverride ?? allSandboxPrompts;
     if (!pool.length) return;
@@ -320,6 +329,7 @@ export default function StorySandbox() {
       }
     }
     if (!row) return;
+    prevPrompts.current[cat] = { row: cardRows[cat]!, text: prompts[cat] };
     setCardRows((prev) => ({ ...prev, [cat]: row! }));
     const text = getFieldValue(row as unknown as Record<string, unknown>, cat);
     setPrompts((p) => ({ ...p, [cat]: text || p[cat] }));
@@ -329,6 +339,7 @@ export default function StorySandbox() {
       delete n[cat];
       return n;
     });
+  };
     setAddingNew((a) => ({ ...a, [cat]: false }));
   };
 
