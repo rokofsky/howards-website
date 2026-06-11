@@ -26,14 +26,23 @@ const WebinarDetail = () => {
   const [showOrderForm, setShowOrderForm] = useState(false);
 
   useEffect(() => {
-    supabase.from("webinars").select("*").eq("slug", slug).maybeSingle().then(({ data }) => {
-      if (data) setWebinar(data as DbWebinar);
-      setLoading(false);
-    });
+    supabase
+      .from("webinars")
+      .select("*")
+      .eq("slug", slug)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) setWebinar(data as DbWebinar);
+        setLoading(false);
+      });
   }, [slug]);
 
   if (loading) {
-    return <Layout><div className="section-padding pt-24 text-center text-muted-foreground">Loading...</div></Layout>;
+    return (
+      <Layout>
+        <div className="section-padding pt-24 text-center text-muted-foreground">Loading...</div>
+      </Layout>
+    );
   }
 
   if (!webinar) {
@@ -54,7 +63,10 @@ const WebinarDetail = () => {
       <section className="section-padding pt-24">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Link to={lp("/services/live-webinars")} className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 inline-block">
+            <Link
+              to={lp("/services/live-webinars")}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 inline-block"
+            >
               ← {t("Back to Online Webinars", "Zpět na online webináře")}
             </Link>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">{webinar.title}</h1>
@@ -68,7 +80,7 @@ const WebinarDetail = () => {
           </motion.div>
 
           <div className="text-center">
-            <Button variant="glassPetrol" size="lg" onClick={() => setShowInquiry(true)}>
+            <Button variant="glassPetrol" size="lg" className="px-10 py-4 text-lg" onClick={() => setShowInquiry(true)}>
               {t("Inquire", "Poptat")}
             </Button>
           </div>
@@ -85,11 +97,7 @@ const WebinarDetail = () => {
         }}
       />
 
-      <WebinarOrderForm
-        open={showOrderForm}
-        onOpenChange={setShowOrderForm}
-        initialWebinarSlug={webinar.slug}
-      />
+      <WebinarOrderForm open={showOrderForm} onOpenChange={setShowOrderForm} initialWebinarSlug={webinar.slug} />
     </Layout>
   );
 };
