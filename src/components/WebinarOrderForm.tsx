@@ -125,6 +125,8 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
         .map((w) => w.title)
         .join(", "),
     );
+    console.log("DEBUG note value:", note, "length:", note.length);
+await supabase.functions.invoke("send-webinar-email", {
     await supabase.functions.invoke("send-webinar-email", {
       body: {
         customer_name: name,
