@@ -148,11 +148,6 @@ export default function StorySandbox() {
   const [structure, setStructure] = useState<StructureKey>("3-act");
   const [scratch, setScratch] = useState<Record<string, string>>({});
   const prevPrompts = useRef<Partial<Record<Category, { row: SandboxRow; text: string }>>>({});
-  const [hasPrev, setHasPrev] = useState<Record<Category, boolean>>({
-    character: false,
-    incident: false,
-    constraint: false,
-  });
 
   // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
@@ -860,7 +855,7 @@ export default function StorySandbox() {
           ) : (
             <p className="text-base md:text-lg italic text-muted-foreground text-center leading-snug">Coming soon</p>
           )}
-          <div className="flex items-center justify-between w-full gap-3">
+          <div className="flex items-center justify-center w-full gap-4">
             {isAdmin ? (
               <div className="flex items-center gap-3 text-xs">
                 <button
@@ -883,18 +878,16 @@ export default function StorySandbox() {
             ) : (
               <span />
             )}
-            <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
-          </div>
-          <div className="flex justify-center mt-2">
             <button
               type="button"
               onClick={() => shuffleOneLiner()}
               disabled={!allOneLiners.length}
-              className="text-foreground hover:opacity-70 transition-opacity"
+              className="text-foreground hover:opacity-70 transition-opacity mx-auto"
               aria-label="Shuffle one-liner"
             >
               <Shuffle className="h-5 w-5" strokeWidth={2.5} />
             </button>
+            <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
           </div>
         </Card>
       </section>
