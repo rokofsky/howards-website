@@ -190,7 +190,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
             <div>
               <Label className="mb-1 block">{t("Select webinars", "Vyberte webináře")} *</Label>
               <p className="text-xs text-muted-foreground mb-2">
-                {t("Price: CZK 3,000 / €125 for a 100-minute session", "Cena: 3 000 Kč / 125 € za 100minutovou lekci")}
+                {t("Price: CZK 3,000 / €125 for a 100-minute session", "Cena: 3 000 Kč / 125 € za 100minutovou akci")}
               </p>
               <div className="max-h-48 overflow-y-auto rounded-md border border-gold/40 p-3 space-y-2">
                 {[...allWebinars]
