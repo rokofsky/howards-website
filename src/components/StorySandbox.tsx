@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Shuffle, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -147,6 +147,7 @@ export default function StorySandbox() {
 
   const [structure, setStructure] = useState<StructureKey>("3-act");
   const [scratch, setScratch] = useState<Record<string, string>>({});
+  const prevPrompts = useRef<Partial<Record<Category, { row: SandboxRow; text: string }>>>({});
 
   // --- Per-box vote counts: key = `${sheetKey}:${id}:${box}` ---
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
@@ -339,7 +340,6 @@ export default function StorySandbox() {
       delete n[cat];
       return n;
     });
-  };
     setAddingNew((a) => ({ ...a, [cat]: false }));
   };
 
