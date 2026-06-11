@@ -675,9 +675,11 @@ export default function StorySandbox() {
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-semibold">Prompts</h3>
-            <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <Shuffle className="w-3 h-3" style={{ pointerEvents: "none" }} />
+            <h3 className="text-lg font-semibold">
+              <span className="inline-block w-[280px]">{/* ADJUST WIDTH HERE TO ALIGN HINTS */}Prompts</span>
+            </h3>
+            <span className="text-lg font-semibold flex items-center gap-1">
+              <Shuffle className="w-4 h-4" style={{ pointerEvents: "none" }} />
               Shuffle to the next card
             </span>
           </div>
@@ -825,9 +827,11 @@ export default function StorySandbox() {
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-semibold">One size fits all prompts</h3>
-            <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <Shuffle className="w-3 h-3" style={{ pointerEvents: "none" }} />
+            <h3 className="text-lg font-semibold">
+              <span className="inline-block w-[280px]">{/* ADJUST WIDTH HERE TO ALIGN HINTS */}One size fits all prompts</span>
+            </h3>
+            <span className="text-lg font-semibold flex items-center gap-1">
+              <Shuffle className="w-4 h-4" style={{ pointerEvents: "none" }} />
               Shuffle to the next card
             </span>
           </div>
