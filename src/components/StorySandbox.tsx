@@ -674,7 +674,13 @@ export default function StorySandbox() {
       {/* Prompt Generator (Sandbox / Sheet1) */}
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold">Prompts</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-lg font-semibold">Prompts</h3>
+            <span className="text-xs text-muted-foreground flex items-center gap-1">
+              <Shuffle className="w-3 h-3" style={{ pointerEvents: "none" }} />
+              Shuffle to the next card
+            </span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
@@ -818,7 +824,13 @@ export default function StorySandbox() {
       {/* One-liner Prompt Generator (Sheet2) */}
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold">One size fits all prompts</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-lg font-semibold">One size fits all prompts</h3>
+            <span className="text-xs text-muted-foreground flex items-center gap-1">
+              <Shuffle className="w-3 h-3" style={{ pointerEvents: "none" }} />
+              Shuffle to the next card
+            </span>
+          </div>
         </div>
         <Card
           key={`oneliner-${oneLinerAnimKey}`}
