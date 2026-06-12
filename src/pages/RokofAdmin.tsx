@@ -163,6 +163,7 @@ const RokofAdmin = () => {
     { id: string; title: string; description: string; sort_order: number; active: boolean }[]
   >([]);
 
+  const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
   const fetchKeynoteTopics = async () => {
     const { data, error } = await supabase.from("keynote_topics").select("*").order("sort_order", { ascending: true });
     if (!error && data) setKeynoteTopics(data);
@@ -703,6 +704,7 @@ const RokofAdmin = () => {
                         onBlurField={handleKeynoteBlur}
                         onActive={handleKeynoteActive}
                         onDelete={handleKeynoteDelete}
+                        onEdit={setEditingKeynote}
                       />
                     ))}
                   </div>
