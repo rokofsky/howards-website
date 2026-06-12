@@ -184,11 +184,17 @@ const RokofAdmin = () => {
       .from("keynote_topics" as never)
       .select("*")
       .order("sort_order", { ascending: true });
+    console.log("[KeynoteTopics] raw data:", data);
+    console.log("[KeynoteTopics] row count:", Array.isArray(data) ? data.length : 0);
+    console.log("[KeynoteTopics] query error:", error);
     if (error) {
       console.error("Failed to load keynote topics:", error);
       return;
     }
-    setTopics(((data as unknown) as KeynoteTopicRow[]) ?? []);
+    const rows = ((data as unknown) as KeynoteTopicRow[]) ?? [];
+    setTopics(rows);
+    console.log("[KeynoteTopics] state array length after set:", rows.length);
+    console.log("[KeynoteTopics] final state array:", rows);
   };
 
   useEffect(() => {
