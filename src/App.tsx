@@ -53,7 +53,7 @@ function ScrollToTop() {
       return;
     }
     prevRef.current = current;
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }, [pathname]);
   return null;
 }
@@ -107,7 +107,9 @@ function GlobalSeoSync() {
       const path = window.location.pathname.toLowerCase();
       const isCz = isCzNow();
       const suffix = ` | ${BRAND}`;
-
+      if (path.includes("/story-sandbox")) {
+        return `Story Sandbox${suffix}`;
+      }
       if (path.includes("/cv")) {
         return `CV${suffix}`;
       } else if (path.includes("/bio")) {
@@ -120,8 +122,7 @@ function GlobalSeoSync() {
       return isCz ? DEFAULT_TITLE_CZ : DEFAULT_TITLE;
     };
 
-    const isBlogPostRoute = () =>
-      /\/blog\/[^/?#]+/.test(window.location.pathname);
+    const isBlogPostRoute = () => /\/blog\/[^/?#]+/.test(window.location.pathname);
 
     const applyTitle = () => {
       const isCz = isCzNow();
