@@ -112,7 +112,7 @@ const RokofAdmin = () => {
   const handleKeynoteBlur = async (id: string, field: "title" | "description", value: string) => {
     await supabase
       .from("keynote_topics")
-      .update({ [field]: value })
+      .update({ [field]: value } as { title?: string; description?: string })
       .eq("id", id);
   };
 
