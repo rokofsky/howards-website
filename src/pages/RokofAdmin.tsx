@@ -700,13 +700,12 @@ const RokofAdmin = () => {
                   <div className="divide-y divide-border">
                     {keynoteTopics.map((topic) => (
                      <SortableKeynoteRow
-  key={topic.id}
-  topic={topic}
-  onBlurField={handleKeynoteBlur}
-  onActive={handleKeynoteActive}
-  onDelete={handleKeynoteDelete}
-  onEdit={setEditingKeynote}
-/>
+                       key={topic.id}
+                       topic={topic}
+                       onBlurField={handleKeynoteBlur}
+                       onActive={handleKeynoteActive}
+                       onDelete={handleKeynoteDelete}
+                     />
                     ))}
                   </div>
                 </SortableContext>
@@ -715,27 +714,6 @@ const RokofAdmin = () => {
           </div>
         </div>
       </section>
-    <Dialog open={!!editingKeynote} onOpenChange={(open) => !open && setEditingKeynote(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{editingKeynote?.title}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3">
-            <Label>Description</Label>
-            <Textarea
-              defaultValue={editingKeynote?.description ?? ""}
-              className="min-h-[120px]"
-              onBlur={(e) => {
-                if (editingKeynote) handleKeynoteBlur(editingKeynote.id, "description", e.target.value);
-              }}
-              placeholder="Enter description for this keynote topic..."
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingKeynote(null)}>Close</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </Layout>
   );
 };
