@@ -8,30 +8,9 @@ const FAQSection = () => {
   const faqs = [
     {
       q: t("What makes Howard different from other consultants?", "Čím se Howard liší od ostatních konzultantů?"),
-      aElement: isCz ? (
-        <>
-          Jednoduše dělá věci jinak — a všimnete si toho hned od prvního dne. Jeho radikálně transparentní komunikace,
-          úroveň profesní etiky a svérázný humor mohou být zpočátku zneklidňující, ale jeho adaptabilita si vás brzy
-          získá. Howard se zaměřuje výhradně na jasnost, otevřený přístup a odkrývání nových strategických možností, o
-          kterých jste ani netušili, že jsou ve hře. Není zde místo pro prázdné fráze, módní výrazy ani skrytý drobný
-          tisk. <br />
-          Protože věří v princip „skin in the game“, nabízí u většiny projektů odměnu vázanou na výsledek. To ho udržuje
-          ve střehu, snižuje vaše riziko a zajišťuje, že všichni táhnou za jeden provaz.
-        </>
-      ) : (
-        <>
-          He simply does things differently — and you’ll notice it from day one. His radically transparent
-          communication, standard of professional ethics and uncommon humor might be unsettling at first, but his
-          adaptability will seamlessly grow on you. Howard focuses strictly on clarity, an open-minded approach, and
-          uncovering new strategic options you didn't even know were on the table. There is no room for fluff,
-          buzzwords, or hidden fine print.&nbsp;
-          <br /> Because he believes in having skin in the game, he offers success-fee structures for most projects. It
-          keeps him sharp, your risk low, and ensures everyone is pulling in the exact same direction.
-        </>
-      ),
       a: t(
-        "He simply does things differently — and you’ll notice it from day one. His radically transparent communication, standard of professional ethics and uncommon humor might be unsettling at first, but his adaptability will seamlessly grow on you. Howard focuses strictly on clarity, an open-minded approach, and uncovering new strategic options you didn't even know were on the table. There is no room for fluff, buzzwords, or hidden fine print. \nBecause he believes in having skin in the game, he offers success-fee structures for most projects. It keeps him sharp, your risk low, and ensures everyone is pulling in the exact same direction.",
-        "Jednoduše dělá věci jinak — a všimnete si toho hned od prvního dne. Jeho radikálně transparentní komunikace, úroveň profesní etiky a svérázný humor mohou být zpočátku zneklidňující, ale jeho adaptabilita si vás brzy získá. Howard se zaměřuje výhradně na jasnost, otevřený přístup a odkrývání nových strategických možností, o kterých jste ani netušili, že jsou ve hře. Není zde místo pro prázdné fráze, módní výrazy ani skrytý drobný tisk. \nProtože věří v princip „skin in the game“, nabízí u většiny projektů odměnu vázanou na výsledek. To ho udržuje ve střehu, snižuje vaše riziko a zajišťuje, že všichni táhnou za jeden provaz.",
+        "He simply does things differently — and you’ll notice it from day one. His radically transparent communication, standard of professional ethics and uncommon humor might be unsettling at first, but his adaptability will seamlessly grow on you. Howard focuses strictly on clarity, an open-minded approach, and uncovering new strategic options you didn't even know were on the table. There is no room for fluff, buzzwords, or hidden fine print. \n\n\nBecause he believes in having skin in the game, he offers success-fee structures for most projects. It keeps him sharp, your risk low, and ensures everyone is pulling in the exact same direction.",
+        "Jednoduše dělá věci jinak — a všimnete si toho hned od prvního dne. Jeho radikálně transparentní komunikace, úroveň profesní etiky a svérázný humor mohou být zpočátku zneklidňující, ale jeho adaptabilita si vás brzy získá. Howard se zaměřuje výhradně na jasnost, otevřený přístup a odkrývání nových strategických možností, o kterých jste ani netušili, že jsou ve hře. Není zde místo pro prázdné fráze, módní výrazy ani skrytý drobný tisk. \n\n\nProtože věří v princip „skin in the game“, nabízí u většiny projektů odměnu vázanou na výsledek. To ho udržuje ve střehu, snižuje vaše riziko a zajišťuje, že všichni táhnou za jeden provaz.",
       ),
     },
     {
@@ -118,13 +97,30 @@ const FAQSection = () => {
           >
             <summary className="cursor-pointer p-6 text-base font-medium list-none flex justify-between items-center">
               {faq.q}
-              <span className="text-muted-foreground transition-transform duration-200 group-open:rotate-45 text-xl ml-4">
+              <summary
+  className="cursor-pointer p-6 text-base font-medium list-none flex justify-between items-center"
+  onClick={(e) => {
+    const details = (e.currentTarget as HTMLElement).closest("details");
+    if (details?.open) {
+      e.preventDefault();
+      details.removeAttribute("open");
+    }
+  }}
+>
                 +
               </span>
             </summary>
-            <div className="px-6 pb-6 text-sm text-muted-foreground leading-relaxed font-medium">
-              {faq.aElement ?? faq.a}
-            </div>
+            <div
+  className="px-6 pb-6 text-sm text-muted-foreground leading-relaxed font-medium cursor-pointer"
+  onClick={(e) => {
+    const details = (e.currentTarget as HTMLElement).closest("details");
+    if (details?.open) {
+      details.removeAttribute("open");
+    }
+  }}
+>
+  {faq.aElement ?? faq.a}
+</div>
           </motion.details>
         ))}
       </div>
