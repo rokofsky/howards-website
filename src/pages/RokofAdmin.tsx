@@ -90,9 +90,6 @@ const RokofAdmin = () => {
   const [keynoteTopics, setKeynoteTopics] = useState<
     { id: string; title: string; description: string; sort_order: number; active: boolean }[]
   >([]);
-  const [keynoteTopics, setKeynoteTopics] = useState<
-    { id: string; title: string; description: string; sort_order: number; active: boolean }[]
-  >([]);
 
   const fetchKeynoteTopics = async () => {
     const { data, error } = await supabase.from("keynote_topics").select("*").order("sort_order", { ascending: true });
@@ -112,10 +109,10 @@ const RokofAdmin = () => {
     setKeynoteTopics((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const handleKeynoteBlur = async (id: string, field: string, value: string) => {
+  const handleKeynoteBlur = async (id: string, field: "title" | "description", value: string) => {
     await supabase
       .from("keynote_topics")
-      .update({ [field]: value })
+      .update({ [field]: value } as { title?: string; description?: string })
       .eq("id", id);
   };
 
