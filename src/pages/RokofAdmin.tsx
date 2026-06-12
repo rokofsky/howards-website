@@ -73,7 +73,6 @@ const RokofAdmin = () => {
   const { dismiss } = useToast();
   const [authenticated, setAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
   const [password, setPassword] = useState("");
-  const [keynoteOpen, setKeynoteOpen] = useState(false);
 
   // Blog generator state
   const [title, setTitle] = useState("");
@@ -616,7 +615,7 @@ const RokofAdmin = () => {
             + Add topic
           </Button>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-3">
           {keynoteTopics.map((topic, index) => (
             <div key={topic.id} className="glass rounded-lg p-4 flex gap-3 items-start">
               <div className="flex flex-col gap-1 pt-1">
@@ -644,7 +643,7 @@ const RokofAdmin = () => {
                 <Textarea
                   defaultValue={topic.description}
                   placeholder="Description (optional)"
-                  className="min-h-[40px]"
+                  className="min-h-[60px]"
                   onBlur={(e) => handleKeynoteBlur(topic.id, "description", e.target.value)}
                 />
               </div>
