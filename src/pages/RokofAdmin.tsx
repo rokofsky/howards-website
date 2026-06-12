@@ -615,7 +615,7 @@ const RokofAdmin = () => {
             + Add topic
           </Button>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-1">
           {keynoteTopics.map((topic, index) => (
             <div key={topic.id} className="glass rounded-lg p-4 flex gap-3 items-start">
               <div className="flex flex-col gap-1 pt-1">
