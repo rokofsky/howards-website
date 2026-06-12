@@ -221,7 +221,7 @@ const RokofAdmin = () => {
     const prev = topics.find((t) => t.id === id);
     if (!prev) return;
     // Skip if no actual change
-    const changed = Object.entries(patch).some(([k, v]) => (prev as Record<string, unknown>)[k] !== v);
+    const changed = Object.entries(patch).some(([k, v]) => (prev as unknown as Record<string, unknown>)[k] !== v);
     setTopics((cur) => cur.map((t) => (t.id === id ? { ...t, ...patch } : t)));
     if (!changed) return;
     const { error } = await supabase
