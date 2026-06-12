@@ -126,7 +126,7 @@ const ServiceDetail = () => {
   const inquiryTitle =
     slug === "conflict-resolution"
       ? t("Conflict mediation/resolution", "Mediace / řešení konfliktů")
-      : slug === "meetings-moderation"
+      : slug === "six-hats"
         ? t("The Six Hats Method for Meetings", "Metoda Šesti klobouků pro porady")
         : slug === "live-webinars"
           ? t("Live Webinars", "Online webináře")
@@ -200,18 +200,48 @@ const ServiceDetail = () => {
                     : "text-3xl md:text-4xl font-semibold mb-6 w-full"
                 }
               >
-                  {slug === "live-webinars" && detail?.pageTitle
-                    ? (() => {
-                        const titleText = pickL(detail.pageTitle, lang);
-                        const anchor = isCz ? "otázku" : "question";
-                        const idx = titleText.toLowerCase().indexOf(anchor.toLowerCase());
-                        const inquiryBtn = (
-                          <span className="inline-flex items-center gap-3 whitespace-nowrap ml-2">
-                            {idx >= 0 ? titleText.substr(idx, anchor.length) : ""}
+                {slug === "live-webinars" && detail?.pageTitle
+                  ? (() => {
+                      const titleText = pickL(detail.pageTitle, lang);
+                      const anchor = isCz ? "otázku" : "question";
+                      const idx = titleText.toLowerCase().indexOf(anchor.toLowerCase());
+                      const inquiryBtn = (
+                        <span className="inline-flex items-center gap-3 whitespace-nowrap ml-2">
+                          {idx >= 0 ? titleText.substr(idx, anchor.length) : ""}
+                          <Button
+                            variant="outline"
+                            size="default"
+                            className="text-sm md:text-base px-3 py-1 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90 whitespace-nowrap"
+                            onClick={() => {
+                              const el = document.getElementById("inquiry-form");
+                              if (el) {
+                                const top = el.getBoundingClientRect().top + window.scrollY - 80;
+                                window.scrollTo({ top, behavior: "smooth" });
+                              }
+                            }}
+                          >
+                            {t("General inquiry", "Obecný dotaz")}
+                          </Button>
+                        </span>
+                      );
+                      if (idx < 0) {
+                        return (
+                          <>
+                            {titleText}
+                            <div className="mt-2">{inquiryBtn}</div>
+                          </>
+                        );
+                      }
+                      const before = titleText.slice(0, idx);
+                      return (
+                        <>
+                          {before}
+                          {anchor}
+                          <div className="mt-2">
                             <Button
                               variant="outline"
                               size="default"
-                              className="text-sm md:text-base px-3 py-1 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90 whitespace-nowrap"
+                              className="text-sm md:text-base px-3 py-1 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90"
                               onClick={() => {
                                 const el = document.getElementById("inquiry-form");
                                 if (el) {
@@ -222,46 +252,17 @@ const ServiceDetail = () => {
                             >
                               {t("General inquiry", "Obecný dotaz")}
                             </Button>
-                          </span>
-                        );
-                        if (idx < 0) {
-                          return (
-                            <>
-                              {titleText}
-                              <div className="mt-2">{inquiryBtn}</div>
-                            </>
-                          );
-                        }
-                        const before = titleText.slice(0, idx);
-                          return (
-  <>
-    {before}{anchor}
-    <div className="mt-2">
-      <Button
-        variant="outline"
-        size="default"
-        className="text-sm md:text-base px-3 py-1 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90"
-        onClick={() => {
-          const el = document.getElementById("inquiry-form");
-          if (el) {
-            const top = el.getBoundingClientRect().top + window.scrollY - 80;
-            window.scrollTo({ top, behavior: "smooth" });
-          }
-        }}
-      >
-        {t("General inquiry", "Obecný dotaz")}
-      </Button>
-    </div>
-  </>
-);
-                      })()
-                    : detail?.pageTitle
-                      ? pickL(detail.pageTitle, lang)
-                      : t("About This Service", "O této službě")}
-                </h2>
-  
-                {slug === "live-webinars" ? (
-                  <>
+                          </div>
+                        </>
+                      );
+                    })()
+                  : detail?.pageTitle
+                    ? pickL(detail.pageTitle, lang)
+                    : t("About This Service", "O této službě")}
+              </h2>
+
+              {slug === "live-webinars" ? (
+                <>
                   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                     {webinars.map((webinar) => {
                       const wTitle = pickCs(webinar.title_cs, webinar.title, isCz);
@@ -386,7 +387,7 @@ const ServiceDetail = () => {
               return (
                 <div
                   key={sectionIndex}
-                  className={`${slug === "meetings-moderation" && sectionIndex === detail.sections.length - 1 ? "mb-4" : "mb-10"}`}
+                  className={`${slug === "six-hats" && sectionIndex === detail.sections.length - 1 ? "mb-4" : "mb-10"}`}
                 >
                   {detail?.tone !== "executive" && sectionTitle.trim().length > 0 && (
                     <h3 className="text-2xl font-semibold mb-2 whitespace-pre-line">{sectionTitle}</h3>
@@ -448,7 +449,7 @@ const ServiceDetail = () => {
 
                   {section.bullets && (
                     <ul
-                      className={`grid ${slug === "storytelling" ? "gap-0.5" : "gap-0.5"} text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line ${slug === "meetings-moderation" && (section.title.en || "").includes("People who are comfortable") ? "mt-1" : ""}`}
+                      className={`grid ${slug === "storytelling" ? "gap-0.5" : "gap-0.5"} text-foreground/80 font-light leading-relaxed pl-0 whitespace-pre-line ${slug === "six-hats" && (section.title.en || "").includes("People who are comfortable") ? "mt-1" : ""}`}
                     >
                       {section.bullets.map((item, i) => {
                         const text = pickL(item, lang);
