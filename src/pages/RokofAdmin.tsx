@@ -100,7 +100,7 @@ function SortableKeynoteRow({
   onDelete,
 }: {
   topic: KeynoteTopic;
-  onBlurField: (id: string, field: "title", value: string) => void;
+  onBlurField: (id: string, field: "title" | "description", value: string) => void;
   onActive: (id: string, value: boolean) => void;
   onDelete: (id: string) => void;
 }) {
@@ -159,6 +159,7 @@ const RokofAdmin = () => {
   const [translating, setTranslating] = useState<string | null>(null);
   // Keynote Topics state
   const [keynoteTopics, setKeynoteTopics] = useState<
+    const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
     { id: string; title: string; description: string; sort_order: number; active: boolean }[]
   >([]);
 
@@ -699,13 +700,14 @@ const RokofAdmin = () => {
                 >
                   <div className="divide-y divide-border">
                     {keynoteTopics.map((topic) => (
-                      <SortableKeynoteRow
-                        key={topic.id}
-                        topic={topic}
-                        onBlurField={handleKeynoteBlur}
-                        onActive={handleKeynoteActive}
-                        onDelete={handleKeynoteDelete}
-                      />
+                     <SortableKeynoteRow
+  key={topic.id}
+  topic={topic}
+  onBlurField={handleKeynoteBlur}
+  onActive={handleKeynoteActive}
+  onDelete={handleKeynoteDelete}
+  onEdit={setEditingKeynote}
+/>
                     ))}
                   </div>
                 </SortableContext>
@@ -714,6 +716,27 @@ const RokofAdmin = () => {
           </div>
         </div>
       </section>
+    <Dialog open={!!editingKeynote} onOpenChange={(open) => !open && setEditingKeynote(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editingKeynote?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <Label>Description</Label>
+            <Textarea
+              defaultValue={editingKeynote?.description ?? ""}
+              className="min-h-[120px]"
+              onBlur={(e) => {
+                if (editingKeynote) handleKeynoteBlur(editingKeynote.id, "description", e.target.value);
+              }}
+              placeholder="Enter description for this keynote topic..."
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingKeynote(null)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
