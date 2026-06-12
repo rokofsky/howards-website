@@ -8,7 +8,24 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast, useToast } from "@/hooks/use-toast";
-import { Trash2, Pencil, Loader2, Languages } from "lucide-react";
+import { Trash2, Pencil, Loader2, Languages, GripVertical, Plus } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -68,6 +85,68 @@ interface BlogPostRow {
   created_at: string;
 }
 
+interface KeynoteTopicRow {
+  id: string;
+  title: string;
+  description: string;
+  active: boolean;
+  sort_order: number;
+}
+
+function SortableKeynoteRow({
+  topic,
+  onChange,
+  onCommit,
+  onDelete,
+}: {
+  topic: KeynoteTopicRow;
+  onChange: (patch: Partial<KeynoteTopicRow>) => void;
+  onCommit: (patch: Partial<KeynoteTopicRow>) => void;
+  onDelete: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: topic.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.6 : 1,
+  };
+  return (
+    <li ref={setNodeRef} style={style} className="flex items-start gap-3 py-3">
+      <button
+        type="button"
+        className="mt-2 text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing touch-none"
+        aria-label="Drag to reorder"
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="h-4 w-4" />
+      </button>
+      <div className="flex-1 space-y-2 min-w-0">
+        <Input
+          value={topic.title}
+          placeholder="Topic title"
+          onChange={(e) => onChange({ title: e.target.value })}
+          onBlur={(e) => onCommit({ title: e.target.value })}
+        />
+        <Textarea
+          value={topic.description}
+          placeholder="Description"
+          className="min-h-[80px]"
+          onChange={(e) => onChange({ description: e.target.value })}
+          onBlur={(e) => onCommit({ description: e.target.value })}
+        />
+      </div>
+      <div className="flex items-center gap-2 pt-2">
+        <span className="text-xs text-muted-foreground">{topic.active ? "Active" : "Hidden"}</span>
+        <Switch checked={topic.active} onCheckedChange={(v) => onCommit({ active: v })} />
+      </div>
+      <Button variant="ghost" size="icon" onClick={onDelete} aria-label="Delete topic" className="mt-1">
+        <Trash2 className="h-4 w-4 text-destructive" />
+      </Button>
+    </li>
+  );
+}
+
 const RokofAdmin = () => {
   const navigate = useNavigate();
   const { dismiss } = useToast();
@@ -87,15 +166,111 @@ const RokofAdmin = () => {
   const [savingEdit, setSavingEdit] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
 
+  // Keynote topics state
+  const [topics, setTopics] = useState<KeynoteTopicRow[]>([]);
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
   const loadPosts = async () => {
     const { data, error } = await supabase.from("blog_posts").select("*");
     console.log("Admin Component Fetch - Data:", data, "Error:", error);
     setPosts((data as BlogPostRow[]) ?? []);
   };
 
+  const loadTopics = async () => {
+    const { data, error } = await supabase
+      .from("keynote_topics" as never)
+      .select("*")
+      .order("sort_order", { ascending: true });
+    if (error) {
+      console.error("Failed to load keynote topics:", error);
+      return;
+    }
+    setTopics(((data as unknown) as KeynoteTopicRow[]) ?? []);
+  };
+
   useEffect(() => {
-    if (authenticated) void loadPosts();
+    if (authenticated) {
+      void loadPosts();
+      void loadTopics();
+    }
   }, [authenticated]);
+
+  const handleAddTopic = async () => {
+    const nextOrder = topics.reduce((m, t) => Math.max(m, t.sort_order), 0) + 1;
+    const { data, error } = await supabase
+      .from("keynote_topics" as never)
+      .insert({ title: "", description: "", active: true, sort_order: nextOrder } as never)
+      .select()
+      .single();
+    if (error || !data) {
+      console.error("Failed to add topic:", error);
+      toast({ title: "Failed to add topic", description: error?.message, variant: "destructive" });
+      return;
+    }
+    setTopics((prev) => [...prev, (data as unknown) as KeynoteTopicRow]);
+  };
+
+  const handleTopicLocalChange = (id: string, patch: Partial<KeynoteTopicRow>) => {
+    setTopics((prev) => prev.map((t) => (t.id === id ? { ...t, ...patch } : t)));
+  };
+
+  const handleTopicCommit = async (id: string, patch: Partial<KeynoteTopicRow>) => {
+    const prev = topics.find((t) => t.id === id);
+    if (!prev) return;
+    // Skip if no actual change
+    const changed = Object.entries(patch).some(([k, v]) => (prev as unknown as Record<string, unknown>)[k] !== v);
+    setTopics((cur) => cur.map((t) => (t.id === id ? { ...t, ...patch } : t)));
+    if (!changed) return;
+    const { error } = await supabase
+      .from("keynote_topics" as never)
+      .update(patch as never)
+      .eq("id", id);
+    if (error) {
+      console.error("Failed to update topic:", error);
+      toast({ title: "Update failed", description: error.message, variant: "destructive" });
+      setTopics((cur) => cur.map((t) => (t.id === id ? prev : t)));
+    }
+  };
+
+  const handleDeleteTopic = async (id: string) => {
+    if (!window.confirm("Delete this topic?")) return;
+    const snapshot = topics;
+    setTopics((prev) => prev.filter((t) => t.id !== id));
+    const { error } = await supabase.from("keynote_topics" as never).delete().eq("id", id);
+    if (error) {
+      console.error("Failed to delete topic:", error);
+      toast({ title: "Delete failed", description: error.message, variant: "destructive" });
+      setTopics(snapshot);
+    }
+  };
+
+  const handleTopicDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = topics.findIndex((t) => t.id === active.id);
+    const newIndex = topics.findIndex((t) => t.id === over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
+    const snapshot = topics;
+    const reordered = arrayMove(topics, oldIndex, newIndex).map((t, i) => ({ ...t, sort_order: i + 1 }));
+    setTopics(reordered);
+    const updates = await Promise.all(
+      reordered.map((t) =>
+        supabase
+          .from("keynote_topics" as never)
+          .update({ sort_order: t.sort_order } as never)
+          .eq("id", t.id),
+      ),
+    );
+    const failed = updates.find((r) => r.error);
+    if (failed?.error) {
+      console.error("Failed to persist topic order:", failed.error);
+      toast({ title: "Reorder failed", description: failed.error.message, variant: "destructive" });
+      setTopics(snapshot);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -328,6 +503,38 @@ const RokofAdmin = () => {
                   </li>
                 ))}
               </ul>
+            )}
+          </div>
+
+          {/* Manage Keynote Topics */}
+          <div className="glass rounded-xl p-8 mb-14">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-xl font-bold">Manage Keynote Topics</h2>
+              <Button variant="cta" size="sm" onClick={handleAddTopic}>
+                <Plus className="h-4 w-4 mr-1" /> Add topic
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground mb-6">
+              Drag to reorder. Edits save on blur; toggle Active to show or hide.
+            </p>
+            {topics.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No topics yet.</p>
+            ) : (
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleTopicDragEnd}>
+                <SortableContext items={topics.map((t) => t.id)} strategy={verticalListSortingStrategy}>
+                  <ul className="divide-y divide-border">
+                    {topics.map((topic) => (
+                      <SortableKeynoteRow
+                        key={topic.id}
+                        topic={topic}
+                        onChange={(patch) => handleTopicLocalChange(topic.id, patch)}
+                        onCommit={(patch) => handleTopicCommit(topic.id, patch)}
+                        onDelete={() => handleDeleteTopic(topic.id)}
+                      />
+                    ))}
+                  </ul>
+                </SortableContext>
+              </DndContext>
             )}
           </div>
 

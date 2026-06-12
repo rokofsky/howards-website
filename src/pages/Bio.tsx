@@ -20,7 +20,7 @@ const Bio = () => {
           <motion.div key={isCz ? "cz" : "en"} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="text-foreground/80 font-light leading-relaxed">
               <img
-                src={hero9}
+                src={hero9b}
                 alt="Howard"
                 className="w-full md:w-[45%] md:float-left md:mr-8 md:mb-4 rounded-lg object-cover aspect-[3/4]"
               />
