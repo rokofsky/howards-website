@@ -88,8 +88,8 @@ const CV = () => {
                 </p>
                 <p>
                   {t(
-                    ">150 webinars and sessions for ±6-96 participants including Effective Feedback, EQ, NLP, Cultural Intelligence, Storytelling Skills, Six Hats Thinking Meetings, Multiple Intelligences, Zazen Meditation, Image-streaming, Behavioral Economics.",
-                    "Více než 150 webinářů a setkání pro přibližně 6 až 96 účastníků, včetně témat jako efektivní zpětná vazba, emoční inteligence, NLP, kulturní inteligence, storytelling, setkání metodou Šesti klobouků, teorie mnoha inteligencí, meditace zazen, image-streaming a behaviorální ekonomie.",
+                    ">150 webinars and sessions for ±6-96 participants — see Live Webinars. In addition, I did \"Sit-down Comedy\", improvisation, and debate events. ",
+                    "Více než 150 webinářů a setkání pro přibližně 6 až 96 účastníků — viz Live Webinars. Navíc jsem dělal „Sit-down Comedy“, improvizaci a debatní akce.",
                   )}
                 </p>
               </div>
@@ -106,8 +106,8 @@ const CV = () => {
                 </p>
                 <p>
                   {t(
-                    "After an injury and – due to long-term crutches – the inability to resume corporate training, I took the opportunity to teach children fulltime at a local prep school.",
-                    "Po úrazu a kvůli dlouhodobému používání berlí, které mi znemožnilo návrat ke korporátním školením, jsem využil příležitosti učit děti na plný úvazek na místní gymnázium.",
+                    "After an injury and – due to long-term crutches – the inability to resume corporate training, I took the opportunity to teach children fulltime at a local prep school. My biggest fear was one of the kids bumping in to a crutch.",
+                    "Po úrazu a kvůli dlouhodobému používání berlí, které mi znemožnilo návrat ke korporátním školením, jsem využil příležitosti učit děti na plný úvazek na místní gymnázium. Mým největším strachem bylo, že do mé berle vrazí některé z dětí.",
                   )}
                 </p>
               </div>
@@ -124,8 +124,8 @@ const CV = () => {
                 </p>
                 <p>
                   {t(
-                    "Training communication skills and 'bedside manner' to medical students.",
-                    "Výuka komunikačních dovedností a „přístupu k pacientům“ pro studenty medicíny.",
+                    "Training communication skills and 'bedside manner' to medical students. As the course was elective (voluntary), most of the students who signed up probably weren't the ones who needed it.",
+                    "Výuka komunikačních dovedností a „přístupu k pacientům“ pro studenty medicíny. Protože byl kurz volitelný (dobrovolný), většina studentů, kteří se přihlásili, pravděpodobně nebyli ti, kteří to potřebovali.",
                   )}
                 </p>
               </div>
@@ -142,8 +142,8 @@ const CV = () => {
                 </p>
                 <p>
                   {t(
-                    "Two 9-week intensive courses for Juneyao pilots. IELTS exam success rate was 93%.",
-                    "Dva devítitýdenní intenzivní kurzy pro piloty společnosti Juneyao Airlines. Úspěšnost u zkoušky IELTS dosáhla 93%.",
+                    "Two 9-week intensive courses for Juneyao pilot candidates. IELTS exam success rate was 93%.",
+                    "Dva devítitýdenní intenzivní kurzy pro kandidáty na piloty společnosti Juneyao Airlines. Úspěšnost u zkoušky IELTS dosáhla 93%.",
                   )}
                 </p>
               </div>
@@ -160,8 +160,8 @@ const CV = () => {
                 </p>
                 <p>
                   {t(
-                    "Led three 8-week intensive Suggestopedic English language courses, and assisted Lonny Gold in two others.",
-                    "Vedl tři osmítýdenní intenzivní kurzy sugestopedické výuky angličtiny a ve dvou dalších asistoval Lonnymu Goldovi.",
+                    "Led three 8-week intensive Suggestopedic English language courses, and assisted Lonny Gold in two others. Possibly the best decision I ever made.",
+                    "Vedl tři osmítýdenní intenzivní kurzy sugestopedické výuky angličtiny a ve dvou dalších asistoval Lonnymu Goldovi. Pravděpodobně nejlepší rozhodnutí, které jsem kdy udělal.",
                   )}
                 </p>
               </div>
@@ -173,8 +173,8 @@ const CV = () => {
                 </p>
                 <p>
                   {t(
-                    "Specialized English: Legal, Business, Financial, Medical, Technical, exam preparation. Small, international, and state-owned enterprises; references upon request.",
-                    "Odborná angličtina: právní, obchodní, finanční, lékařská, technická, příprava na zkoušky.\nMalé, mezinárodní i státní podniky.",
+                    "Specialized English: Legal, Business, Financial, Medical, Technical, exam preparation. Small, international, and state-owned enterprises.",
+                    "Odborná angličtina: právní, obchodní, finanční, lékařská, technická, příprava na zkoušky. Malé, mezinárodní i státní podniky.",
                   )}
                 </p>
               </div>
@@ -191,8 +191,8 @@ const CV = () => {
                 </p>
                 <p>
                   {t(
-                    "Polytechnic and University students at this institute for finance. Courses: Presentation & Negotiation Skills, English for Banking and Finance.",
-                    "Výuka studentů polytechniky a univerzity na institutu zaměřeném na finance. Kurzy: prezentační a vyjednávací dovednosti, angličtina pro bankovnictví a finance.",
+                    "Taught English for Banking and Finance at this polytechnic for finance. Additional courses: Presentation & Negotiation Skills. I didn't understand much of what I was teaching, e.g. selling your company's IP and then leasing it back. Or SPVs. I still don't. ",
+                    "Na této polytechnice pro finance jsem vyučoval angličtinu pro bankovnictví a finance. Další kurzy: Prezentační a vyjednávací dovednosti. Moc jsem nerozuměl tomu, co jsem učil, např. prodej duševního vlastnictví vaší společnosti a jeho následný zpětný pronájem. Nebo SPVs. Pořád tomu nerozumím.",
                   )}
                 </p>
               </div>
@@ -209,8 +209,8 @@ const CV = () => {
                 </p>
                 <p>
                   {t(
-                    "Substituted whole semesters including Tourism, Literature, Education, Writing, Translation, Government, English for older adults, Rhetoric, Public Speaking.",
-                    "Zastupoval celé semestry ve výuce předmětů jako cestovní ruch, literatura, pedagogika, psaní, překlad, veřejná správa, angličtina pro starší dospělé, rétorika a veřejné vystupování.",
+                    "Substituted whole semesters including Tourism, Literature, Education, Writing, Translation, Government, English for older adults, Rhetoric, Public Speaking. Whichever teacher was out for a semester, I taught their class.",
+                    "Zastupoval celé semestry ve výuce předmětů jako cestovní ruch, literatura, pedagogika, psaní, překlad, veřejná správa, angličtina pro starší dospělé, rétorika a veřejné vystupování. Kdykoliv některý učitel na semestr chyběl, učil jsem jeho třídu.",
                   )}
                 </p>
               </div>
@@ -226,10 +226,9 @@ const CV = () => {
                 </p>
                 <p>
                   <em>
-                    {t("Bachelor's program: Literature/Rhetoric, 1984-1989", "BA: literatura / rétorika, 1984-1989")}
+                    {t("Bachelor's program: Literature/Rhetoric, Minor in Philosophy 1984-1989", "BA: literatura / rétorika, vedlejší obor: filozofie 1984-1989")}
                   </em>
                 </p>
-                <p>{t("Minor in Philosophy", "Vedlejší obor: filozofie")}</p>
               </div>
               <div>
                 <p>
@@ -243,8 +242,8 @@ const CV = () => {
                 <p>
                   <em>
                     {t(
-                      "Master's program: English Literature, 1990-1993",
-                      "Magisterský program: anglická literatura, 1990-1993",
+                      "Master's program: English Language Literature, 1990-1993",
+                      "Magisterský program: anglická a cizí literatura, 1990-1993",
                     )}
                   </em>
                 </p>
