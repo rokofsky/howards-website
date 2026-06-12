@@ -119,6 +119,36 @@ export type Database = {
         }
         Relationships: []
       }
+      keynote_topics: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string
+          id: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          id?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          id?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       prompts: {
         Row: {
           character: string | null
