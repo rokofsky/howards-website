@@ -109,7 +109,7 @@ const RokofAdmin = () => {
     setKeynoteTopics((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const handleKeynoteBlur = async (id: string, field: string, value: string) => {
+  const handleKeynoteBlur = async (id: string, field: "title" | "description", value: string) => {
     await supabase
       .from("keynote_topics")
       .update({ [field]: value })
