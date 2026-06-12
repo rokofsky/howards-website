@@ -192,12 +192,13 @@ const RokofAdmin = () => {
     setKeynoteTopics((prev) => prev.map((t) => (t.id === id ? { ...t, active: value } : t)));
   };
 
-  const handleKeynoteReorder = async (index: number, direction: "up" | "down") => {
-    const newIndex = direction === "up" ? index - 1 : index + 1;
-    if (newIndex < 0 || newIndex >= keynoteTopics.length) return;
-    const updated = [...keynoteTopics];
-    [updated[index], updated[newIndex]] = [updated[newIndex], updated[index]];
-    const reordered = updated.map((t, i) => ({ ...t, sort_order: i + 1 }));
+  const handleKeynoteDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = keynoteTopics.findIndex((t) => t.id === active.id);
+    const newIndex = keynoteTopics.findIndex((t) => t.id === over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
+    const reordered = arrayMove(keynoteTopics, oldIndex, newIndex).map((t, i) => ({ ...t, sort_order: i + 1 }));
     setKeynoteTopics(reordered);
     await Promise.all(
       reordered.map((t) => supabase.from("keynote_topics").update({ sort_order: t.sort_order }).eq("id", t.id)),
