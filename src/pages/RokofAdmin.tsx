@@ -159,7 +159,6 @@ const RokofAdmin = () => {
   const [translating, setTranslating] = useState<string | null>(null);
   // Keynote Topics state
   const [keynoteTopics, setKeynoteTopics] = useState<
-    const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
     { id: string; title: string; description: string; sort_order: number; active: boolean }[]
   >([]);
 
