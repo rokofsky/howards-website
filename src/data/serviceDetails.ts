@@ -518,11 +518,11 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     ],
   },
   "coaching-sessions": {
-    pageTitle: { en: "Interpersonal Communication Training", cs: "Trénink mezilidské komunikace" },
+    pageTitle: { en: "Individual Coaching Sessions", cs: "Individuální koučovací sezení" },
     intro: [
       {
-        en: "It's universally affirmed that personal relationships are the most important factor in any business. Communication is the oil for the machine. With a few techniques you can make a good impression, be a good listener, maybe use some charisma, and motivate people. Understanding the nuances of communication will help you avoid misunderstandings, and fix them when they occur. Optional Leadership module.",
-        cs: "Obecně se uznává, že osobní vztahy jsou nejdůležitějším faktorem v jakémkoliv podnikání. Komunikace je olejem celého stroje. Pomocí několika technik můžete udělat dobrý dojem, naslouchat, využít trochu charismatu a motivovat lidi. Pochopení nuancí komunikace vám pomůže předcházet nedorozuměním a napravit je, když nastanou. Volitelný modul Leadership.",
+        en: "Uncover new strategies in 50-minute brainstorming sessions.",
+        cs: "Objevte nové strategie během 50minutových brainstormingových sezení.",
       },
       {
         en: "In this workshop, you will practice how to project yourself more effectively and persuasively by connecting with others, carefully following, guiding, and motivating them. Learn how to craft your message so as to evoke the response you desire. In practically any situation you may find yourself in.",
@@ -656,8 +656,8 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     intro: [
       { en: "\n", cs: "\n" },
       {
-        en: "It has been universally affirmed that personal relationships are the most important factor in any business. Communication is the oil for the machine. With a few techniques you can make a good impression, be a good listener, maybe use some charisma, and motivate people. Understanding the nuances of communication will help you avoid misunderstandings, and fix them when they occur. Optional Leadership module. In this workshop, you will practice how to project yourself more effectively and persuasively by connecting with others, carefully following, guiding, and motivating them. Learn how to craft your message so as to evoke the response you desire. In practically any situation you may find yourself in.",
-        cs: "Howarda si můžete najmout jako řečníka na svou akci — jeho zábavná, vzdělávací témata a artikulovaný, interaktivní řečnický styl si zaručeně získají pozornost každého publika a motivují ho k akci. A možná se cestou i něco naučí…",
+        en: "Fill in.",
+        cs: "Fill in",
       },
       { en: "\n", cs: "\n" },
       { en: "\n", cs: "\n" },
