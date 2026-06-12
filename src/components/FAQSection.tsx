@@ -73,8 +73,8 @@ const FAQSection = () => {
     {
       q: t("Is there some guarantee I'm not wasting money?", "Existuje nějaká záruka, že neutratím peníze zbytečně?"),
       a: t(
-        'Howard has always included a satisfaction guarantee in T&C since his first website in 2004. It reads: "I am not satisfied until you the client is satisfied. If you are disappointed with a service, we will agree to continue working on it at no extra charge, until you are satisfied. Or, you can fire me on the spot and I\'ll cancel the invoice." Simple as that.',
-        "Howard má od svých prvních webových stránek z roku 2004 ve smluvních podmínkách vždy zahrnutou záruku spokojenosti. Zní takto: „Nejsem spokojen, dokud nejste spokojeni Vy. Pokud je klient se službou nespokojen, dohodneme se na dalším pokračování bez příplatku, dokud nebude klient spokojen. Nebo mě můžete na místě propustit a já zruším fakturu.“ Tak jednoduché to je.",
+        "Since his first website in 2004, Howard's T&C has included one simple guarantee: if you're not satisfied, he keeps working for free until you are. Or you can fire him on the spot and he'll tear up the invoice. He's been in this business long enough to know that clause is more valuable than any contract.",
+        "Howard má od svých prvních webových stránek z roku 2004 ve smluvních podmínkách vždy zahrnutou jednu jednoduchou záruku: pokud nejste spokojeni, pokračuje v práci zdarma, dokud nebudete. Nebo ho můžete na místě propustit a on roztrhá fakturu. V tomto oboru se pohybuje dost dlouho na to, aby věděl, že toto ujednání má větší hodnotu než jakákoli smlouva.",
       ),
     },
   ];
