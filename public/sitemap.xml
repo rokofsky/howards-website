@@ -1,3 +1,6 @@
+
+
+
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://howards-website.lovable.app/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
@@ -13,8 +16,7 @@
   <url><loc>https://howards-website.lovable.app/blog/storytelling-is-not-optional-anymore</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://howards-website.lovable.app/services/presentation-speaking-skills</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://howards-website.lovable.app/services/live-webinars</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://howards-website.lovable.app/services/meetings-moderation</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://howards-website.lovable.app/services/conflict-resolution</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+   <url><loc>https://howards-website.lovable.app/services/conflict-resolution</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://howards-website.lovable.app/services/brainstorming-sessions</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://howards-website.lovable.app/services/storytelling</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://howards-website.lovable.app/services/communication-skills</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -26,6 +28,8 @@
   <url><loc>https://howards-website.lovable.app/cz</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://howards-website.lovable.app/cz/bio</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://howards-website.lovable.app/cz/cv</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://howards-website.lovable.app/cz/reference</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://howards-website.lovable.app/cz/reference</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://howards-website.lovable.app/cz/blog</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://howards-website.lovable.app/story-sandbox</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://howards-website.lovable.app/services/six-hats</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
