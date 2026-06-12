@@ -140,6 +140,11 @@ const RokofAdmin = () => {
   const [authenticated, setAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
   const [password, setPassword] = useState("");
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
   // Blog generator state
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
