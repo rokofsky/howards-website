@@ -643,7 +643,7 @@ const RokofAdmin = () => {
                 <Textarea
                   defaultValue={topic.description}
                   placeholder="Description (optional)"
-                  className="min-h-[60px]"
+                  className="min-h-[40px]"
                   onBlur={(e) => handleKeynoteBlur(topic.id, "description", e.target.value)}
                 />
               </div>
