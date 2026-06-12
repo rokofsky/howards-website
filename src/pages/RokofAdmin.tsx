@@ -85,6 +85,55 @@ interface BlogPostRow {
   created_at: string;
 }
 
+interface KeynoteTopic {
+  id: string;
+  title: string;
+  description: string;
+  sort_order: number;
+  active: boolean;
+}
+
+function SortableKeynoteRow({
+  topic,
+  onBlurField,
+  onActive,
+  onDelete,
+}: {
+  topic: KeynoteTopic;
+  onBlurField: (id: string, field: "title", value: string) => void;
+  onActive: (id: string, value: boolean) => void;
+  onDelete: (id: string) => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: topic.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+  return (
+    <div ref={setNodeRef} style={style} className="flex items-center gap-2 py-1 px-2">
+      <button
+        className="cursor-grab touch-none text-muted-foreground hover:text-foreground"
+        {...attributes}
+        {...listeners}
+        aria-label="Drag to reorder"
+      >
+        <GripVertical className="h-4 w-4" />
+      </button>
+      <Input
+        defaultValue={topic.title}
+        placeholder="Topic title"
+        className="flex-1 border-0 focus-visible:ring-0 shadow-none px-2 bg-transparent"
+        onBlur={(e) => onBlurField(topic.id, "title", e.target.value)}
+      />
+      <Switch checked={topic.active} onCheckedChange={(v) => onActive(topic.id, v)} />
+      <button onClick={() => onDelete(topic.id)} aria-label="Delete topic">
+        <Trash2 className="h-4 w-4 text-destructive" />
+      </button>
+    </div>
+  );
+}
+
 const RokofAdmin = () => {
   const navigate = useNavigate();
   const { dismiss } = useToast();
