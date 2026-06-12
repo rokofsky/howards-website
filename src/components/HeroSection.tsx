@@ -11,7 +11,7 @@ import hero5 from "@/assets/hero-5.jpg";
 import hero6 from "@/assets/hero-6.jpg";
 import hero7 from "@/assets/hero-7.jpg";
 import hero8 from "@/assets/hero-8.jpg";
-import hero9b from "@/assets/hero-9b.png";
+import hero9b from "@/assets/hero-9.jpg";
 
 const slides = [
   { src: hero9b, caption: "close up" },
