@@ -95,20 +95,18 @@ const FAQSection = () => {
             transition={{ delay: i * 0.05 }}
             className="glass rounded-lg group"
           >
-            <summary className="cursor-pointer p-6 text-base font-medium list-none flex justify-between items-center">
+            <summary
+              className="cursor-pointer p-6 text-base font-medium list-none flex justify-between items-center"
+              onClick={(e) => {
+                const details = (e.currentTarget as HTMLElement).closest("details");
+                if (details?.open) {
+                  e.preventDefault();
+                  details.removeAttribute("open");
+                }
+              }}
+            >
               {faq.q}
-              <summary
-  className="cursor-pointer p-6 text-base font-medium list-none flex justify-between items-center"
-  onClick={(e) => {
-    const details = (e.currentTarget as HTMLElement).closest("details");
-    if (details?.open) {
-      e.preventDefault();
-      details.removeAttribute("open");
-    }
-  }}
->
-                +
-              </span>
+              <span>+</span>
             </summary>
             <div
   className="px-6 pb-6 text-sm text-muted-foreground leading-relaxed font-medium cursor-pointer"
