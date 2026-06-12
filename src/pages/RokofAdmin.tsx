@@ -73,8 +73,6 @@ const RokofAdmin = () => {
   const { dismiss } = useToast();
   const [authenticated, setAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
   const [password, setPassword] = useState("");
-  const [authenticated, setAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
-  const [password, setPassword] = useState("");
   const [keynoteOpen, setKeynoteOpen] = useState(false);
 
   // Blog generator state
