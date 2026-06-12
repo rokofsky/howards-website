@@ -184,11 +184,17 @@ const RokofAdmin = () => {
       .from("keynote_topics" as never)
       .select("*")
       .order("sort_order", { ascending: true });
+    console.log("[KeynoteTopics] raw data:", data);
+    console.log("[KeynoteTopics] row count:", Array.isArray(data) ? data.length : 0);
+    console.log("[KeynoteTopics] query error:", error);
     if (error) {
       console.error("Failed to load keynote topics:", error);
       return;
     }
-    setTopics(((data as unknown) as KeynoteTopicRow[]) ?? []);
+    const rows = ((data as unknown) as KeynoteTopicRow[]) ?? [];
+    setTopics(rows);
+    console.log("[KeynoteTopics] state array length after set:", rows.length);
+    console.log("[KeynoteTopics] final state array:", rows);
   };
 
   useEffect(() => {
@@ -506,37 +512,6 @@ const RokofAdmin = () => {
             )}
           </div>
 
-          {/* Manage Keynote Topics */}
-          <div className="glass rounded-xl p-8 mb-14">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-xl font-bold">Manage Keynote Topics</h2>
-              <Button variant="cta" size="sm" onClick={handleAddTopic}>
-                <Plus className="h-4 w-4 mr-1" /> Add topic
-              </Button>
-            </div>
-            <p className="text-sm text-muted-foreground mb-6">
-              Drag to reorder. Edits save on blur; toggle Active to show or hide.
-            </p>
-            {topics.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No topics yet.</p>
-            ) : (
-              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleTopicDragEnd}>
-                <SortableContext items={topics.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-                  <ul className="divide-y divide-border">
-                    {topics.map((topic) => (
-                      <SortableKeynoteRow
-                        key={topic.id}
-                        topic={topic}
-                        onChange={(patch) => handleTopicLocalChange(topic.id, patch)}
-                        onCommit={(patch) => handleTopicCommit(topic.id, patch)}
-                        onDelete={() => handleDeleteTopic(topic.id)}
-                      />
-                    ))}
-                  </ul>
-                </SortableContext>
-              </DndContext>
-            )}
-          </div>
 
           <div className="glass rounded-xl px-8 py-4 mb-14">
             <p className="text-sm text-muted-foreground">
@@ -594,6 +569,39 @@ const RokofAdmin = () => {
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Manage Keynote Topics */}
+          <div className="glass rounded-xl p-8 mt-14">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-xl font-bold">Manage Keynote Topics</h2>
+              <Button variant="cta" size="sm" onClick={handleAddTopic}>
+                <Plus className="h-4 w-4 mr-1" /> Add topic
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground mb-6">
+              Drag to reorder. Edits save on blur; toggle Active to show or hide.
+            </p>
+            {(() => { console.log("[KeynoteTopics] rendering with topics:", topics); return null; })()}
+            {topics.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No topics yet.</p>
+            ) : (
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleTopicDragEnd}>
+                <SortableContext items={topics.map((t) => t.id)} strategy={verticalListSortingStrategy}>
+                  <ul className="divide-y divide-border">
+                    {topics.map((topic) => (
+                      <SortableKeynoteRow
+                        key={topic.id}
+                        topic={topic}
+                        onChange={(patch) => handleTopicLocalChange(topic.id, patch)}
+                        onCommit={(patch) => handleTopicCommit(topic.id, patch)}
+                        onDelete={() => handleDeleteTopic(topic.id)}
+                      />
+                    ))}
+                  </ul>
+                </SortableContext>
+              </DndContext>
+            )}
           </div>
         </div>
       </section>
