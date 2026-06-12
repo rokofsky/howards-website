@@ -8,9 +8,26 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast, useToast } from "@/hooks/use-toast";
-import { Trash2, Pencil, Loader2, Languages } from "lucide-react";
+import { Trash2, Pencil, Loader2, Languages, GripVertical } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import {
   isAdminAuthenticated,
   setAdminAuthenticated,
@@ -68,11 +85,65 @@ interface BlogPostRow {
   created_at: string;
 }
 
+interface KeynoteTopic {
+  id: string;
+  title: string;
+  description: string;
+  sort_order: number;
+  active: boolean;
+}
+
+function SortableKeynoteRow({
+  topic,
+  onBlurField,
+  onActive,
+  onDelete,
+}: {
+  topic: KeynoteTopic;
+  onBlurField: (id: string, field: "title", value: string) => void;
+  onActive: (id: string, value: boolean) => void;
+  onDelete: (id: string) => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: topic.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+  return (
+    <div ref={setNodeRef} style={style} className="flex items-center gap-2 py-1 px-2">
+      <button
+        className="cursor-grab touch-none text-muted-foreground hover:text-foreground"
+        {...attributes}
+        {...listeners}
+        aria-label="Drag to reorder"
+      >
+        <GripVertical className="h-4 w-4" />
+      </button>
+      <Input
+        defaultValue={topic.title}
+        placeholder="Topic title"
+        className="flex-1 border-0 focus-visible:ring-0 shadow-none px-2 bg-transparent"
+        onBlur={(e) => onBlurField(topic.id, "title", e.target.value)}
+      />
+      <Switch checked={topic.active} onCheckedChange={(v) => onActive(topic.id, v)} />
+      <button onClick={() => onDelete(topic.id)} aria-label="Delete topic">
+        <Trash2 className="h-4 w-4 text-destructive" />
+      </button>
+    </div>
+  );
+}
+
 const RokofAdmin = () => {
   const navigate = useNavigate();
   const { dismiss } = useToast();
   const [authenticated, setAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
   const [password, setPassword] = useState("");
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
 
   // Blog generator state
   const [title, setTitle] = useState("");
@@ -121,12 +192,13 @@ const RokofAdmin = () => {
     setKeynoteTopics((prev) => prev.map((t) => (t.id === id ? { ...t, active: value } : t)));
   };
 
-  const handleKeynoteReorder = async (index: number, direction: "up" | "down") => {
-    const newIndex = direction === "up" ? index - 1 : index + 1;
-    if (newIndex < 0 || newIndex >= keynoteTopics.length) return;
-    const updated = [...keynoteTopics];
-    [updated[index], updated[newIndex]] = [updated[newIndex], updated[index]];
-    const reordered = updated.map((t, i) => ({ ...t, sort_order: i + 1 }));
+  const handleKeynoteDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = keynoteTopics.findIndex((t) => t.id === active.id);
+    const newIndex = keynoteTopics.findIndex((t) => t.id === over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
+    const reordered = arrayMove(keynoteTopics, oldIndex, newIndex).map((t, i) => ({ ...t, sort_order: i + 1 }));
     setKeynoteTopics(reordered);
     await Promise.all(
       reordered.map((t) => supabase.from("keynote_topics").update({ sort_order: t.sort_order }).eq("id", t.id)),
@@ -608,53 +680,38 @@ const RokofAdmin = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <section className="mt-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Manage Keynote Topics</h2>
-          <Button variant="cta" size="sm" onClick={handleKeynoteAdd}>
-            + Add topic
-          </Button>
-        </div>
-        <div className="space-y-3">
-          {keynoteTopics.map((topic, index) => (
-            <div key={topic.id} className="glass rounded-lg p-4 flex gap-3 items-start">
-              <div className="flex flex-col gap-1 pt-1">
-                <button
-                  onClick={() => handleKeynoteReorder(index, "up")}
-                  disabled={index === 0}
-                  className="text-xs disabled:opacity-30"
-                >
-                  ▲
-                </button>
-                <button
-                  onClick={() => handleKeynoteReorder(index, "down")}
-                  disabled={index === keynoteTopics.length - 1}
-                  className="text-xs disabled:opacity-30"
-                >
-                  ▼
-                </button>
-              </div>
-              <div className="flex-1 space-y-2">
-                <Input
-                  defaultValue={topic.title}
-                  placeholder="Topic title"
-                  onBlur={(e) => handleKeynoteBlur(topic.id, "title", e.target.value)}
-                />
-                <Textarea
-                  defaultValue={topic.description}
-                  placeholder="Description (optional)"
-                  className="min-h-[60px]"
-                  onBlur={(e) => handleKeynoteBlur(topic.id, "description", e.target.value)}
-                />
-              </div>
-              <div className="flex flex-col items-center gap-2 pt-1">
-                <Switch checked={topic.active} onCheckedChange={(v) => handleKeynoteActive(topic.id, v)} />
-                <button onClick={() => handleKeynoteDelete(topic.id)}>
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </button>
-              </div>
+      <section className="section-padding">
+        <div className="max-w-4xl mx-auto">
+          <div className="glass rounded-xl p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold">Manage Keynote Topics</h2>
+              <Button variant="cta" size="sm" onClick={handleKeynoteAdd}>
+                + Add topic
+              </Button>
             </div>
-          ))}
+            {keynoteTopics.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No topics yet.</p>
+            ) : (
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleKeynoteDragEnd}>
+                <SortableContext
+                  items={keynoteTopics.map((t) => t.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="divide-y divide-border">
+                    {keynoteTopics.map((topic) => (
+                      <SortableKeynoteRow
+                        key={topic.id}
+                        topic={topic}
+                        onBlurField={handleKeynoteBlur}
+                        onActive={handleKeynoteActive}
+                        onDelete={handleKeynoteDelete}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
+            )}
+          </div>
         </div>
       </section>
     </Layout>
