@@ -680,53 +680,38 @@ const RokofAdmin = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <section className="mt-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Manage Keynote Topics</h2>
-          <Button variant="cta" size="sm" onClick={handleKeynoteAdd}>
-            + Add topic
-          </Button>
-        </div>
-        <div className="space-y-3">
-          {keynoteTopics.map((topic, index) => (
-            <div key={topic.id} className="glass rounded-lg p-4 flex gap-3 items-start">
-              <div className="flex flex-col gap-1 pt-1">
-                <button
-                  onClick={() => handleKeynoteReorder(index, "up")}
-                  disabled={index === 0}
-                  className="text-xs disabled:opacity-30"
-                >
-                  ▲
-                </button>
-                <button
-                  onClick={() => handleKeynoteReorder(index, "down")}
-                  disabled={index === keynoteTopics.length - 1}
-                  className="text-xs disabled:opacity-30"
-                >
-                  ▼
-                </button>
-              </div>
-              <div className="flex-1 space-y-2">
-                <Input
-                  defaultValue={topic.title}
-                  placeholder="Topic title"
-                  onBlur={(e) => handleKeynoteBlur(topic.id, "title", e.target.value)}
-                />
-                <Textarea
-                  defaultValue={topic.description}
-                  placeholder="Description (optional)"
-                  className="min-h-[60px]"
-                  onBlur={(e) => handleKeynoteBlur(topic.id, "description", e.target.value)}
-                />
-              </div>
-              <div className="flex flex-col items-center gap-2 pt-1">
-                <Switch checked={topic.active} onCheckedChange={(v) => handleKeynoteActive(topic.id, v)} />
-                <button onClick={() => handleKeynoteDelete(topic.id)}>
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </button>
-              </div>
+      <section className="section-padding">
+        <div className="max-w-4xl mx-auto">
+          <div className="glass rounded-xl p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold">Manage Keynote Topics</h2>
+              <Button variant="cta" size="sm" onClick={handleKeynoteAdd}>
+                + Add topic
+              </Button>
             </div>
-          ))}
+            {keynoteTopics.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No topics yet.</p>
+            ) : (
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleKeynoteDragEnd}>
+                <SortableContext
+                  items={keynoteTopics.map((t) => t.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="divide-y divide-border">
+                    {keynoteTopics.map((topic) => (
+                      <SortableKeynoteRow
+                        key={topic.id}
+                        topic={topic}
+                        onBlurField={handleKeynoteBlur}
+                        onActive={handleKeynoteActive}
+                        onDelete={handleKeynoteDelete}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
+            )}
+          </div>
         </div>
       </section>
     </Layout>
