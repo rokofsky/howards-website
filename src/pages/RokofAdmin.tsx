@@ -602,6 +602,7 @@ const RokofAdmin = () => {
                 </SortableContext>
               </DndContext>
             )}
+          </div>
         </div>
       </section>
 
