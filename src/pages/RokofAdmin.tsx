@@ -166,15 +166,111 @@ const RokofAdmin = () => {
   const [savingEdit, setSavingEdit] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
 
+  // Keynote topics state
+  const [topics, setTopics] = useState<KeynoteTopicRow[]>([]);
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
   const loadPosts = async () => {
     const { data, error } = await supabase.from("blog_posts").select("*");
     console.log("Admin Component Fetch - Data:", data, "Error:", error);
     setPosts((data as BlogPostRow[]) ?? []);
   };
 
+  const loadTopics = async () => {
+    const { data, error } = await supabase
+      .from("keynote_topics" as never)
+      .select("*")
+      .order("sort_order", { ascending: true });
+    if (error) {
+      console.error("Failed to load keynote topics:", error);
+      return;
+    }
+    setTopics(((data as unknown) as KeynoteTopicRow[]) ?? []);
+  };
+
   useEffect(() => {
-    if (authenticated) void loadPosts();
+    if (authenticated) {
+      void loadPosts();
+      void loadTopics();
+    }
   }, [authenticated]);
+
+  const handleAddTopic = async () => {
+    const nextOrder = topics.reduce((m, t) => Math.max(m, t.sort_order), 0) + 1;
+    const { data, error } = await supabase
+      .from("keynote_topics" as never)
+      .insert({ title: "", description: "", active: true, sort_order: nextOrder } as never)
+      .select()
+      .single();
+    if (error || !data) {
+      console.error("Failed to add topic:", error);
+      toast({ title: "Failed to add topic", description: error?.message, variant: "destructive" });
+      return;
+    }
+    setTopics((prev) => [...prev, (data as unknown) as KeynoteTopicRow]);
+  };
+
+  const handleTopicLocalChange = (id: string, patch: Partial<KeynoteTopicRow>) => {
+    setTopics((prev) => prev.map((t) => (t.id === id ? { ...t, ...patch } : t)));
+  };
+
+  const handleTopicCommit = async (id: string, patch: Partial<KeynoteTopicRow>) => {
+    const prev = topics.find((t) => t.id === id);
+    if (!prev) return;
+    // Skip if no actual change
+    const changed = Object.entries(patch).some(([k, v]) => (prev as Record<string, unknown>)[k] !== v);
+    setTopics((cur) => cur.map((t) => (t.id === id ? { ...t, ...patch } : t)));
+    if (!changed) return;
+    const { error } = await supabase
+      .from("keynote_topics" as never)
+      .update(patch as never)
+      .eq("id", id);
+    if (error) {
+      console.error("Failed to update topic:", error);
+      toast({ title: "Update failed", description: error.message, variant: "destructive" });
+      setTopics((cur) => cur.map((t) => (t.id === id ? prev : t)));
+    }
+  };
+
+  const handleDeleteTopic = async (id: string) => {
+    if (!window.confirm("Delete this topic?")) return;
+    const snapshot = topics;
+    setTopics((prev) => prev.filter((t) => t.id !== id));
+    const { error } = await supabase.from("keynote_topics" as never).delete().eq("id", id);
+    if (error) {
+      console.error("Failed to delete topic:", error);
+      toast({ title: "Delete failed", description: error.message, variant: "destructive" });
+      setTopics(snapshot);
+    }
+  };
+
+  const handleTopicDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = topics.findIndex((t) => t.id === active.id);
+    const newIndex = topics.findIndex((t) => t.id === over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
+    const snapshot = topics;
+    const reordered = arrayMove(topics, oldIndex, newIndex).map((t, i) => ({ ...t, sort_order: i + 1 }));
+    setTopics(reordered);
+    const updates = await Promise.all(
+      reordered.map((t) =>
+        supabase
+          .from("keynote_topics" as never)
+          .update({ sort_order: t.sort_order } as never)
+          .eq("id", t.id),
+      ),
+    );
+    const failed = updates.find((r) => r.error);
+    if (failed?.error) {
+      console.error("Failed to persist topic order:", failed.error);
+      toast({ title: "Reorder failed", description: failed.error.message, variant: "destructive" });
+      setTopics(snapshot);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
