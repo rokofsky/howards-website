@@ -90,9 +90,6 @@ const RokofAdmin = () => {
   const [keynoteTopics, setKeynoteTopics] = useState<
     { id: string; title: string; description: string; sort_order: number; active: boolean }[]
   >([]);
-  const [keynoteTopics, setKeynoteTopics] = useState<
-    { id: string; title: string; description: string; sort_order: number; active: boolean }[]
-  >([]);
 
   const fetchKeynoteTopics = async () => {
     const { data, error } = await supabase.from("keynote_topics").select("*").order("sort_order", { ascending: true });
