@@ -164,6 +164,7 @@ const RokofAdmin = () => {
   const [translating, setTranslating] = useState<string | null>(null);
   // Keynote Topics state
   const [keynoteTopics, setKeynoteTopics] = useState<
+    const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
     { id: string; title: string; description: string; sort_order: number; active: boolean }[]
   >([]);
 
@@ -701,13 +702,14 @@ const RokofAdmin = () => {
                 <SortableContext items={keynoteTopics.map((t) => t.id)} strategy={verticalListSortingStrategy}>
                   <div className="divide-y divide-border">
                     {keynoteTopics.map((topic) => (
-                      <SortableKeynoteRow
-                        key={topic.id}
-                        topic={topic}
-                        onBlurField={handleKeynoteBlur}
-                        onActive={handleKeynoteActive}
-                        onDelete={handleKeynoteDelete}
-                      />
+                     <SortableKeynoteRow
+  key={topic.id}
+  topic={topic}
+  onBlurField={handleKeynoteBlur}
+  onActive={handleKeynoteActive}
+  onDelete={handleKeynoteDelete}
+  onEdit={setEditingKeynote}
+/>
                     ))}
                   </div>
                 </SortableContext>
