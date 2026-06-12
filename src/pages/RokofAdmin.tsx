@@ -85,6 +85,68 @@ interface BlogPostRow {
   created_at: string;
 }
 
+interface KeynoteTopicRow {
+  id: string;
+  title: string;
+  description: string;
+  active: boolean;
+  sort_order: number;
+}
+
+function SortableKeynoteRow({
+  topic,
+  onChange,
+  onCommit,
+  onDelete,
+}: {
+  topic: KeynoteTopicRow;
+  onChange: (patch: Partial<KeynoteTopicRow>) => void;
+  onCommit: (patch: Partial<KeynoteTopicRow>) => void;
+  onDelete: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: topic.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.6 : 1,
+  };
+  return (
+    <li ref={setNodeRef} style={style} className="flex items-start gap-3 py-3">
+      <button
+        type="button"
+        className="mt-2 text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing touch-none"
+        aria-label="Drag to reorder"
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="h-4 w-4" />
+      </button>
+      <div className="flex-1 space-y-2 min-w-0">
+        <Input
+          value={topic.title}
+          placeholder="Topic title"
+          onChange={(e) => onChange({ title: e.target.value })}
+          onBlur={(e) => onCommit({ title: e.target.value })}
+        />
+        <Textarea
+          value={topic.description}
+          placeholder="Description"
+          className="min-h-[80px]"
+          onChange={(e) => onChange({ description: e.target.value })}
+          onBlur={(e) => onCommit({ description: e.target.value })}
+        />
+      </div>
+      <div className="flex items-center gap-2 pt-2">
+        <span className="text-xs text-muted-foreground">{topic.active ? "Active" : "Hidden"}</span>
+        <Switch checked={topic.active} onCheckedChange={(v) => onCommit({ active: v })} />
+      </div>
+      <Button variant="ghost" size="icon" onClick={onDelete} aria-label="Delete topic" className="mt-1">
+        <Trash2 className="h-4 w-4 text-destructive" />
+      </Button>
+    </li>
+  );
+}
+
 const RokofAdmin = () => {
   const navigate = useNavigate();
   const { dismiss } = useToast();
