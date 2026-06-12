@@ -2,13 +2,16 @@
 export const serviceShortTitles: Record<string, { en: string; cs: string }> = {
   "presentation-speaking-skills": { en: "Presentation Skills", cs: "Prezentační dovednosti" },
   "live-webinars": { en: "Webinars", cs: "Webináře" },
-  "meetings-moderation": { en: "Six Hats", cs: "Šest klobouků" },
+  "six-hats": { en: "Six Hats", cs: "Šest klobouků" },
   "conflict-resolution": { en: "Conflict Mediation", cs: "Mediace konfliktů" },
   "brainstorming-sessions": { en: "Brainstorming", cs: "Brainstorming" },
-  "storytelling": { en: "Storytelling", cs: "Storytelling" },
-  "communication-skills": { en: "Coaching", cs: "Koučink" },
-  "negotiation-skills": { en: "Negotiation Representation", cs: "Vyjednávací zastoupení" },
-  "keynote-speaking": { en: "Communication Training", cs: "Školení komunikace" },
+  storytelling: { en: "Storytelling", cs: "Storytelling" },
+  "coaching-sessions": { en: "Coaching", cs: "Koučink" },
+  "negotiation-representation": { en: "Negotiation Representation", cs: "Vyjednávací zastoupení" },
+  "intercultural-communication": {
+    en: "Intercultural Communication Training",
+    cs: "Školení v mezikulturní komunikaci",
+  },
 };
 
 export function getServiceShortTitle(slug: string, isCz: boolean): string | null {
