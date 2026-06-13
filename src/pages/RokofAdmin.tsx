@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast, useToast } from "@/hooks/use-toast";
-import { Trash2, Pencil, Loader2, Languages, GripVertical } from "lucide-react";
+import { Trash2, Pencil, Loader2, Languages, GripVertical, ChevronDown } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
