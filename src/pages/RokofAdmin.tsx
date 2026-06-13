@@ -163,9 +163,15 @@ const RokofAdmin = () => {
   const [savingEdit, setSavingEdit] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
   // Keynote Topics state
-  const [keynoteTopics, setKeynoteTopics] = useState<
-    { id: string; title: string; description: string; sort_order: number; active: boolean }[]
-  >([]);
+  const [keynoteTopics, setKeynoteTopics] = useState;
+  {
+    id: string;
+    title: string;
+    description: string;
+    sort_order: number;
+    active: boolean;
+  }
+  [] > [];
   const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
   const [deletingKeynoteId, setDeletingKeynoteId] = useState<string | null>(null);
   const fetchKeynoteTopics = async () => {
@@ -713,7 +719,7 @@ const RokofAdmin = () => {
                         topic={topic}
                         onBlurField={handleKeynoteBlur}
                         onActive={handleKeynoteActive}
-                        onDelete={handleKeynoteDelete}
+                        onDelete={confirmKeynoteDelete}
                         onEdit={setEditingKeynote}
                       />
                     ))}
