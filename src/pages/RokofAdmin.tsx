@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast, useToast } from "@/hooks/use-toast";
-import { Trash2, Pencil, Loader2, Languages, GripVertical, ChevronDown } from "lucide-react";
+import { Trash2, Pencil, Loader2, Languages, GripVertical } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -107,7 +107,11 @@ function SortableKeynoteRow({
   onEdit: (topic: KeynoteTopic) => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: topic.id });
-  const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 };
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
   return (
     <div ref={setNodeRef} style={style} className="flex items-center gap-2 py-1 px-2">
       <button
@@ -125,7 +129,7 @@ function SortableKeynoteRow({
         onBlur={(e) => onBlurField(topic.id, "title", e.target.value)}
       />
       <button onClick={() => onEdit(topic)} aria-label="Edit topic">
-        <Pencil className="h-4 w-4 text-muted-foreground" />
+        <Pencil className="h-4 w-4 text-muted-foreground hover:text-foreground" />
       </button>
       <Switch checked={topic.active} onCheckedChange={(v) => onActive(topic.id, v)} />
       <button onClick={() => onDelete(topic.id)} aria-label="Delete topic">
@@ -160,11 +164,10 @@ const RokofAdmin = () => {
   const [translating, setTranslating] = useState<string | null>(null);
   // Keynote Topics state
   const [keynoteTopics, setKeynoteTopics] = useState<
+    const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
     { id: string; title: string; description: string; sort_order: number; active: boolean }[]
   >([]);
 
-  const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
-  const [isKeynoteExpanded, setIsKeynoteExpanded] = useState(false);
   const fetchKeynoteTopics = async () => {
     const { data, error } = await supabase.from("keynote_topics").select("*").order("sort_order", { ascending: true });
     if (!error && data) setKeynoteTopics(data);
@@ -179,9 +182,10 @@ const RokofAdmin = () => {
   };
 
   const handleKeynoteDelete = async (id: string) => {
-    await supabase.from("keynote_topics").delete().eq("id", id);
-    setKeynoteTopics((prev) => prev.filter((t) => t.id !== id));
-  };
+  if (!window.confirm("Delete this keynote topic?")) return;
+  await supabase.from("keynote_topics").delete().eq("id", id);
+  setKeynoteTopics((prev) => prev.filter((t) => t.id !== id));
+};
 
   const handleKeynoteBlur = async (id: string, field: "title" | "description", value: string) => {
     await supabase
@@ -686,54 +690,36 @@ const RokofAdmin = () => {
       <section className="section-padding">
         <div className="max-w-4xl mx-auto">
           <div className="glass rounded-xl p-8">
-            <button
-              type="button"
-              onClick={() => setIsKeynoteExpanded((v) => !v)}
-              className="w-full text-left"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-bold mb-1">Manage Keynote Topics</h2>
-                  <p className="text-sm text-muted-foreground">Create and edit keynote topics</p>
-                </div>
-                <ChevronDown
-                  className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${isKeynoteExpanded ? "rotate-180" : ""}`}
-                />
-              </div>
-            </button>
-            {isKeynoteExpanded && (
-              <div className="mt-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold">Manage Keynote Topics</h2>
-                  <Button variant="cta" size="sm" onClick={handleKeynoteAdd}>
-                    + Add topic
-                  </Button>
-                </div>
-                {keynoteTopics.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No topics yet.</p>
-                ) : (
-                  <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleKeynoteDragEnd}>
-                    <SortableContext items={keynoteTopics.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-                      <div className="divide-y divide-border">
-                        {keynoteTopics.map((topic) => (
-                          <SortableKeynoteRow
-                            key={topic.id}
-                            topic={topic}
-                            onBlurField={handleKeynoteBlur}
-                            onActive={handleKeynoteActive}
-                            onDelete={handleKeynoteDelete}
-                            onEdit={setEditingKeynote}
-                          />
-                        ))}
-                      </div>
-                    </SortableContext>
-                  </DndContext>
-                )}
-              </div>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold">Manage Keynote Topics</h2>
+              <Button variant="cta" size="sm" onClick={handleKeynoteAdd}>
+                + Add topic
+              </Button>
+            </div>
+            {keynoteTopics.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No topics yet.</p>
+            ) : (
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleKeynoteDragEnd}>
+                <SortableContext items={keynoteTopics.map((t) => t.id)} strategy={verticalListSortingStrategy}>
+                  <div className="divide-y divide-border">
+                    {keynoteTopics.map((topic) => (
+                     <SortableKeynoteRow
+  key={topic.id}
+  topic={topic}
+  onBlurField={handleKeynoteBlur}
+  onActive={handleKeynoteActive}
+  onDelete={handleKeynoteDelete}
+  onEdit={setEditingKeynote}
+/>
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
             )}
           </div>
         </div>
       </section>
+
       <Dialog open={!!editingKeynote} onOpenChange={(open) => !open && setEditingKeynote(null)}>
         <DialogContent>
           <DialogHeader>
@@ -751,14 +737,12 @@ const RokofAdmin = () => {
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingKeynote(null)}>
-              Close
-            </Button>
+            <Button variant="outline" onClick={() => setEditingKeynote(null)}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
     </Layout>
   );
 };
-
 export default RokofAdmin;
