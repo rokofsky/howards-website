@@ -157,17 +157,23 @@ const RokofAdmin = () => {
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [generatedSlug, setGeneratedSlug] = useState("");
-const [deletingKeynoteId, setDeletingKeynoteId] = useState<string | null>(null);
+
   const [posts, setPosts] = useState<BlogPostRow[]>([]);
   const [editingPost, setEditingPost] = useState<BlogPostRow | null>(null);
   const [savingEdit, setSavingEdit] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
   // Keynote Topics state
-  const [keynoteTopics, setKeynoteTopics] = useState<
-    const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
-    { id: string; title: string; description: string; sort_order: number; active: boolean }[]
-  >([]);
-
+  const [keynoteTopics, setKeynoteTopics] = useState;
+  {
+    id: string;
+    title: string;
+    description: string;
+    sort_order: number;
+    active: boolean;
+  }
+  [] > [];
+  const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
+  const [deletingKeynoteId, setDeletingKeynoteId] = useState<string | null>(null);
   const fetchKeynoteTopics = async () => {
     const { data, error } = await supabase.from("keynote_topics").select("*").order("sort_order", { ascending: true });
     if (!error && data) setKeynoteTopics(data);
@@ -182,15 +188,15 @@ const [deletingKeynoteId, setDeletingKeynoteId] = useState<string | null>(null);
   };
 
   const confirmKeynoteDelete = (id: string) => {
-  setDeletingKeynoteId(id);
-};
+    setDeletingKeynoteId(id);
+  };
 
-const handleKeynoteDelete = async () => {
-  if (!deletingKeynoteId) return;
-  await supabase.from("keynote_topics").delete().eq("id", deletingKeynoteId);
-  setKeynoteTopics((prev) => prev.filter((t) => t.id !== deletingKeynoteId));
-  setDeletingKeynoteId(null);
-};
+  const handleKeynoteDelete = async () => {
+    if (!deletingKeynoteId) return;
+    await supabase.from("keynote_topics").delete().eq("id", deletingKeynoteId);
+    setKeynoteTopics((prev) => prev.filter((t) => t.id !== deletingKeynoteId));
+    setDeletingKeynoteId(null);
+  };
 
   const handleKeynoteBlur = async (id: string, field: "title" | "description", value: string) => {
     await supabase
@@ -708,14 +714,14 @@ const handleKeynoteDelete = async () => {
                 <SortableContext items={keynoteTopics.map((t) => t.id)} strategy={verticalListSortingStrategy}>
                   <div className="divide-y divide-border">
                     {keynoteTopics.map((topic) => (
-                     <SortableKeynoteRow
-  key={topic.id}
-  topic={topic}
-  onBlurField={handleKeynoteBlur}
-  onActive={handleKeynoteActive}
-  onDelete={handleKeynoteDelete}
-  onEdit={setEditingKeynote}
-/>
+                      <SortableKeynoteRow
+                        key={topic.id}
+                        topic={topic}
+                        onBlurField={handleKeynoteBlur}
+                        onActive={handleKeynoteActive}
+                        onDelete={handleKeynoteDelete}
+                        onEdit={setEditingKeynote}
+                      />
                     ))}
                   </div>
                 </SortableContext>
@@ -742,11 +748,12 @@ const handleKeynoteDelete = async () => {
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingKeynote(null)}>Close</Button>
+            <Button variant="outline" onClick={() => setEditingKeynote(null)}>
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
     </Layout>
   );
 };
