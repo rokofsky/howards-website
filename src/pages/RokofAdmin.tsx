@@ -713,7 +713,6 @@ const RokofAdmin = () => {
     <div className="flex justify-end mb-2">
       
     </div>
-  <>
     {keynoteTopics.length === 0 ? (
       <p className="text-sm text-muted-foreground">No topics yet.</p>
     ) : (
