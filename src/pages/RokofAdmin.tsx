@@ -163,9 +163,15 @@ const RokofAdmin = () => {
   const [savingEdit, setSavingEdit] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
   // Keynote Topics state
-  const [keynoteTopics, setKeynoteTopics] = useState<
-    { id: string; title: string; description: string; sort_order: number; active: boolean }[]
-  >([]);
+  const [keynoteTopics, setKeynoteTopics] = useState;
+  {
+    id: string;
+    title: string;
+    description: string;
+    sort_order: number;
+    active: boolean;
+  }
+  [] > [];
   const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
   const [deletingKeynoteId, setDeletingKeynoteId] = useState<string | null>(null);
   const [isKeynoteExpanded, setIsKeynoteExpanded] = useState(false);
@@ -705,8 +711,11 @@ const RokofAdmin = () => {
            {isKeynoteExpanded && (
   <>
     <div className="flex justify-end mb-2">
-      
-    </div>
+  <Button variant="cta" size="sm" onClick={handleKeynoteAdd}>
+    + Add topic
+  </Button>
+</div>
+  <>
     {keynoteTopics.length === 0 ? (
       <p className="text-sm text-muted-foreground">No topics yet.</p>
     ) : (
