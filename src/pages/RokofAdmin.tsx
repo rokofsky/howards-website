@@ -174,6 +174,7 @@ const RokofAdmin = () => {
   [] > [];
   const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
   const [deletingKeynoteId, setDeletingKeynoteId] = useState<string | null>(null);
+  const [isKeynoteExpanded, setIsKeynoteExpanded] = useState(false);
   const fetchKeynoteTopics = async () => {
     const { data, error } = await supabase.from("keynote_topics").select("*").order("sort_order", { ascending: true });
     if (!error && data) setKeynoteTopics(data);
