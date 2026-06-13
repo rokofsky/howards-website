@@ -703,31 +703,39 @@ const RokofAdmin = () => {
         <div className="max-w-4xl mx-auto">
           <div className="glass rounded-xl p-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold">Manage Keynote Topics</h2>
-              <Button variant="cta" size="sm" onClick={handleKeynoteAdd}>
-                + Add topic
-              </Button>
+              <button onClick={() => setIsKeynoteExpanded(prev => !prev)} className="flex items-center justify-between w-full text-left">
+  <h2 className="text-xl font-bold">Manage Keynote Topics</h2>
+  <span>{isKeynoteExpanded ? "▲" : "▼"}</span>
+</button>
             </div>
-            {keynoteTopics.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No topics yet.</p>
-            ) : (
-              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleKeynoteDragEnd}>
-                <SortableContext items={keynoteTopics.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-                  <div className="divide-y divide-border">
-                    {keynoteTopics.map((topic) => (
-                      <SortableKeynoteRow
-                        key={topic.id}
-                        topic={topic}
-                        onBlurField={handleKeynoteBlur}
-                        onActive={handleKeynoteActive}
-                        onDelete={confirmKeynoteDelete}
-                        onEdit={setEditingKeynote}
-                      />
-                    ))}
-                  </div>
-                </SortableContext>
-              </DndContext>
-            )}
+           {isKeynoteExpanded && (
+  <>
+    <div className="flex justify-end mb-2">
+      
+    </div>
+  <>
+    {keynoteTopics.length === 0 ? (
+      <p className="text-sm text-muted-foreground">No topics yet.</p>
+    ) : (
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleKeynoteDragEnd}>
+        <SortableContext items={keynoteTopics.map((t) => t.id)} strategy={verticalListSortingStrategy}>
+          <div className="divide-y divide-border">
+            {keynoteTopics.map((topic) => (
+              <SortableKeynoteRow
+                key={topic.id}
+                topic={topic}
+                onBlurField={handleKeynoteBlur}
+                onActive={handleKeynoteActive}
+                onDelete={confirmKeynoteDelete}
+                onEdit={setEditingKeynote}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+    )}
+  </>
+)}
           </div>
         </div>
       </section>
