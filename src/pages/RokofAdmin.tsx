@@ -157,7 +157,7 @@ const RokofAdmin = () => {
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [generatedSlug, setGeneratedSlug] = useState("");
-
+const [deletingKeynoteId, setDeletingKeynoteId] = useState<string | null>(null);
   const [posts, setPosts] = useState<BlogPostRow[]>([]);
   const [editingPost, setEditingPost] = useState<BlogPostRow | null>(null);
   const [savingEdit, setSavingEdit] = useState(false);
@@ -181,10 +181,15 @@ const RokofAdmin = () => {
     if (!error) fetchKeynoteTopics();
   };
 
-  const handleKeynoteDelete = async (id: string) => {
-  if (!window.confirm("Delete this keynote topic?")) return;
-  await supabase.from("keynote_topics").delete().eq("id", id);
-  setKeynoteTopics((prev) => prev.filter((t) => t.id !== id));
+  const confirmKeynoteDelete = (id: string) => {
+  setDeletingKeynoteId(id);
+};
+
+const handleKeynoteDelete = async () => {
+  if (!deletingKeynoteId) return;
+  await supabase.from("keynote_topics").delete().eq("id", deletingKeynoteId);
+  setKeynoteTopics((prev) => prev.filter((t) => t.id !== deletingKeynoteId));
+  setDeletingKeynoteId(null);
 };
 
   const handleKeynoteBlur = async (id: string, field: "title" | "description", value: string) => {
