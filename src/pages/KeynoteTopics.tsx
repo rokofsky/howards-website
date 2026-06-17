@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-// Define the structure matching your 'keynote_topics' table
 interface KeynoteTopic {
   id: string;
   title: string;
-  title_cs: string | null;
   description: string | null;
-  description_cs: string | null;
   active: boolean;
   sort_order: number;
 }
 
 export default function KeynoteTopics() {
-  const isCz = window.location.pathname.includes("/cz/");
   const [topics, setTopics] = useState<KeynoteTopic[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +21,7 @@ export default function KeynoteTopics() {
 
         const { data, error: supabaseError } = await supabase
           .from("keynote_topics")
-          .select("id, title, title_cs, description, description_cs, active, sort_order")
+          .select("id, title, description, active, sort_order")
           .eq("active", true)
           .order("sort_order", { ascending: true });
 
@@ -69,20 +65,14 @@ export default function KeynoteTopics() {
         <div className="space-y-6">
           {topics.map((topic, index) => (
             <div key={topic.id}>
-              {/* Topic Wrapper */}
               <div className="py-2">
-                <h2 className="text-xl font-semibold text-foreground">
-                  {isCz && topic.title_cs ? topic.title_cs : topic.title}
-                </h2>
-                {/* Conditional Description: Lighter, smaller font */}
-                {(isCz ? topic.description_cs || topic.description : topic.description) && (
+                <h2 className="text-xl font-semibold text-foreground">{topic.title}</h2>
+                {topic.description && (
                   <p className="mt-1.5 text-sm text-muted-foreground/80 font-normal leading-relaxed">
-                    {isCz && topic.description_cs ? topic.description_cs : topic.description}
+                    {topic.description}
                   </p>
                 )}
               </div>
-
-              {/* Subtle separator between topics (omitted after the final item) */}
               {index < topics.length - 1 && <hr className="mt-6 border-t border-border/40" />}
             </div>
           ))}
