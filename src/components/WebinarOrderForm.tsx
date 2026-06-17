@@ -57,6 +57,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       .select("slug, title, title_cs, details, details_cs, active")
       .then(({ data }) => {
         if (!data) return;
+        console.log("raw data:", data);
         const map: Record<string, string> = {};
         const titleMap: Record<string, string> = {};
         const activeSlugs = new Set<string>();
