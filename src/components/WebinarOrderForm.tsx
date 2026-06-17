@@ -222,7 +222,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                         )}
                       </label>
                       {previewSlug === w.slug && dbWebinarMap[w.slug] && (
-                        <div className="text-base leading-loose text-foreground/80 bg-muted/40 rounded-md px-3 py-2 whitespace-pre-line">
+                        <div className="text-base leading-normal text-foreground/80 bg-muted/40 rounded-md px-3 py-2 whitespace-pre-line">
                           {dbWebinarMap[w.slug]}
                         </div>
                       )}
