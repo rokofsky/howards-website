@@ -79,7 +79,10 @@ const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
 
         {!showForm ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+              style={{ gridAutoFlow: "column", gridTemplateRows: `repeat(${Math.ceil(topics.length / 2)}, auto)` }}
+            >
               {topics.map((topic) => {
                 const checked = selected.includes(topic.title);
                 const isExpanded = expandedId === topic.id;
