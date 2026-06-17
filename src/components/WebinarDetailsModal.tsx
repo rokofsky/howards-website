@@ -26,13 +26,13 @@ export const WebinarDetailsModal = ({ open, onOpenChange, title, details, onInqu
             onClick={() => onOpenChange(false)}
             style={{
               backgroundColor: "transparent",
-              color: "#b8845a",
-              border: "1px solid #b8845a",
+              color: "#3d2010",
+              border: "1px solid #3d2010",
               borderRadius: "6px",
               padding: "16px 28px",
               cursor: "pointer",
               fontSize: "18px",
-              minWidth: "120px",
+              minWidth: "200px",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = "#b8845a20";
