@@ -37,17 +37,17 @@ const HeroSection = () => {
   const t = useT();
   const lp = useLocalizedPath();
   const [current, setCurrent] = useState(0);
-  const [instant, setInstant] = useState(false);
+  const instantRef = useRef(false);
 
   const next = useCallback((isManual = false) => {
-  setInstant(isManual);
-  setCurrent((prev) => (prev + 1) % slides.length);
-}, []);
+    instantRef.current = isManual;
+    setCurrent((prev) => (prev + 1) % slides.length);
+  }, []);
 
-const prev = useCallback(() => {
-  setInstant(true);
-  setCurrent((p) => (p - 1 + slides.length) % slides.length);
-}, []);
+  const prev = useCallback(() => {
+    instantRef.current = true;
+    setCurrent((p) => (p - 1 + slides.length) % slides.length);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => next(false), 5000);
@@ -57,16 +57,21 @@ const prev = useCallback(() => {
   return (
     <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
       <div className="block w-full h-full relative">
-        <AnimatePresence mode="wait">
-          <motion.div key={current} className="absolute inset-0" exit={{ opacity: 0 }} transition={{ duration: instant ? 0 : 1.2 }}>
+        <AnimatePresence mode="sync">
+          <motion.div
+            key={current}
+            className="absolute inset-0"
+            exit={{ opacity: 0 }}
+            transition={{ duration: instantRef.current ? 0 : 1.2 }}
+          >
             <motion.img
               src={slides[current].src}
               alt="Howard - Soft Skills Consultant"
               className="absolute inset-0 w-full h-full object-cover"
               style={{ objectPosition: slidePositions[current] ?? "center center" }}
-             initial={{ opacity: 0, scale: instant ? 1 : 1.25 }}
-animate={{ opacity: 1, scale: 1 }}
-transition={{ duration: instant ? 0 : 1.2 }}
+              initial={{ opacity: 0, scale: instant ? 1 : 1.25 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: instantRef.current ? 0 : 1.2 }}
               width={1920}
               height={1080}
             />
@@ -103,9 +108,9 @@ transition={{ duration: instant ? 0 : 1.2 }}
       </button>
       <button
         onClick={(e) => {
-  e.preventDefault();
-  next(true);
-}}
+          e.preventDefault();
+          next(true);
+        }}
         className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/30 hover:bg-background/50 backdrop-blur-sm rounded-full p-3 transition-all shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/50"
         aria-label="Next slide"
       >
