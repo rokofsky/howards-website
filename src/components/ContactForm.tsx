@@ -141,6 +141,17 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
       setSubmitted(true);
       return;
     }
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+      toast({
+        title: t("Missing required fields", "Chybí povinná pole"),
+        description: t(
+          "Please fill in your name, email, and message.",
+          "Vyplňte prosím jméno, e-mail a zprávu."
+        ),
+        variant: "destructive",
+      });
+      return;
+    }
     // Lenient email fix for common mobile typos
     const fixedEmail = fixCommonEmailTypos(form.email.trim());
     if (fixedEmail !== form.email) {
