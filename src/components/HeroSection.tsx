@@ -57,15 +57,15 @@ const prev = useCallback(() => {
     <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
       <div className="block w-full h-full relative">
         <AnimatePresence mode="wait">
-          <motion.div key={current} className="absolute inset-0" exit={{ opacity: 0 }} transition={{ duration: 0 }}
+          <motion.div key={current} className="absolute inset-0" exit={{ opacity: 0 }} transition={{ duration: instant ? 0 : 1.2 }}
             <motion.img
               src={slides[current].src}
               alt="Howard - Soft Skills Consultant"
               className="absolute inset-0 w-full h-full object-cover"
               style={{ objectPosition: slidePositions[current] ?? "center center" }}
-              initial={{ opacity: 0, scale: 1 }}
+             initial={{ opacity: 0, scale: instant ? 1 : 1.25 }}
 animate={{ opacity: 1, scale: 1 }}
-transition={{ duration: 0 }}
+transition={{ duration: instant ? 0 : 1.2 }}
               width={1920}
               height={1080}
             />
