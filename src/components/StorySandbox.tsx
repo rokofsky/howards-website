@@ -748,7 +748,7 @@ export default function StorySandbox() {
             <span className="text-xs md:text-sm font-normal text-muted-foreground flex items-center gap-1 italic">
               <Shuffle className="w-4 h-4 md:w-3 md:h-3 opacity-50" style={{ pointerEvents: "none" }} />
               <span className="hidden md:inline">Shuffle to the next card</span>
-              <span className="md:hidden">tap to shuffle</span>
+              <span className="md:hidden">tap in card to shuffle</span>
             </span>
           </div>
         </div>
@@ -903,7 +903,7 @@ export default function StorySandbox() {
             <span className="text-xs md:text-sm font-normal text-muted-foreground flex items-center gap-1 italic">
               <Shuffle className="w-4 h-4 md:w-3 md:h-3 opacity-50" style={{ pointerEvents: "none" }} />
               <span className="hidden md:inline">Shuffle to the next card</span>
-              <span className="md:hidden">tap to shuffle</span>
+              <span className="md:hidden">ap in card to shuffle</span>
             </span>
           </div>
         </div>
