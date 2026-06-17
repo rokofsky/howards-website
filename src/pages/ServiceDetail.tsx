@@ -75,6 +75,7 @@ const ServiceDetail = () => {
       supabase
         .from("webinars")
         .select("*")
+        .eq("active", true)
         .order("sort_order", { ascending: true })
         .then(({ data }) => {
           if (data) setWebinars(data as unknown as DbWebinar[]);
