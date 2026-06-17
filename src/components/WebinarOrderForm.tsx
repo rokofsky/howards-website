@@ -109,6 +109,10 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name.trim() || !email.trim()) {
+      toast.error(t("Please enter your name and email.", "Zadejte prosím jméno a e-mail."));
+      return;
+    }
     if (selectedSlugs.length === 0) {
       toast.error(t("Please select at least one webinar.", "Vyberte prosím alespoň jeden webinář."));
       return;
