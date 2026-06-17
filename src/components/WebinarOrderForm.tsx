@@ -64,6 +64,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
         });
         setDbWebinarMap(map);
         setActiveSlugSet(activeSlugs);
+        console.log("active slugs:", [...activeSlugs]);
       });
   }, [open]);
 
