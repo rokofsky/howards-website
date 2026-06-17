@@ -213,10 +213,13 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                         <span className="cursor-pointer hover:opacity-80" onClick={() => toggleSlug(w.slug)}>
                           {w.title}
                         </span>
-                        <div
-                          className="flex-1 cursor-pointer"
-                          onClick={() => setPreviewSlug(previewSlug === w.slug ? null : w.slug)}
-                        />
+                        {dbWebinarMap[w.slug] && (
+                          <div
+                            className="flex-1 self-stretch cursor-pointer"
+                            onClick={() => setPreviewSlug(previewSlug === w.slug ? null : w.slug)}
+                          />
+                        )}
+                        {!dbWebinarMap[w.slug] && <div className="flex-1" />}
                         {dbWebinarMap[w.slug] && (
                           <button
                             type="button"
