@@ -79,6 +79,7 @@ function SortableWebinarRow({
   webinar,
   onEdit,
   onDelete,
+  onToggleActive,
 }: {
   webinar: Webinar;
   onEdit: (w: Webinar) => void;
