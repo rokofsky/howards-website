@@ -450,14 +450,17 @@ export default function StorySandbox() {
     else votes[storeKey] = vote;
     localStorage.setItem("userVotes", JSON.stringify(votes));
 
-    void supabase
-      .rpc("increment_vote", {
-        p_sheet_key: sheetKey,
-        p_row_id: String(id),
-        p_element_box: elementBox,
-        p_vote: current === vote ? (vote === "up" ? "nullify_up" : "nullify_down") : vote,
-        p_previous: current ?? "",
-      })
+    void fetch(`https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/cast-vote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sheet_key: sheetKey,
+        row_id: String(id),
+        element_box: elementBox,
+        vote: current === vote ? (vote === "up" ? "nullify_up" : "nullify_down") : vote,
+      }),
+    })
+      .then((res) => res.json())
       .then(() => {
         supabase
           .from("votes")
