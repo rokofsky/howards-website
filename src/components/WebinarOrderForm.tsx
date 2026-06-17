@@ -44,6 +44,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   const [undecided, setUndecided] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dbWebinarMap, setDbWebinarMap] = useState<Record<string, string>>({});
+  const [dbTitleMap, setDbTitleMap] = useState<Record<string, string>>({});
   const [previewSlug, setPreviewSlug] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [activeSlugSet, setActiveSlugSet] = useState<Set<string> | null>(null);
