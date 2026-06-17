@@ -543,7 +543,7 @@ const RokofAdmin = () => {
       </section>
 
       <Dialog open={!!editingPost} onOpenChange={(open) => !open && setEditingPost(null)}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>Edit Blog Post</DialogTitle>
           </DialogHeader>
@@ -756,7 +756,7 @@ const RokofAdmin = () => {
       </section>
 
       <Dialog open={!!editingKeynote} onOpenChange={(open) => !open && setEditingKeynote(null)}>
-        <DialogContent>
+        <DialogContent className="p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>{editingKeynote?.title}</DialogTitle>
           </DialogHeader>
@@ -779,7 +779,7 @@ const RokofAdmin = () => {
         </DialogContent>
       </Dialog>
       <Dialog open={addingKeynote} onOpenChange={(open) => !open && setAddingKeynote(false)}>
-        <DialogContent>
+        <DialogContent className="p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>Add Keynote Topic</DialogTitle>
           </DialogHeader>
@@ -814,7 +814,7 @@ const RokofAdmin = () => {
         </DialogContent>
       </Dialog>
       <Dialog open={!!deletingKeynoteId} onOpenChange={(open) => !open && setDeletingKeynoteId(null)}>
-        <DialogContent>
+        <DialogContent className="p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>Delete Topic</DialogTitle>
           </DialogHeader>

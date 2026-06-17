@@ -118,7 +118,7 @@ const BlogPost = () => {
             <time className="text-sm text-muted-foreground font-light block mb-2">{date}</time>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 leading-tight">{title}</h1>
             {image && (
-              <img src={image} alt={title} className="w-full aspect-[16/9] object-cover rounded-lg mb-6" />
+              <img src={image} alt={title} className="w-full h-auto aspect-[16/9] object-cover rounded-lg mb-6" />
             )}
             {category && (
               <span className="inline-block bg-accent text-accent-foreground text-xs font-semibold px-2.5 py-1 rounded-full mb-6">

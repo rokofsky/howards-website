@@ -80,7 +80,7 @@ const WebinarDetail = () => {
           </motion.div>
 
           <div className="text-center">
-            <Button variant="glassPetrol" size="lg" className="px-10 py-4 text-lg" onClick={() => setShowInquiry(true)}>
+            <Button variant="glassPetrol" size="lg" className="w-full sm:w-auto px-10 py-4 text-lg" onClick={() => setShowInquiry(true)}>
               {t("Inquire", "Poptat")}
             </Button>
           </div>
