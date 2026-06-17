@@ -209,32 +209,32 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                   .filter((slug) => activeSlugSet !== null && activeSlugSet.has(slug))
                   .sort((a, b) => (dbTitleMap[a] || a).localeCompare(dbTitleMap[b] || b))
                   .map((slug) => (
-                    <div key={w.slug} className="space-y-1">
+                    <div key={slug} className="space-y-1">
                       <div className="flex items-center gap-2 text-sm">
-                        <Checkbox checked={selectedSlugs.includes(w.slug)} onCheckedChange={() => toggleSlug(w.slug)} />
-                        <span className="cursor-pointer hover:opacity-80" onClick={() => toggleSlug(w.slug)}>
-                          {dbTitleMap[w.slug] || w.title}
+                        <Checkbox checked={selectedSlugs.includes(slug)} onCheckedChange={() => toggleSlug(slug)} />
+                        <span className="cursor-pointer hover:opacity-80" onClick={() => toggleSlug(slug)}>
+                          {dbTitleMap[slug]}
                         </span>
-                        {dbWebinarMap[w.slug] && (
+                        {dbWebinarMap[slug] && (
                           <div
                             className="flex-1 self-stretch cursor-pointer"
-                            onClick={() => setPreviewSlug(previewSlug === w.slug ? null : w.slug)}
+                            onClick={() => setPreviewSlug(previewSlug === slug ? null : slug)}
                           />
                         )}
-                        {!dbWebinarMap[w.slug] && <div className="flex-1" />}
-                        {dbWebinarMap[w.slug] && (
+                        {!dbWebinarMap[slug] && <div className="flex-1" />}
+                        {dbWebinarMap[slug] && (
                           <button
                             type="button"
-                            onClick={() => setPreviewSlug(previewSlug === w.slug ? null : w.slug)}
+                            onClick={() => setPreviewSlug(previewSlug === slug ? null : slug)}
                             className="text-xs text-gold underline shrink-0"
                           >
-                            {previewSlug === w.slug ? "less" : "more"}
+                            {previewSlug === slug ? "less" : "more"}
                           </button>
                         )}
                       </div>
-                      {previewSlug === w.slug && dbWebinarMap[w.slug] && (
+                      {previewSlug === slug && dbWebinarMap[slug] && (
                         <div className="text-base leading-normal text-foreground/80 bg-muted/40 rounded-md px-3 py-2 whitespace-pre-line">
-                          {dbWebinarMap[w.slug]}
+                          {dbWebinarMap[slug]}
                         </div>
                       )}
                     </div>
