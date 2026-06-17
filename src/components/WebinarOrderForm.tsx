@@ -113,6 +113,10 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       toast.error(t("Please select at least one webinar.", "Vyberte prosím alespoň jeden webinář."));
       return;
     }
+    if (!name.trim() && !email.trim()) {
+      toast.error(t("Please enter your name and email.", "Zadejte prosím své jméno a e-mail."));
+      return;
+    }
     if (!name.trim()) {
       toast.error(t("Please enter your name.", "Zadejte prosím své jméno."));
       return;
