@@ -449,28 +449,32 @@ export default function StorySandbox() {
     if (current === vote) delete votes[storeKey];
     else votes[storeKey] = vote;
     localStorage.setItem("userVotes", JSON.stringify(votes));
-    const pVote = current === vote ? `nullify_${vote}` : vote;
-    void (supabase.rpc as any)("increment_vote", {
-      p_sheet_key: sheetKey,
-      p_row_id: String(id),
-      p_element_box: elementBox,
-      p_vote: pVote,
-      p_previous: current ?? null,
-    }).then(({ error }: { error: any }) => {
-      if (error) return;
-      supabase
-        .from("votes")
-        .select("*")
-        .then(({ data }) => {
-          if (!data) return;
-          const counts: Record<string, { up: number; down: number }> = {};
-          data.forEach((row) => {
-            const key = `${row.sheet_key}:${row.row_id}:${row.element_box}`;
-            counts[key] = { up: row.up_count, down: row.down_count };
+
+    void fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/cast-vote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sheet_key: sheetKey,
+        row_id: String(id),
+        element_box: elementBox,
+        vote: current === vote ? (vote === "up" ? "nullify_up" : "nullify_down") : vote,
+      }),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        supabase
+          .from("votes")
+          .select("*")
+          .then(({ data }) => {
+            if (!data) return;
+            const counts: Record<string, { up: number; down: number }> = {};
+            data.forEach((row) => {
+              const key = `${row.sheet_key}:${row.row_id}:${row.element_box}`;
+              counts[key] = { up: row.up_count, down: row.down_count };
+            });
+            setVoteCounts(counts);
           });
-          setVoteCounts(counts);
-        });
-    });
+      });
   };
 
   const VoteThumbs = ({
