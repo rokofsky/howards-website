@@ -38,16 +38,18 @@ const HeroSection = () => {
   const lp = useLocalizedPath();
   const [current, setCurrent] = useState(0);
 
-  const next = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % slides.length);
-  }, []);
+  const next = useCallback((isManual = false) => {
+  setInstant(isManual);
+  setCurrent((prev) => (prev + 1) % slides.length);
+}, []);
 
-  const prev = useCallback(() => {
-    setCurrent((p) => (p - 1 + slides.length) % slides.length);
-  }, []);
+const prev = useCallback(() => {
+  setInstant(true);
+  setCurrent((p) => (p - 1 + slides.length) % slides.length);
+}, []);
 
   useEffect(() => {
-    const timer = setInterval(next, 5000);
+    const timer = setInterval(() => next(false), 5000);
     return () => clearInterval(timer);
   }, [next]);
 
@@ -55,15 +57,15 @@ const HeroSection = () => {
     <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
       <div className="block w-full h-full relative">
         <AnimatePresence mode="wait">
-          <motion.div key={current} className="absolute inset-0" exit={{ opacity: 0 }} transition={{ duration: 1.2 }}>
+          <motion.div key={current} className="absolute inset-0" exit={{ opacity: 0 }} transition={{ duration: 0 }}
             <motion.img
               src={slides[current].src}
               alt="Howard - Soft Skills Consultant"
               className="absolute inset-0 w-full h-full object-cover"
               style={{ objectPosition: slidePositions[current] ?? "center center" }}
-              initial={{ opacity: 0, scale: 1.25 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.2 }}
+              initial={{ opacity: 0, scale: 1 }}
+animate={{ opacity: 1, scale: 1 }}
+transition={{ duration: 0 }}
               width={1920}
               height={1080}
             />
@@ -100,9 +102,9 @@ const HeroSection = () => {
       </button>
       <button
         onClick={(e) => {
-          e.preventDefault();
-          next();
-        }}
+  e.preventDefault();
+  next(true);
+}}
         className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/30 hover:bg-background/50 backdrop-blur-sm rounded-full p-3 transition-all shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/50"
         aria-label="Next slide"
       >
