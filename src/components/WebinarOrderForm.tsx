@@ -211,7 +211,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
               </p>
               <div className="max-h-48 overflow-y-auto rounded-md border border-gold/40 p-3 space-y-2">
                 {[...allWebinars]
-                  console.log("activeSlugSet at render:", activeSlugSet);
                   .filter((w) => activeSlugSet !== null && activeSlugSet.has(w.slug))
                   .sort((a, b) => a.title.localeCompare(b.title))
                   .map((w) => (
