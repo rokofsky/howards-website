@@ -163,12 +163,17 @@ const RokofAdmin = () => {
   const [savingEdit, setSavingEdit] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
   // Keynote Topics state
-  const [keynoteTopics, setKeynoteTopics] = useState<
-    { id: string; title: string; description: string; sort_order: number; active: boolean }[]
-  >([]);
+  const [keynoteTopics, setKeynoteTopics] = useState;
+  {
+    id: string;
+    title: string;
+    description: string;
+    sort_order: number;
+    active: boolean;
+  }
+  [] > [];
   const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
   const [deletingKeynoteId, setDeletingKeynoteId] = useState<string | null>(null);
-  const [isKeynoteExpanded, setIsKeynoteExpanded] = useState(false);
   const fetchKeynoteTopics = async () => {
     const { data, error } = await supabase.from("keynote_topics").select("*").order("sort_order", { ascending: true });
     if (!error && data) setKeynoteTopics(data);
@@ -697,38 +702,31 @@ const RokofAdmin = () => {
         <div className="max-w-4xl mx-auto">
           <div className="glass rounded-xl p-8">
             <div className="flex items-center justify-between mb-6">
-              <button onClick={() => setIsKeynoteExpanded(prev => !prev)} className="flex items-center justify-between w-full text-left">
-  <h2 className="text-xl font-bold">Manage Keynote Topics</h2>
-  <span>{isKeynoteExpanded ? "▲" : "▼"}</span>
-</button>
+              <h2 className="text-xl font-bold">Manage Keynote Topics</h2>
+              <Button variant="cta" size="sm" onClick={handleKeynoteAdd}>
+                + Add topic
+              </Button>
             </div>
-           {isKeynoteExpanded && (
-  <>
-    <div className="flex justify-end mb-2">
-      
-    </div>
-    {keynoteTopics.length === 0 ? (
-      <p className="text-sm text-muted-foreground">No topics yet.</p>
-    ) : (
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleKeynoteDragEnd}>
-        <SortableContext items={keynoteTopics.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-          <div className="divide-y divide-border">
-            {keynoteTopics.map((topic) => (
-              <SortableKeynoteRow
-                key={topic.id}
-                topic={topic}
-                onBlurField={handleKeynoteBlur}
-                onActive={handleKeynoteActive}
-                onDelete={confirmKeynoteDelete}
-                onEdit={setEditingKeynote}
-              />
-            ))}
-          </div>
-        </SortableContext>
-      </DndContext>
-    )}
-  </>
-)}
+            {keynoteTopics.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No topics yet.</p>
+            ) : (
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleKeynoteDragEnd}>
+                <SortableContext items={keynoteTopics.map((t) => t.id)} strategy={verticalListSortingStrategy}>
+                  <div className="divide-y divide-border">
+                    {keynoteTopics.map((topic) => (
+                      <SortableKeynoteRow
+                        key={topic.id}
+                        topic={topic}
+                        onBlurField={handleKeynoteBlur}
+                        onActive={handleKeynoteActive}
+                        onDelete={confirmKeynoteDelete}
+                        onEdit={setEditingKeynote}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
+            )}
           </div>
         </div>
       </section>
