@@ -450,7 +450,7 @@ export default function StorySandbox() {
     else votes[storeKey] = vote;
     localStorage.setItem("userVotes", JSON.stringify(votes));
 
-    void fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/cast-vote`, {
+    void fetch(`https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/cast-vote`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
