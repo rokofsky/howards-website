@@ -186,16 +186,14 @@ const RokofAdmin = () => {
   const handleKeynoteAddSave = async () => {
     if (!newKeynoteTitle.trim()) return;
     const maxOrder = keynoteTopics.length > 0 ? Math.max(...keynoteTopics.map((t) => t.sort_order)) : 0;
-    const { error } = await supabase
-      .from("keynote_topics")
-      .insert([
-        {
-          title: newKeynoteTitle.trim(),
-          description: newKeynoteDescription.trim(),
-          sort_order: maxOrder + 1,
-          active: true,
-        },
-      ]);
+    const { error } = await supabase.from("keynote_topics").insert([
+      {
+        title: newKeynoteTitle.trim(),
+        description: newKeynoteDescription.trim(),
+        sort_order: maxOrder + 1,
+        active: true,
+      },
+    ]);
     if (!error) {
       fetchKeynoteTopics();
       setAddingKeynote(false);
@@ -812,6 +810,24 @@ const RokofAdmin = () => {
             </Button>
             <Button variant="cta" onClick={handleKeynoteAddSave} disabled={!newKeynoteTitle.trim()}>
               Add Topic
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!deletingKeynoteId} onOpenChange={(open) => !open && setDeletingKeynoteId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Topic</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Are you sure you want to delete this topic? This cannot be undone.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeletingKeynoteId(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleKeynoteDelete}>
+              Delete
             </Button>
           </DialogFooter>
         </DialogContent>
