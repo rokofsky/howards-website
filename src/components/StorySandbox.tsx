@@ -457,7 +457,7 @@ export default function StorySandbox() {
         sheet_key: sheetKey,
         row_id: String(id),
         element_box: elementBox,
-        vote: current === vote ? (vote === "up" ? "nullify_up" : "nullify_down") : vote,
+        vote,
       }),
     })
       .then((res) => res.json())
