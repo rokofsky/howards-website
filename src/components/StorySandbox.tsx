@@ -900,9 +900,10 @@ export default function StorySandbox() {
                 {/* ADJUST WIDTH HERE TO ALIGN HINTS */}One size fits all prompts
               </span>
             </h3>
-            <span className="text-lg font-semibold flex items-center gap-1">
-              <Shuffle className="w-4 h-4" style={{ pointerEvents: "none" }} />
-              Shuffle to the next card
+            <span className="text-sm md:text-lg font-semibold flex items-center gap-1">
+              <Shuffle className="w-5 h-5 md:w-4 md:h-4" style={{ pointerEvents: "none" }} />
+              <span className="hidden md:inline">Shuffle to the next card</span>
+              <span className="md:hidden">Shuffle</span>
             </span>
           </div>
         </div>
