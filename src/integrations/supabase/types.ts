@@ -373,37 +373,46 @@ export type Database = {
       }
       webinars: {
         Row: {
+          active: boolean
           created_at: string
           description: string
           description_cs: string
+          details: string | null
           details_cs: string
           id: string
           slug: string
           sort_order: number
           title: string
           title_cs: string
+          updated_at: string
         }
         Insert: {
+          active?: boolean
           created_at?: string
           description?: string
           description_cs?: string
+          details?: string | null
           details_cs?: string
           id?: string
           slug: string
           sort_order?: number
           title: string
           title_cs?: string
+          updated_at?: string
         }
         Update: {
+          active?: boolean
           created_at?: string
           description?: string
           description_cs?: string
+          details?: string | null
           details_cs?: string
           id?: string
           slug?: string
           sort_order?: number
           title?: string
           title_cs?: string
+          updated_at?: string
         }
         Relationships: []
       }
