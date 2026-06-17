@@ -18,7 +18,7 @@ export const WebinarDetailsModal = ({ open, onOpenChange, title, details, onInqu
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
-        <div className="whitespace-pre-line text-sm text-foreground/80 leading-relaxed py-2">
+        <div className="whitespace-pre-line text-base text-foreground/80 leading-relaxed py-2">
           {details || t("No additional details yet.", "Zatím žádné další podrobnosti.")}
         </div>
         <div className="flex justify-between pt-2 gap-3">
