@@ -612,6 +612,7 @@ export default function StorySandbox() {
     setSavingField((s) => ({ ...s, [slot]: true }));
     const col = COLUMN_FOR[slot];
     try {
+      const adminToken = localStorage.getItem("admin_session_token") ?? "";
       if (addingNew[slot]) {
         let insertPayload: Record<string, unknown>;
         if (slot === "character") {
@@ -621,7 +622,18 @@ export default function StorySandbox() {
         } else {
           insertPayload = { sheet_key: "oneLiners", one_liner: value };
         }
-        const { data, error } = await (supabase.from("prompts") as any).insert(insertPayload).select().single();
+        const insertRes = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-prompt`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "insert", prompt: insertPayload, token: adminToken }),
+        });
+        const insertJson = await insertRes.json();
+        if (!insertRes.ok || insertJson.error) {
+          console.error("Insert failed", insertJson.error);
+          return;
+        }
+        const data = insertJson.data;
+        const error = null;
         if (error) {
           console.error("Insert failed", error);
           return;
@@ -642,9 +654,14 @@ export default function StorySandbox() {
       } else {
         const rowId = slot === "oneLiner" ? oneLinerRow?.id : cardRows[slot as Category]?.id;
         if (!rowId) return;
-        const { error } = await (supabase.from("prompts") as any).update({ [col]: value }).eq("id", rowId);
-        if (error) {
-          console.error("Update failed", error);
+        const updateRes = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-prompt`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "update", prompt: { id: rowId, [col]: value }, token: adminToken }),
+        });
+        const updateJson = await updateRes.json();
+        if (!updateRes.ok || updateJson.error) {
+          console.error("Update failed", updateJson.error);
           return;
         }
         if (slot === "oneLiner") {
