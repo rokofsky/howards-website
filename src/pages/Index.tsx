@@ -148,6 +148,7 @@ const Index = () => {
           <Button
             variant="glassPetrol"
             size="lg"
+            className="w-full sm:w-auto"
             onClick={() => {
               trackCTA("book_call_contact_section");
               openCalendly();

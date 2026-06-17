@@ -149,7 +149,7 @@ const Bio = () => {
               </p>
 
               <div className="clear-both text-center mt-12">
-                <Button variant="glassPetrol" size="lg" onClick={openCalendly}>
+                <Button variant="glassPetrol" size="lg" className="w-full sm:w-auto" onClick={openCalendly}>
                   {t("Book a free call with Howard", "Zamluvit bezplatný hovor s Howardem")}
                 </Button>
               </div>

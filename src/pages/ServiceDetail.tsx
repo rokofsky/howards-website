@@ -264,7 +264,7 @@ const ServiceDetail = () => {
 
               {slug === "live-webinars" ? (
                 <>
-                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                     {webinars.map((webinar) => {
                       const wTitle = pickCs(webinar.title_cs, webinar.title, isCz);
                       const wDesc = pickCs(webinar.description_cs, webinar.description, isCz);
