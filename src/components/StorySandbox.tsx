@@ -626,7 +626,7 @@ export default function StorySandbox() {
         } else {
           insertPayload = { sheet_key: "oneLiners", one_liner: value };
         }
-        const insertRes = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-prompt`, {
+        const insertRes = await fetch(`https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/manage-prompt`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "insert", prompt: insertPayload, token: adminToken }),
@@ -658,7 +658,7 @@ export default function StorySandbox() {
       } else {
         const rowId = slot === "oneLiner" ? oneLinerRow?.id : cardRows[slot as Category]?.id;
         if (!rowId) return;
-        const updateRes = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-prompt`, {
+        const updateRes = await fetch(`https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/manage-prompt`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "update", prompt: { id: rowId, [col]: value }, token: adminToken }),
