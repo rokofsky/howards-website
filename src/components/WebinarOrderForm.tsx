@@ -50,7 +50,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   const [activeSlugSet, setActiveSlugSet] = useState<Set<string> | null>(null);
   useEffect(() => {
     if (open) setSuccess(false);
-  }}, [open, isCz]);
+  }, [open, isCz]);
   useEffect(() => {
     if (!open) return;
     supabase
