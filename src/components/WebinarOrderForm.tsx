@@ -208,9 +208,15 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                   .sort((a, b) => a.title.localeCompare(b.title))
                   .map((w) => (
                     <div key={w.slug} className="space-y-1">
-                      <label className="flex items-center gap-2 text-sm cursor-pointer hover:opacity-80">
+                      <div className="flex items-center gap-2 text-sm">
                         <Checkbox checked={selectedSlugs.includes(w.slug)} onCheckedChange={() => toggleSlug(w.slug)} />
-                        <span className="flex-1">{w.title}</span>
+                        <span className="cursor-pointer hover:opacity-80" onClick={() => toggleSlug(w.slug)}>
+                          {w.title}
+                        </span>
+                        <div
+                          className="flex-1 cursor-pointer"
+                          onClick={() => setPreviewSlug(previewSlug === w.slug ? null : w.slug)}
+                        />
                         {dbWebinarMap[w.slug] && (
                           <button
                             type="button"
@@ -220,7 +226,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                             {previewSlug === w.slug ? "less" : "more"}
                           </button>
                         )}
-                      </label>
+                      </div>
                       {previewSlug === w.slug && dbWebinarMap[w.slug] && (
                         <div className="text-base leading-normal text-foreground/80 bg-muted/40 rounded-md px-3 py-2 whitespace-pre-line">
                           {dbWebinarMap[w.slug]}
