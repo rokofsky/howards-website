@@ -746,7 +746,7 @@ export default function StorySandbox() {
               <span className="inline-block w-[280px]">{/* ADJUST WIDTH HERE TO ALIGN HINTS */}Prompts</span>
             </h3>
             <span className="text-xs md:text-sm font-normal text-muted-foreground flex items-center gap-1 italic">
-              <Shuffle className="w-4 h-4 md:w-3 md:h-3 opacity-50" style={{ pointerEvents: "none" }} />
+              <Shuffle className="w-5 h-5 opacity-50" style={{ pointerEvents: "none" }} />
               <span className="hidden md:inline">Shuffle to the next card</span>
               <span className="md:hidden">tap in card to shuffle</span>
             </span>
@@ -901,7 +901,7 @@ export default function StorySandbox() {
               </span>
             </h3>
             <span className="text-xs md:text-sm font-normal text-muted-foreground flex items-center gap-1 italic">
-              <Shuffle className="w-4 h-4 md:w-3 md:h-3 opacity-50" style={{ pointerEvents: "none" }} />
+              <Shuffle className="w-5 h-5 opacity-50" style={{ pointerEvents: "none" }} />
               <span className="hidden md:inline">Shuffle to the next card</span>
               <span className="md:hidden">tap in card to shuffle</span>
             </span>
