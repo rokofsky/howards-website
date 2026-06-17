@@ -17,7 +17,7 @@ const PricingSection = () => {
 
   const tiers = [
     {
-      name: t("Live Webinars", "Živé webináře"),
+      name: t("Live Webinars", "Živé interaktivní webináře"),
       price: t("From CZK 3,000 (€125)", "Od 3 000 Kč (125 €)"),
       description: t(
         "From 2 hours to a full day of interactive team learning.",
@@ -48,7 +48,7 @@ const PricingSection = () => {
       inquireInhouse: true,
     },
     {
-      name: t("Keynote Speaking", "Hlavní přednáška"),
+      name: t("Keynote Speaking", "Keynote projev"),
       price: t("From CZK 30,000 (€1200)", "Od 30 000 Kč (1 200 €)"),
       description: t(
         "A speaking engagement your audience will talk about.",
@@ -63,7 +63,7 @@ const PricingSection = () => {
       inquire: true,
     },
     {
-      name: t("Individual sessions", "Individuální lekce"),
+      name: t("Individual sessions", "Individuální Individuální sezení sessie"),
       price: t("From CZK 1,500 (€60)", "Od 1 500 Kč (60 €)"),
       priceSuffix: t("50 minutes", "za hodinu"),
       description: t(
