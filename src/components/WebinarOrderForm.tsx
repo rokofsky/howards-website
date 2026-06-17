@@ -34,7 +34,7 @@ const fixCommonEmailTypos = (email: string): string => {
 
 export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: OrderFormProps) => {
   const t = useT();
-  const isCz = window.location.pathname.startsWith("/cz");
+  const isCz = window.location.pathname.includes("/cz/") || window.location.pathname === "/cz";
   const [name, setName] = useState("");
   const [note, setNote] = useState("");
   const [email, setEmail] = useState("");
@@ -50,7 +50,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   const [activeSlugSet, setActiveSlugSet] = useState<Set<string> | null>(null);
   useEffect(() => {
     if (open) setSuccess(false);
-  }, [open]);
+  }}, [open, isCz]);
   useEffect(() => {
     if (!open) return;
     supabase
