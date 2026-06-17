@@ -56,6 +56,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       .select("slug, details, active")
       .then(({ data }) => {
         if (!data) return;
+        console.log("raw data from supabase:", data);
         const map: Record<string, string> = {};
         const activeSlugs = new Set<string>();
         data.forEach((w: { slug: string; details: string; active: boolean }) => {
