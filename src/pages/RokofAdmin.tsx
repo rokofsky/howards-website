@@ -98,13 +98,11 @@ function SortableKeynoteRow({
   onBlurField,
   onActive,
   onDelete,
-  onEdit,
 }: {
   topic: KeynoteTopic;
   onBlurField: (id: string, field: "title" | "description", value: string) => void;
   onActive: (id: string, value: boolean) => void;
   onDelete: (id: string) => void;
-  onEdit: (topic: KeynoteTopic) => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: topic.id });
   const style = {
@@ -128,9 +126,6 @@ function SortableKeynoteRow({
         className="flex-1 border-0 focus-visible:ring-0 shadow-none px-2 bg-transparent"
         onBlur={(e) => onBlurField(topic.id, "title", e.target.value)}
       />
-      <button onClick={() => onEdit(topic)} aria-label="Edit topic">
-        <Pencil className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-      </button>
       <Switch checked={topic.active} onCheckedChange={(v) => onActive(topic.id, v)} />
       <button onClick={() => onDelete(topic.id)} aria-label="Delete topic">
         <Trash2 className="h-4 w-4 text-destructive" />
@@ -163,17 +158,10 @@ const RokofAdmin = () => {
   const [savingEdit, setSavingEdit] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
   // Keynote Topics state
-  const [keynoteTopics, setKeynoteTopics] = useState;
-  {
-    id: string;
-    title: string;
-    description: string;
-    sort_order: number;
-    active: boolean;
-  }
-  [] > [];
-  const [editingKeynote, setEditingKeynote] = useState<KeynoteTopic | null>(null);
-  const [deletingKeynoteId, setDeletingKeynoteId] = useState<string | null>(null);
+  const [keynoteTopics, setKeynoteTopics] = useState<
+    { id: string; title: string; description: string; sort_order: number; active: boolean }[]
+  >([]);
+
   const fetchKeynoteTopics = async () => {
     const { data, error } = await supabase.from("keynote_topics").select("*").order("sort_order", { ascending: true });
     if (!error && data) setKeynoteTopics(data);
@@ -187,15 +175,9 @@ const RokofAdmin = () => {
     if (!error) fetchKeynoteTopics();
   };
 
-  const confirmKeynoteDelete = (id: string) => {
-    setDeletingKeynoteId(id);
-  };
-
-  const handleKeynoteDelete = async () => {
-    if (!deletingKeynoteId) return;
-    await supabase.from("keynote_topics").delete().eq("id", deletingKeynoteId);
-    setKeynoteTopics((prev) => prev.filter((t) => t.id !== deletingKeynoteId));
-    setDeletingKeynoteId(null);
+  const handleKeynoteDelete = async (id: string) => {
+    await supabase.from("keynote_topics").delete().eq("id", id);
+    setKeynoteTopics((prev) => prev.filter((t) => t.id !== id));
   };
 
   const handleKeynoteBlur = async (id: string, field: "title" | "description", value: string) => {
@@ -715,13 +697,12 @@ const RokofAdmin = () => {
                   <div className="divide-y divide-border">
                     {keynoteTopics.map((topic) => (
                       <SortableKeynoteRow
-                        key={topic.id}
-                        topic={topic}
-                        onBlurField={handleKeynoteBlur}
-                        onActive={handleKeynoteActive}
-                        onDelete={confirmKeynoteDelete}
-                        onEdit={setEditingKeynote}
-                      />
+   key={topic.id}
+   topic={topic}
+   onBlurField={handleKeynoteBlur}
+   onActive={handleKeynoteActive}
+   onDelete={handleKeynoteDelete}
+ />
                     ))}
                   </div>
                 </SortableContext>
@@ -731,29 +712,7 @@ const RokofAdmin = () => {
         </div>
       </section>
 
-      <Dialog open={!!editingKeynote} onOpenChange={(open) => !open && setEditingKeynote(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{editingKeynote?.title}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3">
-            <Label>Description</Label>
-            <Textarea
-              defaultValue={editingKeynote?.description ?? ""}
-              className="min-h-[120px]"
-              onBlur={(e) => {
-                if (editingKeynote) handleKeynoteBlur(editingKeynote.id, "description", e.target.value);
-              }}
-              placeholder="Enter description for this keynote topic..."
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingKeynote(null)}>
-              Close
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+
     </Layout>
   );
 };
