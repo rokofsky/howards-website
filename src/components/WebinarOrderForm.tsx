@@ -45,6 +45,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   const [dbWebinarMap, setDbWebinarMap] = useState<Record<string, string>>({});
   const [previewSlug, setPreviewSlug] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [activeSlugSet, setActiveSlugSet] = useState<Set<string>>(new Set());
   useEffect(() => {
     if (open) setSuccess(false);
   }, [open]);
@@ -52,14 +53,17 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     if (!open) return;
     supabase
       .from("webinars")
-      .select("slug, details")
+      .select("slug, details, active")
       .then(({ data }) => {
         if (!data) return;
         const map: Record<string, string> = {};
-        data.forEach((w: { slug: string; details: string }) => {
+        const activeSlugs = new Set<string>();
+        data.forEach((w: { slug: string; details: string; active: boolean }) => {
+          if (w.active) activeSlugs.add(w.slug);
           if (w.details) map[w.slug] = w.details;
         });
         setDbWebinarMap(map);
+        setActiveSlugSet(activeSlugs);
       });
   }, [open]);
 
@@ -205,6 +209,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
               </p>
               <div className="max-h-48 overflow-y-auto rounded-md border border-gold/40 p-3 space-y-2">
                 {[...allWebinars]
+                  .filter((w) => activeSlugSet.size === 0 || activeSlugSet.has(w.slug))
                   .sort((a, b) => a.title.localeCompare(b.title))
                   .map((w) => (
                     <div key={w.slug} className="space-y-1">
