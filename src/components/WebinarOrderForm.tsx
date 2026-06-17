@@ -109,14 +109,23 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) {
-      toast.error(t("Please enter your name and email.", "Zadejte prosím jméno a e-mail."));
+    if (selectedSlugs.length === 0) {
+      toast.error(t("Please select at least one webinar.", "Vyberte prosím alespoň jeden webinář."));
+      return;
+    }
+    if (!name.trim()) {
+      toast.error(t("Please enter your name.", "Zadejte prosím své jméno."));
+      return;
+    }
+    if (!email.trim()) {
+      toast.error(t("Please enter your email.", "Zadejte prosím svůj e-mail."));
       return;
     }
     if (selectedSlugs.length === 0) {
       toast.error(t("Please select at least one webinar.", "Vyberte prosím alespoň jeden webinář."));
       return;
     }
+
     // Lenient email fix for common mobile typos
     const fixedEmail = fixCommonEmailTypos(email.trim());
     if (fixedEmail !== email) setEmail(fixedEmail);
