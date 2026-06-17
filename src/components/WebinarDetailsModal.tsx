@@ -21,7 +21,28 @@ export const WebinarDetailsModal = ({ open, onOpenChange, title, details, onInqu
         <div className="whitespace-pre-line text-sm text-foreground/80 leading-relaxed py-2">
           {details || t("No additional details yet.", "Zatím žádné další podrobnosti.")}
         </div>
-        <div className="flex justify-end pt-2">
+        <div className="flex justify-between pt-2 gap-3">
+          <button
+            onClick={() => onOpenChange(false)}
+            style={{
+              backgroundColor: "transparent",
+              color: "#b8845a",
+              border: "1px solid #b8845a",
+              borderRadius: "6px",
+              padding: "16px 28px",
+              cursor: "pointer",
+              fontSize: "18px",
+              minWidth: "120px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#b8845a20";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "transparent";
+            }}
+          >
+            {t("Back", "Zpět")}
+          </button>
           <button
             onClick={onInquire}
             style={{
@@ -33,6 +54,12 @@ export const WebinarDetailsModal = ({ open, onOpenChange, title, details, onInqu
               cursor: "pointer",
               fontSize: "18px",
               minWidth: "200px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#b8845a";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#d4a882";
             }}
           >
             {t("Inquire", "Poptat")}
