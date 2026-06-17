@@ -1,11 +1,27 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ContactForm from "@/components/ContactForm";
 import { useT } from "@/hooks/useT";
+import { supabase } from "@/integrations/supabase/client";
+
+interface KeynoteTopic {
+  id: string;
+  title: string;
+  description: string | null;
+  sortorder: number;
+  active: boolean;
+}
 
 interface Props {
   open: boolean;
@@ -14,27 +30,26 @@ interface Props {
 
 const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
   const t = useT();
-
-  const presetTopics = [
-    t("How to give proper directions & instructions", "Jak správně dávat pokyny a instrukce"),
-    t("Brain Gym: get the hemispheres working together", "Brain Gym: propojte obě mozkové hemisféry"),
-    t("Emotional Intelligence: how it can make your life easier", "Emoční inteligence: jak vám usnadní život"),
-    t("Increase your memory!", "Zvyšte svou paměť!"),
-    t("EQ & Leadership: how they go hand-in-hand", "EQ a vedení: jak jdou ruku v ruce"),
-    t("Work-life Balance -- is it for me?", "Work-life Balance -- je to pro mě?"),
-    t("8 Intelligences and how to increase yours", "8 inteligencí a jak tu svou zvýšit"),
-    t("Self-motivation and concentration", "Sebemotivace a soustředění"),
-    t("Time Management in 5 minutes a day", "Time management v 5 minutách denně"),
-  ];
-
+  const [topics, setTopics] = useState<KeynoteTopic[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [customTopic, setCustomTopic] = useState("");
   const [showForm, setShowForm] = useState(false);
 
-  const toggle = (topic: string) => {
-    setSelected((prev) =>
-      prev.includes(topic) ? prev.filter((t) => t !== topic) : [...prev, topic]
-    );
+  useEffect(() => {
+    if (!open) return;
+    supabase
+      .from("keynote_topics")
+      .select("*")
+      .eq("active", true)
+      .order("sortorder", { ascending: true })
+      .then(({ data, error }) => {
+        if (!error && data) setTopics(data);
+      });
+  }, [open]);
+
+  const toggle = (title: string) => {
+    setSelected((prev) => (prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]));
   };
 
   const handleClose = (open: boolean) => {
@@ -42,13 +57,14 @@ const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
       setSelected([]);
       setCustomTopic("");
       setShowForm(false);
+      setExpandedId(null);
     }
     onOpenChange(open);
   };
 
   const topicsForMessage = [...selected, ...(customTopic.trim() ? [customTopic.trim()] : [])];
-  const serviceName = t("Keynote Speaking", "Hlavní přednáška") +
-    (topicsForMessage.length ? ` — ${topicsForMessage.join(", ")}` : "");
+  const serviceName =
+    t("Keynote Speaking", "Hlavní přednáška") + (topicsForMessage.length ? ` — ${topicsForMessage.join(", ")}` : "");
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -63,22 +79,37 @@ const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
         {!showForm ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {presetTopics.map((topic) => {
-                const checked = selected.includes(topic);
+              {topics.map((topic) => {
+                const checked = selected.includes(topic.title);
+                const isExpanded = expandedId === topic.id;
                 return (
-                  <label
-                    key={topic}
-                    className={`flex items-start gap-3 p-3 rounded-md border cursor-pointer transition-colors ${
-                      checked ? "border-gold bg-gold/5" : "border-border hover:border-gold/50"
-                    }`}
-                  >
-                    <Checkbox
-                      checked={checked}
-                      onCheckedChange={() => toggle(topic)}
-                      className="mt-0.5"
-                    />
-                    <span className="text-sm leading-snug">{topic}</span>
-                  </label>
+                  <div key={topic.id} className="flex flex-col">
+                    <label
+                      className={`flex items-start gap-3 p-3 rounded-md border cursor-pointer transition-colors ${
+                        checked ? "border-gold bg-gold/5" : "border-border hover:border-gold/50"
+                      }`}
+                    >
+                      <Checkbox checked={checked} onCheckedChange={() => toggle(topic.title)} className="mt-0.5" />
+                      <span className="text-sm leading-snug flex-1">{topic.title}</span>
+                      {topic.description && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setExpandedId(isExpanded ? null : topic.id);
+                          }}
+                          className="text-xs text-gold underline shrink-0"
+                        >
+                          {isExpanded ? t("less", "méně") : t("more", "více")}
+                        </button>
+                      )}
+                    </label>
+                    {isExpanded && topic.description && (
+                      <div className="text-xs text-foreground/70 bg-muted/40 rounded-b-md px-3 py-2 border border-t-0 border-border">
+                        {topic.description}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
@@ -113,13 +144,11 @@ const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
             <div className="rounded-md border border-gold/30 bg-gold/5 p-3 text-sm">
               <div className="font-medium mb-1">{t("Selected topics:", "Vybraná témata:")}</div>
               <ul className="list-disc list-inside space-y-0.5 text-foreground/80">
-                {topicsForMessage.map((tpc) => <li key={tpc}>{tpc}</li>)}
+                {topicsForMessage.map((tpc) => (
+                  <li key={tpc}>{tpc}</li>
+                ))}
               </ul>
-              <button
-                type="button"
-                onClick={() => setShowForm(false)}
-                className="mt-2 text-xs text-gold underline"
-              >
+              <button type="button" onClick={() => setShowForm(false)} className="mt-2 text-xs text-gold underline">
                 {t("Edit topics", "Upravit témata")}
               </button>
             </div>
