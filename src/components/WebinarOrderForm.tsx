@@ -56,7 +56,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       .select("slug, details, active")
       .then(({ data }) => {
         if (!data) return;
-        console.log("raw data from supabase:", data);
         const map: Record<string, string> = {};
         const activeSlugs = new Set<string>();
         data.forEach((w: { slug: string; details: string; active: boolean }) => {
@@ -65,7 +64,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
         });
         setDbWebinarMap(map);
         setActiveSlugSet(activeSlugs);
-        console.log("active slugs:", [...activeSlugs]);
       });
   }, [open]);
 
@@ -130,20 +128,6 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
       toast.error(t("Order failed: ", "Objednávka selhala: ") + error.message);
       return;
     }
-    console.log("selectedSlugs:", selectedSlugs);
-    console.log(
-      "allWebinars:",
-      allWebinars.map((w) => w.slug),
-    );
-    console.log(
-      "webinar_title:",
-      allWebinars
-        .filter((w) => selectedSlugs.includes(w.slug))
-        .map((w) => w.title)
-        .join(", "),
-    );
-    console.log("DEBUG note value:", note, "length:", note.length);
-    console.log("INVOKE BODY note:", String(note), "preferredTime:", String(preferredTime));
     await supabase.functions.invoke("send-webinar-email", {
       body: {
         customer_name: name,
