@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { verifyAdminPassword, getAdminToken, isAdminAuthenticated, setAdminAuthenticated } from "@/lib/adminAuth";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,6 +40,7 @@ interface Webinar {
   details_cs: string;
   created_at: string;
   sort_order: number;
+  active: boolean;
 }
 
 type CsField = "title_cs" | "description_cs" | "details_cs";
@@ -81,6 +83,7 @@ function SortableWebinarRow({
   webinar: Webinar;
   onEdit: (w: Webinar) => void;
   onDelete: (id: string) => void;
+  onToggleActive: (id: string, value: boolean) => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: webinar.id });
 
@@ -110,7 +113,8 @@ function SortableWebinarRow({
         >
           <GripVertical className="h-5 w-5" />
         </button>
-        <div className="flex gap-1">
+        <div className="flex items-center gap-2">
+          <Switch checked={webinar.active} onCheckedChange={(v) => onToggleActive(webinar.id, v)} />
           <Button variant="ghost" size="icon" onClick={() => onEdit(webinar)}>
             <Pencil className="h-4 w-4 text-muted-foreground" />
           </Button>
@@ -278,6 +282,10 @@ export default function AdminWebinars() {
     toast({ title: "Webinar deleted" });
     fetchWebinars();
   };
+  const handleToggleActive = async (id: string, value: boolean) => {
+    setWebinars((prev) => prev.map((w) => (w.id === id ? { ...w, active: value } : w)));
+    await supabase.from("webinars").update({ active: value }).eq("id", id);
+  };
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -382,7 +390,13 @@ export default function AdminWebinars() {
               <SortableContext items={webinars.map((w) => w.id)} strategy={rectSortingStrategy}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {webinars.map((w) => (
-                    <SortableWebinarRow key={w.id} webinar={w} onEdit={handleEditOpen} onDelete={handleDelete} />
+                    <SortableWebinarRow
+                      key={w.id}
+                      webinar={w}
+                      onEdit={handleEditOpen}
+                      onDelete={handleDelete}
+                      onToggleActive={handleToggleActive}
+                    />
                   ))}
                 </div>
               </SortableContext>
