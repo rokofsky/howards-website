@@ -237,7 +237,6 @@ const RokofAdmin = () => {
   };
   const loadPosts = async () => {
     const { data, error } = await supabase.from("blog_posts").select("*");
-    console.log("Admin Component Fetch - Data:", data, "Error:", error);
     setPosts((data as BlogPostRow[]) ?? []);
   };
 

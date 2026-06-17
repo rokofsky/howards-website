@@ -44,7 +44,6 @@ const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
       .eq("active", true)
       .order("sort_order", { ascending: true })
       .then(({ data, error }) => {
-        console.log("keynote_topics fetch:", data, error);
         if (!error && data) setTopics(data);
       });
   }, [open]);
