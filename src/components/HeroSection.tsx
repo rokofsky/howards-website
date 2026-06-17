@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { motion, AnimatePresence } from "framer-motion";
@@ -69,7 +69,7 @@ const HeroSection = () => {
               alt="Howard - Soft Skills Consultant"
               className="absolute inset-0 w-full h-full object-cover"
               style={{ objectPosition: slidePositions[current] ?? "center center" }}
-              initial={{ opacity: 0, scale: instant ? 1 : 1.25 }}
+              initial={{ opacity: 0, scale: instantRef.current ? 1 : 1.25 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: instantRef.current ? 0 : 1.2 }}
               width={1920}
