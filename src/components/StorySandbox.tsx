@@ -457,11 +457,12 @@ export default function StorySandbox() {
         sheet_key: sheetKey,
         row_id: String(id),
         element_box: elementBox,
-        vote,
+        vote: current === vote ? (vote === "up" ? "nullify_up" : "nullify_down") : vote,
       }),
     })
       .then((res) => res.json())
-      .then(() => {
+      .then((result) => {
+        console.log("cast-vote result:", result);
         supabase
           .from("votes")
           .select("*")
