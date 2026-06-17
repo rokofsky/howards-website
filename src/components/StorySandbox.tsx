@@ -461,9 +461,7 @@ export default function StorySandbox() {
       }),
     })
       .then((res) => res.json())
-      .then((result) => {
-        console.log("cast-vote result:", result);
-      });
+      .then(() => {});
   };
 
   const VoteThumbs = ({
