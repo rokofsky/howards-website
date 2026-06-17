@@ -37,6 +37,7 @@ const HeroSection = () => {
   const t = useT();
   const lp = useLocalizedPath();
   const [current, setCurrent] = useState(0);
+  const [instant, setInstant] = useState(false);
 
   const next = useCallback((isManual = false) => {
   setInstant(isManual);
@@ -57,7 +58,7 @@ const prev = useCallback(() => {
     <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
       <div className="block w-full h-full relative">
         <AnimatePresence mode="wait">
-          <motion.div key={current} className="absolute inset-0" exit={{ opacity: 0 }} transition={{ duration: instant ? 0 : 1.2 }}
+          <motion.div key={current} className="absolute inset-0" exit={{ opacity: 0 }} transition={{ duration: instant ? 0 : 1.2 }}>
             <motion.img
               src={slides[current].src}
               alt="Howard - Soft Skills Consultant"
