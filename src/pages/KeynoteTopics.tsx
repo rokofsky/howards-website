@@ -5,12 +5,15 @@ import { supabase } from "@/integrations/supabase/client";
 interface KeynoteTopic {
   id: string;
   title: string;
+  title_cs: string | null;
   description: string | null;
+  description_cs: string | null;
   active: boolean;
   sort_order: number;
 }
 
 export default function KeynoteTopics() {
+  const isCz = window.location.pathname.includes("/cz/");
   const [topics, setTopics] = useState<KeynoteTopic[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +25,7 @@ export default function KeynoteTopics() {
 
         const { data, error: supabaseError } = await supabase
           .from("keynote_topics")
-          .select("id, title, description, active, sort_order")
+          .select("id, title, title_cs, description, description_cs, active, sort_order")
           .eq("active", true)
           .order("sort_order", { ascending: true });
 
@@ -68,12 +71,13 @@ export default function KeynoteTopics() {
             <div key={topic.id}>
               {/* Topic Wrapper */}
               <div className="py-2">
-                <h2 className="text-xl font-semibold text-foreground">{topic.title}</h2>
-
+                <h2 className="text-xl font-semibold text-foreground">
+                  {isCz && topic.title_cs ? topic.title_cs : topic.title}
+                </h2>
                 {/* Conditional Description: Lighter, smaller font */}
-                {topic.description && (
+                {(isCz ? topic.description_cs || topic.description : topic.description) && (
                   <p className="mt-1.5 text-sm text-muted-foreground/80 font-normal leading-relaxed">
-                    {topic.description}
+                    {isCz && topic.description_cs ? topic.description_cs : topic.description}
                   </p>
                 )}
               </div>
