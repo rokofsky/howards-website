@@ -34,6 +34,7 @@ const fixCommonEmailTypos = (email: string): string => {
 
 export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: OrderFormProps) => {
   const t = useT();
+  const isCz = window.location.pathname.startsWith("/cz");
   const [name, setName] = useState("");
   const [note, setNote] = useState("");
   const [email, setEmail] = useState("");
@@ -53,16 +54,29 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
     if (!open) return;
     supabase
       .from("webinars")
-      .select("slug, details, active")
+      .select("slug, title, title_cs, details, details_cs, active")
       .then(({ data }) => {
         if (!data) return;
         const map: Record<string, string> = {};
+        const titleMap: Record<string, string> = {};
         const activeSlugs = new Set<string>();
-        data.forEach((w: { slug: string; details: string; active: boolean }) => {
-          if (w.active) activeSlugs.add(w.slug);
-          if (w.details) map[w.slug] = w.details;
-        });
+        data.forEach(
+          (w: {
+            slug: string;
+            title: string;
+            title_cs: string;
+            details: string;
+            details_cs: string;
+            active: boolean;
+          }) => {
+            if (w.active) activeSlugs.add(w.slug);
+            const detail = isCz && w.details_cs ? w.details_cs : w.details;
+            if (detail) map[w.slug] = detail;
+            titleMap[w.slug] = isCz && w.title_cs ? w.title_cs : w.title;
+          },
+        );
         setDbWebinarMap(map);
+        setDbTitleMap(titleMap);
         setActiveSlugSet(activeSlugs);
       });
   }, [open]);
@@ -202,7 +216,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                       <div className="flex items-center gap-2 text-sm">
                         <Checkbox checked={selectedSlugs.includes(w.slug)} onCheckedChange={() => toggleSlug(w.slug)} />
                         <span className="cursor-pointer hover:opacity-80" onClick={() => toggleSlug(w.slug)}>
-                          {w.title}
+                          {dbTitleMap[w.slug] || w.title}
                         </span>
                         {dbWebinarMap[w.slug] && (
                           <div
