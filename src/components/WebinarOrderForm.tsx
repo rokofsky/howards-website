@@ -14,7 +14,6 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useT } from "@/hooks/useT";
-import { webinars as allWebinars } from "@/data/webinars";
 
 interface OrderFormProps {
   open: boolean;
@@ -149,10 +148,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
         customer_email: fixedEmail ?? email,
         chosen_date: chosen_date.join(", "),
         preferred_time: preferredTime,
-        webinar_title: allWebinars
-          .filter((w) => selectedSlugs.includes(w.slug))
-          .map((w) => w.title)
-          .join(", "),
+        webinar_title: selectedSlugs.map((slug) => dbTitleMap[slug] || slug).join(", "),
         note: String(note),
       },
     });
@@ -209,10 +205,10 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                 {t("Price: CZK 3,000 / €125 for a 100-minute session", "Cena: 3 000 Kč / 125 € za 100minutovou akci")}
               </p>
               <div className="max-h-48 overflow-y-auto rounded-md border border-gold/40 p-3 space-y-2">
-                {[...allWebinars]
-                  .filter((w) => activeSlugSet !== null && activeSlugSet.has(w.slug))
-                  .sort((a, b) => a.title.localeCompare(b.title))
-                  .map((w) => (
+                {[...Object.keys(dbTitleMap)]
+                  .filter((slug) => activeSlugSet !== null && activeSlugSet.has(slug))
+                  .sort((a, b) => (dbTitleMap[a] || a).localeCompare(dbTitleMap[b] || b))
+                  .map((slug) => (
                     <div key={w.slug} className="space-y-1">
                       <div className="flex items-center gap-2 text-sm">
                         <Checkbox checked={selectedSlugs.includes(w.slug)} onCheckedChange={() => toggleSlug(w.slug)} />
