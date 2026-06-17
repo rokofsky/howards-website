@@ -19,7 +19,7 @@ interface KeynoteTopic {
   id: string;
   title: string;
   description: string | null;
-  sortorder: number;
+  sort_order: number;
   active: boolean;
 }
 
