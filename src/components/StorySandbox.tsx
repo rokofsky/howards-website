@@ -463,18 +463,6 @@ export default function StorySandbox() {
       .then((res) => res.json())
       .then((result) => {
         console.log("cast-vote result:", result);
-        supabase
-          .from("votes")
-          .select("*")
-          .then(({ data }) => {
-            if (!data) return;
-            const counts: Record<string, { up: number; down: number }> = {};
-            data.forEach((row) => {
-              const key = `${row.sheet_key}:${row.row_id}:${row.element_box}`;
-              counts[key] = { up: row.up_count, down: row.down_count };
-            });
-            setVoteCounts(counts);
-          });
       });
   };
 
