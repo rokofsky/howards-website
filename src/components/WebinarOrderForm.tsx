@@ -42,9 +42,25 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
   const [preferredTime, setPreferredTime] = useState("");
   const [undecided, setUndecided] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [dbWebinarMap, setDbWebinarMap] = useState<Record<string, string>>({});
+  const [previewSlug, setPreviewSlug] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   useEffect(() => {
     if (open) setSuccess(false);
+  }, [open]);
+  useEffect(() => {
+    if (!open) return;
+    supabase
+      .from("webinars")
+      .select("slug, details")
+      .then(({ data }) => {
+        if (!data) return;
+        const map: Record<string, string> = {};
+        data.forEach((w: { slug: string; details: string }) => {
+          if (w.details) map[w.slug] = w.details;
+        });
+        setDbWebinarMap(map);
+      });
   }, [open]);
 
   const resetForm = () => {
@@ -191,10 +207,26 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                 {[...allWebinars]
                   .sort((a, b) => a.title.localeCompare(b.title))
                   .map((w) => (
-                    <label key={w.slug} className="flex items-center gap-2 text-sm cursor-pointer hover:opacity-80">
-                      <Checkbox checked={selectedSlugs.includes(w.slug)} onCheckedChange={() => toggleSlug(w.slug)} />
-                      <span>{w.title}</span>
-                    </label>
+                    <div key={w.slug} className="space-y-1">
+                      <label className="flex items-center gap-2 text-sm cursor-pointer hover:opacity-80">
+                        <Checkbox checked={selectedSlugs.includes(w.slug)} onCheckedChange={() => toggleSlug(w.slug)} />
+                        <span className="flex-1">{w.title}</span>
+                        {dbWebinarMap[w.slug] && (
+                          <button
+                            type="button"
+                            onClick={() => setPreviewSlug(previewSlug === w.slug ? null : w.slug)}
+                            className="text-xs text-gold underline shrink-0"
+                          >
+                            {previewSlug === w.slug ? "less" : "more"}
+                          </button>
+                        )}
+                      </label>
+                      {previewSlug === w.slug && dbWebinarMap[w.slug] && (
+                        <div className="text-base leading-loose text-foreground/80 bg-muted/40 rounded-md px-3 py-2 whitespace-pre-line">
+                          {dbWebinarMap[w.slug]}
+                        </div>
+                      )}
+                    </div>
                   ))}
               </div>
             </div>
