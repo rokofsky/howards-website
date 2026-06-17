@@ -745,9 +745,10 @@ export default function StorySandbox() {
             <h3 className="text-lg font-semibold">
               <span className="inline-block w-[280px]">{/* ADJUST WIDTH HERE TO ALIGN HINTS */}Prompts</span>
             </h3>
-            <span className="text-lg font-semibold flex items-center gap-1">
-              <Shuffle className="w-4 h-4" style={{ pointerEvents: "none" }} />
-              Shuffle to the next card
+            <span className="text-sm md:text-lg font-semibold flex items-center gap-1">
+              <Shuffle className="w-5 h-5 md:w-4 md:h-4" style={{ pointerEvents: "none" }} />
+              <span className="hidden md:inline">Shuffle to the next card</span>
+              <span className="md:hidden">Shuffle</span>
             </span>
           </div>
         </div>
@@ -1008,9 +1009,9 @@ export default function StorySandbox() {
           </ToggleGroup>
 
           <Button
-            size="lg"
+            size="sm"
             onClick={handleSaveStory}
-            className="text-base font-semibold px-6 py-5 text-white hover:opacity-90 mr-[8%]"
+            className="text-sm md:text-base font-semibold px-3 py-2 md:px-6 md:py-5 text-white hover:opacity-90 md:mr-[8%] ml-auto"
             style={{ backgroundColor: "#175f87" }}
           >
             Save Story
