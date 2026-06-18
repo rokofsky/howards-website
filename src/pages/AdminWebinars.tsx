@@ -46,33 +46,17 @@ interface Webinar {
 type CsField = "title_cs" | "description_cs" | "details_cs";
 
 async function translateToCzech(text: string): Promise<string> {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
-  if (!apiKey) throw new Error("Missing VITE_GEMINI_API_KEY");
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text:
-                  "Translate the following English text into fluent, natural Czech. Preserve line breaks and formatting. Return ONLY the translated text, no commentary:\n\n" +
-                  text,
-              },
-            ],
-          },
-        ],
-      }),
-    },
-  );
-  if (!res.ok) throw new Error(`Gemini API error ${res.status}`);
+  const token = localStorage.getItem("admin_session_token") ?? "";
+  const res = await fetch("https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/translate-to-czech", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text, token }),
+  });
+  if (!res.ok) throw new Error(`Translation service error ${res.status}`);
   const data = await res.json();
-  const out = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!out || typeof out !== "string") throw new Error("Empty translation response");
-  return out.trim();
+  if (data.error) throw new Error(data.error);
+  if (!data.translation) throw new Error("Empty translation response");
+  return data.translation;
 }
 
 function SortableWebinarRow({
