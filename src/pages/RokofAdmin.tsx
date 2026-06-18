@@ -749,9 +749,11 @@ const RokofAdmin = () => {
             <Label>Description</Label>
             <Textarea
               id="keynote-desc-edit"
-              value={editingKeynote?.description ?? ""}
+              defaultValue={editingKeynote?.description ?? ""}
               className="min-h-[120px]"
-              onChange={(e) => setEditingKeynote({ ...editingKeynote!, description: e.target.value })}
+              onBlur={(e) => {
+                if (editingKeynote) handleKeynoteBlur(editingKeynote.id, "description", e.target.value);
+              }}
               placeholder="Enter description for this keynote topic..."
             />
           </div>
@@ -762,10 +764,11 @@ const RokofAdmin = () => {
             <Button
               variant="cta"
               onClick={async () => {
-                if (editingKeynote) {
-                  await handleKeynoteBlur(editingKeynote.id, "description", editingKeynote.description ?? "");
-                  setEditingKeynote(null);
+                const textarea = document.querySelector("#keynote-desc-edit") as HTMLTextAreaElement;
+                if (textarea && editingKeynote) {
+                  await handleKeynoteBlur(editingKeynote.id, "description", textarea.value);
                 }
+                setEditingKeynote(null);
               }}
             >
               Save
