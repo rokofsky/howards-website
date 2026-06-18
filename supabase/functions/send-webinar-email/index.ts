@@ -33,6 +33,8 @@ async function sendEmail(payload: Record<string, unknown>) {
   return true;
 }
 
+const FORM_SECRET = Deno.env.get("WEBINAR_FORM_SECRET") ?? "";
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -42,11 +44,30 @@ Deno.serve(async (req) => {
     if (!RESEND_API_KEY) throw new Error("RESEND_API_KEY not configured");
 
     const body = await req.json();
-    const customer_name = String(body.customer_name ?? "").trim().slice(0, 200);
-    const customer_email = String(body.customer_email ?? "").trim().slice(0, 255);
-    const chosen_date = String(body.chosen_date ?? "").trim().slice(0, 500);
-    const webinar_title = String(body.webinar_title ?? "").trim().slice(0, 300);
-    const note = String(body.note ?? "").trim().slice(0, 2000);
+
+    // Shared secret check
+    if (FORM_SECRET && body.form_secret !== FORM_SECRET) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const customer_name = String(body.customer_name ?? "")
+      .trim()
+      .slice(0, 200);
+    const customer_email = String(body.customer_email ?? "")
+      .trim()
+      .slice(0, 255);
+    const chosen_date = String(body.chosen_date ?? "")
+      .trim()
+      .slice(0, 500);
+    const webinar_title = String(body.webinar_title ?? "")
+      .trim()
+      .slice(0, 300);
+    const note = String(body.note ?? "")
+      .trim()
+      .slice(0, 2000);
 
     if (!customer_name || !customer_email) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
