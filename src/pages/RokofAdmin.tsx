@@ -35,13 +35,6 @@ import {
   verifyAdminPassword,
 } from "@/lib/adminAuth";
 
-const { error } = await supabase.from("keynote_topics").insert([{
-  title: newKeynoteTitle.trim(),
-  description: newKeynoteDescription.trim(),
-  sort_order: maxOrder + 1,
-  active: true,
-}]);
-if (!error) {
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
@@ -208,8 +201,10 @@ if (!error) {
       .eq("id", id);
   };
 
-  
-if (!error) {
+  const handleKeynoteActive = async (id: string, value: boolean) => {
+    await supabase.from("keynote_topics").update({ active: value }).eq("id", id);
+    setKeynoteTopics((prev) => prev.map((t) => (t.id === id ? { ...t, active: value } : t)));
+  };
 
   const handleKeynoteDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -219,10 +214,11 @@ if (!error) {
     if (oldIndex < 0 || newIndex < 0) return;
     const reordered = arrayMove(keynoteTopics, oldIndex, newIndex).map((t, i) => ({ ...t, sort_order: i + 1 }));
     setKeynoteTopics(reordered);
-    await adminInvoke("admin-keynote-topics", {
-      action: "reorder",
-      items: reordered.map((t) => ({ id: t.id, sort_order: t.sort_order })),
-    });
+    await Promise.all(
+      reordered.map((t) =>
+        supabase.from("keynote_topics").update({ sort_order: t.sort_order }).eq("id", t.id),
+      ),
+    );
   };
   const loadPosts = async () => {
     const { data, error } = await supabase.from("blog_posts").select("*");
