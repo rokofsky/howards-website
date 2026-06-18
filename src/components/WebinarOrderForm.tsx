@@ -15,6 +15,8 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useT } from "@/hooks/useT";
 
+const WEBINAR_FORM_SECRET = "3f9dedaa-4562-4090-a07f-bcc2bdfb3755";
+
 interface OrderFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -167,6 +169,7 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
         preferred_time: preferredTime,
         webinar_title: selectedSlugs.map((slug) => dbTitleMap[slug] || slug).join(", "),
         note: String(note),
+        form_secret: WEBINAR_FORM_SECRET,
       },
     });
     setSuccess(true);
