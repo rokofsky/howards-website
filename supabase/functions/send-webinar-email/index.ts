@@ -84,6 +84,25 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Anti-abuse: require a matching webinar_orders row created in the last 10 minutes
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+    const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    const { data: matching, error: lookupErr } = await supabaseAdmin
+      .from("webinar_orders")
+      .select("id")
+      .eq("customer_email", customer_email)
+      .gte("created_at", tenMinAgo)
+      .limit(1);
+    if (lookupErr || !matching || matching.length === 0) {
+      return new Response(JSON.stringify({ error: "No matching recent order" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const confirmHtml = `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#fff;font-family:Inter,Arial,sans-serif">
 <div style="max-width:600px;margin:0 auto;padding:40px 24px">
   <div style="background:#336b7a;padding:24px 28px;border-radius:8px 8px 0 0">
