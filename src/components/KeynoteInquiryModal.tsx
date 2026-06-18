@@ -93,7 +93,14 @@ const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
                       }`}
                     >
                       <Checkbox checked={checked} onCheckedChange={() => toggle(topic.title)} className="mt-0.5" />
-                      <span className="text-sm leading-snug flex-1">{topic.title}</span>
+                      <span className="text-sm leading-snug">{topic.title}</span>
+                      <span
+                        className="flex-1"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (topic.description) setExpandedId(isExpanded ? null : topic.id);
+                        }}
+                      />
                       {topic.description && (
                         <button
                           type="button"
