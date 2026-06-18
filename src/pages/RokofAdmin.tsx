@@ -199,7 +199,10 @@ const RokofAdmin = () => {
   };
 
   const handleKeynoteBlur = async (id: string, field: "title" | "description", value: string) => {
-    await adminInvoke("admin-keynote-topics", { action: "update", id, [field]: value });
+    await supabase
+      .from("keynote_topics")
+      .update({ [field]: value } as { title?: string; description?: string })
+      .eq("id", id);
   };
 
   const handleKeynoteActive = async (id: string, value: boolean) => {
@@ -749,11 +752,9 @@ const RokofAdmin = () => {
             <Label>Description</Label>
             <Textarea
               id="keynote-desc-edit"
-              defaultValue={editingKeynote?.description ?? ""}
+              value={editingKeynote?.description ?? ""}
               className="min-h-[120px]"
-              onBlur={(e) => {
-                if (editingKeynote) handleKeynoteBlur(editingKeynote.id, "description", e.target.value);
-              }}
+              onChange={(e) => setEditingKeynote({ ...editingKeynote!, description: e.target.value })}
               placeholder="Enter description for this keynote topic..."
             />
           </div>
@@ -764,11 +765,10 @@ const RokofAdmin = () => {
             <Button
               variant="cta"
               onClick={async () => {
-                const textarea = document.querySelector("#keynote-desc-edit") as HTMLTextAreaElement;
-                if (textarea && editingKeynote) {
-                  await handleKeynoteBlur(editingKeynote.id, "description", textarea.value);
+                if (editingKeynote) {
+                  await handleKeynoteBlur(editingKeynote.id, "description", editingKeynote.description ?? "");
+                  setEditingKeynote(null);
                 }
-                setEditingKeynote(null);
               }}
             >
               Save
