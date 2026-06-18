@@ -39,7 +39,8 @@ const timelineOptions: SelectOption[] = [
   { value: "future", label: "In the future" },
 ];
 
-const inputClasses = "w-full h-12 md:h-11 px-4 rounded-md bg-background border border-gold/40 text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow";
+const inputClasses =
+  "w-full h-12 md:h-11 px-4 rounded-md bg-background border border-gold/40 text-foreground text-sm font-light placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-shadow";
 
 const scrollIntoViewOnFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
   const target = e.target;
@@ -76,7 +77,9 @@ const FormSelectField = ({
 }) => {
   return (
     <div>
-      <label htmlFor={id} className="text-sm text-muted-foreground mb-1.5 block font-medium">{label}</label>
+      <label htmlFor={id} className="text-sm text-muted-foreground mb-1.5 block font-medium">
+        {label}
+      </label>
       <div className="relative">
         {!value && (
           <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-sm font-light text-muted-foreground/70">
@@ -90,9 +93,15 @@ const FormSelectField = ({
           onChange={onChange}
           className={`${inputClasses} appearance-none pr-10 ${value ? "text-foreground" : "text-transparent"}`}
         >
-          <option value="" disabled hidden>{" "}</option>
+          <option value="" disabled hidden>
+            {" "}
+          </option>
           {options.map((option) => (
-            <option key={option.value} value={option.value} style={{ color: "#000", letterSpacing: "normal", wordSpacing: "normal" }}>
+            <option
+              key={option.value}
+              value={option.value}
+              style={{ color: "#000", letterSpacing: "normal", wordSpacing: "normal" }}
+            >
               {option.label}
             </option>
           ))}
@@ -108,8 +117,7 @@ const FormSelectField = ({
 const ContactForm = ({ serviceName, showServiceFields = false, formKind }: ContactFormProps) => {
   const t = useT();
   const isCz = useIsCzech();
-  const resolvedFormKind: "general" | "service" | "webinar" =
-    formKind ?? (showServiceFields ? "service" : "general");
+  const resolvedFormKind: "general" | "service" | "webinar" = formKind ?? (showServiceFields ? "service" : "general");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -125,7 +133,9 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
   });
   const [website, setWebsite] = useState(""); // honeypot
   const formOpenedAt = useRef<number>(Date.now());
-  useEffect(() => { formOpenedAt.current = Date.now(); }, []);
+  useEffect(() => {
+    formOpenedAt.current = Date.now();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const target = e.target;
@@ -144,10 +154,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
       toast({
         title: t("Missing required fields", "Chybí povinná pole"),
-        description: t(
-          "Please fill in your name, email, and message.",
-          "Vyplňte prosím jméno, e-mail a zprávu."
-        ),
+        description: t("Please fill in your name, email, and message.", "Vyplňte prosím jméno, e-mail a zprávu."),
         variant: "destructive",
       });
       return;
@@ -203,7 +210,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
         title: t("Something went wrong", "Něco se pokazilo"),
         description: t(
           "Please try again or email info@rokofsky.com directly.",
-          "Zkuste to prosím znovu nebo napište přímo na info@rokofsky.com."
+          "Zkuste to prosím znovu nebo napište přímo na info@rokofsky.com.",
         ),
         variant: "destructive",
       });
@@ -220,13 +227,11 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
         className="glass rounded-lg p-6 max-w-lg mx-auto"
       >
         <div className="text-center mb-4">
-          <h3 className="text-2xl font-bold mb-3">
-            {t("🌿Thanks for signing up🌿", "🌿Díky za přihlášení🌿")}
-          </h3>
+          <h3 className="text-2xl font-bold mb-3">{t("🌿Thanks for signing up🌿", "🌿Díky za přihlášení🌿")}</h3>
           <p className="text-muted-foreground font-normal">
             {t(
               'Howard will be in touch faster than you can say "synergy". Check your email tomorrow.',
-              'Howard se ozve dřív, než stačíte říct „synergie“. Zítra se podívejte na e-mail.'
+              "Howard se ozve dřív, než stačíte říct „synergie“. Zítra se podívejte na e-mail.",
             )}
           </p>
         </div>
@@ -265,12 +270,13 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
       viewport={{ once: true }}
       className="glass rounded-lg p-8 md:p-10 max-w-2xl mx-auto space-y-5"
     >
-      {serviceName && (
-        <input type="hidden" name="service" value={serviceName} />
-      )}
+      {serviceName && <input type="hidden" name="service" value={serviceName} />}
 
       {/* Honeypot — must remain empty. Hidden from users & screen readers. */}
-      <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}>
+      <div
+        aria-hidden="true"
+        style={{ position: "absolute", left: "-10000px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}
+      >
         <label htmlFor="website">Website</label>
         <input
           id="website"
@@ -402,24 +408,23 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind }: Conta
         />
       </div>
 
-      <div className="flex items-center gap-3">
+      <div
+        className="flex items-center gap-3 cursor-pointer"
+        onClick={() => handleChange({ target: { name: "copyToMe", type: "checkbox", checked: !form.copyToMe } } as any)}
+      >
         <input
           type="checkbox"
           id="copyToMe"
           name="copyToMe"
           checked={form.copyToMe}
           onChange={handleChange}
-          className="w-5 h-5 rounded border-input accent-gold"
+          className="w-5 h-5 rounded border-input accent-gold pointer-events-none"
         />
-        <label htmlFor="copyToMe" className="text-sm text-muted-foreground font-normal">
-          {t("Send me a copy", "Pošlete mi kopii")}
-        </label>
+        <span className="text-sm text-muted-foreground font-normal">{t("Send me a copy", "Pošlete mi kopii")}</span>
       </div>
 
       <Button variant="glass" size="xl" type="submit" className="w-full" disabled={loading}>
-        {loading
-          ? t("Sending...", "Odesílám...")
-          : t("Send Message", "Odeslat zprávu")}
+        {loading ? t("Sending...", "Odesílám...") : t("Send Message", "Odeslat zprávu")}
       </Button>
     </motion.form>
   );
