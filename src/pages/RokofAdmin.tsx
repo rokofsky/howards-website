@@ -35,10 +35,13 @@ import {
   verifyAdminPassword,
 } from "@/lib/adminAuth";
 
-const adminInvoke = async (fn: string, body: Record<string, unknown>) => {
-  const token = localStorage.getItem("admin_session_token") ?? "";
-  return supabase.functions.invoke(fn, { body: { ...body, token } });
-};
+const { error } = await supabase.from("keynote_topics").insert([{
+  title: newKeynoteTitle.trim(),
+  description: newKeynoteDescription.trim(),
+  sort_order: maxOrder + 1,
+  active: true,
+}]);
+if (!error) {
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
@@ -175,13 +178,13 @@ const RokofAdmin = () => {
   const handleKeynoteAddSave = async () => {
     if (!newKeynoteTitle.trim()) return;
     const maxOrder = keynoteTopics.length > 0 ? Math.max(...keynoteTopics.map((t) => t.sort_order)) : 0;
-    const { error } = await adminInvoke("admin-keynote-topics", {
-      action: "create",
-      title: newKeynoteTitle.trim(),
-      description: newKeynoteDescription.trim(),
-      sort_order: maxOrder + 1,
-    });
-    if (!error) {
+    const { error } = await supabase.from("keynote_topics").insert([{
+  title: newKeynoteTitle.trim(),
+  description: newKeynoteDescription.trim(),
+  sort_order: maxOrder + 1,
+  active: true,
+}]);
+if (!error) {
       fetchKeynoteTopics();
       setAddingKeynote(false);
     }
@@ -193,19 +196,25 @@ const RokofAdmin = () => {
 
   const handleKeynoteDelete = async () => {
     if (!deletingKeynoteId) return;
-    await adminInvoke("admin-keynote-topics", { action: "delete", id: deletingKeynoteId });
+    await supabase.from("keynote_topics").delete().eq("id", deletingKeynoteId);
     setKeynoteTopics((prev) => prev.filter((t) => t.id !== deletingKeynoteId));
     setDeletingKeynoteId(null);
   };
 
   const handleKeynoteBlur = async (id: string, field: "title" | "description", value: string) => {
-    await adminInvoke("admin-keynote-topics", { action: "update", id, [field]: value });
+    await supabase
+      .from("keynote_topics")
+      .update({ [field]: value } as { title?: string; description?: string })
+      .eq("id", id);
   };
 
-  const handleKeynoteActive = async (id: string, value: boolean) => {
-    await adminInvoke("admin-keynote-topics", { action: "update", id, active: value });
-    setKeynoteTopics((prev) => prev.map((t) => (t.id === id ? { ...t, active: value } : t)));
-  };
+  const { error } = await supabase.from("keynote_topics").insert([{
+  title: newKeynoteTitle.trim(),
+  description: newKeynoteDescription.trim(),
+  sort_order: maxOrder + 1,
+  active: true,
+}]);
+if (!error) {
 
   const handleKeynoteDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -749,11 +758,9 @@ const RokofAdmin = () => {
             <Label>Description</Label>
             <Textarea
               id="keynote-desc-edit"
-              defaultValue={editingKeynote?.description ?? ""}
+              value={editingKeynote?.description ?? ""}
               className="min-h-[120px]"
-              onBlur={(e) => {
-                if (editingKeynote) handleKeynoteBlur(editingKeynote.id, "description", e.target.value);
-              }}
+              onChange={(e) => setEditingKeynote({ ...editingKeynote!, description: e.target.value })}
               placeholder="Enter description for this keynote topic..."
             />
           </div>
@@ -764,11 +771,10 @@ const RokofAdmin = () => {
             <Button
               variant="cta"
               onClick={async () => {
-                const textarea = document.querySelector("#keynote-desc-edit") as HTMLTextAreaElement;
-                if (textarea && editingKeynote) {
-                  await handleKeynoteBlur(editingKeynote.id, "description", textarea.value);
+                if (editingKeynote) {
+                  await handleKeynoteBlur(editingKeynote.id, "description", editingKeynote.description ?? "");
+                  setEditingKeynote(null);
                 }
-                setEditingKeynote(null);
               }}
             >
               Save
