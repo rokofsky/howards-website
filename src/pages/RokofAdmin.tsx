@@ -748,6 +748,7 @@ const RokofAdmin = () => {
           <div className="space-y-3">
             <Label>Description</Label>
             <Textarea
+              id="keynote-desc-edit"
               defaultValue={editingKeynote?.description ?? ""}
               className="min-h-[120px]"
               onBlur={(e) => {
@@ -759,6 +760,18 @@ const RokofAdmin = () => {
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingKeynote(null)}>
               Close
+            </Button>
+            <Button
+              variant="cta"
+              onClick={async () => {
+                const textarea = document.querySelector("#keynote-desc-edit") as HTMLTextAreaElement;
+                if (textarea && editingKeynote) {
+                  await handleKeynoteBlur(editingKeynote.id, "description", textarea.value);
+                }
+                setEditingKeynote(null);
+              }}
+            >
+              Save
             </Button>
           </DialogFooter>
         </DialogContent>
