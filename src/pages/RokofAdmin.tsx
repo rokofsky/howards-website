@@ -208,12 +208,7 @@ if (!error) {
       .eq("id", id);
   };
 
-  const { error } = await supabase.from("keynote_topics").insert([{
-  title: newKeynoteTitle.trim(),
-  description: newKeynoteDescription.trim(),
-  sort_order: maxOrder + 1,
-  active: true,
-}]);
+  
 if (!error) {
 
   const handleKeynoteDragEnd = async (event: DragEndEvent) => {
