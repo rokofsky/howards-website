@@ -35,13 +35,6 @@ import {
   verifyAdminPassword,
 } from "@/lib/adminAuth";
 
-const { error } = await supabase.from("keynote_topics").insert([{
-  title: newKeynoteTitle.trim(),
-  description: newKeynoteDescription.trim(),
-  sort_order: maxOrder + 1,
-  active: true,
-}]);
-if (!error) {
 
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
