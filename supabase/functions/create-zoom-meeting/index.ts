@@ -10,7 +10,43 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { title, date, description } = body ?? {};
+    const { title, date, description, token, password } = body ?? {};
+
+    // Auth check — same pattern as admin-sessions
+    const ADMIN_PASSWORD = Deno.env.get("rokofskyzzz") ?? "";
+    const TOKEN_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
+
+    async function hmacSign(secret: string, data: string): Promise<string> {
+      const enc = new TextEncoder();
+      const key = await crypto.subtle.importKey("raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, [
+        "sign",
+      ]);
+      const sig = await crypto.subtle.sign("HMAC", key, enc.encode(data));
+      return btoa(String.fromCharCode(...new Uint8Array(sig)));
+    }
+
+    async function verifyToken(tok: string): Promise<boolean> {
+      const parts = tok.split(".");
+      if (parts.length !== 2) return false;
+      const [issuedAt, sig] = parts;
+      const ts = Number(issuedAt);
+      if (!Number.isFinite(ts)) return false;
+      if (Date.now() - ts > TOKEN_MAX_AGE_MS) return false;
+      const expected = await hmacSign(ADMIN_PASSWORD, issuedAt);
+      return expected === sig;
+    }
+
+    const authorized =
+      typeof token === "string" && token.length > 0
+        ? await verifyToken(token)
+        : typeof password === "string" && password === ADMIN_PASSWORD;
+
+    if (!authorized) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     if (!date) {
       return new Response(JSON.stringify({ error: "date is required" }), {
