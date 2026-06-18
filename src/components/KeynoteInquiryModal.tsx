@@ -101,7 +101,13 @@ const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
                         {topic.title}
                       </span>
                       <span
-                        className="flex-1 self-stretch"
+                        className="flex-1 h-full cursor-pointer"
+                        onClick={() => {
+                          if (topic.description) setExpandedId(isExpanded ? null : topic.id);
+                        }}
+                      />
+                      <span
+                        className="flex-1 h-full cursor-pointer"
                         onClick={() => {
                           if (topic.description) setExpandedId(isExpanded ? null : topic.id);
                         }}
