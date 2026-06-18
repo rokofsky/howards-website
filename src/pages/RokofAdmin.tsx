@@ -208,8 +208,6 @@ if (!error) {
       .eq("id", id);
   };
 
-  
-if (!error) {
 
   const handleKeynoteDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
