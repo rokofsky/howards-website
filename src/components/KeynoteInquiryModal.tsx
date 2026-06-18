@@ -87,28 +87,17 @@ const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
                 const isExpanded = expandedId === topic.id;
                 return (
                   <div key={topic.id} className="flex flex-col">
-                    <div
+                    <label
                       className={`flex items-start gap-3 p-3 rounded-md border cursor-pointer transition-colors ${
                         checked ? "border-gold bg-gold/5" : "border-border hover:border-gold/50"
                       }`}
                     >
-                      <Checkbox
-                        checked={checked}
-                        onCheckedChange={() => toggle(topic.title)}
-                        className="mt-0.5 shrink-0"
-                      />
-                      <span className="text-sm leading-snug cursor-pointer" onClick={() => toggle(topic.title)}>
-                        {topic.title}
-                      </span>
+                      <Checkbox checked={checked} onCheckedChange={() => toggle(topic.title)} className="mt-0.5" />
+                      <span className="text-sm leading-snug">{topic.title}</span>
                       <span
-                        className="flex-1 h-full cursor-pointer"
-                        onClick={() => {
-                          if (topic.description) setExpandedId(isExpanded ? null : topic.id);
-                        }}
-                      />
-                      <span
-                        className="flex-1 h-full cursor-pointer"
-                        onClick={() => {
+                        className="flex-1"
+                        onClick={(e) => {
+                          e.preventDefault();
                           if (topic.description) setExpandedId(isExpanded ? null : topic.id);
                         }}
                       />
@@ -124,7 +113,7 @@ const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
                           {isExpanded ? t("less", "méně") : t("more", "více")}
                         </button>
                       )}
-                    </div>
+                    </label>
                     {isExpanded && topic.description && (
                       <div className="text-xs text-foreground/70 bg-muted/40 rounded-b-md px-3 py-2 border border-t-0 border-border">
                         {topic.description}
