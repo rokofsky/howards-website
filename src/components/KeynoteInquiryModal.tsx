@@ -101,12 +101,11 @@ const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
                         {topic.title}
                       </span>
                       <span
-                        className="flex-1 self-stretch min-w-4"
+                        className="flex-1 self-stretch"
                         onClick={() => {
                           if (topic.description) setExpandedId(isExpanded ? null : topic.id);
                         }}
                       />
-                      {/* more button comes after the spacer */}
                       {topic.description && (
                         <button
                           type="button"
