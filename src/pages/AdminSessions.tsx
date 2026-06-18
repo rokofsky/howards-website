@@ -97,6 +97,7 @@ export default function AdminSessions() {
           date: new Date(sessionDate).toISOString(),
           title,
           description,
+          token: localStorage.getItem("admin_session_token") ?? "",
         },
       });
       if (error) throw error;
