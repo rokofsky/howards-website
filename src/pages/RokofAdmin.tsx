@@ -35,7 +35,6 @@ import {
   verifyAdminPassword,
 } from "@/lib/adminAuth";
 
-
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
 async function translateToCzech(text: string): Promise<string> {
@@ -171,13 +170,15 @@ const RokofAdmin = () => {
   const handleKeynoteAddSave = async () => {
     if (!newKeynoteTitle.trim()) return;
     const maxOrder = keynoteTopics.length > 0 ? Math.max(...keynoteTopics.map((t) => t.sort_order)) : 0;
-    const { error } = await supabase.from("keynote_topics").insert([{
-  title: newKeynoteTitle.trim(),
-  description: newKeynoteDescription.trim(),
-  sort_order: maxOrder + 1,
-  active: true,
-}]);
-if (!error) {
+    const { error } = await supabase.from("keynote_topics").insert([
+      {
+        title: newKeynoteTitle.trim(),
+        description: newKeynoteDescription.trim(),
+        sort_order: maxOrder + 1,
+        active: true,
+      },
+    ]);
+    if (!error) {
       fetchKeynoteTopics();
       setAddingKeynote(false);
     }
@@ -215,9 +216,7 @@ if (!error) {
     const reordered = arrayMove(keynoteTopics, oldIndex, newIndex).map((t, i) => ({ ...t, sort_order: i + 1 }));
     setKeynoteTopics(reordered);
     await Promise.all(
-      reordered.map((t) =>
-        supabase.from("keynote_topics").update({ sort_order: t.sort_order }).eq("id", t.id),
-      ),
+      reordered.map((t) => supabase.from("keynote_topics").update({ sort_order: t.sort_order }).eq("id", t.id)),
     );
   };
   const loadPosts = async () => {
@@ -764,6 +763,7 @@ if (!error) {
               onClick={async () => {
                 if (editingKeynote) {
                   await handleKeynoteBlur(editingKeynote.id, "description", editingKeynote.description ?? "");
+                  await fetchKeynoteTopics();
                   setEditingKeynote(null);
                 }
               }}
