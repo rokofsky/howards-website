@@ -35,6 +35,11 @@ import {
   verifyAdminPassword,
 } from "@/lib/adminAuth";
 
+const adminInvoke = async (fn: string, body: Record<string, unknown>) => {
+  const token = localStorage.getItem("admin_session_token") ?? "";
+  return supabase.functions.invoke(fn, { body: { ...body, token } });
+};
+
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
 async function translateToCzech(text: string): Promise<string> {
@@ -170,14 +175,12 @@ const RokofAdmin = () => {
   const handleKeynoteAddSave = async () => {
     if (!newKeynoteTitle.trim()) return;
     const maxOrder = keynoteTopics.length > 0 ? Math.max(...keynoteTopics.map((t) => t.sort_order)) : 0;
-    const { error } = await supabase.from("keynote_topics").insert([
-      {
-        title: newKeynoteTitle.trim(),
-        description: newKeynoteDescription.trim(),
-        sort_order: maxOrder + 1,
-        active: true,
-      },
-    ]);
+    const { error } = await adminInvoke("admin-keynote-topics", {
+      action: "create",
+      title: newKeynoteTitle.trim(),
+      description: newKeynoteDescription.trim(),
+      sort_order: maxOrder + 1,
+    });
     if (!error) {
       fetchKeynoteTopics();
       setAddingKeynote(false);
@@ -190,20 +193,17 @@ const RokofAdmin = () => {
 
   const handleKeynoteDelete = async () => {
     if (!deletingKeynoteId) return;
-    await supabase.from("keynote_topics").delete().eq("id", deletingKeynoteId);
+    await adminInvoke("admin-keynote-topics", { action: "delete", id: deletingKeynoteId });
     setKeynoteTopics((prev) => prev.filter((t) => t.id !== deletingKeynoteId));
     setDeletingKeynoteId(null);
   };
 
   const handleKeynoteBlur = async (id: string, field: "title" | "description", value: string) => {
-    await supabase
-      .from("keynote_topics")
-      .update({ [field]: value } as { title?: string; description?: string })
-      .eq("id", id);
+    await adminInvoke("admin-keynote-topics", { action: "update", id, [field]: value });
   };
 
   const handleKeynoteActive = async (id: string, value: boolean) => {
-    await supabase.from("keynote_topics").update({ active: value }).eq("id", id);
+    await adminInvoke("admin-keynote-topics", { action: "update", id, active: value });
     setKeynoteTopics((prev) => prev.map((t) => (t.id === id ? { ...t, active: value } : t)));
   };
 
@@ -215,9 +215,10 @@ const RokofAdmin = () => {
     if (oldIndex < 0 || newIndex < 0) return;
     const reordered = arrayMove(keynoteTopics, oldIndex, newIndex).map((t, i) => ({ ...t, sort_order: i + 1 }));
     setKeynoteTopics(reordered);
-    await Promise.all(
-      reordered.map((t) => supabase.from("keynote_topics").update({ sort_order: t.sort_order }).eq("id", t.id)),
-    );
+    await adminInvoke("admin-keynote-topics", {
+      action: "reorder",
+      items: reordered.map((t) => ({ id: t.id, sort_order: t.sort_order })),
+    });
   };
   const loadPosts = async () => {
     const { data, error } = await supabase.from("blog_posts").select("*");

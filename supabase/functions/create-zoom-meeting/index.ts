@@ -13,7 +13,13 @@ Deno.serve(async (req) => {
     const { title, date, description, token, password } = body ?? {};
 
     // Auth check — same pattern as admin-sessions
-    const ADMIN_PASSWORD = Deno.env.get("rokofskyzzz") ?? "";
+    const ADMIN_PASSWORD = Deno.env.get("ADMIN_PASSWORD") ?? "";
+    if (!ADMIN_PASSWORD) {
+      return new Response(JSON.stringify({ error: "Server not configured" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const TOKEN_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 
     async function hmacSign(secret: string, data: string): Promise<string> {

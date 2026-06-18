@@ -1,3 +1,5 @@
+import { createClient } from "npm:@supabase/supabase-js@2";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -45,7 +47,7 @@ Deno.serve(async (req) => {
 
     const body = await req.json();
 
-    // Shared secret check
+    // Shared secret check (optional)
     if (FORM_SECRET && body.form_secret !== FORM_SECRET) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -78,6 +80,25 @@ Deno.serve(async (req) => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer_email)) {
       return new Response(JSON.stringify({ error: "Invalid email" }), {
         status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Anti-abuse: require a matching webinar_orders row created in the last 10 minutes
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+    const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    const { data: matching, error: lookupErr } = await supabaseAdmin
+      .from("webinar_orders")
+      .select("id")
+      .eq("customer_email", customer_email)
+      .gte("created_at", tenMinAgo)
+      .limit(1);
+    if (lookupErr || !matching || matching.length === 0) {
+      return new Response(JSON.stringify({ error: "No matching recent order" }), {
+        status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
