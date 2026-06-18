@@ -35,6 +35,11 @@ import {
   verifyAdminPassword,
 } from "@/lib/adminAuth";
 
+const adminInvoke = async (fn: string, body: Record<string, unknown>) => {
+  const token = localStorage.getItem("admin_session_token") ?? "";
+  return supabase.functions.invoke(fn, { body: { ...body, token } });
+};
+
 const categories = ["Mindset", "Personal", "Storytelling", "Leadership", "Communication"];
 
 async function translateToCzech(text: string): Promise<string> {
