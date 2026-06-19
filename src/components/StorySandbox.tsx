@@ -615,10 +615,10 @@ export default function StorySandbox() {
         }
         const insertRes = await fetch(`https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/manage-prompt`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          "Content-Type": "application/json",
-    "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-  },
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
           body: JSON.stringify({ action: "insert", prompt: insertPayload, token: adminToken }),
         });
         const insertJson = await insertRes.json();
