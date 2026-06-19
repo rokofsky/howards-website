@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -6,6 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ContactForm from "@/components/ContactForm";
 import { useT } from "@/hooks/useT";
+import { supabase } from "@/integrations/supabase/client";
+
+interface InhouseWorkshop {
+  id: string;
+  title: string;
+  description: string | null;
+  duration: string | null;
+  sort_order: number;
+  active: boolean;
+}
 
 interface Props {
   open: boolean;
@@ -14,33 +24,34 @@ interface Props {
 
 const InhouseInquiryModal = ({ open, onOpenChange }: Props) => {
   const t = useT();
-
-  const presetTopics = [
-    t("Assertiveness", "Asertivita"),
-    t("Be a Better Leader", "Buďte lepším lídrem"),
-    t("Business Writing Clear & Concise", "Obchodní psaní jasně a stručně"),
-    t("Communicating Across Cultures", "Komunikace napříč kulturami"),
-    t("Constructive Feedback – giving and receiving", "Konstruktivní zpětná vazba – dávání a přijímání"),
-    t("Dealing with difficult people", "Jednání s obtížnými lidmi"),
-    t("Interpersonal Communication", "Mezilidská komunikace"),
-    t("NLP (Intro & Advanced)", "NLP (úvod a pokročilé)"),
-    t("Persuasion and Influence", "Přesvědčování a ovlivňování"),
-    t("Persuasive Presentations", "Přesvědčivé prezentace"),
-    t("Self Motivation", "Sebemotivace"),
-    t("Stress Management", "Zvládání stresu"),
-    t("Vocal hygiene and best practice", "Hlasová hygiena a osvědčené postupy"),
-    t("Win-Win Negotiation skills", "Win-Win vyjednávání"),
-    t("Dirty Negotiation techniques", "Nečisté vyjednávací techniky"),
-  ];
-
+  const [workshops, setWorkshops] = useState<InhouseWorkshop[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [customTopic, setCustomTopic] = useState("");
   const [showForm, setShowForm] = useState(false);
 
-  const toggle = (topic: string) => {
-    setSelected((prev) =>
-      prev.includes(topic) ? prev.filter((t) => t !== topic) : [...prev, topic]
-    );
+  useEffect(() => {
+    if (!open) return;
+    (supabase.from("inhouse_workshops" as never) as never as {
+      select: (cols: string) => {
+        eq: (col: string, val: boolean) => {
+          order: (col: string, opts: { ascending: boolean }) => Promise<{
+            data: InhouseWorkshop[] | null;
+            error: unknown;
+          }>;
+        };
+      };
+    })
+      .select("*")
+      .eq("active", true)
+      .order("sort_order", { ascending: true })
+      .then(({ data, error }) => {
+        if (!error && data) setWorkshops(data);
+      });
+  }, [open]);
+
+  const toggle = (title: string) => {
+    setSelected((prev) => (prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]));
   };
 
   const handleClose = (open: boolean) => {
@@ -48,6 +59,7 @@ const InhouseInquiryModal = ({ open, onOpenChange }: Props) => {
       setSelected([]);
       setCustomTopic("");
       setShowForm(false);
+      setExpandedId(null);
     }
     onOpenChange(open);
   };
@@ -68,23 +80,47 @@ const InhouseInquiryModal = ({ open, onOpenChange }: Props) => {
 
         {!showForm ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {presetTopics.map((topic) => {
-                const checked = selected.includes(topic);
+            <div
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+              style={{ gridAutoFlow: "column", gridTemplateRows: `repeat(${Math.ceil(workshops.length / 2)}, auto)` }}
+            >
+              {workshops.map((w) => {
+                const checked = selected.includes(w.title);
+                const isExpanded = expandedId === w.id;
+                const hasDetails = !!(w.description || w.duration);
                 return (
-                  <label
-                    key={topic}
-                    className={`flex items-start gap-3 p-3 rounded-md border cursor-pointer transition-colors ${
-                      checked ? "border-gold bg-gold/5" : "border-border hover:border-gold/50"
-                    }`}
-                  >
-                    <Checkbox
-                      checked={checked}
-                      onCheckedChange={() => toggle(topic)}
-                      className="mt-0.5"
-                    />
-                    <span className="text-sm leading-snug">{topic}</span>
-                  </label>
+                  <div key={w.id} className="flex flex-col">
+                    <label
+                      className={`flex items-start gap-3 p-3 rounded-md border cursor-pointer transition-colors ${
+                        checked ? "border-gold bg-gold/5" : "border-border hover:border-gold/50"
+                      }`}
+                    >
+                      <Checkbox checked={checked} onCheckedChange={() => toggle(w.title)} className="mt-0.5" />
+                      <span className="text-sm leading-snug flex-1">{w.title}</span>
+                      {hasDetails && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setExpandedId(isExpanded ? null : w.id);
+                          }}
+                          className="text-xs text-gold underline shrink-0"
+                        >
+                          {isExpanded ? t("less", "méně") : t("more", "více")}
+                        </button>
+                      )}
+                    </label>
+                    {isExpanded && hasDetails && (
+                      <div className="text-xs text-foreground/70 bg-muted/40 rounded-b-md px-3 py-2 border border-t-0 border-border space-y-1">
+                        {w.description && <div>{w.description}</div>}
+                        {w.duration && (
+                          <div className="font-medium">
+                            {t("Duration:", "Délka:")} {w.duration}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
