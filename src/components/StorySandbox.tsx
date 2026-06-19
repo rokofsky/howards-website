@@ -615,10 +615,9 @@ export default function StorySandbox() {
         }
         const insertRes = await fetch(`https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/manage-prompt`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ndWpyd3VpZnRqbWdud25sZWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0OTk5MzMsImV4cCI6MjA5MTA3NTkzM30.eVsYdGw9udZ3CfQoZZ_w9JTNUpsrVS5DP6tIVaSToyw`,
-          },
+          headers: { "Content-Type": "application/json" },
+          "Content-Type": "application/json",
+  },
           body: JSON.stringify({ action: "insert", prompt: insertPayload, token: adminToken }),
         });
         const insertJson = await insertRes.json();
@@ -652,9 +651,8 @@ export default function StorySandbox() {
   method: "POST",
   headers: { 
     "Content-Type": "application/json",
-    "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ndWpyd3VpZnRqbWdud25sZWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0OTk5MzMsImV4cCI6MjA5MTA3NTkzM30.eVsYdGw9udZ3CfQoZZ_w9JTNUpsrVS5DP6tIVaSToyw`,
   },
-  body: JSON.stringify({ action: "update", id: rowId, prompt: { id: rowId, [col]: value }, token: adminToken }),
+  body: JSON.stringify({ action: "update", prompt: { id: rowId, [col]: value }, token: adminToken }),
 });
         const updateJson = await updateRes.json();
         if (!updateRes.ok || updateJson.error) {
