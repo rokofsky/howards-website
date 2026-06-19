@@ -617,7 +617,7 @@ export default function StorySandbox() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ndWpyd3VpZnRqbWdud25sZWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0OTk5MzMsImV4cCI6MjA5MTA3NTkzM30.eVsYdGw9udZ3CfQoZZ_w9JTNUpsrVS5DP6tIVaSToyw`,
           },
           body: JSON.stringify({ action: "insert", prompt: insertPayload, token: adminToken }),
         });
@@ -652,7 +652,7 @@ export default function StorySandbox() {
   method: "POST",
   headers: { 
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+    "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ndWpyd3VpZnRqbWdud25sZWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0OTk5MzMsImV4cCI6MjA5MTA3NTkzM30.eVsYdGw9udZ3CfQoZZ_w9JTNUpsrVS5DP6tIVaSToyw`,
   },
   body: JSON.stringify({ action: "update", id: rowId, prompt: { id: rowId, [col]: value }, token: adminToken }),
 });
