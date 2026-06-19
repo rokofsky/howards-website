@@ -109,7 +109,7 @@ const Header = () => {
     const tryScroll = () => {
       const el = document.getElementById(id);
       if (el) {
-        const headerOffset = 10;
+        const headerOffset = 60;
         const elementPosition = el.getBoundingClientRect().top + window.scrollY;
         window.scrollTo({ top: elementPosition - headerOffset, behavior: "smooth" });
       } else if (attempts < 10) {
