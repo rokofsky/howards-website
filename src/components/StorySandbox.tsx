@@ -654,7 +654,7 @@ export default function StorySandbox() {
     "Content-Type": "application/json",
     "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
   },
-  body: JSON.stringify({ action: "update", prompt: { id: rowId, [col]: value }, token: adminToken }),
+  body: JSON.stringify({ action: "update", id: rowId, prompt: { id: rowId, [col]: value }, token: adminToken }),
 });
         const updateJson = await updateRes.json();
         if (!updateRes.ok || updateJson.error) {
