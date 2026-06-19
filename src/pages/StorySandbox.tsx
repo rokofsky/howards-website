@@ -3,7 +3,7 @@ import StorySandbox from "@/components/StorySandbox";
 
 const StorySandboxPage = () => (
   <Layout>
-    <section className="section-padding">
+    <section className="section-padding pt-8">
       <StorySandbox />
     </section>
   </Layout>
