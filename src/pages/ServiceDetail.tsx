@@ -169,7 +169,7 @@ const ServiceDetail = () => {
           })}
         </script>
       </Helmet>
-      <section className="section-padding pt-24">
+      <section className="section-padding pt-2">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-2xl md:text-5xl font-medium mb-3">{serviceTitle}</h1>
