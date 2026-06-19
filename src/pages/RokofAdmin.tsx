@@ -77,6 +77,81 @@ interface KeynoteTopic {
   active: boolean;
 }
 
+interface InhouseWorkshop {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  sort_order: number;
+  active: boolean;
+}
+
+type InhouseInsert = Omit<InhouseWorkshop, "id">;
+type InhouseUpdate = Partial<Omit<InhouseWorkshop, "id">>;
+type InhouseResult<T> = Promise<{ data: T; error: { message: string } | null }>;
+type InhouseBuilder = {
+  select: (cols: string) => {
+    order: (col: string, opts: { ascending: boolean }) => InhouseResult<InhouseWorkshop[] | null>;
+  };
+  insert: (rows: InhouseInsert[]) => InhouseResult<null>;
+  update: (patch: InhouseUpdate) => {
+    eq: (col: string, val: string) => InhouseResult<null>;
+  };
+  delete: () => {
+    eq: (col: string, val: string) => InhouseResult<null>;
+  };
+};
+const inhouseWorkshopTable = (): InhouseBuilder =>
+  (supabase.from as unknown as (t: string) => InhouseBuilder)("inhouse_workshops");
+
+function SortableInhouseRow({
+  workshop,
+  onBlurField,
+  onActive,
+  onDelete,
+  onEdit,
+}: {
+  workshop: InhouseWorkshop;
+  onBlurField: (id: string, field: "title" | "description" | "duration", value: string) => void;
+  onActive: (id: string, value: boolean) => void;
+  onDelete: (id: string) => void;
+  onEdit: (workshop: InhouseWorkshop) => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: workshop.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+  return (
+    <div ref={setNodeRef} style={style} className="flex items-center gap-2 py-1 px-2">
+      <button
+        className="cursor-grab touch-none text-muted-foreground hover:text-foreground"
+        {...attributes}
+        {...listeners}
+        aria-label="Drag to reorder"
+      >
+        <GripVertical className="h-4 w-4" />
+      </button>
+      <Input
+        defaultValue={workshop.title}
+        placeholder="Workshop title"
+        className="flex-1 border-0 focus-visible:ring-0 shadow-none px-2 bg-transparent"
+        onBlur={(e) => onBlurField(workshop.id, "title", e.target.value)}
+      />
+      <button onClick={() => onEdit(workshop)} aria-label="Edit workshop">
+        <Pencil className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+      </button>
+      <Switch checked={workshop.active} onCheckedChange={(v) => onActive(workshop.id, v)} />
+      <button onClick={() => onDelete(workshop.id)} aria-label="Delete workshop">
+        <Trash2 className="h-4 w-4 text-destructive" />
+      </button>
+    </div>
+  );
+}
+
+
+
 function SortableKeynoteRow({
   topic,
   onBlurField,
@@ -161,6 +236,84 @@ const RokofAdmin = () => {
     if (!error && data) setKeynoteTopics(data);
   };
 
+  // Inhouse Workshops state
+  const [inhouseWorkshops, setInhouseWorkshops] = useState<InhouseWorkshop[]>([]);
+  const [editingInhouseWorkshop, setEditingInhouseWorkshop] = useState<InhouseWorkshop | null>(null);
+  const [deletingInhouseWorkshopId, setDeletingInhouseWorkshopId] = useState<string | null>(null);
+  const [isInhouseWorkshopExpanded, setIsInhouseWorkshopExpanded] = useState(false);
+  const [addingInhouseWorkshop, setAddingInhouseWorkshop] = useState(false);
+  const [newInhouseWorkshopTitle, setNewInhouseWorkshopTitle] = useState("");
+  const [newInhouseWorkshopDescription, setNewInhouseWorkshopDescription] = useState("");
+  const [newInhouseWorkshopDuration, setNewInhouseWorkshopDuration] = useState("");
+  const fetchInhouseWorkshops = async () => {
+    const { data, error } = await inhouseWorkshopTable().select("*").order("sort_order", { ascending: true });
+    if (!error && data) setInhouseWorkshops(data);
+  };
+
+  const handleInhouseWorkshopAdd = () => {
+    setNewInhouseWorkshopTitle("");
+    setNewInhouseWorkshopDescription("");
+    setNewInhouseWorkshopDuration("");
+    setAddingInhouseWorkshop(true);
+  };
+
+  const handleInhouseWorkshopAddSave = async () => {
+    if (!newInhouseWorkshopTitle.trim()) return;
+    const maxOrder = inhouseWorkshops.length > 0 ? Math.max(...inhouseWorkshops.map((w) => w.sort_order)) : 0;
+    const { error } = await inhouseWorkshopTable().insert([
+      {
+        title: newInhouseWorkshopTitle.trim(),
+        description: newInhouseWorkshopDescription.trim(),
+        duration: newInhouseWorkshopDuration.trim(),
+        sort_order: maxOrder + 1,
+        active: true,
+      },
+    ]);
+    if (!error) {
+      fetchInhouseWorkshops();
+      setAddingInhouseWorkshop(false);
+    }
+  };
+
+  const confirmInhouseWorkshopDelete = (id: string) => {
+    setDeletingInhouseWorkshopId(id);
+  };
+
+  const handleInhouseWorkshopDelete = async () => {
+    if (!deletingInhouseWorkshopId) return;
+    await inhouseWorkshopTable().delete().eq("id", deletingInhouseWorkshopId);
+    setInhouseWorkshops((prev) => prev.filter((w) => w.id !== deletingInhouseWorkshopId));
+    setDeletingInhouseWorkshopId(null);
+  };
+
+  const handleInhouseWorkshopBlur = async (
+    id: string,
+    field: "title" | "description" | "duration",
+    value: string,
+  ) => {
+    await inhouseWorkshopTable()
+      .update({ [field]: value } as InhouseUpdate)
+      .eq("id", id);
+  };
+
+  const handleInhouseWorkshopActive = async (id: string, value: boolean) => {
+    await inhouseWorkshopTable().update({ active: value }).eq("id", id);
+    setInhouseWorkshops((prev) => prev.map((w) => (w.id === id ? { ...w, active: value } : w)));
+  };
+
+  const handleInhouseWorkshopDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = inhouseWorkshops.findIndex((w) => w.id === active.id);
+    const newIndex = inhouseWorkshops.findIndex((w) => w.id === over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
+    const reordered = arrayMove(inhouseWorkshops, oldIndex, newIndex).map((w, i) => ({ ...w, sort_order: i + 1 }));
+    setInhouseWorkshops(reordered);
+    await Promise.all(
+      reordered.map((w) => inhouseWorkshopTable().update({ sort_order: w.sort_order }).eq("id", w.id)),
+    );
+  };
+
   const handleKeynoteAdd = () => {
     setNewKeynoteTitle("");
     setNewKeynoteDescription("");
@@ -228,6 +381,7 @@ const RokofAdmin = () => {
     if (authenticated) {
       void loadPosts();
       fetchKeynoteTopics();
+      fetchInhouseWorkshops();
     }
   }, [authenticated]);
 
@@ -694,6 +848,195 @@ const RokofAdmin = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <section className="section-padding">
+        <div className="max-w-4xl mx-auto">
+          <div className="glass rounded-xl p-8">
+            <div className="flex items-center justify-between mb-6">
+              <button
+                onClick={() => setIsInhouseWorkshopExpanded((prev) => !prev)}
+                className="flex items-center justify-between w-full text-left"
+              >
+                <h2 className="text-xl font-bold">Manage Inhouse Workshops</h2>
+                <span>{isInhouseWorkshopExpanded ? "▲" : "▼"}</span>
+              </button>
+            </div>
+            {isInhouseWorkshopExpanded && (
+              <>
+                <div className="flex justify-end mb-2">
+                  <Button variant="cta" size="sm" onClick={handleInhouseWorkshopAdd}>
+                    + Add Workshop
+                  </Button>
+                </div>
+                {inhouseWorkshops.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No workshops yet.</p>
+                ) : (
+                  <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleInhouseWorkshopDragEnd}
+                  >
+                    <SortableContext
+                      items={inhouseWorkshops.map((w) => w.id)}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      <div className="divide-y divide-border">
+                        {inhouseWorkshops.map((workshop) => (
+                          <SortableInhouseRow
+                            key={workshop.id}
+                            workshop={workshop}
+                            onBlurField={handleInhouseWorkshopBlur}
+                            onActive={handleInhouseWorkshopActive}
+                            onDelete={confirmInhouseWorkshopDelete}
+                            onEdit={setEditingInhouseWorkshop}
+                          />
+                        ))}
+                      </div>
+                    </SortableContext>
+                  </DndContext>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <Dialog
+        open={!!editingInhouseWorkshop}
+        onOpenChange={(open) => !open && setEditingInhouseWorkshop(null)}
+      >
+        <DialogContent className="p-4 sm:p-6">
+          <DialogHeader>
+            <DialogTitle>{editingInhouseWorkshop?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label>Title</Label>
+              <Input
+                value={editingInhouseWorkshop?.title ?? ""}
+                onChange={(e) =>
+                  setEditingInhouseWorkshop({ ...editingInhouseWorkshop!, title: e.target.value })
+                }
+                placeholder="Workshop title"
+              />
+            </div>
+            <div>
+              <Label>Description</Label>
+              <Textarea
+                value={editingInhouseWorkshop?.description ?? ""}
+                className="min-h-[120px]"
+                onChange={(e) =>
+                  setEditingInhouseWorkshop({ ...editingInhouseWorkshop!, description: e.target.value })
+                }
+                placeholder="Enter description for this workshop..."
+              />
+            </div>
+            <div>
+              <Label>Duration</Label>
+              <Input
+                value={editingInhouseWorkshop?.duration ?? ""}
+                onChange={(e) =>
+                  setEditingInhouseWorkshop({ ...editingInhouseWorkshop!, duration: e.target.value })
+                }
+                placeholder="e.g. 90 minutes, half day"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingInhouseWorkshop(null)}>
+              Close
+            </Button>
+            <Button
+              variant="cta"
+              onClick={async () => {
+                if (editingInhouseWorkshop) {
+                  await inhouseWorkshopTable()
+                    .update({
+                      title: editingInhouseWorkshop.title,
+                      description: editingInhouseWorkshop.description,
+                      duration: editingInhouseWorkshop.duration,
+                    })
+                    .eq("id", editingInhouseWorkshop.id);
+                  await fetchInhouseWorkshops();
+                  setEditingInhouseWorkshop(null);
+                }
+              }}
+            >
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={addingInhouseWorkshop} onOpenChange={(open) => !open && setAddingInhouseWorkshop(false)}>
+        <DialogContent className="p-4 sm:p-6">
+          <DialogHeader>
+            <DialogTitle>Add Inhouse Workshop</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label>Title *</Label>
+              <Input
+                value={newInhouseWorkshopTitle}
+                onChange={(e) => setNewInhouseWorkshopTitle(e.target.value)}
+                placeholder="Workshop title"
+                autoFocus
+              />
+            </div>
+            <div>
+              <Label>Description</Label>
+              <Textarea
+                value={newInhouseWorkshopDescription}
+                onChange={(e) => setNewInhouseWorkshopDescription(e.target.value)}
+                className="min-h-[120px]"
+                placeholder="Enter description for this workshop..."
+              />
+            </div>
+            <div>
+              <Label>Duration</Label>
+              <Input
+                value={newInhouseWorkshopDuration}
+                onChange={(e) => setNewInhouseWorkshopDuration(e.target.value)}
+                placeholder="e.g. 90 minutes, half day"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAddingInhouseWorkshop(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="cta"
+              onClick={handleInhouseWorkshopAddSave}
+              disabled={!newInhouseWorkshopTitle.trim()}
+            >
+              Add Workshop
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={!!deletingInhouseWorkshopId}
+        onOpenChange={(open) => !open && setDeletingInhouseWorkshopId(null)}
+      >
+        <DialogContent className="p-4 sm:p-6">
+          <DialogHeader>
+            <DialogTitle>Delete Workshop</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Are you sure you want to delete this workshop? This cannot be undone.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeletingInhouseWorkshopId(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleInhouseWorkshopDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <section className="section-padding">
         <div className="max-w-4xl mx-auto">
           <div className="glass rounded-xl p-8">
