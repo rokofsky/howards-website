@@ -41,7 +41,7 @@ const Blog = () => {
 
   return (
     <Layout>
-      <section className="section-padding pt-8">
+      <section className="section-padding pt-6">
         <div className="max-w-6xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-14">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">{t("Blog", "Blog")}</h1>
