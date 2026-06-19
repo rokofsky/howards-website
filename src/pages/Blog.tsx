@@ -41,18 +41,14 @@ const Blog = () => {
 
   return (
     <Layout>
-      <section className="section-padding pt-24">
+      <section className="section-padding pt-8">
         <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-14"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-14">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">{t("Blog", "Blog")}</h1>
             <p className="text-lg text-muted-foreground font-medium max-w-xl mx-auto">
               {t(
                 "Thoughts on communication, storytelling, and the occasional rant.",
-                "Úvahy o komunikaci, vyprávění příběhů a občasný výlev."
+                "Úvahy o komunikaci, vyprávění příběhů a občasný výlev.",
               )}
             </p>
           </motion.div>
@@ -92,12 +88,8 @@ const Blog = () => {
 
                     <div className="p-6">
                       <time className="text-xs text-muted-foreground font-light">{date}</time>
-                      <h2 className="text-lg font-bold mt-2 mb-2 group-hover:text-accent transition-colors">
-                        {title}
-                      </h2>
-                      <p className="text-sm text-muted-foreground leading-relaxed font-normal">
-                        {excerpt}
-                      </p>
+                      <h2 className="text-lg font-bold mt-2 mb-2 group-hover:text-accent transition-colors">{title}</h2>
+                      <p className="text-sm text-muted-foreground leading-relaxed font-normal">{excerpt}</p>
                     </div>
                   </Link>
                 </motion.article>
