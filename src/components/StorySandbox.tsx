@@ -508,13 +508,11 @@ export default function StorySandbox() {
           onClick={() => handleVote(sheetKey, id, box, "up")}
           className={cn(
             "inline-flex items-center gap-0.5 transition-colors disabled:opacity-40",
-            userVote === "up" && counts.up > 0
-              ? "text-green-600 font-bold"
-              : "text-muted-foreground hover:text-foreground",
+            userVote === "up" ? "text-green-600 font-bold" : "text-muted-foreground hover:text-foreground",
           )}
           aria-label="Thumbs up"
         >
-          <ThumbsUp className={cn("h-3.5 w-3.5", userVote === "up" && counts.up > 0 && "fill-green-600")} />
+          <ThumbsUp className={cn("h-3.5 w-3.5", userVote === "up" && "fill-green-600")} />
           <span>{counts.up}</span>
         </button>
         <button
@@ -523,13 +521,11 @@ export default function StorySandbox() {
           onClick={() => handleVote(sheetKey, id, box, "down")}
           className={cn(
             "inline-flex items-center gap-0.5 transition-colors disabled:opacity-40",
-            userVote === "down" && counts.down > 0
-              ? "text-red-600 font-bold"
-              : "text-muted-foreground hover:text-foreground",
+            userVote === "down" ? "text-red-600 font-bold" : "text-muted-foreground hover:text-foreground",
           )}
           aria-label="Thumbs down"
         >
-          <ThumbsDown className={cn("h-3.5 w-3.5", userVote === "down" && counts.down > 0 && "fill-red-600")} />
+          <ThumbsDown className={cn("h-3.5 w-3.5", userVote === "down" && "fill-red-600")} />
           <span>{counts.down}</span>
         </button>
       </div>
@@ -645,13 +641,13 @@ export default function StorySandbox() {
       } else {
         const rowId = slot === "oneLiner" ? oneLinerRow?.id : cardRows[slot as Category]?.id;
         if (!rowId) return;
-       const updateRes = await fetch(`https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/manage-prompt`, {
-  method: "POST",
-  headers: { 
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({ action: "update", prompt: { id: rowId, [col]: value }, token: adminToken }),
-});
+        const updateRes = await fetch(`https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/manage-prompt`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ action: "update", prompt: { id: rowId, [col]: value }, token: adminToken }),
+        });
         const updateJson = await updateRes.json();
         if (!updateRes.ok || updateJson.error) {
           console.error("Update failed", updateJson.error);
