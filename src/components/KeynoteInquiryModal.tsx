@@ -26,27 +26,19 @@ interface KeynoteTopic {
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  preselectedTopic?: string;
 }
-
-const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
+const KeynoteInquiryModal = ({ open, onOpenChange, preselectedTopic }: Props) => {
   const t = useT();
   const [topics, setTopics] = useState<KeynoteTopic[]>([]);
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string[]>(preselectedTopic ? [preselectedTopic] : []);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [customTopic, setCustomTopic] = useState("");
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
-    if (!open) return;
-    supabase
-      .from("keynote_topics")
-      .select("*")
-      .eq("active", true)
-      .order("sort_order", { ascending: true })
-      .then(({ data, error }) => {
-        if (!error && data) setTopics(data);
-      });
-  }, [open]);
+    if (open && preselectedTopic) setSelected([preselectedTopic]);
+  }, [open, preselectedTopic]);
 
   const toggle = (title: string) => {
     setSelected((prev) => (prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]));
