@@ -24,7 +24,6 @@ export default function KeynoteTopics() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [inquiryOpen, setInquiryOpen] = useState(false);
-  const [selectedTopic, setSelectedTopic] = useState<string | undefined>();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -97,14 +96,7 @@ export default function KeynoteTopics() {
                       <p className="text-sm text-muted-foreground font-normal leading-relaxed">{topic.description}</p>
                     ) : null}
                     <div className="mt-4">
-                      <Button
-                        variant="cta"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedTopic(topic.title);
-                          setInquiryOpen(true);
-                        }}
-                      >
+                      <Button variant="cta" size="sm" onClick={() => setInquiryOpen(true)}>
                         {t("Inquire", "Poptat")}
                       </Button>
                     </div>
@@ -125,7 +117,7 @@ export default function KeynoteTopics() {
         </div>
       </section>
 
-      <KeynoteInquiryModal open={inquiryOpen} onOpenChange={setInquiryOpen} preselectedTopic={selectedTopic} />
+      <KeynoteInquiryModal open={inquiryOpen} onOpenChange={setInquiryOpen} />
     </Layout>
   );
 }
