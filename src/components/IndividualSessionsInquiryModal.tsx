@@ -9,17 +9,17 @@ interface Props {
 
 const IndividualSessionsInquiryModal = ({ open, onOpenChange }: Props) => {
   const t = useT();
-  const serviceName = t("Individual sessions", "Individuální lekce");
+  const serviceName = t("Individual sessions", "Individuální sezení");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t("Individual Sessions Inquiry", "Poptávka individuální lekce")}</DialogTitle>
+          <DialogTitle>{t("Individual Sessions Inquiry", "Poptávka individuální sezení")}</DialogTitle>
           <DialogDescription>
             {t(
               "Tell me a bit about what you'd like to work on and I'll be in touch.",
-              "Napište mi, na čem byste chtěli pracovat, a ozvu se Vám."
+              "Napište mi, na čem byste chtěli pracovat, a ozvu se Vám.",
             )}
           </DialogDescription>
         </DialogHeader>
