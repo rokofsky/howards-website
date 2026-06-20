@@ -54,15 +54,9 @@ export default function KeynoteTopics() {
     <Layout>
       <section className="section-padding pt-24">
         <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
-              <h1 className="text-4xl md:text-5xl font-bold">
-                {t("Keynote Speaking", "Keynote projev")}
-              </h1>
+              <h1 className="text-4xl md:text-5xl font-bold">{t("Keynote Speaking", "Keynote projev")}</h1>
               <Button variant="cta" onClick={() => setInquiryOpen(true)}>
                 {t("Inquire", "Poptat")}
               </Button>
@@ -76,9 +70,7 @@ export default function KeynoteTopics() {
               </div>
             ) : error ? (
               <div className="glass rounded-lg border border-destructive/30 bg-destructive/10 p-8">
-                <p className="text-destructive">
-                  {t("Error loading topics.", "Chyba při načítání témat.")}
-                </p>
+                <p className="text-destructive">{t("Error loading topics.", "Chyba při načítání témat.")}</p>
               </div>
             ) : topics.length === 0 ? (
               <div className="glass rounded-lg p-8">
@@ -101,10 +93,13 @@ export default function KeynoteTopics() {
                   >
                     <h2 className="text-xl font-semibold mb-3">{topic.title}</h2>
                     {topic.description ? (
-                      <p className="text-sm text-muted-foreground font-normal leading-relaxed">
-                        {topic.description}
-                      </p>
+                      <p className="text-sm text-muted-foreground font-normal leading-relaxed">{topic.description}</p>
                     ) : null}
+                    <div className="mt-4">
+                      <Button variant="cta" size="sm" onClick={() => setShowInquiry(true)}>
+                        {t("Inquire", "Poptat")}
+                      </Button>
+                    </div>
                   </motion.div>
                 ))}
               </div>
