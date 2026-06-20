@@ -10,13 +10,7 @@ import { format } from "date-fns";
 import { useT } from "@/hooks/useT";
 import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { trackCTA, trackClick } from "@/lib/analytics";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface Session {
   id: string;
@@ -89,6 +83,7 @@ const StorytellingWorkshops = () => {
           name: name.trim(),
           email: email.trim(),
           session_id: selectedSession.id,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
       });
 
@@ -127,10 +122,9 @@ const StorytellingWorkshops = () => {
             <div className="mb-10 max-w-2xl leading-relaxed text-secondary-foreground whitespace-pre-wrap font-semibold">
               {t(
                 "Storytelling has been around since the dawn of language. Stories were shared and retold around the community fire, at family gatherings in huts, pueblos, igloos and yurts. Do you want to practice your storytelling?\n\nThis is not a reading or writing event; it is a storyTELLING event, where we practice the art of oral storytelling.\n\nYou are encouraged to tell one story (or joke) in English up to 8 minutes; it can be true, fake, myth, fable, metaphor, anecdote. After each turn, if you want, we’ll have a short round of feedback to hopefully improve your story and/or how you tell it.\n\nYou can also just watch, just do us the courtesy of putting your camera on.\nGet out of your comfort zone in a safe space of fellow storytellers!\n\n",
-                "Storytelling existuje už od úsvitu jazyka. Příběhy se sdílely a převyprávěly u komunitního ohně, na rodinných setkáních v chatrčích, pueblech, iglú a jurtách. Chcete si procvičit své vypravěčství?\n\nToto není čtenářská ani spisovatelská akce; je to akce storyTELLINGOVÁ, kde trénujeme umění ústního vyprávění.\n\nJste povzbuzováni k vyprávění jednoho příběhu (nebo vtipu) v angličtině v délce do 8 minut; může být pravdivý, vymyšlený, mýtus, bajka, metafora, anekdota. Po každém vystoupení budeme mít, pokud budete chtít, krátké kolo zpětné vazby, abychom doufejme vylepšili váš příběh a/nebo způsob, jakým ho vyprávíte.\n\nMůžete se také jen dívat, jen nám prokažte laskavost a zapněte si kameru.\nVystupte ze své komfortní zóny v bezpečném prostoru kolegů vypravěčů!\n\n"
+                "Storytelling existuje už od úsvitu jazyka. Příběhy se sdílely a převyprávěly u komunitního ohně, na rodinných setkáních v chatrčích, pueblech, iglú a jurtách. Chcete si procvičit své vypravěčství?\n\nToto není čtenářská ani spisovatelská akce; je to akce storyTELLINGOVÁ, kde trénujeme umění ústního vyprávění.\n\nJste povzbuzováni k vyprávění jednoho příběhu (nebo vtipu) v angličtině v délce do 8 minut; může být pravdivý, vymyšlený, mýtus, bajka, metafora, anekdota. Po každém vystoupení budeme mít, pokud budete chtít, krátké kolo zpětné vazby, abychom doufejme vylepšili váš příběh a/nebo způsob, jakým ho vyprávíte.\n\nMůžete se také jen dívat, jen nám prokažte laskavost a zapněte si kameru.\nVystupte ze své komfortní zóny v bezpečném prostoru kolegů vypravěčů!\n\n",
               )}
             </div>
-
 
             {loading ? (
               <p className="text-muted-foreground font-light">{t("Loading sessions...", "Načítám termíny…")}</p>
@@ -139,7 +133,7 @@ const StorytellingWorkshops = () => {
                 <p className="text-muted-foreground font-light">
                   {t(
                     "No upcoming sessions scheduled yet. Check back soon!",
-                    "Zatím nejsou naplánovány žádné nadcházející termíny. Podívejte se brzy znovu!"
+                    "Zatím nejsou naplánovány žádné nadcházející termíny. Podívejte se brzy znovu!",
                   )}
                 </p>
               </div>
@@ -165,15 +159,9 @@ const StorytellingWorkshops = () => {
                         </span>
                       </p>
                       {session.description && (
-                        <p className="text-sm text-muted-foreground mb-4 flex-1 font-normal">
-                          {session.description}
-                        </p>
+                        <p className="text-sm text-muted-foreground mb-4 flex-1 font-normal">{session.description}</p>
                       )}
-                      <Button
-                        variant="cta"
-                        className="w-full mt-auto"
-                        onClick={() => openRegistration(session)}
-                      >
+                      <Button variant="cta" className="w-full mt-auto" onClick={() => openRegistration(session)}>
                         {t("Reserve your spot", "Rezervovat místo")}
                       </Button>
                     </div>
@@ -195,13 +183,11 @@ const StorytellingWorkshops = () => {
               <p className="text-muted-foreground mb-5 max-w-2xl leading-relaxed font-normal">
                 {t(
                   "Use the Story Sandbox to instantly generate creative characters, unexpected incidents, and obstacles for your story outline.",
-                  "Použijte Story Sandbox a okamžitě generujte kreativní postavy, nečekané události a překážky pro váš příběhový nástřel."
+                  "Použijte Story Sandbox a okamžitě generujte kreativní postavy, nečekané události a překážky pro váš příběhový nástřel.",
                 )}
               </p>
               <Button variant="cta" asChild>
-                <Link to={lp("/story-sandbox")}>
-                  {t("Open Story Sandbox", "Otevřít Story Sandbox")}
-                </Link>
+                <Link to={lp("/story-sandbox")}>{t("Open Story Sandbox", "Otevřít Story Sandbox")}</Link>
               </Button>
             </motion.div>
           </motion.div>
@@ -214,11 +200,13 @@ const StorytellingWorkshops = () => {
           {success ? (
             <>
               <DialogHeader>
-                <DialogTitle className="text-xl">{t("🌿Thanks for signing up🌿", "🌿Díky za přihlášení🌿")}</DialogTitle>
+                <DialogTitle className="text-xl">
+                  {t("🌿Thanks for signing up🌿", "🌿Díky za přihlášení🌿")}
+                </DialogTitle>
                 <DialogDescription className="pt-2 text-base font-medium">
                   {t(
                     "Check your email for the Zoom link, no need to install or setup anything. See you there!",
-                    "Zkontrolujte si e-mail, kde najdete odkaz na Zoom, nemusíte nic instalovat ani nastavovat. Uvidíme se tam!"
+                    "Zkontrolujte si e-mail, kde najdete odkaz na Zoom, nemusíte nic instalovat ani nastavovat. Uvidíme se tam!",
                   )}
                   <br />
                   /HR
@@ -238,8 +226,7 @@ const StorytellingWorkshops = () => {
                 <DialogTitle className="text-xl">Reserve your spot</DialogTitle>
                 <DialogDescription>
                   {selectedSession?.title || t("Storytelling Session", "Sezení Storytellingu")} —{" "}
-                  {selectedSession &&
-                    format(new Date(selectedSession.session_date), "d MMMM, yyyy 'at' h:mm a 'CET'")}
+                  {selectedSession && format(new Date(selectedSession.session_date), "d MMMM, yyyy 'at' h:mm a 'CET'")}
                 </DialogDescription>
               </DialogHeader>
               {errorBanner && (
@@ -284,7 +271,6 @@ const StorytellingWorkshops = () => {
           )}
         </DialogContent>
       </Dialog>
-
     </Layout>
   );
 };
