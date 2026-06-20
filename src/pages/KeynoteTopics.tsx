@@ -96,7 +96,7 @@ export default function KeynoteTopics() {
                       <p className="text-sm text-muted-foreground font-normal leading-relaxed">{topic.description}</p>
                     ) : null}
                     <div className="mt-4">
-                      <Button variant="cta" size="sm" onClick={() => setShowInquiry(true)}>
+                      <Button variant="cta" size="sm" onClick={() => setInquiryOpen(true)}>
                         {t("Inquire", "Poptat")}
                       </Button>
                     </div>
