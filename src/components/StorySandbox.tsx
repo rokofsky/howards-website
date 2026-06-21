@@ -968,7 +968,7 @@ export default function StorySandbox() {
               >
                 <Shuffle className="h-5 w-5" strokeWidth={2.5} />
               </button>
-              <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" />
+              <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" voteCounts={voteCounts} onVote={handleVote} />
             </div>
           </div>
         </Card>
