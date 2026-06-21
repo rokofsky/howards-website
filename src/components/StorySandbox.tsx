@@ -481,6 +481,7 @@ export default function StorySandbox() {
     const userVotes = readUserVotes();
     const stored = Object.prototype.hasOwnProperty.call(userVotes, key) ? userVotes[key] : null;
     const userVote: "up" | "down" | null = stored === "up" || stored === "down" ? stored : null;
+    console.log("DEBUG vote check - key:", key, "userVote:", userVote, "counts:", counts, "total:", total);
     return (
       <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
         <TooltipProvider delayDuration={150}>
