@@ -125,6 +125,73 @@ const buildFallbackSandbox = (): SandboxRow[] =>
 const buildFallbackPrompts = (lines: readonly string[]): PromptRow[] =>
   lines.map((p, i) => ({ id: `fb-${i}`, prompt: p }));
 
+type VoteThumbsProps = {
+  sheetKey: SheetKey;
+  id: string | number | undefined;
+  box: ElementBox;
+  voteCounts: Record<string, { up: number; down: number }>;
+  onVote: (sheetKey: SheetKey, id: string | number | undefined, box: ElementBox, vote: "up" | "down") => void;
+};
+
+const VoteThumbs = ({ sheetKey, id, box, voteCounts, onVote }: VoteThumbsProps) => {
+  const key = `${sheetKey}:${id}:${box}`;
+  const counts = voteCounts[key] ?? { up: 0, down: 0 };
+  const total = counts.up + counts.down;
+  const disabled = id === undefined || id === null || id === "";
+  const userVotes = readUserVotes();
+  const stored = Object.prototype.hasOwnProperty.call(userVotes, key) ? userVotes[key] : null;
+  const userVote: "up" | "down" | null = stored === "up" || stored === "down" ? stored : null;
+  return (
+    <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
+      <TooltipProvider delayDuration={150}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              disabled={disabled}
+              className="inline-flex items-center rounded-full border border-border bg-background/60 px-2.5 py-0.5 text-xs font-medium hover:bg-accent hover:text-accent-foreground transition-colors disabled:opacity-40"
+              aria-label={`${total} votes`}
+            >
+              {total} {total === 1 ? "vote" : "votes"}
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <span className="text-xs">
+              {counts.up} Up | {counts.down} Down
+            </span>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => onVote(sheetKey, id, box, "up")}
+        className={cn(
+          "inline-flex items-center gap-0.5 transition-colors disabled:opacity-40",
+          userVote === "up" && total > 0 ? "text-green-600 font-bold" : "text-muted-foreground hover:text-foreground",
+        )}
+        aria-label="Thumbs up"
+      >
+        <ThumbsUp className={cn("h-3.5 w-3.5", userVote === "up" && total > 0 && "fill-green-600")} />
+        <span>{counts.up}</span>
+      </button>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => onVote(sheetKey, id, box, "down")}
+        className={cn(
+          "inline-flex items-center gap-0.5 transition-colors disabled:opacity-40",
+          userVote === "down" && total > 0 ? "text-red-600 font-bold" : "text-muted-foreground hover:text-foreground",
+        )}
+        aria-label="Thumbs down"
+      >
+        <ThumbsDown className={cn("h-3.5 w-3.5", userVote === "down" && total > 0 && "fill-red-600")} />
+        <span>{counts.down}</span>
+      </button>
+    </div>
+  );
+};
+
 export default function StorySandbox() {
   // --- Independent data sources ---
   const [allSandboxPrompts, setAllSandboxPrompts] = useState<SandboxRow[]>(buildFallbackSandbox());
