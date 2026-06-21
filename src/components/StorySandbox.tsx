@@ -521,7 +521,7 @@ export default function StorySandbox() {
           onClick={() => handleVote(sheetKey, id, box, "down")}
           className={cn(
             "inline-flex items-center gap-0.5 transition-colors disabled:opacity-40",
-            userVote === "down" ? "text-red-600 font-bold" : "text-muted-foreground hover:text-foreground",
+            userVote === "down" && total > 0 ? "text-red-600 font-bold" : "text-muted-foreground hover:text-foreground",
           )}
           aria-label="Thumbs down"
         >
