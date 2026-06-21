@@ -446,9 +446,17 @@ export default function StorySandbox() {
       if (indices.length === 0) return;
       q = { indices, idx: 0, lastId: q.lastId };
     }
-    const rowIdx = q.indices[q.idx];
-    const row = pool[rowIdx];
+    const currentId = cardRows[cat]?.id;
+    let rowIdx = q.indices[q.idx];
+    let row = pool[rowIdx];
     if (!row) return;
+    // Consecutive duplicate guard: skip the next item if it equals the currently visible one.
+    if (pool.length > 1 && row.id !== undefined && row.id === currentId) {
+      q.idx = (q.idx + 1) % q.indices.length;
+      rowIdx = q.indices[q.idx];
+      row = pool[rowIdx];
+      if (!row) return;
+    }
     qRef.current = { indices: q.indices, idx: q.idx + 1, lastId: row.id ?? null };
 
     prevPrompts.current[cat] = { row: cardRows[cat]!, text: prompts[cat] };
@@ -474,8 +482,15 @@ export default function StorySandbox() {
       if (indices.length === 0) return;
       q = { indices, idx: 0, lastId: q.lastId };
     }
-    const row = pool[q.indices[q.idx]];
+    const currentId = oneLinerRow?.id;
+    let row = pool[q.indices[q.idx]];
     if (!row) return;
+    // Consecutive duplicate guard: skip the next item if it equals the currently visible one.
+    if (pool.length > 1 && row.id !== undefined && row.id === currentId) {
+      q.idx = (q.idx + 1) % q.indices.length;
+      row = pool[q.indices[q.idx]];
+      if (!row) return;
+    }
     oneLinerQueueRef.current = { indices: q.indices, idx: q.idx + 1, lastId: row.id ?? null };
 
     setOneLinerRow(row);
