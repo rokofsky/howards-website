@@ -479,6 +479,7 @@ export default function StorySandbox() {
     const hasAnyVotes = total > 0;
     const disabled = id === undefined || id === null || id === "";
     const userVotes = readUserVotes();
+    console.log("DEBUG vote check - key:", key, "userVote:", userVote, "counts:", counts, "total:", total);
     const stored = Object.prototype.hasOwnProperty.call(userVotes, key) ? userVotes[key] : null;
     const userVote: "up" | "down" | null = stored === "up" || stored === "down" ? stored : null;
     return (
