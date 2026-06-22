@@ -23,7 +23,7 @@ const PricingSection = () => {
       price: t("From CZK 3,000 (€125)", "Od 3 000 Kč (125 €)"),
       description: t(
         "From 2 hours to a full day of interactive team learning.",
-        "Od 2 hodin po celý den interaktivního týmového vzdělávání."
+        "Od 2 hodin po celý den interaktivního týmového vzdělávání.",
       ),
       features: [
         t("2–6 hour sessions", "Setkání v délce 2–6 hodin"),
@@ -54,7 +54,7 @@ const PricingSection = () => {
       price: t("From CZK 30,000 (€1200)", "Od 30 000 Kč (1 200 €)"),
       description: t(
         "A speaking engagement your audience will talk about.",
-        "Jednorázové vystoupení, o kterém bude Vaše publikum mluvit."
+        "Jednorázové vystoupení, o kterém bude Vaše publikum mluvit.",
       ),
       features: [
         t("60–90 minute session", "Vystoupení v délce 60–90 minut"),
@@ -68,10 +68,7 @@ const PricingSection = () => {
       name: t("Individual sessions", "Individuální Individuální sezení sessie"),
       price: t("From CZK 1,500 (€60)", "Od 1 500 Kč (60 €)"),
       priceSuffix: t("50 minutes", "za hodinu"),
-      description: t(
-        "Satisfaction guaranteed or no need to pay",
-        "Spokojenost zaručena, nebo neplatíte"
-      ),
+      description: t("Satisfaction guaranteed or no need to pay", "Spokojenost zaručena, nebo neplatíte"),
       features: [
         t("Discretion guaranteed", "Diskrétnost zaručena"),
         t("Out-of-the-box thinking", "Roky tvrdých zkušeností"),
@@ -90,13 +87,11 @@ const PricingSection = () => {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">
-          {t("Investment", "Investice")}
-        </h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("Investment", "Investice")}</h2>
         <p className="text-primary font-semibold">
           {t(
-            "No hidden fees. No surprise \"strategy sessions\".",
-            "Žádné skryté poplatky. Žádné překvapivé „strategické konzultace“."
+            'No hidden fees. No surprise "strategy sessions".',
+            "Žádné skryté poplatky. Žádné překvapivé „strategické konzultace“.",
           )}
         </p>
       </motion.div>
@@ -136,36 +131,21 @@ const PricingSection = () => {
             )}
             {tier.inquire && (
               <div className="mt-auto pt-2">
-                <Button
-                  type="button"
-                  variant="cta"
-                  className="w-full"
-                  onClick={() => setKeynoteOpen(true)}
-                >
+                <Button type="button" variant="cta" className="w-full" onClick={() => navigate("/keynote-topics")}>
                   {t("Inquire", "Poptat")}
                 </Button>
               </div>
             )}
             {tier.inquireInhouse && (
               <div className="mt-auto pt-2">
-                <Button
-                  type="button"
-                  variant="cta"
-                  className="w-full"
-                  onClick={() => setInhouseOpen(true)}
-                >
+                <Button type="button" variant="cta" className="w-full" onClick={() => setInhouseOpen(true)}>
                   {t("Inquire", "Poptat")}
                 </Button>
               </div>
             )}
             {tier.inquireIndividual && (
               <div className="mt-auto pt-2">
-                <Button
-                  type="button"
-                  variant="cta"
-                  className="w-full"
-                  onClick={() => setIndividualOpen(true)}
-                >
+                <Button type="button" variant="cta" className="w-full" onClick={() => setIndividualOpen(true)}>
                   {t("Inquire", "Poptat")}
                 </Button>
               </div>
