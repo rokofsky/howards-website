@@ -877,7 +877,7 @@ const IsolatedView = ({
             return (
               <div
                 key={it.key}
-                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""} ${isFocusedSide ? "ring-2 ring-white/60 shadow-xl" : ""} transition-all`}
+                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""} ${isFocusedSide ? "ring-4 ring-white shadow-xl rounded-sm" : ""} transition-all`}
                 style={{
                   overflow: "visible",
                   pointerEvents: "auto",
