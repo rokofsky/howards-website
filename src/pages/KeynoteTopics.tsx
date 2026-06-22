@@ -65,9 +65,6 @@ export default function KeynoteTopics() {
                     {t("Back to pricing", "Zpět na ceník")}
                   </Link>
                 </Button>
-                <Button variant="cta" onClick={() => setInquiryOpen(true)}>
-                  {t("Inquire", "Poptat")}
-                </Button>
               </div>
             </div>
 
