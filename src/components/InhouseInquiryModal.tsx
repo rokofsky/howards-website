@@ -139,6 +139,7 @@ const InhouseInquiryModal = ({ open, onOpenChange }: Props) => {
                 );
               })}
             </div>
+            )}
 
             <div className="space-y-2 pt-2">
               <Label htmlFor="inhouse-custom-topic">{t("Add your own topic", "Přidat vlastní téma")}</Label>
