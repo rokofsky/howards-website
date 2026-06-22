@@ -69,10 +69,19 @@ export default function KeynoteTopics() {
             </div>
 
             {loading ? (
-              <div className="glass rounded-lg p-8">
-                <p className="text-muted-foreground font-light animate-pulse">
-                  {t("Loading topics...", "Načítám témata...")}
-                </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="glass rounded-lg border border-border/50 p-6 animate-pulse space-y-4"
+                  >
+                    <div className="h-5 w-3/4 bg-muted rounded" />
+                    <div className="space-y-2">
+                      <div className="h-3 w-full bg-muted rounded" />
+                      <div className="h-3 w-1/2 bg-muted rounded" />
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : error ? (
               <div className="glass rounded-lg border border-destructive/30 bg-destructive/10 p-8">
