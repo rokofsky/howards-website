@@ -546,7 +546,6 @@ export default function StorySandbox() {
       .then(() => {});
   };
 
-
   const current = STRUCTURES[structure];
   const sections = useMemo(() => current.sections, [current]);
 
@@ -710,6 +709,8 @@ export default function StorySandbox() {
     } else {
       const remaining = allSandboxPrompts.filter((r) => r.id !== rowId);
       setAllSandboxPrompts(remaining);
+      characterQueueRef.current = { indices: [], idx: 0, lastId: characterQueueRef.current.lastId };
+      incidentQueueRef.current = { indices: [], idx: 0, lastId: incidentQueueRef.current.lastId };
       shuffleCard(slot as Category, remaining);
     }
   };
@@ -885,7 +886,13 @@ export default function StorySandbox() {
                     ) : (
                       <span />
                     )}
-                    <VoteThumbs sheetKey="sandbox" id={cardRows[key]?.id} box={box} voteCounts={voteCounts} onVote={handleVote} />
+                    <VoteThumbs
+                      sheetKey="sandbox"
+                      id={cardRows[key]?.id}
+                      box={box}
+                      voteCounts={voteCounts}
+                      onVote={handleVote}
+                    />
                   </div>
                 )}
               </Card>
@@ -983,7 +990,13 @@ export default function StorySandbox() {
               >
                 <Shuffle className="h-5 w-5" strokeWidth={2.5} />
               </button>
-              <VoteThumbs sheetKey="oneLiners" id={oneLinerRow?.id} box="generic" voteCounts={voteCounts} onVote={handleVote} />
+              <VoteThumbs
+                sheetKey="oneLiners"
+                id={oneLinerRow?.id}
+                box="generic"
+                voteCounts={voteCounts}
+                onVote={handleVote}
+              />
             </div>
           </div>
         </Card>
