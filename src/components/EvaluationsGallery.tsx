@@ -896,7 +896,7 @@ const IsolatedView = ({
                     : undefined
                 }
               >
-                <div className={`${isFocusedSide ? "ring-4 ring-blue-400 shadow-xl rounded-sm" : ""} transition-all`}>
+                <div className={`${isFocused ? "ring-4 ring-blue-400 shadow-xl rounded-sm" : ""} transition-all`}>
                   <img
                     src={`${it.src}?v=${ASSET_VERSION}`}
                     alt={`${alt} #${it.num}`}
