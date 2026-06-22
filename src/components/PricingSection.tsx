@@ -11,12 +11,8 @@ import IndividualSessionsInquiryModal from "@/components/IndividualSessionsInqui
 
 const PricingSection = () => {
   const t = useT();
-  const PricingSection = () => {
-  const t = useT();
   const isCz = useIsCzech();
   const navigate = useNavigate();
-  const [keynoteOpen, setKeynoteOpen] = useState(false);
-  const isCz = useIsCzech();
   const [keynoteOpen, setKeynoteOpen] = useState(false);
   const [inhouseOpen, setInhouseOpen] = useState(false);
   const [individualOpen, setIndividualOpen] = useState(false);
