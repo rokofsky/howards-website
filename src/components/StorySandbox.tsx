@@ -705,6 +705,7 @@ export default function StorySandbox() {
     if (slot === "oneLiner") {
       const remaining = allOneLiners.filter((r) => r.id !== rowId);
       setAllOneLiners(remaining);
+      oneLinerQueueRef.current = { indices: [], idx: 0, lastId: oneLinerQueueRef.current.lastId };
       shuffleOneLiner(remaining);
     } else {
       const remaining = allSandboxPrompts.filter((r) => r.id !== rowId);
