@@ -877,7 +877,7 @@ const IsolatedView = ({
             return (
               <div
                 key={it.key}
-                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""} ${isFocusedSide ? "ring-4 ring-white shadow-xl rounded-sm" : ""} transition-all`}
+                className={`relative flex-[0_0_33.333%] min-w-0 h-full flex items-center justify-center p-1 ${isNeighbor ? "cursor-pointer" : ""} transition-all`}
                 style={{
                   overflow: "visible",
                   pointerEvents: "auto",
@@ -896,90 +896,91 @@ const IsolatedView = ({
                     : undefined
                 }
               >
-                <img
-                  src={`${it.src}?v=${ASSET_VERSION}`}
-                  alt={`${alt} #${it.num}`}
-                  draggable={false}
-                  ref={(el) => {
-                    // activeImgRef tracks the FOCUSED image (zoom/pan target).
-                    if (idx === focused) {
-                      activeImgRef.current = el;
-                    }
-                  }}
-                  style={{
-                    pointerEvents: isFocused ? "auto" : "none",
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                    touchAction: "none",
-                    transform: isFocused
-                      ? `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`
-                      : undefined,
-                    transformOrigin: "center",
-                    transition: isPanning.current ? "none" : "transform 0.1s ease",
-                  }}
-                  className="select-none"
-                  onPointerDown={(e) => {
-                    if (scale <= 1) return;
+                <div className={`${isFocusedSide ? "ring-4 ring-white shadow-xl rounded-sm" : ""} transition-all`}>
+                  <img
+                    src={`${it.src}?v=${ASSET_VERSION}`}
+                    alt={`${alt} #${it.num}`}
+                    draggable={false}
+                    ref={(el) => {
+                      if (idx === focused) {
+                        activeImgRef.current = el;
+                      }
+                    }}
+                    style={{
+                      pointerEvents: isFocused ? "auto" : "none",
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      touchAction: "none",
+                      transform: isFocused
+                        ? `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`
+                        : undefined,
+                      transformOrigin: "center",
+                      transition: isPanning.current ? "none" : "transform 0.1s ease",
+                    }}
+                    className="select-none"
+                    onPointerDown={(e) => {
+                      if (scale <= 1) return;
 
-                    const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
-                    const clampX = maxX * scale;
-
-                    // ADDED: Match the 5px leeway buffer here so the image releases the event tracking system
-                    const isAtLeftEdge = offset.x >= clampX - 5;
-                    const isAtRightEdge = offset.x <= -clampX + 5;
-
-                    if (!isAtLeftEdge && !isAtRightEdge) {
-                      e.stopPropagation();
-                    }
-
-                    e.currentTarget.setPointerCapture(e.pointerId);
-                    panStartX.current = e.clientX;
-                    panStartY.current = e.clientY;
-
-                    containerBounds.current = {
-                      width: window.innerWidth,
-                      height: window.innerHeight,
-                    };
-                    imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
-                    isPanning.current = true;
-                  }}
-                  onPointerMove={(e) => {
-                    if (!isPanning.current) return;
-                    e.stopPropagation();
-                    const dx = e.clientX - panStartX.current;
-                    const dy = e.clientY - panStartY.current;
-                    panStartX.current = e.clientX;
-                    panStartY.current = e.clientY;
-                    setOffset((o) => {
-                      const effWidth = Math.max(imageBounds.current.width, containerBounds.current.width);
-                      const maxX = Math.max(0, (effWidth * scale - containerBounds.current.width) / 2);
-                      const maxY = Math.max(
-                        0,
-                        (imageBounds.current.height * scale - containerBounds.current.height) / 2,
-                      );
-                      // Multiply by scale because offset is applied as translate(offset/scale)
+                      const maxX = Math.max(0, (imageBounds.current.width * scale - window.innerWidth) / 2);
                       const clampX = maxX * scale;
-                      const clampY = maxY * scale;
-                      return {
-                        x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
-                        y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
+
+                      // ADDED: Match the 5px leeway buffer here so the image releases the event tracking system
+                      const isAtLeftEdge = offset.x >= clampX - 5;
+                      const isAtRightEdge = offset.x <= -clampX + 5;
+
+                      if (!isAtLeftEdge && !isAtRightEdge) {
+                        e.stopPropagation();
+                      }
+
+                      e.currentTarget.setPointerCapture(e.pointerId);
+                      panStartX.current = e.clientX;
+                      panStartY.current = e.clientY;
+
+                      containerBounds.current = {
+                        width: window.innerWidth,
+                        height: window.innerHeight,
                       };
-                    });
-                  }}
-                  onPointerUp={(e) => {
-                    isPanning.current = false;
-                    try {
-                      e.currentTarget.releasePointerCapture(e.pointerId);
-                    } catch {}
-                  }}
-                  onPointerCancel={(e) => {
-                    isPanning.current = false;
-                    try {
-                      e.currentTarget.releasePointerCapture(e.pointerId);
-                    } catch {}
-                  }}
-                />
+                      imageBounds.current = getRenderedImageSize(e.currentTarget, containerBounds.current);
+                      isPanning.current = true;
+                    }}
+                    onPointerMove={(e) => {
+                      if (!isPanning.current) return;
+                      e.stopPropagation();
+                      const dx = e.clientX - panStartX.current;
+                      const dy = e.clientY - panStartY.current;
+                      panStartX.current = e.clientX;
+                      panStartY.current = e.clientY;
+                      setOffset((o) => {
+                        const effWidth = Math.max(imageBounds.current.width, containerBounds.current.width);
+                        const maxX = Math.max(0, (effWidth * scale - containerBounds.current.width) / 2);
+                        const maxY = Math.max(
+                          0,
+                          (imageBounds.current.height * scale - containerBounds.current.height) / 2,
+                        );
+                        // Multiply by scale because offset is applied as translate(offset/scale)
+                        const clampX = maxX * scale;
+                        const clampY = maxY * scale;
+                        return {
+                          x: Math.max(-clampX, Math.min(clampX, o.x + dx)),
+                          y: Math.max(-clampY, Math.min(clampY, o.y + dy)),
+                        };
+                      });
+                    }}
+                    onPointerUp={(e) => {
+                      isPanning.current = false;
+                      try {
+                        e.currentTarget.releasePointerCapture(e.pointerId);
+                      } catch {}
+                    }}
+                    onPointerCancel={(e) => {
+                      isPanning.current = false;
+                      try {
+                        e.currentTarget.releasePointerCapture(e.pointerId);
+                      } catch {}
+                    }}
+                  />
+                </div>
                 <span
                   style={{
                     position: "absolute",
