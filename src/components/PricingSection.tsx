@@ -5,11 +5,17 @@ import { Button } from "@/components/ui/button";
 import { useT } from "@/hooks/useT";
 import { useIsCzech } from "@/hooks/useLanguageRouting";
 import KeynoteInquiryModal from "@/components/KeynoteInquiryModal";
+import { useNavigate } from "react-router-dom";
 import InhouseInquiryModal from "@/components/InhouseInquiryModal";
 import IndividualSessionsInquiryModal from "@/components/IndividualSessionsInquiryModal";
 
 const PricingSection = () => {
   const t = useT();
+  const PricingSection = () => {
+  const t = useT();
+  const isCz = useIsCzech();
+  const navigate = useNavigate();
+  const [keynoteOpen, setKeynoteOpen] = useState(false);
   const isCz = useIsCzech();
   const [keynoteOpen, setKeynoteOpen] = useState(false);
   const [inhouseOpen, setInhouseOpen] = useState(false);
