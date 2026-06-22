@@ -57,7 +57,7 @@ export default function KeynoteTopics() {
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
-              <h1 className="text-4xl md:text-5xl font-bold">{t("Keynote Speaking", "Keynote projev")}</h1>
+              <h1 className="text-4xl md:text-5xl font-bold">{t("Suggested keynote speaking topics", "Doporučená témata keynote projevů")}</h1>
               <div className="flex items-center gap-6">
                 <Button variant="outline" asChild>
                   <Link to={lp("/#pricing")} className="inline-flex items-center gap-2">
