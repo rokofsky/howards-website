@@ -681,6 +681,8 @@ export default function StorySandbox() {
             prev.map((r) => (r.id === rowId ? ({ ...r, [col]: value } as SandboxRow) : r)),
           );
           setPrompts((p) => ({ ...p, [slot]: value }));
+          characterQueueRef.current = { indices: [], idx: 0, lastId: String(rowId) };
+          incidentQueueRef.current = { indices: [], idx: 0, lastId: String(rowId) };
         }
       }
       setDrafts((d) => {
