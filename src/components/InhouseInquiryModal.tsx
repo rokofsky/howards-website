@@ -83,6 +83,18 @@ const InhouseInquiryModal = ({ open, onOpenChange }: Props) => {
 
         {!showForm ? (
           <>
+            {loading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="animate-pulse rounded-lg border border-border p-3 flex items-center gap-3">
+                    <div className="h-4 w-4 rounded-full bg-muted shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 bg-muted rounded w-2/3" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
             <div
               className="grid grid-cols-1 sm:grid-cols-2 gap-3"
               style={{ gridAutoFlow: "column", gridTemplateRows: `repeat(${Math.ceil(workshops.length / 2)}, auto)` }}
