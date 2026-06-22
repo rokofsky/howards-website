@@ -26,9 +26,10 @@ interface KeynoteTopic {
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  preselectedTopic?: string;
 }
 
-const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
+const KeynoteInquiryModal = ({ open, onOpenChange, preselectedTopic }: Props) => {
   const t = useT();
   const [topics, setTopics] = useState<KeynoteTopic[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
@@ -47,6 +48,12 @@ const KeynoteInquiryModal = ({ open, onOpenChange }: Props) => {
         if (!error && data) setTopics(data);
       });
   }, [open]);
+
+  useEffect(() => {
+    if (open && preselectedTopic) {
+      setSelected([preselectedTopic]);
+    }
+  }, [open, preselectedTopic]);
 
   const toggle = (title: string) => {
     setSelected((prev) => (prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]));
