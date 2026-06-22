@@ -189,9 +189,9 @@ const Header = () => {
                   <img
                     src={bookCover}
                     alt="How to GET Great Service by Howard Rokofsky"
-                    className="w-5 h-7 object-cover rounded-sm"
-                    width={20}
-                    height={28}
+                    className="w-5 h-7 object-cover"
+                    width={24}
+                    height={32}
                   />
                   {link.label}
                 </a>
@@ -280,9 +280,9 @@ const Header = () => {
                       <img
                         src={bookCover}
                         alt="How to GET Great Service by Howard Rokofsky"
-                        className="w-5 h-7 object-cover rounded-sm"
-                        width={20}
-                        height={28}
+                        className="w-5 h-7 object-cover"
+                        width={24}
+                        height={32}
                       />
                       {link.label}
                     </a>
