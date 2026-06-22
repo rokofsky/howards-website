@@ -29,9 +29,11 @@ const InhouseInquiryModal = ({ open, onOpenChange }: Props) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [customTopic, setCustomTopic] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!open) return;
+    setLoading(true);
     (supabase.from("inhouse_workshops" as never) as never as {
       select: (cols: string) => {
         eq: (col: string, val: boolean) => {
@@ -47,6 +49,7 @@ const InhouseInquiryModal = ({ open, onOpenChange }: Props) => {
       .order("sort_order", { ascending: true })
       .then(({ data, error }) => {
         if (!error && data) setWorkshops(data);
+        setLoading(false);
       });
   }, [open]);
 
