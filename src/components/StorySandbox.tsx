@@ -780,7 +780,7 @@ export default function StorySandbox() {
                     {showShuffle && (
                       <button
                         type="button"
-                        onClick={() => shuffleCard(key, undefined, cardRows[key as Category]?.id)}
+                        onClick={() => shuffleCard(key, undefined, cardRows[key as Category]?.id !== undefined ? String(cardRows[key as Category]?.id) : undefined)}
                         className="text-foreground hover:opacity-70 transition-opacity"
                         aria-label={`Shuffle ${label}`}
                       >
