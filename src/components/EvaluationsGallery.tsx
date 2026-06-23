@@ -886,6 +886,21 @@ const IsolatedView = ({
                   transform: centerShiftPct ? `translateX(${centerShiftPct}%)` : undefined,
                   transition: isPanning.current ? "none" : "transform 0.2s ease",
                 }}
+                role={!isFocused ? "button" : undefined}
+                tabIndex={!isFocused ? 0 : undefined}
+                aria-label={!isFocused ? `Focus evaluation #${it.num}` : undefined}
+                onKeyDown={
+                  !isFocused
+                    ? (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setScale(1);
+                          setOffset({ x: 0, y: 0 });
+                          setFocusIdx(idx);
+                        }
+                      }
+                    : undefined
+                }
                 onClick={
                   !isFocused
                     ? () => {
