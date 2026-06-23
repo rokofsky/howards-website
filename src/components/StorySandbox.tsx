@@ -435,7 +435,7 @@ export default function StorySandbox() {
     oneLinerQueueRef.current = { indices: [], idx: 0, lastId: oneLinerQueueRef.current.lastId };
   }, [allOneLiners]);
 
-  const shuffleCard = (cat: Category, poolOverride?: SandboxRow[]) => {
+  const shuffleCard = (cat: Category, poolOverride?: SandboxRow[], currentIdOverride?: string) => {
     const pool = poolOverride ?? allSandboxPrompts;
     if (!pool.length) return;
     const qRef = queueRefForCat(cat);
@@ -446,7 +446,7 @@ export default function StorySandbox() {
       if (indices.length === 0) return;
       q = { indices, idx: 0, lastId: q.lastId };
     }
-    const currentId = cardRows[cat]?.id;
+    const currentId = currentIdOverride ?? cardRows[cat]?.id;
     let rowIdx = q.indices[q.idx];
     let row = pool[rowIdx];
     if (!row) return;
@@ -780,7 +780,7 @@ export default function StorySandbox() {
                     {showShuffle && (
                       <button
                         type="button"
-                        onClick={() => shuffleCard(key)}
+                        onClick={() => shuffleCard(key, undefined, cardRows[key as Category]?.id)}
                         className="text-foreground hover:opacity-70 transition-opacity"
                         aria-label={`Shuffle ${label}`}
                       >
