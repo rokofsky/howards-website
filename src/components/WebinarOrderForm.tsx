@@ -232,13 +232,33 @@ export const WebinarOrderForm = ({ open, onOpenChange, initialWebinarSlug }: Ord
                     <div key={slug} className="space-y-1">
                       <div className="flex items-center gap-2 text-sm">
                         <Checkbox checked={selectedSlugs.includes(slug)} onCheckedChange={() => toggleSlug(slug)} />
-                        <span className="cursor-pointer hover:opacity-80" onClick={() => toggleSlug(slug)}>
+                        <span
+                          className="cursor-pointer hover:opacity-80"
+                          onClick={() => toggleSlug(slug)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              toggleSlug(slug);
+                            }
+                          }}
+                        >
                           {dbTitleMap[slug]}
                         </span>
                         {dbWebinarMap[slug] && (
                           <div
                             className="flex-1 self-stretch cursor-pointer"
                             onClick={() => setPreviewSlug(previewSlug === slug ? null : slug)}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={previewSlug === slug ? "Hide details" : "Show details"}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                setPreviewSlug(previewSlug === slug ? null : slug);
+                              }
+                            }}
                           />
                         )}
                         {!dbWebinarMap[slug] && <div className="flex-1" />}
