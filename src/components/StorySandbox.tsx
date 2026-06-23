@@ -451,6 +451,8 @@ export default function StorySandbox() {
     let row = pool[rowIdx];
     if (!row) return;
     // Consecutive duplicate guard: skip the next item if it equals the currently visible one.
+    if (cat === "incident")
+      console.log("INCIDENT shuffle - currentId:", currentId, "next row id:", row.id, "same?", row.id === currentId);
     if (pool.length > 1 && row.id !== undefined && row.id === currentId) {
       q.idx = (q.idx + 1) % q.indices.length;
       rowIdx = q.indices[q.idx];
@@ -780,7 +782,15 @@ export default function StorySandbox() {
                     {showShuffle && (
                       <button
                         type="button"
-                        onClick={() => shuffleCard(key, undefined, cardRows[key as Category]?.id !== undefined ? String(cardRows[key as Category]?.id) : undefined)}
+                        onClick={() =>
+                          shuffleCard(
+                            key,
+                            undefined,
+                            cardRows[key as Category]?.id !== undefined
+                              ? String(cardRows[key as Category]?.id)
+                              : undefined,
+                          )
+                        }
                         className="text-foreground hover:opacity-70 transition-opacity"
                         aria-label={`Shuffle ${label}`}
                       >
