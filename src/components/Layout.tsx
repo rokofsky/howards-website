@@ -12,7 +12,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
         Skip to main content
       </a>
       <Header />
-      <main className="flex-1 pt-12">{children}</main>
+      <main id="main-content" className="flex-1 pt-12">
+        {children}
+      </main>
       <Footer />
     </div>
   );
