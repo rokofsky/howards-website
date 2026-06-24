@@ -218,6 +218,7 @@ function PageRoutes() {
       <Route path="services/online-webinars" element={<Navigate to="../services/live-webinars" replace />} />
       <Route path="services/:slug" element={<ServiceDetail />} />
       <Route path="keynote-topics" element={<KeynoteTopics />} />
+      <Route path="inhouse-workshops" element={<InhouseWorkshops />} />
       <Route path="blog" element={<Blog />} />
       <Route path="blog/:slug" element={<BlogPost />} />
       <Route path="webinars/:slug" element={<WebinarDetail />} />
