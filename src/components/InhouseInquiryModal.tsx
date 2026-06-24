@@ -54,6 +54,12 @@ const InhouseInquiryModal = ({ open, onOpenChange, preselectedWorkshop }: Props)
       });
   }, [open]);
 
+  useEffect(() => {
+    if (open && preselectedWorkshop) {
+      setSelected([preselectedWorkshop]);
+    }
+  }, [open, preselectedWorkshop]);
+
   const toggle = (title: string) => {
     setSelected((prev) => (prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]));
   };
