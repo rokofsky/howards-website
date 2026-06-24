@@ -17,6 +17,7 @@ import StorytellingWorkshops from "./pages/StorytellingWorkshops";
 import StorySandboxPage from "./pages/StorySandbox";
 import ServiceDetail from "./pages/ServiceDetail";
 import KeynoteTopics from "./pages/KeynoteTopics";
+import InhouseWorkshops from "./pages/InhouseWorkshops";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import WebinarDetail from "./pages/WebinarDetail";
