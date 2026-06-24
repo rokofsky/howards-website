@@ -20,9 +20,10 @@ interface InhouseWorkshop {
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  preselectedWorkshop?: string;
 }
 
-const InhouseInquiryModal = ({ open, onOpenChange }: Props) => {
+const InhouseInquiryModal = ({ open, onOpenChange, preselectedWorkshop }: Props) => {
   const t = useT();
   const [workshops, setWorkshops] = useState<InhouseWorkshop[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
