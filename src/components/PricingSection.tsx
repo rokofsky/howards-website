@@ -138,7 +138,7 @@ const PricingSection = () => {
             )}
             {tier.inquireInhouse && (
               <div className="mt-auto pt-2">
-                <Button type="button" variant="cta" className="w-full" onClick={() => setInhouseOpen(true)}>
+                <Button type="button" variant="cta" className="w-full" onClick={() => navigate(isCz ? "/cz/inhouse-workshops" : "/inhouse-workshops")}>
                   {t("Inquire", "Poptat")}
                 </Button>
               </div>

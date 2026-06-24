@@ -20,9 +20,10 @@ interface InhouseWorkshop {
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  preselectedWorkshop?: string;
 }
 
-const InhouseInquiryModal = ({ open, onOpenChange }: Props) => {
+const InhouseInquiryModal = ({ open, onOpenChange, preselectedWorkshop }: Props) => {
   const t = useT();
   const [workshops, setWorkshops] = useState<InhouseWorkshop[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
@@ -52,6 +53,12 @@ const InhouseInquiryModal = ({ open, onOpenChange }: Props) => {
         setLoading(false);
       });
   }, [open]);
+
+  useEffect(() => {
+    if (open && preselectedWorkshop) {
+      setSelected([preselectedWorkshop]);
+    }
+  }, [open, preselectedWorkshop]);
 
   const toggle = (title: string) => {
     setSelected((prev) => (prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]));

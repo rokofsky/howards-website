@@ -17,6 +17,7 @@ import StorytellingWorkshops from "./pages/StorytellingWorkshops";
 import StorySandboxPage from "./pages/StorySandbox";
 import ServiceDetail from "./pages/ServiceDetail";
 import KeynoteTopics from "./pages/KeynoteTopics";
+import InhouseWorkshops from "./pages/InhouseWorkshops";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import WebinarDetail from "./pages/WebinarDetail";
@@ -217,6 +218,7 @@ function PageRoutes() {
       <Route path="services/online-webinars" element={<Navigate to="../services/live-webinars" replace />} />
       <Route path="services/:slug" element={<ServiceDetail />} />
       <Route path="keynote-topics" element={<KeynoteTopics />} />
+      <Route path="inhouse-workshops" element={<InhouseWorkshops />} />
       <Route path="blog" element={<Blog />} />
       <Route path="blog/:slug" element={<BlogPost />} />
       <Route path="webinars/:slug" element={<WebinarDetail />} />
