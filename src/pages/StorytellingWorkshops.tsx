@@ -101,7 +101,15 @@ const StorytellingWorkshops = () => {
 
       setSuccess({
         title: data.session_title,
-        date: format(new Date(data.session_date), "EEEE, d MMMM yyyy 'at' HH:mm 'CET'"),
+        date: new Date(data.session_date).toLocaleString(undefined, {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZoneName: "short",
+        }),
       });
     } catch (err: any) {
       const message = err?.message || "Registration failed. Please try again.";
@@ -155,7 +163,6 @@ const StorytellingWorkshops = () => {
                         {format(new Date(session.session_date), "EEEE, MMMM d, yyyy")}
                         <span className="text-muted-foreground ml-2">
                           {format(new Date(session.session_date), "h:mm a")}
-                          <span className="text-xs ml-1 opacity-70">(CET)</span>
                         </span>
                       </p>
                       {session.description && (
@@ -226,7 +233,15 @@ const StorytellingWorkshops = () => {
                 <DialogTitle className="text-xl">Reserve your spot</DialogTitle>
                 <DialogDescription>
                   {selectedSession?.title || t("Storytelling Session", "Sezení Storytellingu")} —{" "}
-                  {selectedSession && format(new Date(selectedSession.session_date), "d MMMM, yyyy 'at' h:mm a 'CET'")}
+                  {selectedSession &&
+                    new Date(selectedSession.session_date).toLocaleString(undefined, {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      timeZoneName: "short",
+                    })}
                 </DialogDescription>
               </DialogHeader>
               {errorBanner && (
