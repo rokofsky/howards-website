@@ -205,6 +205,7 @@ const ContactForm = ({ serviceName, showServiceFields = false, formKind, onSucce
 
       setSubmitted(true);
       trackCTA("contact_form_submit", { service: serviceName || "general" });
+      onSuccess?.();
     } catch (err) {
       console.error("Submit error:", err);
       toast({
