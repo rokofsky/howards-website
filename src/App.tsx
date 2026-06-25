@@ -32,12 +32,27 @@ import { initGlobalTracking, initScrollDepth } from "./lib/analytics";
 
 const queryClient = new QueryClient();
 
+// Reuse the GA4 Measurement ID already configured in index.html.
+const GA_MEASUREMENT_ID = "G-ZWYSNHKQR5";
+
 function AnalyticsBootstrap() {
   useEffect(() => {
     initGlobalTracking();
     const teardown = initScrollDepth();
     return teardown;
   }, []);
+  return null;
+}
+
+function PageviewTracker() {
+  const { pathname, search } = useLocation();
+  useEffect(() => {
+    const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+    if (typeof gtag !== "function") return;
+    gtag("config", GA_MEASUREMENT_ID, {
+      page_path: pathname + search,
+    });
+  }, [pathname, search]);
   return null;
 }
 
