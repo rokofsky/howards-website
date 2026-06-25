@@ -70,11 +70,6 @@ export const verifyAdminPassword = async (password: string): Promise<boolean> =>
       }
       return true;
     }
-      } catch {
-        /* ignore */
-      }
-      return true;
-    }
     return false;
   } catch {
     return false;
