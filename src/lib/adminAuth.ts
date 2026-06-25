@@ -62,12 +62,14 @@ export const verifyAdminPassword = async (password: string): Promise<boolean> =>
     });
     if (error) return false;
     const payload = data as { ok?: boolean; token?: string } | null;
-    if (payload?.ok === true) {
+    if (payload?.ok === true && payload.token && looksLikeSignedToken(payload.token)) {
       try {
-        if (payload.token) {
-          localStorage.setItem(TOKEN_KEY, payload.token);
-        }
-        localStorage.setItem(AUTH_KEY, "true");
+        localStorage.setItem(TOKEN_KEY, payload.token);
+      } catch {
+        /* ignore */
+      }
+      return true;
+    }
       } catch {
         /* ignore */
       }
