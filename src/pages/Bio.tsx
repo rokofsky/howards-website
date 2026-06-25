@@ -63,54 +63,25 @@ const Bio = () => {
                   "Jednoho dne se v místních novinách objevil inzerát na místo učitele na polytechnice „Hogeschool Holland“. Neměl sice chuť učit, ale práci opravdu potřeboval. Naštěstí pro něj byla jeho holandština lepší než angličtina ředitele, a tak ho přijali na místě, aniž by po něm požadovali pracovní povolení, natož pobytové vízum. Když vešel do přednáškového sálu plného drzých studentů s jiskřivýma očima, věděl, že to je jeho poslání. Po pár letech se vydal na cesty, přestěhoval se do Prahy a začal školit zaměstnance firem v „měkkých dovednostech“: asertivitě, vyjednávání, emoční inteligenci a řečnických dovednostech. Jeho srdcovou záležitostí byl čtyřsemestrální kurz „Klinická empatie“ na Lékařské fakultě Univerzity Karlovy a sní o tom, že jednoho dne bude tento předmět vyučovat skutečné lékaře.",
                 )}
               </p>
-              <p className="mb-4">
-                {"\n"}
-              </p>
-              <p className="mb-4">
-                {"\n"}
-              </p>
-              <p className="mb-4">
-                {t(
-                  "Per the drill, I got a bike, a job at the student club (De Soos), posted adverts at the supermarket for language exchange, basically killing time in the most productive way I could think of. When spring came, I validated the train pass, and embarked on a mystery tour – galivanting towns and cities, museums, customs, people, and street food. In those days you needed to get a paper map wherever you went, or at least I did. Travel journals linger at the bottom of the bookcase, full of memories, poems, anecdotes, and a lock of girl's hair.",
-                  "Jak už to tak bývá, pořídil jsem si kolo, našel si práci ve studentském klubu (De Soos), vylepil v supermarketu inzeráty na jazykovou výměnu a v podstatě zabíjel čas tím nejproduktivnějším způsobem, jaký mě napadl. Když přišlo jaro, aktivoval jsem si jízdenku a vydal se na tajemnou cestu – toulal jsem se po městech, navštěvoval muzea, poznával zvyky, lidi a pouliční jídlo. V té době jste si museli pořídit papírovou mapu, kamkoli jste jeli, nebo alespoň já jsem to tak dělal. Cestovní deníky leží na dně knihovny, plné vzpomínek, básní, anekdot a pramínků dívčích vlasů.",
-                )}
-              </p>
-              <p className="mb-4">
-                {"\n"}
-              </p>
-              <p className="mb-4">
-                {"\n"}
-              </p>
-              <p className="mb-4">
-                {"\n"}
-              </p>
-              <p className="mb-4">
-                {"\n"}
-              </p>
-              <p className="mb-4">
-                {"\n"}
-              </p>
-              <p className="mb-4">
-                {"\n"}
-              </p>
+              <p className="mb-4">{"\n"}</p>
+              <p className="mb-4">{"\n"}</p>
+              <p className="mb-4">{"\n"}</p>
+              <p className="mb-4">{"\n"}</p>
+              <p className="mb-4">{"\n"}</p>
+              <p className="mb-4">{"\n"}</p>
+              <p className="mb-4">{"\n"}</p>
+              <p className="mb-4">{"\n"}</p>
+              <p className="mb-4">{"\n"}</p>
               <p className="mb-4">
                 {t(
                   "In 2002, Lonny Gold invited me to assist him on a Suggestopedic English course in subtropical Hainan, China for a 2-month course, which was extended to four. I loved that island and its coconuts, eating mangoes off the tree and drinking green tea. What I loved perhaps most was bike riding in the chaotic traffic, developing a sense of vision (awareness?) in all directions. And being invited for karaoke and beer by strangers. I've been back there 3 times since, and have developed quite a love-hate relationship with the Middle Kingdom.",
                   "V roce 2002 mě Lonny Gold pozval, abych mu pomáhal s kurzem angličtiny metodou Suggestopedie na subtropickém ostrově Hainan v Číně. Měl to být dvouměsíční kurz, který se nakonec protáhl na čtyři měsíce. Ten ostrov a jeho kokosy jsem si zamiloval, stejně jako jíst manga přímo ze stromu a pít zelený čaj. Nejvíc se mi asi líbilo jezdit na kole v chaotickém provozu a rozvíjet smysl pro vnímání (uvědomění?) ve všech směrech. A také to, že mě cizí lidé zvali na karaoke a pivo. Od té doby jsem se tam vrátil třikrát a k Čínské lidové republice jsem si vybudoval poměrně rozporuplný vztah lásky a nenávisti.",
                 )}
               </p>
-              <p className="mb-4">
-                {"\n"}
-              </p>
-              <p className="mb-4">
-                {"\n"}
-              </p>
-              <p className="mb-4">
-                {"\n"}
-              </p>
-              <p className="mb-4">
-                {"\n"}
-              </p>
+              <p className="mb-4">{"\n"}</p>
+              <p className="mb-4">{"\n"}</p>
+              <p className="mb-4">{"\n"}</p>
+              <p className="mb-4">{"\n"}</p>
 
               <div className="clear-both text-center mt-12">
                 <Button variant="glassPetrol" size="lg" className="w-full sm:w-auto" onClick={openCalendly}>
