@@ -34,7 +34,6 @@ const slidePositions: Record<number, string> = {
 };
 
 // Per-slide initial scale (default 1.08); higher = starts more zoomed, zooms out more
-
 const HeroSection = () => {
   const t = useT();
   const lp = useLocalizedPath();
