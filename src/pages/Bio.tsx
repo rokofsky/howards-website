@@ -30,7 +30,7 @@ const Bio = () => {
               <p className="mb-6 text-lg font-semibold">{t("No excuses!", "Žádné výmluvy!")}</p>
               <p className="mb-6">
                 <Link to={lp("/cv")} className="underline hover:text-foreground transition-colors">
-                  {t("CV", "CV")}
+                  {t("Howard's CV", "Howardův CV")}
                 </Link>
               </p>
               <p className="mb-6">
