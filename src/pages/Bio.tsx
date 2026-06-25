@@ -74,8 +74,14 @@ const Bio = () => {
               <p className="mb-4">{"\n"}</p>
               <p className="mb-4">
                 {t(
-                  "In 2002, Lonny Gold invited me to assist him on a Suggestopedic English course in subtropical Hainan, China for a 2-month course, which was extended to four. I loved that island and its coconuts, eating mangoes off the tree and drinking green tea. What I loved perhaps most was bike riding in the chaotic traffic, developing a sense of vision (awareness?) in all directions. And being invited for karaoke and beer by strangers. I've been back there 3 times since, and have developed quite a love-hate relationship with the Middle Kingdom.",
-                  "V roce 2002 mě Lonny Gold pozval, abych mu pomáhal s kurzem angličtiny metodou Suggestopedie na subtropickém ostrově Hainan v Číně. Měl to být dvouměsíční kurz, který se nakonec protáhl na čtyři měsíce. Ten ostrov a jeho kokosy jsem si zamiloval, stejně jako jíst manga přímo ze stromu a pít zelený čaj. Nejvíc se mi asi líbilo jezdit na kole v chaotickém provozu a rozvíjet smysl pro vnímání (uvědomění?) ve všech směrech. A také to, že mě cizí lidé zvali na karaoke a pivo. Od té doby jsem se tam vrátil třikrát a k Čínské lidové republice jsem si vybudoval poměrně rozporuplný vztah lásky a nenávisti.",
+                  "In 2002, Lonny Gold invited him to assist him on a Suggestopedic English course in subtropical Hainan, China for a 2-month course, which was so successful they immediately hired him to teach his own course for another two months. He's been back there 3 times since, and has developed quite a love-hate relationship with the Middle Kingdom.",
+                  "V roce 2002 ho Lonny Gold pozval, aby mu asistoval na kurzu angličtiny metodou Suggestopedie v subtropickém Hainanu v Číně. Kurz trval 2 měsíce a byl tak úspěšný, že ho okamžitě najali, aby další dva měsíce učil svůj vlastní kurz. Od té doby se tam vrátil třikrát a k Říši středu si vybudoval poměrně rozporuplný vztah lásky a nenávisti."
+                )}
+              </p>
+              <p className="mb-4">
+                {t(
+                  "Travels have included, in addition to the standard fare of train tickets and backpacking, hitchhiking, couchsurfing, trespassing, and squatting. Ever flirting with danger, he’s been in and out of a fair amount of trouble and has survived to create this website with no major scars. Except for that broken femur.",
+                  "Jeho cesty zahrnovaly kromě běžných jízdenek na vlak a baťůžkářství také stopování, couchsurfing, neoprávněné vniknutí a squatting. Neustále flirtoval s nebezpečím, dostal se do nejednoho problému a přežil, aby mohl vytvořit tyto webové stránky bez větších jizev. Tedy až na tu zlomenou stehenní kost."
                 )}
               </p>
               <p className="mb-4">{"\n"}</p>
