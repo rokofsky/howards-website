@@ -188,7 +188,20 @@ const InhouseInquiryModal = ({ open, onOpenChange, preselectedWorkshop }: Props)
                 {t("Edit topics", "Upravit témata")}
               </button>
             </div>
-            <ContactForm serviceName={serviceName} showServiceFields formKind="service" />
+            <ContactForm
+              serviceName={serviceName}
+              showServiceFields
+              formKind="service"
+              onSuccess={() => {
+                const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+                if (typeof gtag === "function") {
+                  gtag("event", "generate_lead", {
+                    event_category: "engagement",
+                    event_label: "Inhouse Workshop Inquiry",
+                  });
+                }
+              }}
+            />
           </>
         )}
       </DialogContent>
