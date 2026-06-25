@@ -26,9 +26,11 @@ const slides = [
 
 // Per-slide object-position overrides (default is "center center")
 const slidePositions: Record<number, string> = {
-  0: "center 30%",
+  0: "center 15%", // was "center 30%" — pull up to show more body
   2: "center center",
+  3: "center 20%", // add this — show more of the frame
   7: "center center",
+  5: "center 40%",
 };
 
 // Per-slide initial scale (default 1.08); higher = starts more zoomed, zooms out more
