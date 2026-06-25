@@ -28,7 +28,7 @@ const slides = [
 const slidePositions: Record<number, string> = {
   0: "center 20%", // was "center 30%" — pull up to show more body
   2: "center center",
-  3: "center 5%", // add this — show more of the frame
+  3: "center 40%", // add this — show more of the frame
   7: "center center",
   5: "center 40%",
 };
