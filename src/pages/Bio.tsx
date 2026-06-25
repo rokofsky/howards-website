@@ -15,7 +15,7 @@ const Bio = () => {
 
   return (
     <Layout>
-      <section className="section-padding pt-24 font-medium">
+      <section className="section-padding pt-8 font-normal">
         <div className="max-w-4xl mx-auto">
           <motion.div key={isCz ? "cz" : "en"} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="text-foreground/80 font-light leading-relaxed">
