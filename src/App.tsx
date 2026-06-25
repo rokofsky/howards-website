@@ -256,6 +256,7 @@ const App = () => (
           <ScrollToTop />
           <GlobalSeoSync />
           <AnalyticsBootstrap />
+          <PageviewTracker />
           <Routes>
             {/* English routes (root) */}
             <Route path="/">{PageRoutes()}</Route>
