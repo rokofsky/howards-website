@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import hero9b from "@/assets/hero-9.jpg";
+import hero1 from "@/assets/hero-1.jpg";
 import { openCalendly } from "@/lib/calendly";
 import { useT } from "@/hooks/useT";
 import { useIsCzech, useLocalizedPath } from "@/hooks/useLanguageRouting";
@@ -20,7 +20,7 @@ const Bio = () => {
           <motion.div key={isCz ? "cz" : "en"} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="text-foreground/80 font-light leading-relaxed">
               <img
-                src={hero9b}
+                src={hero1}
                 alt="Howard"
                 className="w-full md:w-[45%] md:float-left md:mr-8 md:mb-4 rounded-lg object-cover aspect-[3/4]"
               />
