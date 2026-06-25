@@ -4,22 +4,22 @@ import { useLocalizedPath } from "@/hooks/useLanguageRouting";
 import { motion, AnimatePresence } from "framer-motion";
 import { useT } from "@/hooks/useT";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import hero1 from "@/assets/hero-1.jpg";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
-import hero4 from "@/assets/hero-4.png";
+import hero4 from "@/assets/hero-4.jpg";
 import hero5 from "@/assets/hero-5.jpg";
-import hero6 from "@/assets/hero-6.jpg";
+import hero6 from "@/assets/hero-6.png";
 import hero7 from "@/assets/hero-7.jpg";
 import hero8 from "@/assets/hero-8.jpg";
-import hero9b from "@/assets/hero-9.jpg";
 
 const slides = [
-  { src: hero9b, caption: "close up" },
-  { src: hero5, caption: "" },
+  { src: hero1, caption: "close up" },
   { src: hero2, caption: "" },
-  { src: hero6, caption: "move back will ya" },
   { src: hero3, caption: "" },
-  { src: hero4, caption: "" },
+  { src: hero4, caption: "move back will ya" },
+  { src: hero5, caption: "" },
+  { src: hero6, caption: "" },
   { src: hero7, caption: "" },
   { src: hero8, caption: "So happy to be home" },
 ];
