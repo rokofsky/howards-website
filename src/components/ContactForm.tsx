@@ -16,6 +16,7 @@ interface ContactFormProps {
   serviceName?: string;
   showServiceFields?: boolean;
   formKind?: "general" | "service" | "webinar";
+  onSuccess?: () => void;
 }
 
 const projectTypeOptions: SelectOption[] = [
