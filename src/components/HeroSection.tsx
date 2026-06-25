@@ -26,7 +26,7 @@ const slides = [
 
 // Per-slide object-position overrides (default is "center center")
 const slidePositions: Record<number, string> = {
-  0: "center 50%", // was "center 30%" — pull up to show more body
+  0: "center 20%", // was "center 30%" — pull up to show more body
   2: "center center",
   3: "center 15%", // add this — show more of the frame
   7: "center center",
