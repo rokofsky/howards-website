@@ -115,7 +115,7 @@ const FormSelectField = ({
   );
 };
 
-const ContactForm = ({ serviceName, showServiceFields = false, formKind }: ContactFormProps) => {
+const ContactForm = ({ serviceName, showServiceFields = false, formKind, onSuccess }: ContactFormProps) => {
   const t = useT();
   const isCz = useIsCzech();
   const resolvedFormKind: "general" | "service" | "webinar" = formKind ?? (showServiceFields ? "service" : "general");
