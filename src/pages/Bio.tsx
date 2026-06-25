@@ -47,16 +47,11 @@ const Bio = () => {
               </p>
               <p className="mb-4">
                 {t(
-                  "At 13, I started delivering the daily Newsday door-to-door, for 2½ years. We had to collect the subscription fees every week – a teenager tracking down deadbeat customers seems absurd nowadays (newspapers are now delivered by adults in vans). I babysat, shoveled snow, painted houses, installed insulation in neighbors' crawl-spaces, whatever anyone was willing to pay me to do.",
-                  "Ve 13 letech jsem začal roznášet deník Newsday od dveří ke dveřím, a to po dobu 2½ roku. Každý týden jsem musel vybírat předplatné – teenager, který honí neplatiče, se dnes zdá absurdní (noviny dnes rozvážejí dospělí v dodávkách). Hlídal jsem děti, odklízel sníh, maloval domy, instaloval izolaci v podkrovích sousedů, zkrátka cokoli, za co mi někdo byl ochoten zaplatit.",
+                  "After touring Europe, he enrolled in a master’s program at the University of Amsterdam (Netherlands), living off proceeds from the baseball cards and, after his visa expired, whatever he could do to pay the rent and avoid returning to the USA. Cooking, catering, red-light district bartending, managing an illegal sauna club, and ‘donating’ bodily fluids were just some of the exploits he engaged in as a relatively integrated, albeit illegal alien.\u00a0\u00a0",
+                  "Po cestě po Evropě se zapsal do magisterského studia na Amsterodamské univerzitě (Nizozemsko) a žil z výnosů z prodeje těch baseballových karet a – po vypršení platnosti víza – z čehokoli, co mu umožnilo zaplatit nájem a vyhnout se návratu do USA. Vaření, catering, práce barmana v čtvrti „red lights“, vedení nelegálního saunového klubu a „darování“ tělních tekutin byly jen některé z činností, kterým se věnoval jako relativně dobře integrovaný, byť nelegální cizinec.\u00a0\u00a0"
                 )}
               </p>
-              <p className="mb-4">
-                {t(
-                  "After touring Europe, he enrolled in a master’s program at the University of Amsterdam (Netherlands), living off proceeds from the baseball cards and, after his visa expired, whatever he could do to pay the rent and avoid returning to the USA. Cooking, catering, red-light district bartending, managing an illegal sauna club, and ‘donating’ bodily fluids were just some of the exploits he engaged in as a relatively integrated, albeit illegal alien. ",
-                  "Po cestě po Evropě se zapsal do magisterského studia na Amsterodamské univerzitě (Nizozemsko) a žil z výnosů z prodeje těch baseballových karet a – po vypršení platnosti víza – z čehokoli, co mu umožnilo zaplatit nájem a vyhnout se návratu do USA. Vaření, catering, práce barmana v čtvrti „red lights“, vedení nelegálního saunového klubu a „darování“ tělních tekutin byly jen některé z činností, kterým se věnoval jako relativně dobře integrovaný, byť nelegální cizinec.",
-                )}
-              </p>
+              <p className="mb-4">{"\n"}</p>
               <p className="mb-4">
                 {t(
                   "One day, an advert appeared in the local paper for a teaching position at the polytechnic \"Hogeschool Holland\". He had no desire to teach, but he really needed a job. Fortunately for him, his Dutch was better than the director's English, and so he was hired on the spot without being asked to show a work permit, let alone a residence visa. When he walked into a lecture hall full of cheeky, bright-eyed students, he knew this was his calling. After a couple of years he took the show on the road, moved to Prague and started training corporates in ‘soft skills’: assertiveness, negotiations, EQ, and public speaking skills. His pet project was four semesters of ‘Clinical Empathy’ at the Charles University Medical School and he dreams of someday teaching this to bonafide doctors.",
