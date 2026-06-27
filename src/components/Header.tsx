@@ -163,7 +163,7 @@ const Header = () => {
           href={homeHref}
           onClick={(e) => handleHomeClick(e)}
           aria-label={t("Go to home page", "Přejít na úvodní stránku")}
-          className="flex h-full items-center self-stretch bg-transparent transition-all duration-200 hover:scale-[1.02] hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+          className="flex h-full items-center self-stretch bg-transparent transition-all duration-200 hover:scale-[1.02] hover:opacity-80 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
           style={{ backgroundColor: "transparent" }}
         >
           <img
