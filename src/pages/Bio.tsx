@@ -15,13 +15,15 @@ const Bio = () => {
 
   return (
     <Layout>
-      <section className="section-padding pt-8 font-normal">
+      <section className="section-padding pt-8">
         <div className="max-w-4xl mx-auto">
           <motion.div key={isCz ? "cz" : "en"} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="text-foreground/80 font-light leading-relaxed">
+            <article className="text-foreground leading-relaxed">
               <img
                 src={hero1}
-                alt="Howard"
+                alt="Howard Rokofsky, professional trainer and speaker"
+                loading="lazy"
+                decoding="async"
                 className="w-full md:w-[45%] md:float-left md:mr-8 md:mb-6 rounded-lg object-cover aspect-[3/4]"
               />
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
@@ -29,7 +31,10 @@ const Bio = () => {
               </h1>
               <p className="mb-6 text-lg font-semibold">{t("No excuses!", "Žádné výmluvy!")}</p>
               <p className="mb-6">
-                <Link to={lp("/cv")} className="underline hover:text-foreground transition-colors">
+                <Link
+                  to={lp("/cv")}
+                  className="underline hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:rounded-sm"
+                >
                   {t("Howard's CV", "Howardův CV")}
                 </Link>
               </p>
@@ -75,7 +80,7 @@ const Bio = () => {
                   {t("Book a free call with Howard", "Zamluvit bezplatný hovor s Howardem")}
                 </Button>
               </div>
-            </div>
+            </article>
           </motion.div>
         </div>
       </section>
