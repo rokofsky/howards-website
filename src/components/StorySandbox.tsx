@@ -701,9 +701,15 @@ export default function StorySandbox() {
     if (!window.confirm("Go ahead dude, delete it")) return;
     const rowId = slot === "oneLiner" ? oneLinerRow?.id : cardRows[slot as Category]?.id;
     if (!rowId) return;
-    const { error } = await supabase.from("prompts").delete().eq("id", String(rowId));
-    if (error) {
-      console.error("Delete failed", error);
+    const adminToken = localStorage.getItem("admin_session_token") ?? "";
+    const res = await fetch(`https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/manage-prompt`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "delete", prompt: { id: String(rowId) }, token: adminToken }),
+    });
+    const json = await res.json();
+    if (!res.ok || json.error) {
+      console.error("Delete failed", json.error);
       return;
     }
     if (slot === "oneLiner") {
