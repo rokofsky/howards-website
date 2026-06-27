@@ -80,7 +80,7 @@ const Bio = () => {
                   {t("Book a free call with Howard", "Zamluvit bezplatný hovor s Howardem")}
                 </Button>
               </div>
-            </div>
+            </article>
           </motion.div>
         </div>
       </section>
