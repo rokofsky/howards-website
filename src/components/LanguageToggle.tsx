@@ -46,7 +46,7 @@ const LanguageToggle = () => {
         onClick={() => switchTo("en")}
         aria-label="Switch to English"
         aria-pressed={isEn}
-        className={`transition-all rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isEn ? "font-bold text-foreground" : "font-normal text-foreground/50 hover:text-foreground/70"}`}
+        className={`transition-all px-1 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${isEn ? "font-bold text-foreground" : "font-normal text-foreground/50 hover:text-foreground/70"}`}
       >
         EN
       </button>
@@ -55,7 +55,7 @@ const LanguageToggle = () => {
         onClick={() => switchTo("cz")}
         aria-label="Přepnout do češtiny"
         aria-pressed={!isEn}
-        className={`transition-all rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${!isEn ? "font-bold text-foreground" : "font-normal text-foreground/50 hover:text-foreground/70"}`}
+        className={`transition-all px-1 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${!isEn ? "font-bold text-foreground" : "font-normal text-foreground/50 hover:text-foreground/70"}`}
       >
         CZ
       </button>
