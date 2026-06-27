@@ -44,14 +44,18 @@ const LanguageToggle = () => {
     <div className="flex items-center gap-1 text-sm tracking-wide">
       <button
         onClick={() => switchTo("en")}
-        className={`transition-all ${isEn ? "font-bold text-foreground" : "font-normal text-foreground/50 hover:text-foreground/70"}`}
+        aria-label="Switch to English"
+        aria-pressed={isEn}
+        className={`transition-all rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isEn ? "font-bold text-foreground" : "font-normal text-foreground/50 hover:text-foreground/70"}`}
       >
         EN
       </button>
       <span className="text-foreground/30">|</span>
       <button
         onClick={() => switchTo("cz")}
-        className={`transition-all ${!isEn ? "font-bold text-foreground" : "font-normal text-foreground/50 hover:text-foreground/70"}`}
+        aria-label="Přepnout do češtiny"
+        aria-pressed={!isEn}
+        className={`transition-all rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${!isEn ? "font-bold text-foreground" : "font-normal text-foreground/50 hover:text-foreground/70"}`}
       >
         CZ
       </button>
