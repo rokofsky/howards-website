@@ -544,18 +544,11 @@ const ServiceDetail = () => {
   </Button>
 </div>
 <div className="relative max-w-2xl mx-auto">
-                  variant="glassPetrol"
-                  size="sm"
-                  className="rounded-full text-sm px-4 py-1.5 h-auto whitespace-nowrap"
-                  onClick={openCalendly}
-                >
-                  {t("Skip the email, book a call now", "Zapomeňte na e-mail, rovnou si domluvte hovor")}
-                </Button>
+                <ContactForm serviceName={serviceTitle} showServiceFields />
               </div>
-              <ContactForm serviceName={serviceTitle} showServiceFields />
             </div>
-          </div>
-      </section>
+          </section>
+
     </Layout>
   );
 };
