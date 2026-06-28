@@ -547,7 +547,9 @@ const ServiceDetail = () => {
                 <ContactForm serviceName={serviceTitle} showServiceFields />
               </div>
             </div>
-          </section>
+          </div>
+        </section>
+
 
     </Layout>
   );
