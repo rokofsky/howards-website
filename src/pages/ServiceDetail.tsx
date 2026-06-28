@@ -533,9 +533,17 @@ const ServiceDetail = () => {
                 "Vyplňte níže pár údajů (většinou nepovinných) a ozvu se Vám do zítřka.",
               )}
             </p>
-            <div className="relative max-w-2xl mx-auto">
-              <div className="absolute top-2 left-0 right-0 z-10 flex justify-center">
-                <Button
+           <div className="flex justify-center mb-4">
+  <Button
+    variant="glassPetrol"
+    size="sm"
+    className="rounded-full text-sm px-4 py-1.5 h-auto whitespace-nowrap"
+    onClick={openCalendly}
+  >
+    {t("Skip the email, book a call now", "Zapomeňte na e-mail, rovnou si domluvte hovor")}
+  </Button>
+</div>
+<div className="relative max-w-2xl mx-auto">
                   variant="glassPetrol"
                   size="sm"
                   className="rounded-full text-sm px-4 py-1.5 h-auto whitespace-nowrap"
@@ -547,7 +555,6 @@ const ServiceDetail = () => {
               <ContactForm serviceName={serviceTitle} showServiceFields />
             </div>
           </div>
-        </div>
       </section>
     </Layout>
   );
