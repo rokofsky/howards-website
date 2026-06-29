@@ -237,7 +237,7 @@ export default function StorySandbox() {
 
   // --- Admin inline editing ---
   const [isAdmin, setIsAdmin] = useState<boolean>(
-    typeof window !== "undefined" && localStorage.getItem("admin_authenticated") === "true",
+    typeof window !== "undefined" && isAdminAuthenticated(),
   );
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [addingNew, setAddingNew] = useState<Record<string, boolean>>({});
