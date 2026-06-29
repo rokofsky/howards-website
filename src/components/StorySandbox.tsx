@@ -9,6 +9,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminAuthenticated } from "@/lib/adminAuth";
 
 const readUserVotes = (): Record<string, "up" | "down"> => {
   try {
@@ -236,7 +237,7 @@ export default function StorySandbox() {
 
   // --- Admin inline editing ---
   const [isAdmin, setIsAdmin] = useState<boolean>(
-    typeof window !== "undefined" && localStorage.getItem("admin_authenticated") === "true",
+    typeof window !== "undefined" && isAdminAuthenticated(),
   );
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [addingNew, setAddingNew] = useState<Record<string, boolean>>({});
