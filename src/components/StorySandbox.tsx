@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Shuffle, ThumbsUp, ThumbsDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -194,6 +195,7 @@ const VoteThumbs = ({ sheetKey, id, box, voteCounts, onVote }: VoteThumbsProps) 
 };
 
 export default function StorySandbox() {
+  const { t } = useTranslation();
   // --- Independent data sources ---
   const [allSandboxPrompts, setAllSandboxPrompts] = useState<SandboxRow[]>(buildFallbackSandbox());
   const [allOneLiners, setAllOneLiners] = useState<PromptRow[]>(buildFallbackPrompts(FALLBACK_ONE_LINERS));
@@ -745,12 +747,9 @@ export default function StorySandbox() {
     <div className="w-full max-w-5xl mx-auto space-y-10">
       {/* Header */}
       <header className="text-center space-y-2">
-        <h2 className="text-3xl md:text-4xl font-bold">Story Sandbox</h2>
+        <h2 className="text-3xl md:text-4xl font-bold">{t("storySandbox.title")}</h2>
         <p className="text-muted-foreground max-w-xl mx-auto whitespace-pre-line">
-          Create your own story! Shuffle the prompts to find one you want, or scroll below and pick a structure and fill
-          in the boxes - it's as easy as that.{"\n"}
-          You can vote up👍 or down👎 as you shuffle.{"\n"}
-          Save your story on your computer. I don't keep any data except the anonymous votes.
+          {t("storySandbox.description")}
         </p>
       </header>
 
