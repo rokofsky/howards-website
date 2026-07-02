@@ -81,7 +81,9 @@ type ElementBox = "character" | "incident" | "constraint" | "untitled" | "generi
 type SandboxRow = {
   id?: string | number;
   character?: string;
+  character_cs?: string;
   incident?: string;
+  incident_cs?: string;
   constraint?: string;
   setting?: string;
   untitled?: string;
@@ -91,6 +93,8 @@ type PromptRow = {
   prompt?: string;
   text?: string;
   oneLiner?: string;
+  one_liner?: string;
+  one_liner_cs?: string;
 };
 
 const pickRandom = <T,>(arr: T[]): T | undefined =>
