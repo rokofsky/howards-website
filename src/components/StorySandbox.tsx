@@ -11,6 +11,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { isAdminAuthenticated } from "@/lib/adminAuth";
+import { useIsCzech } from "@/hooks/useLanguageRouting";
 
 const readUserVotes = (): Record<string, "up" | "down"> => {
   try {
@@ -80,7 +81,9 @@ type ElementBox = "character" | "incident" | "constraint" | "untitled" | "generi
 type SandboxRow = {
   id?: string | number;
   character?: string;
+  character_cs?: string;
   incident?: string;
+  incident_cs?: string;
   constraint?: string;
   setting?: string;
   untitled?: string;
@@ -90,6 +93,8 @@ type PromptRow = {
   prompt?: string;
   text?: string;
   oneLiner?: string;
+  one_liner?: string;
+  one_liner_cs?: string;
 };
 
 const pickRandom = <T,>(arr: T[]): T | undefined =>
@@ -196,6 +201,7 @@ const VoteThumbs = ({ sheetKey, id, box, voteCounts, onVote }: VoteThumbsProps) 
 
 export default function StorySandbox() {
   const { t } = useTranslation();
+  const isCz = useIsCzech();
   // --- Independent data sources ---
   const [allSandboxPrompts, setAllSandboxPrompts] = useState<SandboxRow[]>(buildFallbackSandbox());
   const [allOneLiners, setAllOneLiners] = useState<PromptRow[]>(buildFallbackPrompts(FALLBACK_ONE_LINERS));
@@ -367,12 +373,15 @@ export default function StorySandbox() {
   const getFieldValue = (row: Record<string, unknown> | null | undefined, cat: string): string => {
     if (!row) return "";
     let col: string | null = null;
+    let csCol: string | null = null;
     switch (cat) {
       case "character":
         col = "character";
+        csCol = "character_cs";
         break;
       case "incident":
         col = "incident";
+        csCol = "incident_cs";
         break;
       case "constraint":
         col = "constraint_text";
@@ -380,6 +389,7 @@ export default function StorySandbox() {
       case "oneLiners":
       case "generic":
         col = "one_liner";
+        csCol = "one_liner_cs";
         break;
       case "sheet3":
       case "text":
@@ -388,9 +398,16 @@ export default function StorySandbox() {
       default:
         return "";
     }
-    const v = (row as Record<string, unknown>)[col];
-    if (typeof v === "string" && v.trim()) return v.trim();
-    return "";
+    const readStr = (key: string | null): string => {
+      if (!key) return "";
+      const v = (row as Record<string, unknown>)[key];
+      return typeof v === "string" && v.trim() ? v.trim() : "";
+    };
+    if (isCz && csCol) {
+      const cs = readStr(csCol);
+      if (cs) return cs;
+    }
+    return readStr(col);
   };
 
   // --- Independent shuffle handlers ---
@@ -591,15 +608,22 @@ export default function StorySandbox() {
   const oneLinerText = getFieldValue(oneLinerRow as unknown as Record<string, unknown>, "oneLiners");
 
   // --- Admin helpers ---
-  const COLUMN_FOR: Record<string, string> = {
-    character: "character",
-    incident: "incident",
-    oneLiner: "one_liner",
-  };
+  const COLUMN_FOR: Record<string, string> = isCz
+    ? {
+        character: "character_cs",
+        incident: "incident_cs",
+        oneLiner: "one_liner_cs",
+      }
+    : {
+        character: "character",
+        incident: "incident",
+        oneLiner: "one_liner",
+      };
 
   const currentValueFor = (slot: "character" | "incident" | "oneLiner"): string => {
     if (slot === "oneLiner") return oneLinerText;
-    return prompts[slot];
+    const row = cardRows[slot] as unknown as Record<string, unknown> | null;
+    return getFieldValue(row, slot) || prompts[slot];
   };
 
   const draftValueFor = (slot: "character" | "incident" | "oneLiner"): string => {
@@ -622,11 +646,17 @@ export default function StorySandbox() {
       if (addingNew[slot]) {
         let insertPayload: Record<string, unknown>;
         if (slot === "character") {
-          insertPayload = { sheet_key: "sandbox", character: value, incident: PLACEHOLDER_INC };
+          insertPayload = isCz
+            ? { sheet_key: "sandbox", character_cs: value, character: PLACEHOLDER_CHAR, incident: PLACEHOLDER_INC }
+            : { sheet_key: "sandbox", character: value, incident: PLACEHOLDER_INC };
         } else if (slot === "incident") {
-          insertPayload = { sheet_key: "sandbox", incident: value, character: PLACEHOLDER_CHAR };
+          insertPayload = isCz
+            ? { sheet_key: "sandbox", incident_cs: value, incident: PLACEHOLDER_INC, character: PLACEHOLDER_CHAR }
+            : { sheet_key: "sandbox", incident: value, character: PLACEHOLDER_CHAR };
         } else {
-          insertPayload = { sheet_key: "oneLiners", one_liner: value };
+          insertPayload = isCz
+            ? { sheet_key: "oneLiners", one_liner_cs: value, one_liner: "" }
+            : { sheet_key: "oneLiners", one_liner: value };
         }
         const insertRes = await fetch(`https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/manage-prompt`, {
           method: "POST",
