@@ -608,15 +608,22 @@ export default function StorySandbox() {
   const oneLinerText = getFieldValue(oneLinerRow as unknown as Record<string, unknown>, "oneLiners");
 
   // --- Admin helpers ---
-  const COLUMN_FOR: Record<string, string> = {
-    character: "character",
-    incident: "incident",
-    oneLiner: "one_liner",
-  };
+  const COLUMN_FOR: Record<string, string> = isCz
+    ? {
+        character: "character_cs",
+        incident: "incident_cs",
+        oneLiner: "one_liner_cs",
+      }
+    : {
+        character: "character",
+        incident: "incident",
+        oneLiner: "one_liner",
+      };
 
   const currentValueFor = (slot: "character" | "incident" | "oneLiner"): string => {
     if (slot === "oneLiner") return oneLinerText;
-    return prompts[slot];
+    const row = cardRows[slot] as unknown as Record<string, unknown> | null;
+    return getFieldValue(row, slot) || prompts[slot];
   };
 
   const draftValueFor = (slot: "character" | "incident" | "oneLiner"): string => {
@@ -639,11 +646,17 @@ export default function StorySandbox() {
       if (addingNew[slot]) {
         let insertPayload: Record<string, unknown>;
         if (slot === "character") {
-          insertPayload = { sheet_key: "sandbox", character: value, incident: PLACEHOLDER_INC };
+          insertPayload = isCz
+            ? { sheet_key: "sandbox", character_cs: value, character: PLACEHOLDER_CHAR, incident: PLACEHOLDER_INC }
+            : { sheet_key: "sandbox", character: value, incident: PLACEHOLDER_INC };
         } else if (slot === "incident") {
-          insertPayload = { sheet_key: "sandbox", incident: value, character: PLACEHOLDER_CHAR };
+          insertPayload = isCz
+            ? { sheet_key: "sandbox", incident_cs: value, incident: PLACEHOLDER_INC, character: PLACEHOLDER_CHAR }
+            : { sheet_key: "sandbox", incident: value, character: PLACEHOLDER_CHAR };
         } else {
-          insertPayload = { sheet_key: "oneLiners", one_liner: value };
+          insertPayload = isCz
+            ? { sheet_key: "oneLiners", one_liner_cs: value, one_liner: "" }
+            : { sheet_key: "oneLiners", one_liner: value };
         }
         const insertRes = await fetch(`https://mgujrwuiftjmgnwnlels.supabase.co/functions/v1/manage-prompt`, {
           method: "POST",
