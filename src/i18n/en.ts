@@ -62,6 +62,10 @@ const en = {
     heading: "Who is Howard",
     bookCallButton: "Book a free call with Howard",
   },
+  storySandbox: {
+    title: "Story Sandbox",
+    description: "Create your own story! Shuffle the prompts to find one you want, or scroll below and pick a structure and fill in the boxes - it's as easy as that.\nYou can vote up👍 or down👎 as you shuffle.\nSave your story on your computer. I don't keep any data except the anonymous votes.",
+  },
 };
 
 export default en;
