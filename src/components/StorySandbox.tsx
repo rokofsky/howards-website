@@ -759,7 +759,7 @@ export default function StorySandbox() {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-semibold">
-              <span className="inline-block w-[280px]">{/* ADJUST WIDTH HERE TO ALIGN HINTS */}Prompts</span>
+              <span className="inline-block w-[280px]">{/* ADJUST WIDTH HERE TO ALIGN HINTS */}Story prompts</span>
             </h3>
             <span className="text-xs md:text-sm font-normal text-muted-foreground flex items-center gap-1 italic">
               <Shuffle className="w-10 h-10 md:w-5 md:h-5 opacity-100" style={{ pointerEvents: "none" }} />
@@ -927,7 +927,7 @@ export default function StorySandbox() {
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-semibold">
               <span className="inline-block w-[280px]">
-                {/* ADJUST WIDTH HERE TO ALIGN HINTS */}One size fits all prompts
+                {/* ADJUST WIDTH HERE TO ALIGN HINTS */}One-size-fits-all story prompts
               </span>
             </h3>
             <span className="text-xs md:text-sm font-normal text-muted-foreground flex items-center gap-1 italic">
