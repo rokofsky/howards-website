@@ -64,7 +64,7 @@ const en = {
   },
   storySandbox: {
     title: "Story Sandbox",
-    description: "Create your own story! Shuffle the prompts to find one you want, or scroll below and pick a structure and fill in the boxes - it's as easy as that.\nYou can vote up👍 or down👎 as you shuffle.\nSave your story on your computer. I don't keep any data except the anonymous votes.",
+    description: "Create your own story! Shuffle the prompts to find one you want, or scroll below and pick a structure and fill in the boxes - it's as easy as that.\nYou can vote up👍 or down👎 as you shuffle.\nSave your story on your computer.\u00a0\nNo data is saved except the anonymous votes.",
     shuffleLabel: "= Shuffle to the next card",
   },
 };
