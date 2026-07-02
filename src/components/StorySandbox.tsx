@@ -201,6 +201,7 @@ const VoteThumbs = ({ sheetKey, id, box, voteCounts, onVote }: VoteThumbsProps) 
 
 export default function StorySandbox() {
   const { t } = useTranslation();
+  const isCz = useIsCzech();
   // --- Independent data sources ---
   const [allSandboxPrompts, setAllSandboxPrompts] = useState<SandboxRow[]>(buildFallbackSandbox());
   const [allOneLiners, setAllOneLiners] = useState<PromptRow[]>(buildFallbackPrompts(FALLBACK_ONE_LINERS));
