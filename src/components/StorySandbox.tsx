@@ -373,12 +373,15 @@ export default function StorySandbox() {
   const getFieldValue = (row: Record<string, unknown> | null | undefined, cat: string): string => {
     if (!row) return "";
     let col: string | null = null;
+    let csCol: string | null = null;
     switch (cat) {
       case "character":
         col = "character";
+        csCol = "character_cs";
         break;
       case "incident":
         col = "incident";
+        csCol = "incident_cs";
         break;
       case "constraint":
         col = "constraint_text";
@@ -386,6 +389,7 @@ export default function StorySandbox() {
       case "oneLiners":
       case "generic":
         col = "one_liner";
+        csCol = "one_liner_cs";
         break;
       case "sheet3":
       case "text":
@@ -394,9 +398,16 @@ export default function StorySandbox() {
       default:
         return "";
     }
-    const v = (row as Record<string, unknown>)[col];
-    if (typeof v === "string" && v.trim()) return v.trim();
-    return "";
+    const readStr = (key: string | null): string => {
+      if (!key) return "";
+      const v = (row as Record<string, unknown>)[key];
+      return typeof v === "string" && v.trim() ? v.trim() : "";
+    };
+    if (isCz && csCol) {
+      const cs = readStr(csCol);
+      if (cs) return cs;
+    }
+    return readStr(col);
   };
 
   // --- Independent shuffle handlers ---
