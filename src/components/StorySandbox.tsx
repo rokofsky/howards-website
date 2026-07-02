@@ -11,6 +11,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { isAdminAuthenticated } from "@/lib/adminAuth";
+import { useIsCzech } from "@/hooks/useLanguageRouting";
 
 const readUserVotes = (): Record<string, "up" | "down"> => {
   try {
