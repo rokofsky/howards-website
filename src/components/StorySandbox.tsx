@@ -69,10 +69,10 @@ const STORAGE_KEY = "story-sandbox:v1";
 type Category = "character" | "incident" | "constraint";
 type Prompts = Record<Category, string>;
 
-const CATEGORY_META: { key: Category; label: string; tone: string; box: ElementBox }[] = [
-  { key: "character", label: "Character", tone: "from-primary/20 to-primary/5 border-primary/30", box: "character" },
-  { key: "incident", label: "By the way", tone: "from-primary/20 to-primary/5 border-primary/30", box: "incident" },
-  { key: "constraint", label: "Add here", tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
+const CATEGORY_META = (t: (key: string) => string): { key: Category; label: string; tone: string; box: ElementBox }[] => [
+  { key: "character", label: t("storySandbox.categories.character"), tone: "from-primary/20 to-primary/5 border-primary/30", box: "character" },
+  { key: "incident", label: t("storySandbox.categories.incident"), tone: "from-primary/20 to-primary/5 border-primary/30", box: "incident" },
+  { key: "constraint", label: t("storySandbox.categories.constraint"), tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
 ];
 
 type SheetKey = "sandbox" | "oneLiners" | "sheet3";
@@ -799,7 +799,7 @@ export default function StorySandbox() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-          {CATEGORY_META.map(({ key, label, tone, box }) => {
+          {CATEGORY_META(t).map(({ key, label, tone, box }) => {
             const value = prompts[key];
             const isEditing = editing === key;
             const isConstraint = key === "constraint";
