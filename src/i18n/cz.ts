@@ -64,7 +64,7 @@ const cz = {
   },
   storySandbox: {
     title: "Story Sandbox",
-    description: "Vytvořte si vlastní příběh!\u00a0\nZamíchejte náměty a vyberte si ten, který se vám líbí, nebo se posuňte níže, vyberte si strukturu a vyplňte políčka – je to tak jednoduché.\nPři míchání můžete hlasovat pro👍 nebo proti👎.\nUložte si svůj příběh do počítače. Neuchovávám žádná data kromě anonymních hlasů.",
+    description: "Vytvořte si vlastní příběh!\u00a0\nZamíchejte náměty a vyberte si ten, který se vám líbí, nebo se posuňte níže, vyberte si strukturu a vyplňte políčka – je to tak jednoduché.\nPři míchání můžete hlasovat pro👍 nebo proti👎.\nUložte si svůj příběh do počítače.\u00a0\nNeuchovává se žádná data kromě anonymních hlasů.",
     shuffleLabel: "= Přejít k další kartě",
   },
 };
