@@ -14,7 +14,7 @@ import hero7 from "@/assets/hero-7.jpg";
 import hero8 from "@/assets/hero-8.jpg";
 
 const slides = [
-  { src: hero1, caption: "close up" },
+  { src: hero1, caption: "raconteur" },
   { src: hero2, caption: "training is fun" },
   { src: hero3, caption: "no whiteboard?!" },
   { src: hero4, caption: "move back will ya" },
