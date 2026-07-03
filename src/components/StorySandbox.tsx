@@ -256,9 +256,31 @@ export default function StorySandbox() {
 
   const isRowValidFor = (row: SandboxRow | PromptRow | null | undefined, cat: string): boolean => {
     if (!row) return false;
+
+    const raw = (key: string) => {
+      const v = (row as unknown as Record<string, unknown>)[key];
+      return typeof v === "string" && v.trim() ? v.trim() : "";
+    };
+    const isPlaceholder = (v: string) => v === PLACEHOLDER_CHAR || v === PLACEHOLDER_INC;
+
+    if (isCz) {
+      const csCol =
+        cat === "character"
+          ? "character_cs"
+          : cat === "incident"
+            ? "incident_cs"
+            : cat === "oneLiners" || cat === "generic"
+              ? "one_liner_cs"
+              : null;
+      if (csCol) {
+        const cs = raw(csCol);
+        if (cs && !isPlaceholder(cs)) return true;
+      }
+    }
+
     const v = getFieldValue(row as unknown as Record<string, unknown>, cat).trim();
     if (!v) return false;
-    if (v === PLACEHOLDER_CHAR || v === PLACEHOLDER_INC) return false;
+    if (isPlaceholder(v)) return false;
     return true;
   };
 
