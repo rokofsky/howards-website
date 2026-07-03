@@ -55,10 +55,10 @@ const Blog = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post, i) => {
-              const title = lang === "cs" ? post.title_cs : post.title_en;
-              const excerpt = lang === "cs" ? post.excerpt_cs : post.excerpt_en;
-              const category = lang === "cs" ? post.category_cs : post.category_en;
-              const date = lang === "cs" ? post.date_cs : post.date_en;
+              const title = lang === "cs" ? (post.title_cs || post.title_en) : post.title_en;
+              const excerpt = lang === "cs" ? (post.excerpt_cs || post.excerpt_en) : post.excerpt_en;
+              const category = lang === "cs" ? (post.category_cs || post.category_en) : post.category_en;
+              const date = lang === "cs" ? (post.date_cs || post.date_en) : post.date_en;
               const image = resolveImageUrl(post.image_url);
               return (
                 <motion.article

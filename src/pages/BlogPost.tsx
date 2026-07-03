@@ -73,11 +73,11 @@ const BlogPost = () => {
     );
   }
 
-  const title = lang === "cs" ? post.title_cs : post.title_en;
-  const date = lang === "cs" ? post.date_cs : post.date_en;
-  const category = lang === "cs" ? post.category_cs : post.category_en;
-  const content = lang === "cs" ? post.content_cs : post.content_en;
-  const excerpt = lang === "cs" ? post.excerpt_cs : post.excerpt_en;
+  const title = lang === "cs" ? (post.title_cs || post.title_en) : post.title_en;
+  const date = lang === "cs" ? (post.date_cs || post.date_en) : post.date_en;
+  const category = lang === "cs" ? (post.category_cs || post.category_en) : post.category_en;
+  const content = lang === "cs" ? (post.content_cs || post.content_en) : post.content_en;
+  const excerpt = lang === "cs" ? (post.excerpt_cs || post.excerpt_en) : post.excerpt_en;
   const image = resolveImageUrl(post.image_url);
 
   const description = excerpt && excerpt.length > 160 ? excerpt.slice(0, 157) + "…" : excerpt || `${title} — Rokofsky Communication`;
