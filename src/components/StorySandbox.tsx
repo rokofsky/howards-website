@@ -669,11 +669,11 @@ export default function StorySandbox() {
         let insertPayload: Record<string, unknown>;
         if (slot === "character") {
           insertPayload = isCz
-            ? { sheet_key: "sandbox", character_cs: value, character: PLACEHOLDER_CHAR, incident: PLACEHOLDER_INC }
+            ? { sheet_key: "sandbox", character_cs: value, character: "", incident: "" }
             : { sheet_key: "sandbox", character: value, incident: PLACEHOLDER_INC };
         } else if (slot === "incident") {
           insertPayload = isCz
-            ? { sheet_key: "sandbox", incident_cs: value, incident: PLACEHOLDER_INC, character: PLACEHOLDER_CHAR }
+            ? { sheet_key: "sandbox", incident_cs: value, incident: "", character: "" }
             : { sheet_key: "sandbox", incident: value, character: PLACEHOLDER_CHAR };
         } else {
           insertPayload = isCz
