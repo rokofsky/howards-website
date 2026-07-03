@@ -15,12 +15,12 @@ import hero8 from "@/assets/hero-8.jpg";
 
 const slides = [
   { src: hero1, caption: "close up" },
-  { src: hero2, caption: "" },
-  { src: hero3, caption: "" },
+  { src: hero2, caption: "training is fun" },
+  { src: hero3, caption: "no whiteboard?!" },
   { src: hero4, caption: "move back will ya" },
-  { src: hero5, caption: "" },
-  { src: hero6, caption: "" },
-  { src: hero7, caption: "" },
+  { src: hero5, caption: "gather round" },
+  { src: hero6, caption: "tropical rainforest" },
+  { src: hero7, caption: "everybody listen!" },
   { src: hero8, caption: "So happy to be home" },
 ];
 
