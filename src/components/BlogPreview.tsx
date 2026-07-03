@@ -58,9 +58,9 @@ const BlogPreview = () => {
               to={lp(`/blog/${post.slug}`)}
               className="block glass rounded-lg p-6 hover:shadow-lg transition-shadow duration-300 cursor-pointer group h-full"
             >
-              <time className="text-xs text-muted-foreground font-light">{lang === "cs" ? post.date_cs : post.date_en}</time>
-              <h3 className="text-lg font-semibold mt-2 mb-3 group-hover:text-gold transition-colors">{lang === "cs" ? post.title_cs : post.title_en}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed font-normal">{lang === "cs" ? post.excerpt_cs : post.excerpt_en}</p>
+              <time className="text-xs text-muted-foreground font-light">{lang === "cs" ? (post.date_cs || post.date_en) : post.date_en}</time>
+              <h3 className="text-lg font-semibold mt-2 mb-3 group-hover:text-gold transition-colors">{lang === "cs" ? (post.title_cs || post.title_en) : post.title_en}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-normal">{lang === "cs" ? (post.excerpt_cs || post.excerpt_en) : post.excerpt_en}</p>
             </Link>
           </motion.article>
         ))}
