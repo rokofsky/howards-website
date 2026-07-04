@@ -294,7 +294,7 @@ const RokofAdmin = () => {
 
   const handleInhouseWorkshopBlur = async (
     id: string,
-    field: "title" | "description" | "duration",
+    field: "title" | "description" | "duration" | "title_cs" | "description_cs" | "duration_cs",
     value: string,
   ) => {
     await inhouseWorkshopTable()
