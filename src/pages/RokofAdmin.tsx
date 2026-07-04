@@ -82,6 +82,9 @@ interface InhouseWorkshop {
   title: string;
   description: string;
   duration: string;
+  title_cs: string;
+  description_cs: string;
+  duration_cs: string;
   sort_order: number;
   active: boolean;
 }
@@ -265,6 +268,9 @@ const RokofAdmin = () => {
         title: newInhouseWorkshopTitle.trim(),
         description: newInhouseWorkshopDescription.trim(),
         duration: newInhouseWorkshopDuration.trim(),
+        title_cs: "",
+        description_cs: "",
+        duration_cs: "",
         sort_order: maxOrder + 1,
         active: true,
       },
@@ -288,7 +294,7 @@ const RokofAdmin = () => {
 
   const handleInhouseWorkshopBlur = async (
     id: string,
-    field: "title" | "description" | "duration",
+    field: "title" | "description" | "duration" | "title_cs" | "description_cs" | "duration_cs",
     value: string,
   ) => {
     await inhouseWorkshopTable()
@@ -920,6 +926,16 @@ const RokofAdmin = () => {
               />
             </div>
             <div>
+              <Label>Title (Czech)</Label>
+              <Input
+                value={editingInhouseWorkshop?.title_cs ?? ""}
+                onChange={(e) =>
+                  setEditingInhouseWorkshop({ ...editingInhouseWorkshop!, title_cs: e.target.value })
+                }
+                placeholder="Workshop title (Czech)"
+              />
+            </div>
+            <div>
               <Label>Description</Label>
               <Textarea
                 value={editingInhouseWorkshop?.description ?? ""}
@@ -931,6 +947,17 @@ const RokofAdmin = () => {
               />
             </div>
             <div>
+              <Label>Description (Czech)</Label>
+              <Textarea
+                value={editingInhouseWorkshop?.description_cs ?? ""}
+                className="min-h-[120px]"
+                onChange={(e) =>
+                  setEditingInhouseWorkshop({ ...editingInhouseWorkshop!, description_cs: e.target.value })
+                }
+                placeholder="Enter description for this workshop (Czech)..."
+              />
+            </div>
+            <div>
               <Label>Duration</Label>
               <Input
                 value={editingInhouseWorkshop?.duration ?? ""}
@@ -938,6 +965,16 @@ const RokofAdmin = () => {
                   setEditingInhouseWorkshop({ ...editingInhouseWorkshop!, duration: e.target.value })
                 }
                 placeholder="e.g. 90 minutes, half day"
+              />
+            </div>
+            <div>
+              <Label>Duration (Czech)</Label>
+              <Input
+                value={editingInhouseWorkshop?.duration_cs ?? ""}
+                onChange={(e) =>
+                  setEditingInhouseWorkshop({ ...editingInhouseWorkshop!, duration_cs: e.target.value })
+                }
+                placeholder="e.g. 90 minut, půldenní"
               />
             </div>
           </div>
@@ -954,6 +991,9 @@ const RokofAdmin = () => {
                       title: editingInhouseWorkshop.title,
                       description: editingInhouseWorkshop.description,
                       duration: editingInhouseWorkshop.duration,
+                      title_cs: editingInhouseWorkshop.title_cs,
+                      description_cs: editingInhouseWorkshop.description_cs,
+                      duration_cs: editingInhouseWorkshop.duration_cs,
                     })
                     .eq("id", editingInhouseWorkshop.id);
                   await fetchInhouseWorkshops();
