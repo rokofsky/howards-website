@@ -926,6 +926,16 @@ const RokofAdmin = () => {
               />
             </div>
             <div>
+              <Label>Title (Czech)</Label>
+              <Input
+                value={editingInhouseWorkshop?.title_cs ?? ""}
+                onChange={(e) =>
+                  setEditingInhouseWorkshop({ ...editingInhouseWorkshop!, title_cs: e.target.value })
+                }
+                placeholder="Workshop title (Czech)"
+              />
+            </div>
+            <div>
               <Label>Description</Label>
               <Textarea
                 value={editingInhouseWorkshop?.description ?? ""}
@@ -937,6 +947,17 @@ const RokofAdmin = () => {
               />
             </div>
             <div>
+              <Label>Description (Czech)</Label>
+              <Textarea
+                value={editingInhouseWorkshop?.description_cs ?? ""}
+                className="min-h-[120px]"
+                onChange={(e) =>
+                  setEditingInhouseWorkshop({ ...editingInhouseWorkshop!, description_cs: e.target.value })
+                }
+                placeholder="Enter description for this workshop (Czech)..."
+              />
+            </div>
+            <div>
               <Label>Duration</Label>
               <Input
                 value={editingInhouseWorkshop?.duration ?? ""}
@@ -944,6 +965,16 @@ const RokofAdmin = () => {
                   setEditingInhouseWorkshop({ ...editingInhouseWorkshop!, duration: e.target.value })
                 }
                 placeholder="e.g. 90 minutes, half day"
+              />
+            </div>
+            <div>
+              <Label>Duration (Czech)</Label>
+              <Input
+                value={editingInhouseWorkshop?.duration_cs ?? ""}
+                onChange={(e) =>
+                  setEditingInhouseWorkshop({ ...editingInhouseWorkshop!, duration_cs: e.target.value })
+                }
+                placeholder="e.g. 90 minut, půldenní"
               />
             </div>
           </div>
