@@ -82,6 +82,9 @@ interface InhouseWorkshop {
   title: string;
   description: string;
   duration: string;
+  title_cs: string;
+  description_cs: string;
+  duration_cs: string;
   sort_order: number;
   active: boolean;
 }
