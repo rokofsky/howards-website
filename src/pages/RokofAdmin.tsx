@@ -991,6 +991,9 @@ const RokofAdmin = () => {
                       title: editingInhouseWorkshop.title,
                       description: editingInhouseWorkshop.description,
                       duration: editingInhouseWorkshop.duration,
+                      title_cs: editingInhouseWorkshop.title_cs,
+                      description_cs: editingInhouseWorkshop.description_cs,
+                      duration_cs: editingInhouseWorkshop.duration_cs,
                     })
                     .eq("id", editingInhouseWorkshop.id);
                   await fetchInhouseWorkshops();
