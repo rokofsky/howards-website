@@ -69,10 +69,27 @@ const STORAGE_KEY = "story-sandbox:v1";
 type Category = "character" | "incident" | "constraint";
 type Prompts = Record<Category, string>;
 
-const CATEGORY_META = (t: (key: string) => string): { key: Category; label: string; tone: string; box: ElementBox }[] => [
-  { key: "character", label: t("storySandbox.categories.character"), tone: "from-primary/20 to-primary/5 border-primary/30", box: "character" },
-  { key: "incident", label: t("storySandbox.categories.incident"), tone: "from-primary/20 to-primary/5 border-primary/30", box: "incident" },
-  { key: "constraint", label: t("storySandbox.categories.constraint"), tone: "from-primary/20 to-primary/5 border-primary/30", box: "constraint" },
+const CATEGORY_META = (
+  t: (key: string) => string,
+): { key: Category; label: string; tone: string; box: ElementBox }[] => [
+  {
+    key: "character",
+    label: t("storySandbox.categories.character"),
+    tone: "from-primary/20 to-primary/5 border-primary/30",
+    box: "character",
+  },
+  {
+    key: "incident",
+    label: t("storySandbox.categories.incident"),
+    tone: "from-primary/20 to-primary/5 border-primary/30",
+    box: "incident",
+  },
+  {
+    key: "constraint",
+    label: t("storySandbox.categories.constraint"),
+    tone: "from-primary/20 to-primary/5 border-primary/30",
+    box: "constraint",
+  },
 ];
 
 type SheetKey = "sandbox" | "oneLiners" | "sheet3";
@@ -244,9 +261,7 @@ export default function StorySandbox() {
   const [voteCounts, setVoteCounts] = useState<Record<string, { up: number; down: number }>>({});
 
   // --- Admin inline editing ---
-  const [isAdmin, setIsAdmin] = useState<boolean>(
-    typeof window !== "undefined" && isAdminAuthenticated(),
-  );
+  const [isAdmin, setIsAdmin] = useState<boolean>(typeof window !== "undefined" && isAdminAuthenticated());
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [addingNew, setAddingNew] = useState<Record<string, boolean>>({});
   const [savingField, setSavingField] = useState<Record<string, boolean>>({});
@@ -494,13 +509,12 @@ export default function StorySandbox() {
     if (!row) return;
     // Consecutive duplicate guard: skip the next item if it equals the currently visible one.
     if (cat === "incident")
-      console.log("INCIDENT shuffle - currentId:", currentId, "next row id:", row.id, "same?", row.id === currentId);
-    if (pool.length > 1 && row.id !== undefined && row.id === currentId) {
-      q.idx = (q.idx + 1) % q.indices.length;
-      rowIdx = q.indices[q.idx];
-      row = pool[rowIdx];
-      if (!row) return;
-    }
+      if (pool.length > 1 && row.id !== undefined && row.id === currentId) {
+        q.idx = (q.idx + 1) % q.indices.length;
+        rowIdx = q.indices[q.idx];
+        row = pool[rowIdx];
+        if (!row) return;
+      }
     qRef.current = { indices: q.indices, idx: q.idx + 1, lastId: row.id ?? null };
 
     prevPrompts.current[cat] = { row: cardRows[cat]!, text: prompts[cat] };
@@ -800,9 +814,7 @@ export default function StorySandbox() {
       {/* Header */}
       <header className="text-center space-y-2">
         <h2 className="text-3xl md:text-4xl font-bold">{t("storySandbox.title")}</h2>
-        <p className="text-muted-foreground max-w-xl mx-auto whitespace-pre-line">
-          {t("storySandbox.description")}
-        </p>
+        <p className="text-muted-foreground max-w-xl mx-auto whitespace-pre-line">{t("storySandbox.description")}</p>
       </header>
 
       {/* Prompt Generator (Sandbox / Sheet1) */}
