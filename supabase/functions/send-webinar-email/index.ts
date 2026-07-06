@@ -47,8 +47,8 @@ Deno.serve(async (req) => {
 
     const body = await req.json();
 
-    // Shared secret check (optional)
-    if (FORM_SECRET && body.form_secret !== FORM_SECRET) {
+    // Shared secret check (required)
+    if (!FORM_SECRET || body.form_secret !== FORM_SECRET) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
