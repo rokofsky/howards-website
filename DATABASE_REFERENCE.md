@@ -13,6 +13,7 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 **Purpose.** Bilingual (English + Czech) long-form blog articles rendered on the public site and managed from the in-app admin.
 
 **Read/write map**
+
 - Pages: `src/pages/Blog.tsx` (read), `src/pages/BlogPost.tsx` (read), `src/pages/RokofAdmin.tsx` (read + insert + update + delete)
 - Components: `src/components/BlogPreview.tsx` (read)
 - Edge Functions: none
@@ -20,23 +21,24 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 
 **Columns (from `types.ts`)**
 
-| Column | Type |
-| --- | --- |
-| `id` | uuid |
-| `slug` | text |
-| `title_en`, `title_cs` | text |
-| `excerpt_en`, `excerpt_cs` | text |
-| `content_en`, `content_cs` | text |
-| `category_en`, `category_cs` | text |
-| `date_en`, `date_cs` | text (display-only date strings) |
-| `image_url` | text | null |
-| `published` | boolean |
-| `sort_order` | number |
-| `created_at`, `updated_at` | timestamp |
+| Column                       | Type                             |
+| ---------------------------- | -------------------------------- | ---- |
+| `id`                         | uuid                             |
+| `slug`                       | text                             |
+| `title_en`, `title_cs`       | text                             |
+| `excerpt_en`, `excerpt_cs`   | text                             |
+| `content_en`, `content_cs`   | text                             |
+| `category_en`, `category_cs` | text                             |
+| `date_en`, `date_cs`         | text (display-only date strings) |
+| `image_url`                  | text                             | null |
+| `published`                  | boolean                          |
+| `sort_order`                 | number                           |
+| `created_at`, `updated_at`   | timestamp                        |
 
 **Relationships.** None declared.
 
 **Business rules (verified)**
+
 - Public reads filter `published = true` (`Blog.tsx`, `BlogPost.tsx`, `BlogPreview.tsx`).
 - Public ordering is `sort_order ASC, created_at DESC` (`BlogPreview.tsx`).
 - Bilingual fallback pattern `*_cs || *_en` when locale is Czech (`BlogPreview.tsx`).
@@ -55,6 +57,7 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 **Purpose.** Catalog of webinar offerings shown in the "Live Webinars" service grid and on each webinar detail page; also selectable in the order form.
 
 **Read/write map**
+
 - Pages: `src/pages/WebinarDetail.tsx` (read), `src/pages/ServiceDetail.tsx` (read), `src/pages/AdminWebinars.tsx` (read + insert + update + delete + reorder)
 - Components: `src/components/WebinarOrderForm.tsx` (read — resolves slugs to ids)
 - Edge Functions: `supabase/functions/admin-webinars/index.ts` (insert, update, delete — admin auth via HMAC token / password)
@@ -62,20 +65,21 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 
 **Columns (from `types.ts`)**
 
-| Column | Type |
-| --- | --- |
-| `id` | uuid |
-| `slug` | text |
-| `title`, `title_cs` | text |
-| `description`, `description_cs` | text |
-| `details`, `details_cs` | text |
-| `active` | boolean |
-| `sort_order` | number |
-| `created_at`, `updated_at` | timestamp |
+| Column                          | Type      |
+| ------------------------------- | --------- |
+| `id`                            | uuid      |
+| `slug`                          | text      |
+| `title`, `title_cs`             | text      |
+| `description`, `description_cs` | text      |
+| `details`, `details_cs`         | text      |
+| `active`                        | boolean   |
+| `sort_order`                    | number    |
+| `created_at`, `updated_at`      | timestamp |
 
 **Relationships.** None declared. Referenced indirectly by `webinar_orders.session_ids` / `session_id` (see below), but no FK.
 
 **Business rules (verified)**
+
 - Admin list ordering is `sort_order ASC` (`AdminWebinars.tsx`).
 - Drag reorder rewrites `sort_order` per row (`AdminWebinars.tsx`).
 - `active` toggled via `update({ active })` (`AdminWebinars.tsx`).
@@ -95,6 +99,7 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 **Purpose.** Keynote-talk topics displayed on `/keynote-topics` and referenced by the inquiry modal.
 
 **Read/write map**
+
 - Pages: `src/pages/KeynoteTopics.tsx` (read), `src/pages/RokofAdmin.tsx` (read + insert + update + delete + reorder)
 - Components: `src/components/KeynoteInquiryModal.tsx` (read)
 - Edge Functions: `supabase/functions/admin-keynote-topics/index.ts` (insert, update, reorder, delete — admin auth)
@@ -102,18 +107,19 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 
 **Columns (from `types.ts`)**
 
-| Column | Type |
-| --- | --- |
-| `id` | uuid |
-| `title` | text |
-| `description` | text |
-| `active` | boolean |
-| `sort_order` | number |
+| Column                     | Type      |
+| -------------------------- | --------- |
+| `id`                       | uuid      |
+| `title`                    | text      |
+| `description`              | text      |
+| `active`                   | boolean   |
+| `sort_order`               | number    |
 | `created_at`, `updated_at` | timestamp |
 
 **Relationships.** None declared.
 
 **Business rules (verified)**
+
 - Admin lists ordered by `sort_order ASC` (`RokofAdmin.tsx`, `admin-keynote-topics/index.ts`).
 - `active` toggled with `update({ active })`; delete is hard delete (`RokofAdmin.tsx`).
 - Edge function enforces `title` max 300 chars, `description` max 5000 chars, defaults `sort_order = 0`, `active = true`.
@@ -132,6 +138,7 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 **Purpose.** Scheduled online storytelling workshop sessions users can sign up for; carries the Zoom meeting details for each session.
 
 **Read/write map**
+
 - Pages: `src/pages/StorytellingWorkshops.tsx` (read — via edge function, not direct select), `src/pages/AdminSessions.tsx` (read + insert + update + delete), `src/pages/Diagnostics.tsx` (read)
 - Components: none directly
 - Edge Functions: `supabase/functions/admin-sessions/index.ts` (read + insert + update + delete — admin auth), `supabase/functions/signup-for-session/index.ts` (read — fetches `zoom_link`, `zoom_meeting_id`, `session_date`, `title` for a session id)
@@ -139,20 +146,21 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 
 **Columns (from `types.ts`)**
 
-| Column | Type |
-| --- | --- |
-| `id` | uuid |
-| `title` | text | null |
-| `description` | text | null |
-| `session_date` | timestamp with time zone |
-| `status` | text |
-| `zoom_link` | text | null (sensitive) |
-| `zoom_meeting_id` | text | null (sensitive) |
-| `created_at` | timestamp |
+| Column            | Type                     |
+| ----------------- | ------------------------ | ---------------- |
+| `id`              | uuid                     |
+| `title`           | text                     | null             |
+| `description`     | text                     | null             |
+| `session_date`    | timestamp with time zone |
+| `status`          | text                     |
+| `zoom_link`       | text                     | null (sensitive) |
+| `zoom_meeting_id` | text                     | null (sensitive) |
+| `created_at`      | timestamp                |
 
 **Relationships.** `session_signups.session_id → storytelling_sessions.id` (also references the `storytelling_sessions_public` view).
 
 **Business rules (verified)**
+
 - Public listing goes through the `get_published_storytelling_sessions` RPC / public view, which projects only non-sensitive columns and filters `status = 'published'`.
 - Workspace rule (workspace knowledge, cited in `StorytellingWorkshops.tsx` comment): do **not** apply date-based filters client-side; filter by `status = 'published'` only. The RPC itself does apply `session_date >= now()`.
 - Admin sanitizes `zoom_meeting_id` by stripping non-digits before insert/update (`AdminSessions.tsx`, `admin-sessions/index.ts`).
@@ -171,6 +179,7 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 **Purpose.** Story-sandbox prompt rows (character / setting / incident / constraint / prompt text) rendered by the interactive Story Sandbox.
 
 **Read/write map**
+
 - Pages: `src/pages/Diagnostics.tsx` (read)
 - Components: `src/components/StorySandbox.tsx` (read — `select("*")`)
 - Edge Functions: none
@@ -178,20 +187,21 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 
 **Columns (from `types.ts`)**
 
-| Column | Type |
-| --- | --- |
-| `id` | uuid |
-| `sheet_key` | text |
-| `character` | text | null |
-| `setting` | text | null |
-| `incident` | text | null |
-| `constraint_text` | text | null |
-| `prompt` | text | null |
-| `created_at` | timestamp |
+| Column            | Type      |
+| ----------------- | --------- | ---- |
+| `id`              | uuid      |
+| `sheet_key`       | text      |
+| `character`       | text      | null |
+| `setting`         | text      | null |
+| `incident`        | text      | null |
+| `constraint_text` | text      | null |
+| `prompt`          | text      | null |
+| `created_at`      | timestamp |
 
 **Relationships.** No FKs declared. Logically pairs with `votes` via `(sheet_key, row_id)` — `row_id` is not stored on `prompts` in the schema; the sandbox component treats prompt rows as vote targets.
 
 **Business rules (verified)**
+
 - Fetched as a full-table select and rendered client-side (`StorySandbox.tsx`).
 - No write path exists in the app — content is seeded/administered outside the UI.
 
@@ -208,6 +218,7 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 **Purpose.** Aggregate up/down vote counts for individual sandbox elements, keyed by `(sheet_key, row_id, element_box)`.
 
 **Read/write map**
+
 - Pages: `src/pages/Diagnostics.tsx` (read)
 - Components: `src/components/StorySandbox.tsx` (read — `select("sheet_key,row_id,element_box,up_count,down_count")`)
 - Edge Functions: `supabase/functions/cast-vote/index.ts` (write via RPC only)
@@ -215,18 +226,19 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 
 **Columns (from `types.ts`)**
 
-| Column | Type |
-| --- | --- |
-| `sheet_key` | text |
-| `row_id` | text |
-| `element_box` | text |
-| `up_count` | number |
-| `down_count` | number |
-| `updated_at` | timestamp |
+| Column        | Type      |
+| ------------- | --------- |
+| `sheet_key`   | text      |
+| `row_id`      | text      |
+| `element_box` | text      |
+| `up_count`    | number    |
+| `down_count`  | number    |
+| `updated_at`  | timestamp |
 
 **Relationships.** No FKs declared. Logically joined to `prompts` on `sheet_key`.
 
 **Business rules (verified)**
+
 - Clients never write directly. `cast-vote` validates the vote value against `{"up","down","nullify_up","nullify_down"}` and calls the `increment_vote` RPC with SECURITY DEFINER semantics.
 - RPC clamps counters at 0 and upserts on the composite key `(sheet_key, row_id, element_box)`.
 
@@ -243,6 +255,7 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 **Purpose.** Per the schema, links a signup email to a `storytelling_sessions` row.
 
 **Read/write map**
+
 - Pages: none reference `session_signups` directly.
 - Components: none.
 - Edge Functions: none reference `session_signups` directly. `signup-for-session/index.ts` writes to the separate `registrations` table, not this one.
@@ -250,11 +263,11 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 
 **Columns (from `types.ts`)**
 
-| Column | Type |
-| --- | --- |
-| `id` | uuid |
-| `session_id` | uuid |
-| `email` | text |
+| Column       | Type      |
+| ------------ | --------- |
+| `id`         | uuid      |
+| `session_id` | uuid      |
+| `email`      | text      |
 | `created_at` | timestamp |
 
 **Relationships.** `session_id → storytelling_sessions.id` (also targets the `storytelling_sessions_public` view).
@@ -274,6 +287,7 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 **Purpose.** Orders placed via the "Order Now (no payment required)" webinar order form — stores customer contact and chosen webinar(s)/date(s).
 
 **Read/write map**
+
 - Pages: none read directly.
 - Components: `src/components/WebinarOrderForm.tsx` (insert — one row per order after resolving webinar slugs → ids).
 - Edge Functions: `supabase/functions/send-webinar-email/index.ts` (read — anti-abuse check that a matching order row exists in the last 10 minutes before sending confirmation email via Resend).
@@ -281,22 +295,23 @@ Tags used below: `read`, `write`, `read+write`. Sections order: `blog_posts`, `w
 
 **Columns (from `types.ts`)**
 
-| Column | Type |
-| --- | --- |
-| `id` | uuid |
-| `customer_name` | text |
-| `customer_email` | text |
-| `session_id` | uuid | null (legacy single-selection) |
-| `session_ids` | uuid[] | null (multi-selection) |
-| `chosen_date` | text | null (legacy single-date) |
-| `chosen_dates` | text[] | null (multi-date) |
-| `created_at` | timestamp | null |
+| Column           | Type      |
+| ---------------- | --------- | ------------------------------ |
+| `id`             | uuid      |
+| `customer_name`  | text      |
+| `customer_email` | text      |
+| `session_id`     | uuid      | null (legacy single-selection) |
+| `session_ids`    | uuid[]    | null (multi-selection)         |
+| `chosen_date`    | text      | null (legacy single-date)      |
+| `chosen_dates`   | text[]    | null (multi-date)              |
+| `created_at`     | timestamp | null                           |
 
 Note: the singular `session_id`/`chosen_date` columns coexist with the plural array versions in the schema; current form code writes the plural arrays.
 
 **Relationships.** No FK declared, but `session_id` / `session_ids` logically reference `webinars.id` (the form resolves selected slugs via `webinars` before inserting).
 
 **Business rules (verified)**
+
 - Order form inserts one row; then `send-webinar-email` is invoked. That function requires a matching `customer_email` order created within the last 10 minutes before it will send via Resend (anti-abuse).
 - No admin CRUD path for `webinar_orders` exists in the codebase.
 
@@ -308,12 +323,115 @@ Note: the singular `session_id`/`chosen_date` columns coexist with the plural ar
 
 ---
 
-## Cross-table migration order
+## 9. `inhouse_workshops`
 
-1. **`keynote_topics`** — self-contained; migrate first as a smoke test of the CPT/ACF pipeline.
-2. **`webinars`** — must exist before `webinar_orders` because orders reference webinar IDs.
-3. **`storytelling_sessions`** — must exist before `session_signups` and before the Zoom-integrated signup route.
-4. **`session_signups`** — depends on `storytelling_sessions`; likely retired (no verified app usage).
-5. **`webinar_orders`** — depends on `webinars`; also depends on the Resend rewire being in place.
-6. **`prompts`** then **`votes`** — sandbox pair; `prompts` first because `votes` targets `(sheet_key, row_id)` on prompt rows. Vote data itself is not migrated.
-7. **`blog_posts`** — independent; can move any time, but do last so URL redirects and WPML setup don't block earlier operational tables.
+**Purpose.** Catalog of corporate training and in-house workshop offerings displayed on dynamic routing pages and service sub-grids.
+
+**Read/write map**
+
+- Pages: `src/pages/InhouseWorkshops.tsx` (read), `src/pages/RokofAdmin.tsx` (read + insert + update + delete + reorder)
+- Components: `src/components/WorkshopInquiryModal.tsx` (read)
+- Edge Functions: `supabase/functions/admin-workshops/index.ts` (insert, update, reorder, delete — admin auth via HMAC token / password)
+- RPCs / Views: none
+
+**Columns (from `types.ts`)**
+
+| Column                          | Type      |
+| ------------------------------- | --------- | ---- |
+| `id`                            | uuid      |
+| `title`, `title_cs`             | text      |
+| `description`, `description_cs` | text      |
+| `duration`, `duration_cs`       | text      | null |
+| `active`                        | boolean   |
+| `sort_order`                    | number    |
+| `created_at`, `updated_at`      | timestamp |
+
+**Relationships.** None declared.
+
+**Business rules (verified)**
+
+- Admin list ordering is strictly controlled via `sort_order ASC` (`RokofAdmin.tsx`).
+- Fully bilingual schema framework supporting parallel tracking configurations (`title` vs `title_cs`, etc.).
+- Admin writes run through a dedicated `admin-workshops` edge function requiring HMAC session token verification or the fallback backend password block.
+
+**Data migration recommendation.** **All** — stable structural catalog content currently rendering live corporate offerings.
+
+**Recommended WordPress equivalent.** Custom Post Type `inhouse_workshop` paired with Advanced Custom Fields (ACF) for localized `duration`/`description` parameters, utilizing WPML or Polylang for language switching.
+
+---
+
+## 10. `registrations`
+
+**Purpose.** The live, active operational registry holding user-generated signups for public storytelling workshops. (Replaces the unused `session_signups` table).
+
+**Read/write map**
+
+- Pages: none read directly.
+- Components: none directly.
+- Edge Functions: `supabase/functions/signup-for-session/index.ts` (write — core insert destination after verifying meeting limits and validating inbound client payload schemas).
+- RPCs / Views: none.
+
+**Columns (from `types.ts`)**
+
+| Column       | Type      |
+| ------------ | --------- | ---- |
+| `id`         | uuid      |
+| `session_id` | uuid      |
+| `email`      | text      |
+| `name`       | text      | null |
+| `created_at` | timestamp |
+
+**Relationships.** `session_id` logically acts as a Foreign Key referencing `storytelling_sessions.id`.
+
+**Business rules (verified)**
+
+- The application bypasses the empty client-side `session_signups` structure entirely. Signups route via the `signup-for-session` Edge Function which inserts directly into this table.
+- Inserts trigger a server-side Zoom API request to register the attendee against the explicit `zoom_meeting_id` and issue an automatic bilingual confirmation dispatch via Resend.
+
+**Data migration recommendation.** **Some** — migrate active, upcoming session registration rows for live follow-ups. Historical records can be exported directly to a flat CSV file for offsite archiving.
+
+**Recommended WordPress equivalent.** Custom `$wpdb` table `wp_workshop_registrations` (or a protected CPT `workshop_registration` referencing the `story_session` post type if an out-of-the-box admin list interface is preferred).
+
+---
+
+## 11. `contact_submissions`
+
+**Purpose.** Persistent database audit log capturing all contact form submissions fired across the frontend site.
+
+**Read/write map**
+
+- Pages: none read directly.
+- Components: `src/components/ContactForm.tsx` (indirect write path).
+- Edge Functions: `supabase/functions/send-contact-email/index.ts` (write — updates/logs the submission payload securely on the backend alongside processing the outbound email relay).
+- RPCs / Views: none.
+
+**Columns (from `types.ts`)**
+
+| Column       | Type      |
+| ------------ | --------- | ---- |
+| `id`         | uuid      |
+| `name`       | text      |
+| `email`      | text      |
+| `subject`    | text      | null |
+| `message`    | text      |
+| `created_at` | timestamp |
+
+**Relationships.** None declared.
+
+**Business rules (verified)**
+
+- Inbound data arrays pass through the `send-contact-email` edge infrastructure which sanitizes the input parameters, logs a backup snapshot row to this table, and triggers a direct notification to the admin via Resend.
+
+**Data migration recommendation.** **None** — historical message logs have no structural layout value in a fresh installation. Start clean and let a native WP form processor log future messages.
+
+## **Recommended WordPress equivalent.** Replace completely with a native WordPress contact form plugin framework (like Contact Form 7, Gravity Forms, or Fluent Forms) configured to store submission logs locally while dispatching admin updates via standard server SMTP.
+
+## Cross-table migration order (Updated)
+
+1. **`keynote_topics` & `inhouse_workshops`** — Completely self-contained content tables. Run these first as your base pipeline testing blocks.
+2. **`webinars`** — Must exist prior to configuring orders.
+3. **`storytelling_sessions`** — Crucial foundational layout required before user signups or tracking loops can be built.
+4. **`registrations`** — Operational dependency mapping back directly to active storytelling sessions.
+5. **`webinar_orders`** — Operational data requiring parent webinar IDs to resolve selections.
+6. **`prompts` then `votes`** — Sandbox interface configuration blocks. Prompt matrix pulls first; user interaction tokens start clean.
+7. **`blog_posts`** — Highly independent long-form content. Process last to ensure bilingual plugin routing mappings and URL taxonomies are firmly configured first.
