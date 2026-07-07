@@ -15,7 +15,8 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useT } from "@/hooks/useT";
 
-const WEBINAR_FORM_SECRET = "3f9dedaa-4562-4090-a07f-bcc2bdfb3755";
+// Replace the hardcoded string with this secure environment reference:
+const WEBINAR_FORM_SECRET = import.meta.env.VITE_WEBINAR_FORM_SECRET;
 
 interface OrderFormProps {
   open: boolean;
