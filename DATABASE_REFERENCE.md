@@ -358,6 +358,8 @@ Note: the singular `session_id`/`chosen_date` columns coexist with the plural ar
 
 **Recommended WordPress equivalent.** Custom Post Type `inhouse_workshop` paired with Advanced Custom Fields (ACF) for localized `duration`/`description` parameters, utilizing WPML or Polylang for language switching.
 
+**Migration notes.** Map `sort_order` directly to `menu_order`. Ensure the translation plugin correctly links English workshops to Czech counterparts rather than stacking them as flat rows.
+
 ---
 
 ## 10. `registrations`
@@ -392,6 +394,8 @@ Note: the singular `session_id`/`chosen_date` columns coexist with the plural ar
 
 **Recommended WordPress equivalent.** Custom `$wpdb` table `wp_workshop_registrations` (or a protected CPT `workshop_registration` referencing the `story_session` post type if an out-of-the-box admin list interface is preferred).
 
+**Migration notes.** Rebuild the registration intercept hook directly in PHP to coordinate post-insert routines with the Zoom S2S OAuth tokens and Resend mail integrations.
+
 ---
 
 ## 11. `contact_submissions`
@@ -424,7 +428,7 @@ Note: the singular `session_id`/`chosen_date` columns coexist with the plural ar
 
 **Data migration recommendation.** **None** — historical message logs have no structural layout value in a fresh installation. Start clean and let a native WP form processor log future messages.
 
-## **Recommended WordPress equivalent.** Replace completely with a native WordPress contact form plugin framework (like Contact Form 7, Gravity Forms, or Fluent Forms) configured to store submission logs locally while dispatching admin updates via standard server SMTP.
+**Recommended WordPress equivalent.** Replace completely with a native WordPress contact form plugin framework (like Contact Form 7, Gravity Forms, or Fluent Forms) configured to store submission logs locally while dispatching admin updates via standard server SMTP.
 
 ## Cross-table migration order (Updated)
 
