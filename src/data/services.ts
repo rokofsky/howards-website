@@ -73,10 +73,10 @@ export const services: ServiceItem[] = [
   },
   {
     id: "9",
-    title: { en: "Intercultural communication training", cs: "Školení komunikace pro týmy" },
+    title: { en: "Intercultural communication training", cs: "Trénink v mezikulturní komunikace" },
     subtitle: {
       en: "when you're dealing with people from all over the world",
-      cs: "Akce, které ve vašich hostech rezonují",
+      cs: "když jednáte s lidmi z celého světa",
     },
     hook: { en: "\n", cs: "\n" },
     slug: "intercultural-communication",
