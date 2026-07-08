@@ -130,7 +130,7 @@ const ServiceDetail = () => {
       : slug === "six-hats"
         ? t("The Six Hats Method for Meetings", "Metoda Šesti klobouků pro porady")
         : slug === "live-webinars"
-          ? t("Live Webinars", "Online webináře")
+          ? t("Live Webinars", "Živé\u00A0webináře")
           : serviceTitle;
 
   const subtitle = pickL(service.subtitle, lang);
