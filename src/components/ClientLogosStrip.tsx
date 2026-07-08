@@ -1,22 +1,27 @@
 import { useT } from "@/hooks/useT";
 
 import accenture from "@/assets/clients/accenture.png";
+import alcon from "@/assets/clients/alcon.jpg";
 import analogia from "@/assets/clients/analogia.png";
 import arcelorMittal from "@/assets/clients/arcelor-mittal.png";
 import avon from "@/assets/clients/avon.png";
 import caledonianSchool from "@/assets/clients/caledonian-school.png";
 import ceps from "@/assets/clients/ceps.png";
+import ceskarafinerska from "@/assets/clients/ceskarafinerska.jpg";
 import citibank from "@/assets/clients/citibank.png";
 import csob from "@/assets/clients/csob.png";
 import ctGroup from "@/assets/clients/ct-group.png";
 import dresserRand from "@/assets/clients/dresser-rand.png";
 import elektrotechnika from "@/assets/clients/elektrotechnika.png";
+import elnec from "@/assets/clients/elnec.jpg";
 import eon from "@/assets/clients/eon.png";
+import ezpada from "@/assets/clients/ezpada.jpg";
 import fiat from "@/assets/clients/fiat.jpg";
 import heidelbergMaterials from "@/assets/clients/heidelberg-materials.png";
 import hp from "@/assets/clients/hp.png";
 import iir from "@/assets/clients/iir.png";
 import johnCrane from "@/assets/clients/john-crane.png";
+import johnsoncontrols from "@/assets/clients/johnsoncontrols.jpg";
 import kostal from "@/assets/clients/kostal.png";
 import prologis from "@/assets/clients/prologis.png";
 import saab from "@/assets/clients/saab.jpg";
@@ -39,22 +44,27 @@ interface Logo {
 
 const logos: Logo[] = [
   { src: accenture, alt: "Accenture" },
+  { src: alcon, alt: "alcon" },
   { src: analogia, alt: "Analogia" },
   { src: arcelorMittal, alt: "ArcelorMittal" },
   { src: avon, alt: "Avon" },
   { src: caledonianSchool, alt: "Caledonian School" },
   { src: ceps, alt: "ČEPS" },
+  { src: ceskarafinerska, alt: "ceskarafinerska" },
   { src: citibank, alt: "Citibank" },
   { src: csob, alt: "ČSOB" },
   { src: ctGroup, alt: "CT Group" },
   { src: dresserRand, alt: "Dresser-Rand" },
   { src: elektrotechnika, alt: "Elektrotechnika" },
+  { src: elnec, alt: "elnec" },
   { src: eon, alt: "E.ON" },
+  { src: ezpada, alt: "ezpada" },
   { src: fiat, alt: "Fiat" },
   { src: heidelbergMaterials, alt: "Heidelberg Materials" },
   { src: hp, alt: "HP" },
   { src: iir, alt: "IIR", wide: true },
   { src: johnCrane, alt: "John Crane" },
+  { src: johnsoncontrols, alt: "johnsoncontrols" },
   { src: kostal, alt: "Kostal" },
   { src: prologis, alt: "Prologis" },
   { src: saab, alt: "Saab" },
