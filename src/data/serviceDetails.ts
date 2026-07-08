@@ -604,15 +604,15 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         ],
       },
       {
-        title: { en: "Training Methods", cs: "Metody tréninku" },
+        title: { en: "\n", cs: "\n" },
         paragraphs: [
           {
-            en: "Experiential training by role-playing and resolving model situations. These are recorded, analysed by the trainer with appropriate feedback.",
-            cs: "Zážitkový trénink formou hraní rolí a řešení modelových situací. Ty se nahrávají a trenér je analyzuje s odpovídající zpětnou vazbou.",
+            en: "\n",
+            cs: "\n",
           },
           {
-            en: "The trainer focuses on revealing and repeating correct behaviors, demonstrating the most useful rhetorical formulations, non-verbal signals, and self-control mechanisms. Feedback is encouraged in all workshops and seminars. Everyone is kindly asked to participate and give feedback. There is space for everyone.",
-            cs: "Trenér se zaměřuje na odhalení a opakování správného chování, předvedení nejužitečnějších rétorických formulací, neverbálních signálů a mechanismů sebekontroly. Zpětná vazba je vítána ve všech workshopech a seminářích. Každý je zdvořile vyzván k účasti a poskytnutí zpětné vazby. Prostor je pro všechny.",
+            en: "\n",
+            cs: "\n",
           },
         ],
       },
