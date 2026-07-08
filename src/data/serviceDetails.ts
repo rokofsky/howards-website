@@ -672,8 +672,36 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         title: { en: "", cs: "" },
         bullets: [
           {
-            en: "Analyze how verbal and nonverbal communication styles vary across cultures.\n\nIdentify potential barriers in intercultural communication and apply strategies to overcome them.\n\nApply effective negotiation techniques tailored to different cultural contexts.\n\nEvaluate case studies of successful and failed intercultural business negotiations.\n\nDemonstrate conflict resolution skills in multicultural team environments.\n\nAssess the role of ethics and etiquette in international business interactions.\n\nEnhance persuasive communication skills for presentations, meetings, and written exchanges in global settings.\n\nDesign culturally appropriate business strategies for market entry, partnerships, and stakeholder engagement.",
-            cs: "Analyzovat, jak se verbální a neverbální komunikační styly liší v závislosti na kultuře.\n\nIdentifikovat potenciální bariéry v mezikulturní komunikaci a aplikovat strategie k jejich překonání.\n\nAplikovat efektivní techniky vyjednávání přizpůsobené různým kulturním kontextům.\n\nVyhodnocovat případové studie úspěšných i neúspěšných mezikulturních obchodních vyjednávání.\n\nProkázat dovednosti v řešení konfliktů v multikulturním týmovém prostředí.\n\nPosoudit roli etiky a etikety v mezinárodních obchodních interakcích.\n\nZlepšit přesvědčivé komunikační dovednosti pro prezentace, schůzky a písemnou výměnu v globálním prostředí.\n\nNavrhovat kulturně vhodné obchodní strategie pro vstup na trh, partnerství a zapojení zúčastněných stran.",
+            en: "Analyze how verbal and nonverbal communication styles vary across cultures.",
+            cs: "Analyzovat, jak se verbální a neverbální komunikační styly liší v závislosti na kultuře.",
+          },
+          {
+            en: "Identify potential barriers in intercultural communication and apply strategies to overcome them.",
+            cs: "Identifikovat potenciální bariéry v mezikulturní komunikaci a aplikovat strategie k jejich překonání.",
+          },
+          {
+            en: "Apply effective negotiation techniques tailored to different cultural contexts.",
+            cs: "Aplikovat efektivní techniky vyjednávání přizpůsobené různým kulturním kontextům.",
+          },
+          {
+            en: "Evaluate case studies of successful and failed intercultural business negotiations.",
+            cs: "Vyhodnocovat případové studie úspěšných i neúspěšných mezikulturních obchodních vyjednávání.",
+          },
+          {
+            en: "Demonstrate conflict resolution skills in multicultural team environments.",
+            cs: "Prokázat dovednosti v řešení konfliktů v multikulturním týmovém prostředí.",
+          },
+          {
+            en: "Assess the role of ethics and etiquette in international business interactions.",
+            cs: "Posoudit roli etiky a etikety v mezinárodních obchodních interakcích.",
+          },
+          {
+            en: "Enhance persuasive communication skills for presentations, meetings, and written exchanges in global settings.",
+            cs: "Zlepšit přesvědčivé komunikační dovednosti pro prezentace, schůzky a písemnou výměnu v globálním prostředí.",
+          },
+          {
+            en: "Design culturally appropriate business strategies for market entry, partnerships, and stakeholder engagement.",
+            cs: "Navrhovat kulturně vhodné obchodní strategie pro vstup na trh, partnerství a zapojení zúčastněných stran.",
           },
         ],
       },
