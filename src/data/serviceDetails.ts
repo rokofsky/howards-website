@@ -555,7 +555,7 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           { en: "Eased dealing with conflict", cs: "Snadnější zvládání konfliktů" },
           { en: "\n", cs: "\n" },
           { en: "Overcoming objections", cs: "Překonávání námitek" },
-          { en: "Assertiveness — the two-line technique\u00A0to make your point and defend your space", cs: "Asertivita — technika dvou řádků\u00A0prosadit svůj názor a obhájit svůj prostor" },
+          { en: "Assertiveness — the two-line technique\u00A0to make your point and defend your space", cs: "Asertivita: technika dvou řádků\u00A0—\u00A0prosadit svůj názor a obhájit svůj prostor" },
           {
             en: "Constructive feedback: giving, receiving and requesting",
             cs: "Konstruktivní zpětná vazba: dávat, přijímat a žádat o ni",
