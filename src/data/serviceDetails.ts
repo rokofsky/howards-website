@@ -648,37 +648,25 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     tone: "executive",
   },
   "intercultural-communication": {
-    pageTitle: { en: "\n", cs: "\n" },
+    pageTitle: { en: "Course objectives:", cs: "Cíle kurzu:" },
     lead: {
       en: "when you deal with people from all over the world",
       cs: "Najměte Howarda jako řečníka na svou významnou akci a ještě rok poté se o ní bude mluvit.",
     },
     intro: [
-      { en: "\n", cs: "\n" },
       {
-        en: "Fill in.",
-        cs: "Fill in",
+        en: "This course is designed to equip MBA students with the essential knowledge and skills to navigate the complexities of intercultural communication and negotiation in global business environments. By examining communication styles and negotiation strategies in general as well as across different regions, students will develop the ability to foster effective collaboration, mitigate misunderstandings, and achieve successful outcomes in cross-cultural interactions. Through case studies, simulations, and real-world examples, the course emphasizes practical application, enabling participants to adapt their communication approaches to diverse cultural contexts. Key topics include verbal and nonverbal communication, conflict resolution, and ethical considerations in international business. By the end of the course, students will be prepared to engage confidently in multicultural settings, enhancing their professional competence in an increasingly interconnected world.",
+        cs: "Tento kurz je navržen tak, aby studenty MBA vybavil základními znalostmi a dovednostmi pro orientaci v komplexitě mezikulturní komunikace a vyjednávání v globálním obchodním prostředí. Zkoumáním komunikačních stylů a vyjednávacích strategií obecně i napříč různými regiony si studenti rozvinou schopnost podporovat efektivní spolupráci, zmírňovat nedorozumění a dosahovat úspěšných výsledků v mezikulturních interakcích. Prostřednictvím případových studií, simulací a reálných příkladů kurz klade důraz na praktickou aplikaci a umožňuje účastníkům přizpůsobit své komunikační přístupy různým kulturním kontextům. Klíčová témata zahrnují verbální a neverbální komunikaci, řešení konfliktů a etické aspekty v mezinárodním obchodu. Na konci kurzu budou studenti připraveni sebevědomě se zapojit v multikulturním prostředí, což zvýší jejich profesní kompetenci ve stále více propojeném světě.",
       },
-      { en: "\n", cs: "\n" },
-      { en: "\n", cs: "\n" },
     ],
     sections: [
       {
-        title: { en: "Available workshops\n", cs: "Dostupné workshopy\n" },
+        title: { en: "", cs: "" },
         bullets: [
-          { en: "\n", cs: "\n" },
-          { en: "\n", cs: "\n" },
           {
-            en: "Assertiveness\nIntercultural Communication\nEffective Feedback - Giving & Receiving\n\n\n",
-            cs: "Asertivita\nMezikulturní komunikace\nEfektivní zpětná vazba – poskytování a přijímání\n\n\n",
+            en: "Analyze how verbal and nonverbal communication styles vary across cultures.\n\nIdentify potential barriers in intercultural communication and apply strategies to overcome them.\n\nApply effective negotiation techniques tailored to different cultural contexts.\n\nEvaluate case studies of successful and failed intercultural business negotiations.\n\nDemonstrate conflict resolution skills in multicultural team environments.\n\nAssess the role of ethics and etiquette in international business interactions.\n\nEnhance persuasive communication skills for presentations, meetings, and written exchanges in global settings.\n\nDesign culturally appropriate business strategies for market entry, partnerships, and stakeholder engagement.",
+            cs: "Analyzovat, jak se verbální a neverbální komunikační styly liší v závislosti na kultuře.\n\nIdentifikovat potenciální bariéry v mezikulturní komunikaci a aplikovat strategie k jejich překonání.\n\nAplikovat efektivní techniky vyjednávání přizpůsobené různým kulturním kontextům.\n\nVyhodnocovat případové studie úspěšných i neúspěšných mezikulturních obchodních vyjednávání.\n\nProkázat dovednosti v řešení konfliktů v multikulturním týmovém prostředí.\n\nPosoudit roli etiky a etikety v mezinárodních obchodních interakcích.\n\nZlepšit přesvědčivé komunikační dovednosti pro prezentace, schůzky a písemnou výměnu v globálním prostředí.\n\nNavrhovat kulturně vhodné obchodní strategie pro vstup na trh, partnerství a zapojení zúčastněných stran.",
           },
-        ],
-      },
-      {
-        title: { en: "Training Methods", cs: "Metody tréninku" },
-        bullets: [
-          { en: "\n", cs: "\n" },
-          { en: "\n", cs: "\n" },
         ],
       },
     ],
