@@ -461,9 +461,9 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     taglines: [
       {
         en: "Empower your team to connect with story.",
-        cs: "Dejte svému týmu sílu spojit se prostřednictvím příběhu.",
+        cs: "Fakta informují, příběhy prodávají.",
       },
-      { en: "Facts tell, stories sell.", cs: "Fakta informují, příběhy prodávají." },
+      { en: "Facts tell, stories sell.", cs: "\n" },
     ],
     intro: [
       {
