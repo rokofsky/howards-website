@@ -525,7 +525,7 @@ const ServiceDetail = () => {
 
           <div id="inquiry-form">
             <h2 className="text-2xl font-bold text-center mb-2">
-              {t("Inquire about", "Poptávka:")} {inquiryTitle}
+              {t("Inquire about", "Dotaz:")} {inquiryTitle}
             </h2>
             <p className="text-muted-foreground text-center mb-8 font-normal">
               {t(
