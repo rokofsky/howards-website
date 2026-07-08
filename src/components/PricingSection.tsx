@@ -65,7 +65,7 @@ const PricingSection = () => {
       inquire: true,
     },
     {
-      name: t("Individual sessions", "Individuální Individuální sezení sessie"),
+      name: t("Individual sessions", "\u00A0Individuální sezení\u00A0"),
       price: t("From CZK 1,500 (€60)", "Od 1 500 Kč (60 €)"),
       priceSuffix: t("50 minutes", "za hodinu"),
       description: t("Satisfaction guaranteed or no need to pay", "Spokojenost zaručena, nebo neplatíte"),
