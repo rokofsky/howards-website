@@ -521,12 +521,12 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
     pageTitle: { en: "Individual Coaching Sessions", cs: "Individuální koučovací sezení" },
     intro: [
       {
-        en: "Uncover new strategies in 50-minute brainstorming sessions.",
-        cs: "Objevte nové strategie během 50minutových brainstormingových sezení.",
+        en: "\n",
+        cs: "\n",
       },
       {
-        en: "In this workshop, you will practice how to project yourself more effectively and persuasively by connecting with others, carefully following, guiding, and motivating them. Learn how to craft your message so as to evoke the response you desire. In practically any situation you may find yourself in.",
-        cs: "V tomto workshopu si vyzkoušíte, jak působit efektivněji a přesvědčivěji díky spojení s druhými, pozornému naslouchání, vedení a motivaci. Naučíte se formulovat sdělení tak, aby vyvolalo požadovanou reakci. Prakticky v jakékoliv situaci, do které se dostanete.",
+        en: "Mastering communication and emotional intelligence are more than assets — they are necessities. These coaching sessions are designed for professionals, executives, and leaders who want to bridge the gap between capability and impactful expression. Our work together will focus entirely on real-world applications, whether it be in the workplace or your personal life. We dive directly into your active projects, upcoming presentations, or daily interactions, refining your verbal and non-verbal language skills and emotional control in real time.\n\nEvery session is tailored precisely to your immediate business and/or personal requirements within their particular contexts. By integrating advanced communication techniques with practical support, I help you navigate high-stakes negotiations, build rapport, solve communication issues and deliver compelling narratives with absolute poise. This personalized, highly responsive environment ensures that every session spent directly translates into enhanced clarity, personal presence, and confidence.",
+        cs: "Mistrovství v komunikaci a emoční inteligence jsou víc než jen devizou — jsou nezbytností. Tato koučovací sezení jsou určena pro profesionály, manažery a lídry, kteří chtějí překlenout mezeru mezi svými schopnostmi a působivým vyjádřením. Naše společná práce se plně zaměří na aplikace v reálném světě, ať už v pracovním nebo osobním životě. Ponoříme se přímo do vašich aktuálních projektů, nadcházejících prezentací nebo každodenních interakcí a v reálném čase budeme ladit vaše verbální i neverbální dovednosti a emoční sebekontrolu.\n\nKaždé sezení je ušito na míru vašim okamžitým obchodním a osobním potřebám v jejich konkrétním kontextu. Díky propojení pokročilých komunikačních technik s praktickou podporou vám pomohu zvládat vyjednávání s vysokými sázkami, budovat vztahy, řešit komunikační problémy a předávat přesvědčivá sdělení s naprostou rozvahou. Toto personalizované a vysoce responzivní prostředí zajišťuje, že se každá minuta strávená na sezení přímo promítne do větší srozumitelnosti, osobního vyzařování a sebevědomí.",
       },
     ],
     sections: [
