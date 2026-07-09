@@ -4,15 +4,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
+import { useT } from "@/hooks/useT";
 import { Trash2, Pencil } from "lucide-react";
 
 interface Session {
   id: string;
   title: string | null;
   description: string | null;
+  details: string | null;
   session_date: string;
   zoom_link: string | null;
   zoom_meeting_id: string | null;
@@ -23,6 +26,7 @@ interface Session {
 import { verifyAdminPassword, isAdminAuthenticated, setAdminAuthenticated, getAdminToken } from "@/lib/adminAuth";
 
 export default function AdminSessions() {
+  const t = useT();
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState<boolean>(() => isAdminAuthenticated());
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -32,6 +36,7 @@ export default function AdminSessions() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [details, setDetails] = useState("");
   const [sessionDate, setSessionDate] = useState("");
   const [zoomLink, setZoomLink] = useState("");
   const [zoomMeetingId, setZoomMeetingId] = useState("");
@@ -65,6 +70,7 @@ export default function AdminSessions() {
   const clearForm = () => {
     setTitle("");
     setDescription("");
+    setDetails("");
     setSessionDate("");
     setZoomLink("");
     setZoomMeetingId("");
@@ -76,6 +82,7 @@ export default function AdminSessions() {
     setEditingId(s.id);
     setTitle(s.title || "");
     setDescription(s.description || "");
+    setDetails(s.details || "");
     const d = new Date(s.session_date);
     const pad = (n: number) => n.toString().padStart(2, "0");
     setSessionDate(
@@ -122,6 +129,7 @@ export default function AdminSessions() {
     const payload = {
       title: title || null,
       description: description || null,
+      details: details || null,
       session_date: new Date(sessionDate).toISOString(),
       zoom_link: zoomLink || null,
       zoom_meeting_id: cleanMeetingId,
@@ -260,6 +268,18 @@ export default function AdminSessions() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Optional description"
+            />
+          </div>
+          <div>
+            <Label htmlFor="details">{t("Details", "Podrobnosti")}</Label>
+            <Textarea
+              id="details"
+              value={details}
+              onChange={(e) => setDetails(e.target.value)}
+              placeholder={t(
+                "Extended session information displayed in the public View details modal",
+                "Rozšířené informace o session zobrazené ve veřejném modálu Zobrazit podrobnosti",
+              )}
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === "create") {
-      const { title, description, session_date, zoom_link, zoom_meeting_id, status } = body;
+      const { title, description, details, session_date, zoom_link, zoom_meeting_id, status } = body;
       if (!session_date) {
         return new Response(JSON.stringify({ error: "session_date is required" }), {
           status: 200,
@@ -101,6 +101,7 @@ Deno.serve(async (req) => {
         .insert({
           title,
           description,
+          details,
           session_date,
           zoom_link,
           zoom_meeting_id: cleanMeetingId,
@@ -116,7 +117,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === "update") {
-      const { id, title, description, session_date, zoom_link, zoom_meeting_id, status } = body;
+      const { id, title, description, details, session_date, zoom_link, zoom_meeting_id, status } = body;
       if (!id) {
         return new Response(JSON.stringify({ error: "id is required" }), {
           status: 200,
@@ -126,6 +127,7 @@ Deno.serve(async (req) => {
       const updates: Record<string, unknown> = {};
       if (title !== undefined) updates.title = title;
       if (description !== undefined) updates.description = description;
+      if (details !== undefined) updates.details = details;
       if (session_date !== undefined) updates.session_date = session_date;
       if (zoom_link !== undefined) updates.zoom_link = zoom_link;
       if (zoom_meeting_id !== undefined) updates.zoom_meeting_id = zoom_meeting_id ? zoom_meeting_id.replace(/\D/g, "") : null;
