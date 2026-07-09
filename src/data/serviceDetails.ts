@@ -525,8 +525,8 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
         cs: "\n",
       },
       {
-        en: "Mastering interpersonal communication and emotional intelligence are more than assets — they are necessities. These coaching sessions are designed for professionals, executives, and leaders who want to bridge the gap between capability and impactful expression. Our work together will focus entirely on real-world applications, whether it be in the workplace or your personal life. We dive directly into your active projects, upcoming presentations, or daily interactions, refining your verbal and non-verbal language skills and emotional control in real time.\u00A0\u00A0\n\nEvery session is tailored precisely to your immediate business and/or personal requirements within their particular contexts. By integrating advanced communication techniques with practical support, I help you navigate high-stakes negotiations, build rapport, solve communication issues and deliver compelling narratives with absolute poise. This personalized, highly responsive environment ensures that every session spent directly translates into enhanced clarity, personal presence, and confidence.",
-        cs: "Mistrovství v interpersonální komunikaci a emoční inteligence jsou víc než jen devizou — jsou nezbytností. Tato koučovací sezení jsou určena pro profesionály, manažery a lídry, kteří chtějí překlenout mezeru mezi svými schopnostmi a působivým vyjádřením. Naše společná práce se plně zaměří na aplikace v reálném světě, ať už v pracovním nebo osobním životě. Ponoříme se přímo do vašich aktuálních projektů, nadcházejících prezentací nebo každodenních interakcí a v reálném čase budeme ladit vaše verbální i neverbální dovednosti a emoční sebekontrolu.\u00A0\u00A0\n\nKaždé sezení je ušito na míru vašim okamžitým obchodním a osobním potřebám v jejich konkrétním kontextu. Díky propojení pokročilých komunikačních technik s praktickou podporou vám pomohu zvládat vyjednávání s vysokými sázkami, budovat vztahy, řešit komunikační problémy a předávat přesvědčivá sdělení s naprostou rozvahou. Toto personalizované a vysoce responzivní prostředí zajišťuje, že se každá minuta strávená na sezení přímo promítne do větší srozumitelnosti, osobního vyzařování a sebevědomí.",
+        en: "Mastering interpersonal communication and emotional intelligence are more than assets — they are necessities. These coaching sessions are designed for professionals, executives, and leaders who want to bridge the gap between capability and impactful expression. Our work together will focus entirely on real-world applications, whether it be in the workplace or your personal life. We dive directly into your active projects, upcoming presentations, or daily interactions, refining your verbal and non-verbal language skills and emotional control in real time.\n\nEvery session is tailored precisely to your immediate business and/or personal requirements within their particular contexts. By integrating advanced communication techniques with practical support, I help you navigate high-stakes negotiations, build rapport, solve communication issues and deliver compelling narratives with absolute poise. This personalized, highly responsive environment ensures that every session spent directly translates into enhanced clarity, personal presence, and confidence.",
+        cs: "Mistrovství v interpersonální komunikaci a emoční inteligence jsou víc než jen devizou — jsou nezbytností. Tato koučovací sezení jsou určena pro profesionály, manažery a lídry, kteří chtějí překlenout mezeru mezi svými schopnostmi a působivým vyjádřením. Naše společná práce se plně zaměří na aplikace v reálném světě, ať už v pracovním nebo osobním životě. Ponoříme se přímo do vašich aktuálních projektů, nadcházejících prezentací nebo každodenních interakcí a v reálném čase budeme ladit vaše verbální i neverbální dovednosti a emoční sebekontrolu.\n\nKaždé sezení je ušito na míru vašim okamžitým obchodním a osobním potřebám v jejich konkrétním kontextu. Díky propojení pokročilých komunikačních technik s praktickou podporou vám pomohu zvládat vyjednávání s vysokými sázkami, budovat vztahy, řešit komunikační problémy a předávat přesvědčivá sdělení s naprostou rozvahou. Toto personalizované a vysoce responzivní prostředí zajišťuje, že se každá minuta strávená na sezení přímo promítne do větší srozumitelnosti, osobního vyzařování a sebevědomí.",
       },
     ],
     sections: [
@@ -545,7 +545,10 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           { en: "\n", cs: "\n" },
           { en: "Hara: learn the power of speaking from your gut", cs: "Hara: poznejte sílu mluvení z břicha" },
           { en: "Vocal intonation for proper authority", cs: "Hlasová intonace pro správnou autoritu" },
-          { en: "Maximize your credibility and impact with non-verbal skills", cs: "Maximalizovat důvěryhodnost a dopad neverbálními dovednostmi" },
+          {
+            en: "Maximize your credibility and impact with non-verbal skills",
+            cs: "Maximalizovat důvěryhodnost a dopad neverbálními dovednostmi",
+          },
           { en: "Gaining rapport", cs: "Budování vztahu (rapport)" },
           { en: "Empathy: the 180-degree mindset", cs: "Empatie: 180stupňové myšlení" },
           {
@@ -555,7 +558,10 @@ export const serviceDetails: Record<string, ServiceDetailContent> = {
           { en: "Eased dealing with conflict", cs: "Snadnější zvládání konfliktů" },
           { en: "\n", cs: "\n" },
           { en: "Overcoming objections", cs: "Překonávání námitek" },
-          { en: "Assertiveness — the two-line technique\u00A0to make your point and defend your space", cs: "Asertivita: technika dvou řádků\u00A0—\u00A0prosadit svůj názor a obhájit svůj prostor" },
+          {
+            en: "Assertiveness — the two-line technique\u00A0to make your point and defend your space",
+            cs: "Asertivita: technika dvou řádků\u00A0—\u00A0prosadit svůj názor a obhájit svůj prostor",
+          },
           {
             en: "Constructive feedback: giving, receiving and requesting",
             cs: "Konstruktivní zpětná vazba: dávat, přijímat a žádat o ni",
