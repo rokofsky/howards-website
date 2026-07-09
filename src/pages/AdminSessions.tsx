@@ -129,13 +129,38 @@ export default function AdminSessions() {
     };
 
     if (editingId) {
-      const { error } = await supabase.from("storytelling_sessions").update(payload).eq("id", editingId);
+      const { data, error } = await supabase
+        .from("storytelling_sessions")
+        .update(payload)
+        .eq("id", editingId)
+        .select();
       setLoading(false);
       if (error) {
+        console.error("Update failed:", error);
         toast({ title: "Error updating session", description: error.message, variant: "destructive" });
         return;
       }
+      if (!data || data.length === 0) {
+        // RLS or missing row — fall back to admin edge function using service role
+        const { data: fnData, error: fnError } = await supabase.functions.invoke("admin-sessions", {
+          body: {
+            action: "update",
+            id: editingId,
+            token: getAdminToken() ?? "",
+            ...payload,
+          },
+        });
+        if (fnError || (fnData && (fnData as any).error)) {
+          const msg = fnError?.message || (fnData as any)?.error || "Update was blocked";
+          console.error("Admin update failed:", msg);
+          toast({ title: "Error updating session", description: msg, variant: "destructive" });
+          return;
+        }
+      }
       toast({ title: "Session updated!" });
+      setSessions((prev) =>
+        prev.map((s) => (s.id === editingId ? ({ ...s, ...payload } as Session) : s)),
+      );
     } else {
       const { error } = await supabase.from("storytelling_sessions").insert(payload);
       setLoading(false);
