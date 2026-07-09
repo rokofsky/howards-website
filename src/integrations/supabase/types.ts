@@ -282,6 +282,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          details: string | null
           id: string
           session_date: string
           status: string
@@ -292,6 +293,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          details?: string | null
           id?: string
           session_date: string
           status?: string
@@ -302,6 +304,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          details?: string | null
           id?: string
           session_date?: string
           status?: string
