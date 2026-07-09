@@ -53,7 +53,7 @@ const StorytellingWorkshops = () => {
     // Public view only exposes safe marketing columns and only published sessions.
     const { data, error } = await supabase
       .from(tableName as any)
-      .select("id, session_date, title, description")
+      .select("id, session_date, title, description, details")
       .eq("status", statusFilter)
       .gte("session_date", now)
       .order("session_date", { ascending: true });
