@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/hooks/useT";
-import { useIsCzech } from "@/hooks/useLanguageRouting";
+import { useIsCzech, useLocalizedPath } from "@/hooks/useLanguageRouting";
 import KeynoteInquiryModal from "@/components/KeynoteInquiryModal";
 import { useNavigate } from "react-router-dom";
 import InhouseInquiryModal from "@/components/InhouseInquiryModal";
@@ -13,6 +13,7 @@ const PricingSection = () => {
   const t = useT();
   const isCz = useIsCzech();
   const navigate = useNavigate();
+  const lp = useLocalizedPath();
   const [keynoteOpen, setKeynoteOpen] = useState(false);
   const [inhouseOpen, setInhouseOpen] = useState(false);
   const [individualOpen, setIndividualOpen] = useState(false);
@@ -145,8 +146,8 @@ const PricingSection = () => {
             )}
             {tier.inquireIndividual && (
               <div className="mt-auto pt-2">
-                <Button type="button" variant="cta" className="w-full" onClick={() => setIndividualOpen(true)}>
-                  {t("Inquire", "Poptat")}
+                <Button type="button" variant="cta" className="w-full" onClick={() => navigate(lp("/services/coaching-sessions"))}>
+                  {t("Details", "Podrobnosti")}
                 </Button>
               </div>
             )}
