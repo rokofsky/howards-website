@@ -184,10 +184,10 @@ const StorytellingWorkshops = () => {
               <p className="text-muted-foreground font-light">{t("Loading sessions...", "Načítám termíny…")}</p>
             ) : sessions.length === 0 ? (
               <div className="glass rounded-lg border border-border/50 p-10 md:p-14 text-center max-w-2xl mx-auto">
-                <div className="text-5xl mb-4" aria-hidden="true">📅</div>
-                <h3 className="text-xl md:text-2xl font-semibold mb-3">
-                  {t("Stay tuned!", "Zůstaňte naladěni!")}
-                </h3>
+                <div className="text-5xl mb-4" aria-hidden="true">
+                  📅
+                </div>
+                <h3 className="text-xl md:text-2xl font-semibold mb-3">{t("Stay tuned!", "Zůstaňte naladěni!")}</h3>
                 <p className="text-muted-foreground font-normal leading-relaxed">
                   {t(
                     "No upcoming sessions scheduled at the moment. Check again in a few days for future sessions!",
@@ -206,7 +206,7 @@ const StorytellingWorkshops = () => {
                     className="glass rounded-lg border border-border/50 hover:border-gold/40 transition-all flex flex-col"
                   >
                     <div className="p-6 flex-1 flex flex-col">
-                      <div className="flex items-start justify-between gap-3 mb-2">
+                      <div className="flex items-baseline justify-between gap-3 mb-2">
                         <h3 className="text-lg font-semibold">
                           {session.title || t("Storytelling Session", "Sezení Storytellingu")}
                         </h3>
@@ -399,8 +399,7 @@ const StorytellingWorkshops = () => {
           <div className="mt-2 text-foreground/80 leading-relaxed whitespace-pre-wrap">
             {detailSession?.details?.trim()
               ? detailSession.details
-              : detailSession?.description ||
-                t("No additional details yet.", "Zatím žádné další podrobnosti.")}
+              : detailSession?.description || t("No additional details yet.", "Zatím žádné další podrobnosti.")}
           </div>
           <Button variant="outline" className="mt-4" onClick={() => setDetailOpen(false)}>
             {t("Close", "Zavřít")}
