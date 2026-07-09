@@ -231,6 +231,11 @@ const StorytellingWorkshops = () => {
                       {session.description && (
                         <p className="text-sm text-muted-foreground mb-4 flex-1 font-normal">{session.description}</p>
                       )}
+                      {session.details && (
+                        <p className="text-sm text-muted-foreground mb-4 font-normal whitespace-pre-wrap">
+                          {session.details}
+                        </p>
+                      )}
                       <div className="mt-auto flex flex-col gap-2">
                         <Button variant="cta" className="w-full" onClick={() => openRegistration(session)}>
                           {t("Reserve your spot", "Rezervovat místo")}
