@@ -1,0 +1,1 @@
+ALTER VIEW public.storytelling_sessions_public SET (security_invoker = true);

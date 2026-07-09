@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 25 65% 62%;
+    --foreground: 20 25% 10%;
+
+    --card: 28 45% 78%;
+    --card-foreground: 20 25% 10%;
+
+    --popover: 28 45% 78%;
+    --popover-foreground: 20 25% 10%;
+
+    --primary: 20 45% 18%;
+    --primary-foreground: 35 30% 95%;
+
+    --secondary: 25 55% 70%;
+    --secondary-foreground: 20 30% 14%;
+
+    --muted: 25 50% 68%;
+    --muted-foreground: 20 15% 35%;
+
+    --accent: 195 40% 32%;
+    --accent-foreground: 195 10% 98%;
+
+    --gold: 20 45% 18%;
+    --gold-foreground: 35 30% 95%;
+
+    --petrol: 195 40% 32%;
+    --petrol-foreground: 195 10% 98%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 25 40% 55%;
+    --input: 28 40% 72%;
+    --ring: 20 45% 18%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 25 55% 65%;
+    --sidebar-foreground: 20 25% 10%;
+    --sidebar-primary: 20 45% 18%;
+    --sidebar-primary-foreground: 35 30% 95%;
+    --sidebar-accent: 25 55% 70%;
+    --sidebar-accent-foreground: 20 30% 14%;
+    --sidebar-border: 25 40% 55%;
+    --sidebar-ring: 195 40% 32%;
+  }
+
+  .dark {
+    --background: 20 30% 8%;
+    --foreground: 30 15% 90%;
+    --card: 20 25% 12%;
+    --card-foreground: 30 15% 90%;
+    --popover: 20 25% 12%;
+    --popover-foreground: 30 15% 90%;
+    --primary: 30 35% 75%;
+    --primary-foreground: 20 25% 10%;
+    --secondary: 20 20% 16%;
+    --secondary-foreground: 30 15% 90%;
+    --muted: 20 18% 18%;
+    --muted-foreground: 25 10% 55%;
+    --accent: 195 35% 45%;
+    --accent-foreground: 195 10% 98%;
+    --gold: 30 30% 65%;
+    --gold-foreground: 20 25% 10%;
+    --petrol: 195 35% 45%;
+    --petrol-foreground: 195 10% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 20 18% 18%;
+    --input: 20 18% 18%;
+    --ring: 30 35% 75%;
+    --sidebar-background: 20 25% 9%;
+    --sidebar-foreground: 30 15% 90%;
+    --sidebar-primary: 30 35% 75%;
+    --sidebar-primary-foreground: 20 25% 10%;
+    --sidebar-accent: 20 20% 16%;
+    --sidebar-accent-foreground: 30 15% 90%;
+    --sidebar-border: 20 18% 18%;
+    --sidebar-ring: 195 35% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-weight: 300;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply backdrop-blur-2xl border border-border/40;
+    background: hsl(28 45% 78% / 0.45);
+    box-shadow: 0 8px 32px 0 hsl(20 45% 18% / 0.1),
+                inset 0 1px 0 0 hsl(30 50% 95% / 0.5),
+                inset 0 -1px 0 0 hsl(20 30% 40% / 0.1);
+  }
+
+  .glass-button {
+    @apply backdrop-blur-xl border border-border/30;
+    box-shadow: 0 4px 16px 0 hsl(20 45% 18% / 0.12),
+                0 0 20px 0 hsl(20 45% 18% / 0.1),
+                inset 0 1px 0 0 hsl(30 50% 95% / 0.4);
+    transition: all 0.3s ease;
+  }
+
+  .glass-button:hover {
+    box-shadow: 0 6px 24px 0 hsl(20 45% 18% / 0.18),
+                0 0 30px 0 hsl(20 45% 18% / 0.2),
+                inset 0 1px 0 0 hsl(30 50% 95% / 0.5);
+    transform: translateY(-1px);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 20px 0 hsl(20 45% 18% / 0.2),
+                0 0 40px 0 hsl(20 45% 18% / 0.1);
+  }
+
+  .glow-petrol {
+    box-shadow: 0 0 20px 0 hsl(195 40% 32% / 0.2),
+                0 0 40px 0 hsl(195 40% 32% / 0.1);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(20 45% 18%), hsl(30 70% 85%));
+  }
+
+  .section-padding {
+    @apply px-6 py-20 md:px-12 lg:px-20 xl:px-32;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}

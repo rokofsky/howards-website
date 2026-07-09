@@ -1,0 +1,1 @@
+ALTER TABLE public.reference_scans ADD COLUMN thumbnail_path text;

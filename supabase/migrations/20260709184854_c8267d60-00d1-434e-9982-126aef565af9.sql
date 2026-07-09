@@ -1,0 +1,1 @@
+ALTER TABLE public.storytelling_sessions ADD COLUMN details text;

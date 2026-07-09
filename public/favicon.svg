@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <style>
+      @media (prefers-color-scheme: dark) {
+        .bg { fill: #1A1A1A; }
+      }
+    </style>
+  </defs>
+  <!-- Orange ring -->
+  <circle cx="32" cy="32" r="31" fill="none" stroke="#FF5C00" stroke-width="1.8"/>
+  <!-- White/dark background circle -->
+  <circle class="bg" cx="32" cy="32" r="29.5" fill="white"/>
+  <!-- Brand R traced from logo, visually centered -->
+  <g transform="translate(33.5, 32.5) scale(0.038) translate(-350, -420)">
+    <!-- Main vertical stem -->
+    <path d="
+      M 140 60 L 140 840 L 250 840 L 250 480
+      L 320 480
+      C 350 480, 370 500, 390 540
+      L 500 800
+      Q 560 900, 600 940
+      Q 680 1020, 760 1020
+      Q 800 1020, 800 980
+      Q 800 960, 780 940
+      Q 740 900, 680 800
+      L 560 580
+      Q 530 530, 500 500
+      Q 480 480, 450 465
+      C 560 440, 620 370, 620 260
+      C 620 150, 560 60, 380 60
+      L 220 60 Z
+
+      M 250 150 L 360 150
+      C 480 150, 530 210, 530 270
+      C 530 350, 470 410, 360 410
+      L 250 410 Z
+    " fill="#111111" fill-rule="evenodd"/>
+  </g>
+</svg>
