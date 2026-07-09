@@ -174,9 +174,14 @@ const StorytellingWorkshops = () => {
                       {session.description && (
                         <p className="text-sm text-muted-foreground mb-4 flex-1 font-normal">{session.description}</p>
                       )}
-                      <Button variant="cta" className="w-full mt-auto" onClick={() => openRegistration(session)}>
-                        {t("Reserve your spot", "Rezervovat místo")}
-                      </Button>
+                      <div className="mt-auto flex flex-col gap-2">
+                        <Button variant="cta" className="w-full" onClick={() => openRegistration(session)}>
+                          {t("Reserve your spot", "Rezervovat místo")}
+                        </Button>
+                        <Button variant="outline" className="w-full" onClick={() => downloadIcs(session)}>
+                          {t("Add to Calendar", "Přidat do kalendáře")}
+                        </Button>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
