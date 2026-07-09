@@ -240,13 +240,10 @@ const StorytellingWorkshops = () => {
                           onClick={() => {
                             downloadIcs(session);
                             toast.success(
-                              t("Calendar Updated", "Kalendář aktualizován"),
-                              {
-                                description: t(
-                                  "Added to your calendar. Have you reserved your spot yet?",
-                                  "Bylo přidáno do vašeho kalendáře. Už jste si rezervovali místo?"
-                                ),
-                              }
+                              t(
+                                "Added to your calendar. Have you reserved your spot yet?",
+                                "Bylo přidáno do vašeho kalendáře. Už jste si rezervovali místo?",
+                              ),
                             );
                           }}
                         >
