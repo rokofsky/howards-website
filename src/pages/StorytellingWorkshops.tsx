@@ -365,6 +365,36 @@ const StorytellingWorkshops = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Session Details Modal */}
+      <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
+        <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl">
+              {detailSession?.title || t("Storytelling Session", "Sezení Storytellingu")}
+            </DialogTitle>
+            <DialogDescription>
+              {detailSession && (
+                <>
+                  {format(new Date(detailSession.session_date), "EEEE, MMMM d, yyyy")}
+                  <span className="text-muted-foreground ml-2">
+                    {format(new Date(detailSession.session_date), "h:mm a")}
+                  </span>
+                </>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-2 text-foreground/80 leading-relaxed whitespace-pre-wrap">
+            {detailSession?.details?.trim()
+              ? detailSession.details
+              : detailSession?.description ||
+                t("No additional details yet.", "Zatím žádné další podrobnosti.")}
+          </div>
+          <Button variant="outline" className="mt-4" onClick={() => setDetailOpen(false)}>
+            {t("Close", "Zavřít")}
+          </Button>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
