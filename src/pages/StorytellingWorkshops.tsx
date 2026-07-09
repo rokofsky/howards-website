@@ -38,6 +38,7 @@ const StorytellingWorkshops = () => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<{ title: string; date: string } | null>(null);
   const [errorBanner, setErrorBanner] = useState<string | null>(null);
+  const [downloadedSessionIds, setDownloadedSessionIds] = useState<string[]>([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -234,21 +235,32 @@ const StorytellingWorkshops = () => {
                         <Button variant="cta" className="w-full" onClick={() => openRegistration(session)}>
                           {t("Reserve your spot", "Rezervovat místo")}
                         </Button>
-                        <Button
-                          variant="outline"
-                          className="w-full"
-                          onClick={() => {
-                            downloadIcs(session);
-                            toast.success(
-                              t(
+                        {downloadedSessionIds.includes(session.id) ? (
+                          <div className="w-full rounded-lg border border-border/30 bg-secondary/60 p-5 text-center">
+                            <h4 className="mb-1 text-base font-semibold">
+                              {t("🌿 Calendar Updated 🌿", "🌿 Kalendář aktualizován 🌿")}
+                            </h4>
+                            <p className="text-sm text-muted-foreground font-normal leading-relaxed">
+                              {t(
                                 "Added to your calendar. Have you reserved your spot yet?",
                                 "Bylo přidáno do vašeho kalendáře. Už jste si rezervovali místo?",
-                              ),
-                            );
-                          }}
-                        >
-                          {t("Add to Calendar", "Přidat do kalendáře")}
-                        </Button>
+                              )}
+                            </p>
+                          </div>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            className="w-full"
+                            onClick={() => {
+                              downloadIcs(session);
+                              setDownloadedSessionIds((prev) =>
+                                prev.includes(session.id) ? prev : [...prev, session.id],
+                              );
+                            }}
+                          >
+                            {t("Add to Calendar", "Přidat do kalendáře")}
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </motion.div>
