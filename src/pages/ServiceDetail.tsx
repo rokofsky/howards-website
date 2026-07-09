@@ -172,6 +172,15 @@ const ServiceDetail = () => {
       <section className="section-padding pt-24">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            {slug === "coaching-sessions" && (
+              <div className="mb-6">
+                <Button variant="outline" asChild>
+                  <Link to={lp("/#pricing")} className="inline-flex items-center gap-2">
+                    {t("← Back to pricing", "← Zpět na ceník")}
+                  </Link>
+                </Button>
+              </div>
+            )}
             <h1 className="text-2xl md:text-5xl font-medium mb-3">{serviceTitle}</h1>
 
             {detail?.taglines ? (
