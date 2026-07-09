@@ -211,9 +211,9 @@ const StorytellingWorkshops = () => {
                           {session.title || t("Storytelling Session", "Sezení Storytellingu")}
                         </h3>
                         <Button
-                          variant="link"
+                          variant="outline"
                           size="sm"
-                          className="h-auto p-0 text-gold shrink-0"
+                          className="h-auto px-3 py-1 text-gold border-gold/40 hover:bg-gold/10 shrink-0 text-xs rounded"
                           onClick={() => {
                             setDetailSession(session);
                             setDetailOpen(true);
