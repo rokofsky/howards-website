@@ -45,11 +45,13 @@ const StorytellingWorkshops = () => {
   // exposed to anon/authenticated, so a select("*") on the base table would fail by design.
 
   const fetchSessions = async () => {
+    const now = new Date().toISOString();
     // Public view only exposes safe marketing columns and only published sessions.
     const { data, error } = await supabase
       .from(tableName as any)
       .select("id, session_date, title, description")
       .eq("status", statusFilter)
+      .gte("session_date", now)
       .order("session_date", { ascending: true });
 
     setQueryError(error || null);
