@@ -23,6 +23,7 @@ import iir from "@/assets/clients/iir.png";
 import johnCrane from "@/assets/clients/john-crane.png";
 import johnsoncontrols from "@/assets/clients/johnsoncontrols.jpg";
 import kostal from "@/assets/clients/kostal.png";
+import nku from "@/assets/clients/nku.jpg";
 import prologis from "@/assets/clients/prologis.png";
 import saab from "@/assets/clients/saab.jpg";
 import sanofiAventis from "@/assets/clients/sanofi-aventis.png";
@@ -66,6 +67,7 @@ const logos: Logo[] = [
   { src: johnCrane, alt: "John Crane" },
   { src: johnsoncontrols, alt: "johnsoncontrols" },
   { src: kostal, alt: "Kostal" },
+  { src: nku, alt: "nku" },
   { src: prologis, alt: "Prologis" },
   { src: saab, alt: "Saab" },
   { src: sanofiAventis, alt: "Sanofi-Aventis" },
