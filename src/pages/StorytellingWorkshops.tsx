@@ -239,15 +239,16 @@ const StorytellingWorkshops = () => {
                           className="w-full"
                           onClick={() => {
                             downloadIcs(session);
-                          toast.success(
-  t("Calendar Updated", "Kalendář aktualizován"),
-  {
-    description: t(
-      "Added to your calendar. Have you reserved your spot yet?",
-      "Bylo přidáno do vašeho kalendáře. Už jste si rezervovali místo?"
-    ),
-  }
-);
+                            toast.success(
+                              t("Calendar Updated", "Kalendář aktualizován"),
+                              {
+                                description: t(
+                                  "Added to your calendar. Have you reserved your spot yet?",
+                                  "Bylo přidáno do vašeho kalendáře. Už jste si rezervovali místo?"
+                                ),
+                              }
+                            );
+                          }}
                         >
                           {t("Add to Calendar", "Přidat do kalendáře")}
                         </Button>
