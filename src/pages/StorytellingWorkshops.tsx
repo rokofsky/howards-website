@@ -139,11 +139,15 @@ const StorytellingWorkshops = () => {
             {loading ? (
               <p className="text-muted-foreground font-light">{t("Loading sessions...", "Načítám termíny…")}</p>
             ) : sessions.length === 0 ? (
-              <div className="glass rounded-lg p-8">
-                <p className="text-muted-foreground font-light">
+              <div className="glass rounded-lg border border-border/50 p-10 md:p-14 text-center max-w-2xl mx-auto">
+                <div className="text-5xl mb-4" aria-hidden="true">📅</div>
+                <h3 className="text-xl md:text-2xl font-semibold mb-3">
+                  {t("Stay tuned!", "Zůstaňte naladěni!")}
+                </h3>
+                <p className="text-muted-foreground font-normal leading-relaxed">
                   {t(
-                    "No upcoming sessions scheduled yet. Check back soon!",
-                    "Zatím nejsou naplánovány žádné nadcházející termíny. Podívejte se brzy znovu!",
+                    "No upcoming sessions scheduled at the moment. Check again in a few days for future sessions!",
+                    "Momentálně nejsou naplánované žádné vyprávěcí sezení. Za pár dní se sem podívejte znovu, až budou zveřejněny další termíny!",
                   )}
                 </p>
               </div>
