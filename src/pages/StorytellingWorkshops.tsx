@@ -17,6 +17,7 @@ interface Session {
   session_date: string;
   title: string | null;
   description: string | null;
+  details?: string | null;
 }
 
 const StorytellingWorkshops = () => {
@@ -30,6 +31,8 @@ const StorytellingWorkshops = () => {
   const [unfilteredSessions, setUnfilteredSessions] = useState<unknown[] | null>(null);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [detailSession, setDetailSession] = useState<Session | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -49,7 +52,7 @@ const StorytellingWorkshops = () => {
     // Public view only exposes safe marketing columns and only published sessions.
     const { data, error } = await supabase
       .from(tableName as any)
-      .select("id, session_date, title, description")
+      .select("id, session_date, title, description, details")
       .eq("status", statusFilter)
       .gte("session_date", now)
       .order("session_date", { ascending: true });
@@ -202,9 +205,22 @@ const StorytellingWorkshops = () => {
                     className="glass rounded-lg border border-border/50 hover:border-gold/40 transition-all flex flex-col"
                   >
                     <div className="p-6 flex-1 flex flex-col">
-                      <h3 className="text-lg font-semibold mb-2">
-                        {session.title || t("Storytelling Session", "Sezení Storytellingu")}
-                      </h3>
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <h3 className="text-lg font-semibold">
+                          {session.title || t("Storytelling Session", "Sezení Storytellingu")}
+                        </h3>
+                        <Button
+                          variant="link"
+                          size="sm"
+                          className="h-auto p-0 text-gold shrink-0"
+                          onClick={() => {
+                            setDetailSession(session);
+                            setDetailOpen(true);
+                          }}
+                        >
+                          {t("View details", "Zobrazit podrobnosti")}
+                        </Button>
+                      </div>
                       <p className="text-sm text-gold font-medium mb-3">
                         {format(new Date(session.session_date), "EEEE, MMMM d, yyyy")}
                         <span className="text-muted-foreground ml-2">
@@ -218,7 +234,19 @@ const StorytellingWorkshops = () => {
                         <Button variant="cta" className="w-full" onClick={() => openRegistration(session)}>
                           {t("Reserve your spot", "Rezervovat místo")}
                         </Button>
-                        <Button variant="outline" className="w-full" onClick={() => downloadIcs(session)}>
+                        <Button
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => {
+                            downloadIcs(session);
+                            toast.success(
+                              t(
+                                "Added to your calendar. Have you reserved your spot yet?",
+                                "Bylo přidáno do vašeho kalendáře. Už jste si rezervovali místo?",
+                              ),
+                            );
+                          }}
+                        >
                           {t("Add to Calendar", "Přidat do kalendáře")}
                         </Button>
                       </div>
