@@ -17,6 +17,7 @@ interface Session {
   session_date: string;
   title: string | null;
   description: string | null;
+  details?: string | null;
 }
 
 const StorytellingWorkshops = () => {
@@ -30,6 +31,8 @@ const StorytellingWorkshops = () => {
   const [unfilteredSessions, setUnfilteredSessions] = useState<unknown[] | null>(null);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [detailSession, setDetailSession] = useState<Session | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -202,9 +205,22 @@ const StorytellingWorkshops = () => {
                     className="glass rounded-lg border border-border/50 hover:border-gold/40 transition-all flex flex-col"
                   >
                     <div className="p-6 flex-1 flex flex-col">
-                      <h3 className="text-lg font-semibold mb-2">
-                        {session.title || t("Storytelling Session", "Sezení Storytellingu")}
-                      </h3>
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <h3 className="text-lg font-semibold">
+                          {session.title || t("Storytelling Session", "Sezení Storytellingu")}
+                        </h3>
+                        <Button
+                          variant="link"
+                          size="sm"
+                          className="h-auto p-0 text-gold shrink-0"
+                          onClick={() => {
+                            setDetailSession(session);
+                            setDetailOpen(true);
+                          }}
+                        >
+                          {t("View details", "Zobrazit podrobnosti")}
+                        </Button>
+                      </div>
                       <p className="text-sm text-gold font-medium mb-3">
                         {format(new Date(session.session_date), "EEEE, MMMM d, yyyy")}
                         <span className="text-muted-foreground ml-2">
@@ -218,7 +234,19 @@ const StorytellingWorkshops = () => {
                         <Button variant="cta" className="w-full" onClick={() => openRegistration(session)}>
                           {t("Reserve your spot", "Rezervovat místo")}
                         </Button>
-                        <Button variant="outline" className="w-full" onClick={() => downloadIcs(session)}>
+                        <Button
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => {
+                            downloadIcs(session);
+                            toast.success(
+                              t(
+                                "Added to your calendar. Have you reserved your spot yet?",
+                                "Bylo přidáno do vašeho kalendáře. Už jste si rezervovali místo?",
+                              ),
+                            );
+                          }}
+                        >
                           {t("Add to Calendar", "Přidat do kalendáře")}
                         </Button>
                       </div>
@@ -335,6 +363,36 @@ const StorytellingWorkshops = () => {
               </form>
             </>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Session Details Modal */}
+      <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
+        <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl">
+              {detailSession?.title || t("Storytelling Session", "Sezení Storytellingu")}
+            </DialogTitle>
+            <DialogDescription>
+              {detailSession && (
+                <>
+                  {format(new Date(detailSession.session_date), "EEEE, MMMM d, yyyy")}
+                  <span className="text-muted-foreground ml-2">
+                    {format(new Date(detailSession.session_date), "h:mm a")}
+                  </span>
+                </>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-2 text-foreground/80 leading-relaxed whitespace-pre-wrap">
+            {detailSession?.details?.trim()
+              ? detailSession.details
+              : detailSession?.description ||
+                t("No additional details yet.", "Zatím žádné další podrobnosti.")}
+          </div>
+          <Button variant="outline" className="mt-4" onClick={() => setDetailOpen(false)}>
+            {t("Close", "Zavřít")}
+          </Button>
         </DialogContent>
       </Dialog>
     </Layout>

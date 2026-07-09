@@ -15,7 +15,7 @@ const trackEvent = (label: string, params: Record<string, unknown> = {}) => {
   }
 };
 
-export const ASSET_VERSION = "202606291032";
+export const ASSET_VERSION = "202607091757";
 
 const VALID_EVAL_FILES = [
   "eval-001.jpg",
@@ -190,6 +190,54 @@ const VALID_EVAL_FILES = [
   "eval-170.jpg",
   "eval-171.jpg",
   "eval-172.jpg",
+  "eval-173.jpg",
+  "eval-174.jpg",
+  "eval-175.jpg",
+  "eval-176.jpg",
+  "eval-177.jpg",
+  "eval-178.jpg",
+  "eval-179.jpg",
+  "eval-180.jpg",
+  "eval-181.jpg",
+  "eval-182.jpg",
+  "eval-183.jpg",
+  "eval-184.jpg",
+  "eval-185.jpg",
+  "eval-186.jpg",
+  "eval-187.jpg",
+  "eval-188.jpg",
+  "eval-189.jpg",
+  "eval-190.jpg",
+  "eval-191.jpg",
+  "eval-192.jpg",
+  "eval-193.jpg",
+  "eval-194.jpg",
+  "eval-195.jpg",
+  "eval-196.jpg",
+  "eval-197.jpg",
+  "eval-198.jpg",
+  "eval-199.jpg",
+  "eval-200.jpg",
+  "eval-201.jpg",
+  "eval-202.jpg",
+  "eval-203.jpg",
+  "eval-204.jpg",
+  "eval-205.jpg",
+  "eval-206.jpg",
+  "eval-207.jpg",
+  "eval-208.jpg",
+  "eval-209.jpg",
+  "eval-210.jpg",
+  "eval-211.jpg",
+  "eval-212.jpg",
+  "eval-213.jpg",
+  "eval-214.jpg",
+  "eval-215.jpg",
+  "eval-216.jpg",
+  "eval-217.jpg",
+  "eval-218.jpg",
+  "eval-219.jpg",
+  "eval-220.jpg",
 ] as const;
 
 const buildCandidates = (): Item[] =>
