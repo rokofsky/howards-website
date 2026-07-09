@@ -121,6 +121,46 @@ const StorytellingWorkshops = () => {
     setSubmitting(false);
   };
 
+  const downloadIcs = (session: Session) => {
+    const start = new Date(session.session_date);
+    const end = new Date(start.getTime() + 90 * 60 * 1000);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const fmt = (d: Date) =>
+      `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+    const escape = (s: string) =>
+      s.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+    const title = session.title || "Storytelling Session";
+    const uid = `${session.id}@howardrocks`;
+    const lines = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//Howard//Storytelling Sessions//EN",
+      "CALSCALE:GREGORIAN",
+      "METHOD:PUBLISH",
+      "BEGIN:VEVENT",
+      `UID:${uid}`,
+      `DTSTAMP:${fmt(new Date())}`,
+      `DTSTART:${fmt(start)}`,
+      `DTEND:${fmt(end)}`,
+      `SUMMARY:${escape(title)}`,
+      ...(session.description ? [`DESCRIPTION:${escape(session.description)}`] : []),
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ];
+    const blob = new Blob([lines.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const y = start.getFullYear();
+    const m = pad(start.getMonth() + 1);
+    const d = pad(start.getDate());
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `storytelling-session-${y}${m}${d}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <Layout>
       <section className="section-padding pt-24">
