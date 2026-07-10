@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useLocalizedPath, useIsCzech } from "@/hooks/useLanguageRouting";
 import { openCalendly } from "@/lib/calendly";
 import { useEffect, useState } from "react";
