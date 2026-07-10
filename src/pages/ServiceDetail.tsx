@@ -56,6 +56,8 @@ const ServiceDetail = () => {
   const t = useT();
   const { slug } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromPricing = (location.state as { fromPricing?: boolean } | null)?.fromPricing === true;
   const { toast } = useToast();
   const [webinars, setWebinars] = useState<DbWebinar[]>([]);
   const [expandedWebinar, setExpandedWebinar] = useState<string | null>(null);
