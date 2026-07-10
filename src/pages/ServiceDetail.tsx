@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useLocalizedPath, useIsCzech } from "@/hooks/useLanguageRouting";
 import { openCalendly } from "@/lib/calendly";
 import { useEffect, useState } from "react";
@@ -56,6 +56,8 @@ const ServiceDetail = () => {
   const t = useT();
   const { slug } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromPricing = (location.state as { fromPricing?: boolean } | null)?.fromPricing === true;
   const { toast } = useToast();
   const [webinars, setWebinars] = useState<DbWebinar[]>([]);
   const [expandedWebinar, setExpandedWebinar] = useState<string | null>(null);
@@ -172,11 +174,20 @@ const ServiceDetail = () => {
       <section className="section-padding pt-24">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            {slug === "coaching-sessions" && (
+            {fromPricing && (slug === "coaching-sessions" || slug === "live-webinars") && (
               <div className="mb-6">
                 <Button variant="outline" asChild>
                   <Link to={lp("/#pricing")} className="inline-flex items-center gap-2">
                     {t("← Back to pricing", "← Zpět na ceník")}
+                  </Link>
+                </Button>
+              </div>
+            )}
+            {!fromPricing && (
+              <div className="mb-6">
+                <Button variant="outline" asChild>
+                  <Link to={lp("/#services")} className="inline-flex items-center gap-2">
+                    {t("← Back to services", "← Zpět na služby")}
                   </Link>
                 </Button>
               </div>
@@ -531,6 +542,25 @@ const ServiceDetail = () => {
               </div>
             )}
           </motion.div>
+
+          {fromPricing && (slug === "coaching-sessions" || slug === "live-webinars") && (
+            <div className="mb-6">
+              <Button variant="outline" asChild>
+                <Link to={lp("/#pricing")} className="inline-flex items-center gap-2">
+                  {t("← Back to pricing", "← Zpět na ceník")}
+                </Link>
+              </Button>
+            </div>
+          )}
+          {!fromPricing && (
+            <div className="mb-6">
+              <Button variant="outline" asChild>
+                <Link to={lp("/#services")} className="inline-flex items-center gap-2">
+                  {t("← Back to services", "← Zpět na služby")}
+                </Link>
+              </Button>
+            </div>
+          )}
 
           <div id="inquiry-form">
             <h2 className="text-2xl font-bold text-center mb-2">
