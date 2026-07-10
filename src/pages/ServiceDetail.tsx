@@ -174,11 +174,20 @@ const ServiceDetail = () => {
       <section className="section-padding pt-24">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            {slug === "coaching-sessions" && (
+            {fromPricing && (slug === "coaching-sessions" || slug === "live-webinars") && (
               <div className="mb-6">
                 <Button variant="outline" asChild>
                   <Link to={lp("/#pricing")} className="inline-flex items-center gap-2">
                     {t("← Back to pricing", "← Zpět na ceník")}
+                  </Link>
+                </Button>
+              </div>
+            )}
+            {!fromPricing && (
+              <div className="mb-6">
+                <Button variant="outline" asChild>
+                  <Link to={lp("/#services")} className="inline-flex items-center gap-2">
+                    {t("← Back to services", "← Zpět na služby")}
                   </Link>
                 </Button>
               </div>
