@@ -543,6 +543,25 @@ const ServiceDetail = () => {
             )}
           </motion.div>
 
+          {fromPricing && (slug === "coaching-sessions" || slug === "live-webinars") && (
+            <div className="mb-6">
+              <Button variant="outline" asChild>
+                <Link to={lp("/#pricing")} className="inline-flex items-center gap-2">
+                  {t("← Back to pricing", "← Zpět na ceník")}
+                </Link>
+              </Button>
+            </div>
+          )}
+          {!fromPricing && (
+            <div className="mb-6">
+              <Button variant="outline" asChild>
+                <Link to={lp("/#services")} className="inline-flex items-center gap-2">
+                  {t("← Back to services", "← Zpět na služby")}
+                </Link>
+              </Button>
+            </div>
+          )}
+
           <div id="inquiry-form">
             <h2 className="text-2xl font-bold text-center mb-2">
               {t("Inquire about", "Dotaz:")} {inquiryTitle}
