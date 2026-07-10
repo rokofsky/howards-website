@@ -126,7 +126,7 @@ const PricingSection = () => {
             {tier.cta && (
               <div className="mt-auto pt-2">
                 <Button asChild variant="cta" className="w-full">
-                  <Link to={tier.cta.to}>{tier.cta.label}</Link>
+                  <Link to={tier.cta.to} state={{ fromPricing: true }}>{tier.cta.label}</Link>
                 </Button>
               </div>
             )}
@@ -146,7 +146,7 @@ const PricingSection = () => {
             )}
             {tier.inquireIndividual && (
               <div className="mt-auto pt-2">
-                <Button type="button" variant="cta" className="w-full" onClick={() => navigate(lp("/services/coaching-sessions"))}>
+                <Button type="button" variant="cta" className="w-full" onClick={() => navigate(lp("/services/coaching-sessions"), { state: { fromPricing: true } })}>
                   {t("Details", "Podrobnosti")}
                 </Button>
               </div>
