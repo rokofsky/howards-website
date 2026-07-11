@@ -609,8 +609,9 @@ const IsolatedView = ({
     loop: true,
     startIndex,
     dragFree: false,
-    containScroll: "keepSnaps",
+    containScroll: false,
     align: "start",
+    slidesToScroll: 1,
   });
 
   const [scale, setScale] = useState(1);
