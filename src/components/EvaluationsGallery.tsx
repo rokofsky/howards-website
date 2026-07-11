@@ -609,7 +609,7 @@ const IsolatedView = ({
     loop: true,
     startIndex,
     dragFree: false,
-    containScroll: false,
+    containScroll: "keepSnaps",
     align: "start",
   });
 
