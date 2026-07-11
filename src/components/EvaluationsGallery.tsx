@@ -568,7 +568,7 @@ const EvaluationsGallery = () => {
       {lightboxIndex !== null && (
         <IsolatedView
           items={allSorted}
-          startIndex={lightboxIndex === 0 ? allSorted.length - 1 : lightboxIndex - 1}
+          startIndex={lightboxIndex}
           onIndexChange={setLightboxIndex}
           onClose={() => {
             setLightboxIndex(null);
@@ -607,7 +607,7 @@ const IsolatedView = ({
 }: IsolatedViewProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    startIndex: startIndex === 0 ? items.length - 1 : startIndex - 1,
+    startIndex,
     dragFree: false,
     containScroll: false,
   });
