@@ -610,7 +610,7 @@ const IsolatedView = ({
     startIndex,
     dragFree: false,
     containScroll: false,
-    align: "start",
+    align: 0.33,
     slidesToScroll: 1,
   });
 
