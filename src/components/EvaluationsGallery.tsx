@@ -610,6 +610,7 @@ const IsolatedView = ({
     startIndex,
     dragFree: false,
     containScroll: false,
+    align: "start",
   });
 
   const [scale, setScale] = useState(1);
