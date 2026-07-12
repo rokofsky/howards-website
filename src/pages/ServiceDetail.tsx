@@ -59,6 +59,13 @@ const ServiceDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const fromPricing = (location.state as { fromPricing?: boolean } | null)?.fromPricing === true;
+
+  const handleBackToPricing = () => {
+    try { track("click_back_to_pricing", { slug }); } catch { /* never block nav */ }
+  };
+  const handleBackToServices = () => {
+    try { track("click_back_to_services", { slug }); } catch { /* never block nav */ }
+  };
   const { toast } = useToast();
   const [webinars, setWebinars] = useState<DbWebinar[]>([]);
   const [expandedWebinar, setExpandedWebinar] = useState<string | null>(null);
