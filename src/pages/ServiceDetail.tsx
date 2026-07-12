@@ -66,6 +66,19 @@ const ServiceDetail = () => {
   const handleBackToServices = () => {
     try { track("click_back_to_services", { slug }); } catch { /* never block nav */ }
   };
+  const handleBookCall = () => {
+    try { track("click_book_a_call", { slug, page: "service_detail" }); } catch { /* never block */ }
+    openCalendly();
+  };
+  const scrollToInquiry = () => {
+    try { track("click_jump_to_inquiry", { slug, page: "service_detail" }); } catch { /* never block */ }
+    const el = document.getElementById("inquiry-form");
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
+
   const { toast } = useToast();
   const [webinars, setWebinars] = useState<DbWebinar[]>([]);
   const [expandedWebinar, setExpandedWebinar] = useState<string | null>(null);
@@ -241,13 +254,8 @@ const ServiceDetail = () => {
                             variant="outline"
                             size="default"
                             className="text-sm md:text-base px-3 py-1 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90 whitespace-nowrap"
-                            onClick={() => {
-                              const el = document.getElementById("inquiry-form");
-                              if (el) {
-                                const top = el.getBoundingClientRect().top + window.scrollY - 80;
-                                window.scrollTo({ top, behavior: "smooth" });
-                              }
-                            }}
+                            onClick={scrollToInquiry}
+
                           >
                             {t("General inquiry", "Obecný dotaz")}
                           </Button>
@@ -271,13 +279,8 @@ const ServiceDetail = () => {
                               variant="outline"
                               size="default"
                               className="text-sm md:text-base px-3 py-1 rounded-full min-h-0 h-auto bg-primary text-primary-foreground hover:bg-primary/90"
-                              onClick={() => {
-                                const el = document.getElementById("inquiry-form");
-                                if (el) {
-                                  const top = el.getBoundingClientRect().top + window.scrollY - 80;
-                                  window.scrollTo({ top, behavior: "smooth" });
-                                }
-                              }}
+                              onClick={scrollToInquiry}
+
                             >
                               {t("General inquiry", "Obecný dotaz")}
                             </Button>
@@ -585,7 +588,7 @@ const ServiceDetail = () => {
     variant="glassPetrol"
     size="sm"
     className="rounded-full text-sm px-4 py-1.5 h-auto whitespace-nowrap"
-    onClick={openCalendly}
+    onClick={handleBookCall}
   >
     {t("Skip the email, book a call now", "Zapomeňte na e-mail, rovnou si domluvte hovor")}
   </Button>
