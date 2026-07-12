@@ -66,6 +66,19 @@ const ServiceDetail = () => {
   const handleBackToServices = () => {
     try { track("click_back_to_services", { slug }); } catch { /* never block nav */ }
   };
+  const handleBookCall = () => {
+    try { track("click_book_a_call", { slug, page: "service_detail" }); } catch { /* never block */ }
+    openCalendly();
+  };
+  const scrollToInquiry = () => {
+    try { track("click_jump_to_inquiry", { slug, page: "service_detail" }); } catch { /* never block */ }
+    const el = document.getElementById("inquiry-form");
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
+
   const { toast } = useToast();
   const [webinars, setWebinars] = useState<DbWebinar[]>([]);
   const [expandedWebinar, setExpandedWebinar] = useState<string | null>(null);
