@@ -588,7 +588,7 @@ const ServiceDetail = () => {
     variant="glassPetrol"
     size="sm"
     className="rounded-full text-sm px-4 py-1.5 h-auto whitespace-nowrap"
-    onClick={openCalendly}
+    onClick={handleBookCall}
   >
     {t("Skip the email, book a call now", "Zapomeňte na e-mail, rovnou si domluvte hovor")}
   </Button>
