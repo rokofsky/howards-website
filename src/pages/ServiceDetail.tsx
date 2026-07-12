@@ -185,7 +185,7 @@ const ServiceDetail = () => {
             {fromPricing && (slug === "coaching-sessions" || slug === "live-webinars") && (
               <div className="mb-6">
                 <Button variant="outline" asChild>
-                  <Link to={lp("/#pricing")} className="inline-flex items-center gap-2">
+                  <Link to={lp("/#pricing")} onClick={handleBackToPricing} className="inline-flex items-center gap-2">
                     {t("← Back to pricing", "← Zpět na ceník")}
                   </Link>
                 </Button>
@@ -194,7 +194,7 @@ const ServiceDetail = () => {
             {!fromPricing && (
               <div className="mb-6">
                 <Button variant="outline" asChild>
-                  <Link to={lp("/#services")} className="inline-flex items-center gap-2">
+                  <Link to={lp("/#services")} onClick={handleBackToServices} className="inline-flex items-center gap-2">
                     {t("← Back to services", "← Zpět na služby")}
                   </Link>
                 </Button>
@@ -554,7 +554,7 @@ const ServiceDetail = () => {
           {fromPricing && (slug === "coaching-sessions" || slug === "live-webinars") && (
             <div className="mb-6">
               <Button variant="outline" asChild>
-                <Link to={lp("/#pricing")} className="inline-flex items-center gap-2">
+                <Link to={lp("/#pricing")} onClick={handleBackToPricing} className="inline-flex items-center gap-2">
                   {t("← Back to pricing", "← Zpět na ceník")}
                 </Link>
               </Button>
@@ -563,7 +563,7 @@ const ServiceDetail = () => {
           {!fromPricing && (
             <div className="mb-6">
               <Button variant="outline" asChild>
-                <Link to={lp("/#services")} className="inline-flex items-center gap-2">
+                <Link to={lp("/#services")} onClick={handleBackToServices} className="inline-flex items-center gap-2">
                   {t("← Back to services", "← Zpět na služby")}
                 </Link>
               </Button>
